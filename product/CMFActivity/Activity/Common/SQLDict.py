@@ -33,6 +33,7 @@ from Shared.DC.ZRDB.Results import Results
 from Products.CMFActivity.ActivityTool import Message
 from .SQLBase import SQLBase
 
+
 from zLOG import TRACE, WARNING
 
 class SQLDict(SQLBase):
@@ -69,12 +70,8 @@ class SQLDict(SQLBase):
     message_list = activity_buffer.getMessageList(self)
     return [m for m in message_list if m.is_registered]
 
-  def _likeChildPathPattern(self, path):
-    return path.replace('_', r'\_') + '/%'
-
   def getProcessableMessageLoader(self, db, processing_node):
     path_and_method_id_dict = {}
-    for_update = self._forUpdateSQL(db)
     def load(line):
       # getProcessableMessageList already fetch messages with the same
       # group_method_id, so what remains to be filtered on are path and
@@ -86,8 +83,6 @@ class SQLDict(SQLBase):
       uid = line.uid
       original_uid = path_and_method_id_dict.get(key)
       if original_uid is None:
-        sql_method_id = b" AND method_id = ? AND group_method_id = ?"
-        method_args = (method_id, line.group_method_id)
         m = Message.load(line.message, uid=uid, line=line)
         merge_parent = m.activity_kw.get('merge_parent')
         try:
@@ -103,14 +98,8 @@ class SQLDict(SQLBase):
             uid_list = []
             if path_list:
               # Select parent messages.
-              path_placeholders = b",".join([b"?"] * len(path_list))
-              parent_sql = (b"SELECT * FROM message"
-                b" WHERE processing_node IN (0, ?) AND path IN (" + path_placeholders + b")"
-                + sql_method_id +
-                b" ORDER BY path LIMIT 1" + for_update)
-              parent_args = (processing_node,) + tuple(path_list) + method_args
-              result = Results(self._executeQuery(db, parent_sql, parent_args,
-                                                  max_rows=0))
+              result = self._selectParentMessage(
+                db, processing_node, path_list, method_id, line.group_method_id)
               if result: # found a parent
                 # mark child as duplicate
                 uid_list.append(uid)
@@ -121,12 +110,8 @@ class SQLDict(SQLBase):
                 m = Message.load(line.message, uid=uid, line=line)
             # return unreserved similar children
             path = line.path
-            child_sql = (b"SELECT uid FROM message"
-              b" WHERE processing_node = 0 AND (path = ? OR path LIKE ?)"
-              + sql_method_id + for_update)
-            child_args = (path, self._likeChildPathPattern(path)) + method_args
-            result = self._executeQuery(db, child_sql, child_args,
-                                        max_rows=0)[1]
+            result = self._selectSimilarChildren(
+              db, path, method_id, line.group_method_id)
             reserve_uid_list = [x for x, in result]
             uid_list += reserve_uid_list
             if not line.processing_node:
@@ -134,11 +119,8 @@ class SQLDict(SQLBase):
               reserve_uid_list.append(uid)
           else:
             # Select duplicates.
-            dup_sql = (b"SELECT uid FROM message"
-              b" WHERE processing_node = 0 AND path = ?"
-              + sql_method_id + for_update)
-            dup_args = (path,) + method_args
-            result = self._executeQuery(db, dup_sql, dup_args, max_rows=0)[1]
+            result = self._selectDuplicates(
+              db, path, method_id, line.group_method_id)
             reserve_uid_list = uid_list = [x for x, in result]
           if reserve_uid_list:
             self.assignMessageList(db, processing_node, reserve_uid_list)

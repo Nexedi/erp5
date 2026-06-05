@@ -48,6 +48,13 @@ class SQLJoblib(_SQLJoblib, SQLDict):
     b" priority, group_method_id, tag, signature, serialization_tag,"
     b" message) VALUES\n")
 
+  def _selectDuplicates(self, db, path, signature, method_id, group_method_id):
+    sql = (b"SELECT uid FROM message_job"
+      b" WHERE processing_node = 0 AND path = ? AND signature = ?"
+      b" AND method_id = ? AND group_method_id = ?")
+    args = (path, signature, method_id, group_method_id)
+    return db.query(sql, 0, args=args)[1]
+
   def prepareQueueMessageList(self, activity_tool, message_list):
     db = activity_tool.getSQLConnection()
     insert_prefix = self._insert_template % str2bytes(self.sql_table)
@@ -64,7 +71,7 @@ class SQLJoblib(_SQLJoblib, SQLDict):
           all_args.extend(row_args)
         sql = insert_prefix + sep.join(row_sql_list)
         try:
-          self._executeQuery(db, sql, tuple(all_args))
+          db.query(sql, args=tuple(all_args))
         except sqlite3.IntegrityError as e:
           msg = str(e)
           if 'UNIQUE constraint failed' not in msg and 'PRIMARY KEY' not in msg:

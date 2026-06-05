@@ -28,17 +28,12 @@ from __future__ import absolute_import
 ##############################################################################
 
 from six import string_types as basestring
-from six.moves import xrange
 from Products.ERP5Type.Utils import ensure_list, str2bytes, bytes2str
 from collections import defaultdict
-from contextlib import contextmanager
-from itertools import product, chain
+from itertools import product
 import operator
 import sys
 import transaction
-from random import getrandbits
-import MySQLdb
-from MySQLdb.constants.ER import DUP_ENTRY
 from DateTime import DateTime
 from Shared.DC.ZRDB.Results import Results
 from zLOG import LOG, TRACE, INFO, WARNING, ERROR, PANIC
@@ -86,30 +81,6 @@ _IDENTITY = lambda x: x
 def render_datetime(x):
   return "%.4d-%.2d-%.2d %.2d:%.2d:%09.6f" % x.toZone('UTC').parts()[:6]
 
-def _render_arg(arg, quote):
-  # Render a single Python value as an inline SQL literal (MySQL-shape).
-  # Booleans must be checked before int since bool is a subclass of int.
-  if arg is None:
-    return b'NULL'
-  if isinstance(arg, bool):
-    return b'1' if arg else b'0'
-  if isinstance(arg, (int, float)):
-    return str2bytes(str(arg))
-  if isinstance(arg, DateTime):
-    return quote(render_datetime(arg))
-  return quote(arg)
-
-def _substitute_args(sql, args, quote):
-  parts = sql.split(b'?')
-  assert len(parts) - 1 == len(args), (
-    "placeholder/args mismatch: %d ? vs %d args in %r"
-    % (len(parts) - 1, len(args), sql))
-  pieces = [parts[0]]
-  for arg, part in zip(args, parts[1:]):
-    pieces.append(_render_arg(arg, quote))
-    pieces.append(part)
-  return b''.join(pieces)
-
 if six.PY2:
   _SQLTEST_NO_QUOTE_TYPE_SET = int, float, long
 else:
@@ -117,34 +88,29 @@ else:
 _SQLTEST_NON_SEQUENCE_TYPE_SET = _SQLTEST_NO_QUOTE_TYPE_SET + (DateTime, basestring)
 
 # sqltest_dict ({'condition_name': <render_function>}) defines how to render
-# condition statements in the SQL query used by SQLBase.getMessageList.
-# Each render function returns a (sql_fragment, args_tuple) pair where
-# sql_fragment uses `?` placeholders for every value.
+# condition statements in the SQL query used by SQLBase.getMessageList
 def sqltest_dict():
   sqltest_dict = {}
   def _(name, column=None, op="="):
     if column is None:
       column = name
-    column_b = str2bytes(column)
-    eq_b = column_b + str2bytes(" %s ?" % op)
-    def render(value):
+    column_op = str2bytes(("%s %s " % (column, op)))
+    def render(value, render_string):
       if isinstance(value, _SQLTEST_NO_QUOTE_TYPE_SET):
-        return eq_b, (value,)
+        return column_op + str2bytes(str(value))
       if isinstance(value, DateTime):
-        return eq_b, (render_datetime(value),)
+        value = render_datetime(value)
       if isinstance(value, basestring):
-        return eq_b, (value,)
+        return column_op + render_string(value)
       assert op == "=", value
       if value is None: # XXX: see comment in SQLBase._getMessageList
-        return column_b + b" IS NULL", ()
-      value_list = [
-        render_datetime(x) if isinstance(x, DateTime) else x
-        for x in value
-      ]
-      if not value_list:
-        return b"0", ()
-      placeholders = b",".join([b"?"] * len(value_list))
-      return column_b + b" IN (" + placeholders + b")", tuple(value_list)
+        return column + b" IS NULL"
+      for x in value:
+        return str2bytes("%s IN (%s)" % (column, ', '.join(map(
+          str if isinstance(x, _SQLTEST_NO_QUOTE_TYPE_SET) else
+          render_datetime if isinstance(x, DateTime) else
+          lambda v: bytes2str(render_string(v)), value))))
+      return b"0"
     sqltest_dict[name] = render
   _('active_process_uid')
   _('group_method_id')
@@ -156,33 +122,42 @@ def sqltest_dict():
   _('retry')
   _('to_date', column="date", op="<=")
   _('uid')
-  def renderAbovePriorityDateUid(value):
+  def renderAbovePriorityDateUid(value, render_string):
     # Strictly dependent on _getMessageList's sort order: given a well-ordered
     # list of values, rendered condition will match the immediate next row in
     # that sort order.
     priority, date, uid = value
     assert isinstance(priority, _SQLTEST_NO_QUOTE_TYPE_SET)
     assert isinstance(uid, _SQLTEST_NO_QUOTE_TYPE_SET)
-    date_str = render_datetime(date)
     return (
-      b'(priority>? OR (priority=? AND (date>? OR (date=? AND uid>?))))',
-      (priority, priority, date_str, date_str, uid),
+        b'(priority>%(priority)d OR (priority=%(priority)d AND '
+        b'(date>%(date)s OR (date=%(date)s AND uid>%(uid)d))'
+        b'))' % {
+        b'priority': priority,
+        # render_datetime raises if "date" lacks date API, so no need to check
+        b'date': render_string(render_datetime(date)),
+        b'uid': uid,
+      }
     )
   sqltest_dict['above_priority_date_uid'] = renderAbovePriorityDateUid
   return sqltest_dict
 sqltest_dict = sqltest_dict()
 
-def _validate_after_path_and_method_id(value):
+def _validate_after_path_and_method_id(value, render_string):
   path, method_id = value
-  sql_m, args_m = sqltest_dict['method_id'](method_id)
-  sql_p, args_p = sqltest_dict['path'](path)
-  return sql_m + b' AND ' + sql_p, args_m + args_p
+  return (
+    sqltest_dict['method_id'](method_id, render_string) +
+    b' AND ' +
+    sqltest_dict['path'](path, render_string)
+  )
 
-def _validate_after_tag_and_method_id(value):
+def _validate_after_tag_and_method_id(value, render_string):
   tag, method_id = value
-  sql_m, args_m = sqltest_dict['method_id'](method_id)
-  sql_t, args_t = sqltest_dict['tag'](tag)
-  return sql_m + b' AND ' + sql_t, args_m + args_t
+  return (
+    sqltest_dict['method_id'](method_id, render_string) +
+    b' AND ' +
+    sqltest_dict['tag'](tag, render_string)
+  )
 
 # Definition of activity dependencies
 # key: dependency name (as passed to ActiveObject.activate() & friends)
@@ -242,62 +217,6 @@ class SQLBase(Queue):
   """
     Define a set of common methods for SQL-based storage of activities.
   """
-
-  _force_index_node2_sql = "FORCE INDEX (node2_priority_date)"
-  _MAX_DEPENDENCY_UNION_SUBQUERY_COUNT = -5000
-  _dependency_subquery_open = b"("
-  _dependency_subquery_close = b" LIMIT 1)"
-
-  def _executeQuery(self, db, sql, args=(), max_rows=1000):
-    """Execute a `?`-placeholder query.
-
-    Default (MySQL-shape): substitute every `?` in sql using db.string_literal,
-    then call db.query with a fully-rendered SQL string (no `?` left).
-    SQLite backend overrides this to pass args to the DA natively.
-    """
-    sql = _substitute_args(sql, args, db.string_literal)
-    return db.query(sql, max_rows)
-
-  def _forUpdateSQL(self, db):
-    return b" FOR UPDATE" + (b' SKIP LOCKED' if db.has_skip_locked else b'')
-
-  def _wrapSubquery(self, sql):
-    return b'(' + sql + b')'
-
-  def _reactivateDateSQL(self, delay):
-    return b"DATE_ADD(UTC_TIMESTAMP(6), INTERVAL ? SECOND)", (delay,)
-
-  def _timeShiftDateSQL(self, delay):
-    return b"DATE_SUB(date, INTERVAL ? SECOND)", (delay,)
-
-  def _dependencyUnionSuffixSQL(self):
-    return b""
-
-  @contextmanager
-  def SQLLock(self, db, lock_name, timeout):
-    """
-    Attempt to acquire a named SQL lock. The outcome of this acquisition is
-    returned to the context statement and MUST be checked:
-    1: lock acquired
-    0: timeout
-    """
-    lock_name = db.string_literal(lock_name)
-    query = db.query
-    (_, ((acquired, ), )) = query(
-      b'SELECT GET_LOCK(%s, %f)' % (lock_name, timeout),
-      max_rows=0,
-    )
-    if acquired is None:
-      raise ValueError('Error acquiring lock')
-    try:
-      yield acquired
-    finally:
-      if acquired:
-        query(
-          b'SELECT RELEASE_LOCK(%s)' % (lock_name, ),
-          max_rows=0,
-        )
-
   def initialize(self, activity_tool, clear):
     db = activity_tool.getSQLConnection()
     create = self.createTableSQL()
@@ -316,12 +235,6 @@ class SQLBase(Queue):
           " The following added columns could not be initialized: %s"
           % (self.sql_table, ", ".join(column_list)))
 
-  _insert_template = (b"INSERT INTO %s (uid,"
-    b" path, active_process_uid, date, method_id, processing_node,"
-    b" priority, node, group_method_id, tag, serialization_tag,"
-    b" message) VALUES\n(%s)")
-  _insert_separator = b"),\n("
-
   def _hasDependency(self, message):
     get = message.activity_kw.get
     return any(
@@ -329,84 +242,18 @@ class SQLBase(Queue):
       for x in _DEPENDENCY_TESTER_DICT
     )
 
-  def prepareQueueMessageList(self, activity_tool, message_list):
-    db = activity_tool.getSQLConnection()
-    quote = db.string_literal
-    def insert(reset_uid):
-      values = self._insert_separator.join(values_list)
-      del values_list[:]
-      for _ in xrange(UID_ALLOCATION_TRY_COUNT):
-        if reset_uid:
-          reset_uid = False
-          # Overflow will result into IntegrityError.
-          db.query(b"SET @uid := %d" % getrandbits(UID_SAFE_BITSIZE))
-        try:
-          db.query(self._insert_template % (str2bytes(self.sql_table), values))
-        except MySQLdb.IntegrityError as e:
-          if e.args[0] != DUP_ENTRY:
-            raise
-          reset_uid = True
-        else:
-          break
-      else:
-        raise RuntimeError("Maximum retry for prepareQueueMessageList reached")
-    i = 0
-    reset_uid = True
-    values_list = []
-    max_payload = self._insert_max_payload
-    sep_len = len(self._insert_separator)
-    hasDependency = self._hasDependency
-    for m in message_list:
-      if m.is_registered:
-        active_process_uid = m.active_process_uid
-        date = m.activity_kw.get('at_date')
-        row = b','.join((
-          b'@uid+%d' % i,
-          quote('/'.join(m.object_path)),
-          b'NULL' if active_process_uid is None else str2bytes(str(active_process_uid)),
-          b"UTC_TIMESTAMP(6)" if date is None else quote(render_datetime(date)),
-          quote(m.method_id),
-          b'-1' if hasDependency(m) else b'0',
-          str2bytes(str(m.activity_kw.get('priority', 1))),
-          str2bytes(str(m.activity_kw.get('node', 0))),
-          quote(m.getGroupId()),
-          quote(m.activity_kw.get('tag', b'')),
-          quote(m.activity_kw.get('serialization_tag', b'')),
-          quote(Message.dump(m))))
-        i += 1
-        n = sep_len + len(row)
-        max_payload -= n
-        if max_payload < 0:
-          if values_list:
-            insert(reset_uid)
-            reset_uid = False
-            max_payload = self._insert_max_payload - n
-          else:
-            raise ValueError("max_allowed_packet too small to insert message")
-        values_list.append(row)
-    if values_list:
-      insert(reset_uid)
-
   def _getMessageList(self, db, count=1000, src__=0, **kw):
     # XXX: Because most columns have NOT NULL constraint, conditions with None
     #      value should be ignored, instead of trying to render them
     #      (with comparisons with NULL).
-    where_parts = []
-    where_args = []
-    for k, v in six.iteritems(kw):
-      frag, args = sqltest_dict[k](v)
-      where_parts.append(frag)
-      where_args.extend(args)
-    where_sql = b'\n  AND '.join(where_parts)
+    q = db.string_literal
+    sql = b'\n  AND '.join(sqltest_dict[k](v, q) for k, v in six.iteritems(kw))
     sql = b"SELECT * FROM %s%s\nORDER BY priority, date, uid%s" % (
       str2bytes(self.sql_table),
-      where_sql and b'\nWHERE ' + where_sql,
+      sql and b'\nWHERE ' + sql,
       b'' if count is None else b'\nLIMIT %d' % count,
     )
-    if src__:
-      # caller wants the rendered SQL string for debugging; render args inline
-      return _substitute_args(sql, tuple(where_args), db.string_literal)
-    return Results(self._executeQuery(db, sql, tuple(where_args), max_rows=0))
+    return sql if src__ else Results(db.query(sql, max_rows=0))
 
   def getMessageList(self, activity_tool, *args, **kw):
     result = self._getMessageList(activity_tool.getSQLConnection(), *args, **kw)
@@ -420,91 +267,24 @@ class SQLBase(Queue):
                              retry=line.retry)
       for line in result]
 
-  def countMessageSQL(self, **kw):
-    where_parts = []
-    where_args = []
-    for k, v in six.iteritems(kw):
-      if not v:
-        continue
-      frag, frag_args = sqltest_dict[k](v)
-      where_parts.append(frag)
-      where_args.extend(frag_args)
-    sql = b"SELECT count(*) FROM %s WHERE processing_node > %d AND %s" % (
-      str2bytes(self.sql_table), DEPENDENCY_IGNORED_ERROR_STATE,
-      b" AND ".join(where_parts) or b"1")
-    return sql, tuple(where_args)
+  def countMessageSQL(self, quote, **kw):
+    return b"SELECT count(*) FROM %s WHERE processing_node > %d AND %s" % (
+      str2bytes(self.sql_table), DEPENDENCY_IGNORED_ERROR_STATE, b" AND ".join(
+        sqltest_dict[k](v, quote) for (k, v) in six.iteritems(kw) if v
+        ) or b"1")
 
-  def hasActivitySQL(self, only_valid=False, only_invalid=False, **kw):
-    where_parts = []
-    where_args = []
-    for k, v in six.iteritems(kw):
-      if not v:
-        continue
-      frag, frag_args = sqltest_dict[k](v)
-      where_parts.append(frag)
-      where_args.extend(frag_args)
+  def hasActivitySQL(self, quote, only_valid=False, only_invalid=False, **kw):
+    where = [sqltest_dict[k](v, quote) for (k, v) in six.iteritems(kw) if v]
     if only_valid:
-      where_parts.append(b'processing_node > %d' % INVOKE_ERROR_STATE)
+      where.append(b'processing_node > %d' % INVOKE_ERROR_STATE)
     if only_invalid:
-      where_parts.append(b'processing_node <= %d' % INVOKE_ERROR_STATE)
-    sql = self._wrapSubquery(b"SELECT 1 FROM %s WHERE %s LIMIT 1" % (
-      str2bytes(self.sql_table), b" AND ".join(where_parts) or b"1"))
-    return sql, tuple(where_args)
+      where.append(b'processing_node <= %d' % INVOKE_ERROR_STATE)
+    return b"SELECT 1 FROM %s WHERE %s LIMIT 1" % (
+      str2bytes(self.sql_table), b" AND ".join(where) or b"1")
 
   def getPriority(self, activity_tool, processing_node, node_set=None):
     db = activity_tool.getSQLConnection()
-    if node_set is None:
-      sql = (b"SELECT 3*priority, date"
-        b" FROM %s"
-        b" WHERE"
-        b"  processing_node=0 AND"
-        b"  date <= UTC_TIMESTAMP(6)"
-        b" ORDER BY priority, date"
-        b" LIMIT 1") % str2bytes(self.sql_table)
-      result = self._executeQuery(db, sql, (), max_rows=0)[1]
-    else:
-      # MariaDB often choose processing_node_priority_date index
-      # but node2_priority_date is much faster if there exist
-      # many node < 0 non-groupable activities.
-      force_index = self._force_index_node2_sql
-      subquery_template = (b"SELECT 3*priority{} AS effective_priority, date"
-        b" FROM %s"
-        b" {}"
-        b" WHERE"
-        b"  {} AND"
-        b"  processing_node=0 AND"
-        b"  date <= %s"
-        b" ORDER BY priority, date"
-        b" LIMIT 1") % (str2bytes(self.sql_table), b"UTC_TIMESTAMP(6)")
-      wrapSubquery = self._wrapSubquery
-      def subquery(prio_suffix, idx, cond_sql, cond_args):
-        formatted = str2bytes(bytes2str(subquery_template).format(
-          prio_suffix, idx, bytes2str(cond_sql)))
-        return wrapSubquery(formatted), cond_args
-      parts = [
-        subquery('-1', force_index, b'node = ?', (processing_node,)),
-        subquery('', force_index, b'node=0', ()),
-      ]
-      for x in node_set:
-        parts.append(subquery('-1', force_index, b'node = ?', (x,)))
-      union_sql = b" UNION ALL ".join(p[0] for p in parts)
-      all_args = tuple(a for p in parts for a in p[1])
-      sql = (b"SELECT *"
-             b" FROM (" + union_sql + b") AS t"
-             b" ORDER BY effective_priority, date"
-             b" LIMIT 1")
-      result = self._executeQuery(db, sql, all_args, max_rows=0)[1]
-      if not result:
-        # We did not find any activity matching our node (by number nor by
-        # family), nor by having no node preference. Look for any other
-        # activity we could be allowed to execute.
-        # This is slower than the above queries, because it does a range
-        # scan, either on the "node" column to sort the set, or on the
-        # sorted set to filter negative node values.
-        # This is why this query is only executed when the previous one
-        # did not find anything.
-        sub_sql, sub_args = subquery('+1', '', b'node>0', ())
-        result = self._executeQuery(db, sub_sql, sub_args, max_rows=0)[1]
+    result = self._selectPriority(db, processing_node, node_set)
     if result:
       return result[0]
     return Queue.getPriority(self, activity_tool, processing_node, node_set)
@@ -623,11 +403,8 @@ class SQLBase(Queue):
     # further dependency processing is delayed to the next iteration, to avoid
     # doing such work if there is no such further iteration.
     new_blocked_message_set = set()
+    quote = db.string_literal
     table_name_list = activity_tool.getSQLTableNameSet()
-    max_count = self._MAX_DEPENDENCY_UNION_SUBQUERY_COUNT
-    subquery_open = self._dependency_subquery_open
-    subquery_close = self._dependency_subquery_close
-    union_suffix = self._dependencyUnionSuffixSQL()
     for (
       dependency_name,
       dependency_value_dict,
@@ -678,20 +455,18 @@ class SQLBase(Queue):
         if len(column_list) == 1 else
         _IDENTITY
       )
-      base_sql_suffix = b' WHERE processing_node > %i AND (%%s)' % (
+      base_sql_suffix = b' WHERE processing_node > %i AND (%%s) LIMIT 1)' % (
         min_processing_node,
-      ) + subquery_close
-      sql_suffix_pairs = []
-      for dependency_value in dependency_value_dict:
-        frag, frag_args = to_sql(dependency_value)
-        sql_suffix_pairs.append((base_sql_suffix % frag, frag_args))
-      base_sql_prefix = subquery_open + b'SELECT %s FROM ' % (
-        b','.join([ str2bytes(c) for c in column_list ]),
       )
+      sql_suffix_list = [
+        base_sql_suffix % to_sql(dependency_value, quote)
+        for dependency_value in dependency_value_dict
+      ]
+      base_sql_prefix = self._dependencySubqueryPrefix(column_list)
       subquery_list = [
-        (base_sql_prefix + str2bytes(table_name) + suffix_sql, suffix_args)
+        base_sql_prefix + str2bytes(table_name) + sql_suffix
         for table_name in table_name_list
-        for suffix_sql, suffix_args in sql_suffix_pairs
+        for sql_suffix in sql_suffix_list
       ]
       while subquery_list:
         # Join queries with a UNION, to reduce per-query latency.
@@ -699,11 +474,10 @@ class SQLBase(Queue):
         # largely exceed the number of activities being considered multiplied
         # by the number of activty tables: it is also proportional to the
         # number of distinct values being looked for in the current column.
-        batch = subquery_list[max_count:]
-        batch_sql = b' UNION '.join(s for s, _ in batch) + union_suffix
-        batch_args = tuple(a for _, args in batch for a in args)
-        for row in self._executeQuery(db, batch_sql, batch_args,
-                                      max_rows=0)[1]:
+        for row in db.query(
+          b' UNION '.join(subquery_list[self._MAX_DEPENDENCY_UNION_SUBQUERY_COUNT:]),
+          max_rows=0,
+        )[1]:
           # Each row is a value which blocks some activities.
           dependent_message_set = dependency_value_dict[row2key(row)]
           # queue blocked messages for processing in the beginning of next
@@ -712,7 +486,7 @@ class SQLBase(Queue):
           # ...but update result immediately, in case there is no next
           # outermost iteration.
           result -= dependent_message_set
-        del subquery_list[max_count:]
+        del subquery_list[self._MAX_DEPENDENCY_UNION_SUBQUERY_COUNT:]
       dependency_value_dict.clear()
     return result
 
@@ -773,16 +547,6 @@ class SQLBase(Queue):
         messages being pending execution.
     """
     assert limit
-    table_b = str2bytes(self.sql_table)
-    date_frag, date_args = sqltest_dict['to_date'](date)
-    if group_method_id:
-      group_frag = b' AND group_method_id=?'
-      group_args = (group_method_id,)
-    else:
-      group_frag = b''
-      group_args = ()
-    for_update_suffix = self._forUpdateSQL(db)
-
     # Note: Not all write accesses to our table are protected by this lock.
     # This lock is not here for data consistency reasons, but to avoid wasting
     # time on SQL deadlocks caused by the varied lock ordering chosen by the
@@ -808,68 +572,8 @@ class SQLBase(Queue):
       # for users and reduce the probability to do the same work several times
       # (think of an object that is modified several times in a short period of
       # time).
-      if node_set is None:
-        sql = (b"SELECT *"
-          b" FROM %s"
-          b" WHERE"
-          b"  processing_node=0 AND"
-          b"  %s%s"
-          b" ORDER BY priority, date"
-          b" LIMIT ?"
-          b"%s") % (table_b, date_frag, group_frag, for_update_suffix)
-        all_args = date_args + group_args + (limit,)
-        result = Results(self._executeQuery(db, sql, all_args, max_rows=0))
-      else:
-        if group_method_id:
-          force_index = ''
-        else:
-          # MariaDB often choose processing_node_priority_date index
-          # but node2_priority_date is much faster if there exist
-          # many node < 0 non-groupable activities.
-          force_index = self._force_index_node2_sql
-        subquery_template = (b"SELECT *, 3*priority{} AS effective_priority"
-          b" FROM %s"
-          b" {}"
-          b" WHERE"
-          b"  {} AND"
-          b"  processing_node=0 AND"
-          b"  %s%s"
-          b" ORDER BY priority, date"
-          b" LIMIT ?"
-          b"%s") % (table_b, date_frag, group_frag, for_update_suffix)
-        wrapSubquery = self._wrapSubquery
-        def subquery(prio_suffix, idx, cond_sql, cond_args):
-          formatted = str2bytes(bytes2str(subquery_template).format(
-            prio_suffix, idx, bytes2str(cond_sql)))
-          # cond args come first (in WHERE), then to_date args, then group args, then LIMIT
-          return wrapSubquery(formatted), \
-            cond_args + date_args + group_args + (limit,)
-        parts = [
-          subquery('-1', force_index, b'node = ?', (processing_node,)),
-          subquery('', force_index, b'node=0', ()),
-        ]
-        for x in node_set:
-          parts.append(subquery('-1', force_index, b'node = ?', (x,)))
-        union_sql = b" UNION ALL ".join(p[0] for p in parts)
-        union_args = tuple(a for p in parts for a in p[1])
-        sql = (b"SELECT *"
-               b" FROM (" + union_sql + b") AS t"
-               b" ORDER BY effective_priority, date"
-               b" LIMIT ?")
-        all_args = union_args + (limit,)
-        result = Results(self._executeQuery(db, sql, all_args, max_rows=0))
-        if not result:
-          # We did not find any activity matching our node (by number nor by
-          # family), nor by having no node preference. Look for any other
-          # activity we could be allowed to execute.
-          # This is slower than the above queries, because it does a range
-          # scan, either on the "node" column to sort the set, or on the
-          # sorted set to filter negative node values.
-          # This is why this query is only executed when the previous one
-          # did not find anything.
-          sub_sql, sub_args = subquery('+1', '', b'node>0', ())
-          result = Results(self._executeQuery(db, sub_sql, sub_args,
-                                              max_rows=0))
+      result = self._selectReservedMessageList(
+        db, date, processing_node, limit, group_method_id, node_set)
       if result:
         # Reserve messages.
         uid_list = [x.uid for x in result]
@@ -877,17 +581,6 @@ class SQLBase(Queue):
         self._log(TRACE, 'Reserved messages: %r' % uid_list)
         return result
     return ()
-
-  def assignMessageList(self, db, state, uid_list):
-    """
-      Put messages back in given processing_node.
-    """
-    uid_list = tuple(uid_list)
-    placeholders = b",".join([b"?"] * len(uid_list))
-    sql = (b"UPDATE %s SET processing_node=? WHERE uid IN (%s)"
-           % (str2bytes(self.sql_table), placeholders))
-    self._executeQuery(db, sql, (state,) + uid_list)
-    db.query(b"COMMIT")
 
   def getProcessableMessageLoader(self, db, processing_node):
     # do not merge anything
@@ -935,10 +628,9 @@ class SQLBase(Queue):
         # To minimize the probability of deadlocks, we also COMMIT so that a
         # new transaction starts on the first 'FOR UPDATE' query, which is all
         # the more important as the current on started with getPriority().
-        sql = (b"SELECT * FROM %s WHERE processing_node=?"
-               b" ORDER BY priority, date LIMIT 1") % str2bytes(self.sql_table)
-        result = self._executeQuery(db, sql, (processing_node,), max_rows=0)
-        db.query(b"COMMIT")
+        result = db.query(b"SELECT * FROM %s WHERE processing_node=%d"
+          b" ORDER BY priority, date LIMIT 1\0COMMIT" % (
+          str2bytes(self.sql_table), processing_node), 0)
         already_assigned = result[1]
         if already_assigned:
           result = Results(result)
@@ -966,12 +658,12 @@ class SQLBase(Queue):
           if limit > 1: # <=> cost * count < 1
             cost *= count
             # Retrieve objects which have the same group method.
-            assigned_sql = (b"SELECT * FROM %s"
-              b" WHERE processing_node=? AND group_method_id=?"
-              b" ORDER BY priority, date LIMIT ?") % str2bytes(self.sql_table)
             result = iter(already_assigned
-              and Results(self._executeQuery(db, assigned_sql,
-                (processing_node, group_method_id, limit), max_rows=0))
+              and Results(db.query(b"SELECT * FROM %s"
+                b" WHERE processing_node=%d AND group_method_id=%s"
+                b" ORDER BY priority, date LIMIT %d" % (
+                str2bytes(self.sql_table), processing_node,
+                db.string_literal(group_method_id), limit), 0))
                 # Do not optimize rare case: keep the code simple by not
                 # adding more results from getReservedMessageList if the
                 # limit is not reached.
@@ -1093,23 +785,6 @@ class SQLBase(Queue):
                                     uid_to_duplicate_uid_list_dict)
     transaction.commit()
     return bool(message_list)
-
-  def deleteMessageList(self, db, uid_list):
-    uid_list = tuple(uid_list)
-    placeholders = b",".join([b"?"] * len(uid_list))
-    sql = (b"DELETE FROM %s WHERE uid IN (%s)"
-           % (str2bytes(self.sql_table), placeholders))
-    self._executeQuery(db, sql, uid_list)
-
-  def reactivateMessageList(self, db, uid_list, delay, retry):
-    uid_list = tuple(uid_list)
-    placeholders = b",".join([b"?"] * len(uid_list))
-    date_sql, date_args = self._reactivateDateSQL(delay)
-    sql = (b"UPDATE %s SET date = %s%s WHERE uid IN (%s)"
-           % (str2bytes(self.sql_table), date_sql,
-              b", retry = retry + 1" if retry else b"",
-              placeholders))
-    self._executeQuery(db, sql, date_args + uid_list)
 
   def finalizeMessageExecution(self, activity_tool, message_list,
                                uid_to_duplicate_uid_list_dict=None):
@@ -1270,20 +945,3 @@ class SQLBase(Queue):
     if uid_list:
       self.deleteMessageList(db, uid_list)
 
-  # Required for tests
-  def timeShift(self, activity_tool, delay, processing_node=None):
-    """
-      To simulate time shift, we simply substract delay from
-      all dates in message(_queue) table
-    """
-    db = activity_tool.getSQLConnection()
-    date_sql, date_args = self._timeShiftDateSQL(delay)
-    if processing_node is None:
-      sql = b"UPDATE %s SET date = %s" % (
-        str2bytes(self.sql_table), date_sql)
-      args = date_args
-    else:
-      sql = b"UPDATE %s SET date = %s WHERE processing_node=?" % (
-        str2bytes(self.sql_table), date_sql)
-      args = date_args + (processing_node,)
-    self._executeQuery(db, sql, args)

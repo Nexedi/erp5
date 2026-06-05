@@ -32,6 +32,7 @@ from contextlib import contextmanager
 from random import getrandbits
 from six.moves import xrange
 from Products.ERP5Type.Utils import str2bytes
+from Shared.DC.ZRDB.Results import Results
 from Products.CMFActivity.ActivityTool import Message
 from ..Common.SQLBase import (
   SQLBase as _SQLBase,
@@ -49,10 +50,8 @@ from ..Common.SQLBase import (
 
 class SQLBase(_SQLBase):
 
-  _force_index_node2_sql = ""
-  _MAX_DEPENDENCY_UNION_SUBQUERY_COUNT = -100
-  _dependency_subquery_open = b""
-  _dependency_subquery_close = b""
+  # SQLite's SQLITE_MAX_COMPOUND_SELECT defaults to 500. Keep some margin.
+  _MAX_DEPENDENCY_UNION_SUBQUERY_COUNT = -400
 
   _insert_template = (b"INSERT INTO %s (uid,"
     b" path, active_process_uid, date, method_id, processing_node,"
@@ -60,11 +59,13 @@ class SQLBase(_SQLBase):
     b" message) VALUES\n")
   _insert_separator = b",\n"
 
-  def _executeQuery(self, db, sql, args=(), max_rows=1000):
-    return db.query(sql, max_rows, args=tuple(args) if args else None)
-
-  def _forUpdateSQL(self, db):
-    return b""
+  def _dependencySubqueryPrefix(self, column_list):
+    # SQLite does not accept parenthesized SELECTs as compound-SELECT legs,
+    # and disallows LIMIT on intermediate legs. Wrap each leg in a FROM
+    # subquery instead.
+    return b'SELECT * FROM (SELECT %s FROM ' % (
+      b','.join([str2bytes(c) for c in column_list]),
+    )
 
   def prepareQueueMessageList(self, activity_tool, message_list):
     db = activity_tool.getSQLConnection()
@@ -82,7 +83,7 @@ class SQLBase(_SQLBase):
           all_args.extend(row_args)
         sql = insert_prefix + sep.join(row_sql_list)
         try:
-          self._executeQuery(db, sql, tuple(all_args))
+          db.query(sql, args=tuple(all_args))
         except sqlite3.IntegrityError as e:
           msg = str(e)
           if 'UNIQUE constraint failed' not in msg and 'PRIMARY KEY' not in msg:
@@ -117,18 +118,125 @@ class SQLBase(_SQLBase):
     if rows_list:
       insert(rows_list)
 
-  def _wrapSubquery(self, sql):
-    return b'SELECT * FROM (' + sql + b')'
+  def assignMessageList(self, db, state, uid_list):
+    uid_list = tuple(uid_list)
+    placeholders = b",".join([b"?"] * len(uid_list))
+    sql = (b"UPDATE %s SET processing_node=? WHERE uid IN (%s)"
+           % (str2bytes(self.sql_table), placeholders))
+    db.query(sql, args=(state,) + uid_list)
+    db.query(b"COMMIT")
 
-  def _reactivateDateSQL(self, delay):
-    return b"strftime('%Y-%m-%d %H:%M:%f','now',?)", \
-      ('+%s seconds' % delay,)
+  def deleteMessageList(self, db, uid_list):
+    uid_list = tuple(uid_list)
+    placeholders = b",".join([b"?"] * len(uid_list))
+    sql = (b"DELETE FROM %s WHERE uid IN (%s)"
+           % (str2bytes(self.sql_table), placeholders))
+    db.query(sql, args=uid_list)
 
-  def _timeShiftDateSQL(self, delay):
-    return b"datetime(date, ?)", ('-%s seconds' % delay,)
+  def reactivateMessageList(self, db, uid_list, delay, retry):
+    uid_list = tuple(uid_list)
+    placeholders = b",".join([b"?"] * len(uid_list))
+    date_sql = (b"strftime('%Y-%m-%d %H:%M:%f','now','+"
+                + str2bytes(str(delay)) + b" seconds')")
+    sql = (b"UPDATE %s SET date = %s%s WHERE uid IN (%s)"
+           % (str2bytes(self.sql_table),
+              date_sql,
+              b", retry = retry + 1" if retry else b"",
+              placeholders))
+    db.query(sql, args=uid_list)
 
-  def _dependencyUnionSuffixSQL(self):
-    return b'LIMIT %d' % self._MAX_DEPENDENCY_UNION_SUBQUERY_COUNT
+  def timeShift(self, activity_tool, delay, processing_node=None):
+    db = activity_tool.getSQLConnection()
+    date_sql = b"datetime(date, '-" + str2bytes(str(delay)) + b" seconds')"
+    if processing_node is None:
+      sql = b"UPDATE %s SET date = %s" % (
+        str2bytes(self.sql_table), date_sql)
+      db.query(sql)
+    else:
+      sql = b"UPDATE %s SET date = %s WHERE processing_node=?" % (
+        str2bytes(self.sql_table), date_sql)
+      db.query(sql, args=(processing_node,))
+
+  def _selectPriority(self, db, processing_node, node_set):
+    table = str2bytes(self.sql_table)
+    if node_set is None:
+      sql = (b"SELECT 3*priority, date FROM %s"
+        b" WHERE processing_node=0 AND date <= UTC_TIMESTAMP(6)"
+        b" ORDER BY priority, date LIMIT 1") % table
+      return db.query(sql, 0)[1]
+    def subquery(prio_suffix, cond_sql):
+      # SQLite forbids ORDER BY / LIMIT on intermediate compound-SELECT legs,
+      # so wrap each leg as a FROM-subquery.
+      return (b"SELECT * FROM ("
+        b"SELECT 3*priority" + prio_suffix + b" AS effective_priority, date"
+        b" FROM " + table +
+        b" WHERE " + cond_sql +
+        b" AND processing_node=0 AND date <= UTC_TIMESTAMP(6)"
+        b" ORDER BY priority, date LIMIT 1)")
+    subqueries = [
+      subquery(b'-1', b'node = ?'),
+      subquery(b'', b'node=0'),
+    ]
+    args = [processing_node]
+    for x in node_set:
+      subqueries.append(subquery(b'-1', b'node = ?'))
+      args.append(x)
+    sql = (b"SELECT * FROM (" + b" UNION ALL ".join(subqueries) + b")"
+      b" ORDER BY effective_priority, date LIMIT 1")
+    result = db.query(sql, 0, args=tuple(args))[1]
+    if not result:
+      fallback = subquery(b'+1', b'node>0')
+      result = db.query(fallback, 0)[1]
+    return result
+
+  def _selectReservedMessageList(self, db, date, processing_node, limit,
+                                 group_method_id, node_set):
+    table = str2bytes(self.sql_table)
+    to_date_sql = b"date <= ?"
+    # getNow(db) returns a string on SQLite (UDF result); tests may pass a
+    # DateTime instance which needs rendering.
+    base_args = [date if isinstance(date, str) else render_datetime(date)]
+    if group_method_id:
+      group_clause = b" AND group_method_id=?"
+      group_args = [group_method_id]
+    else:
+      group_clause = b""
+      group_args = []
+    if node_set is None:
+      sql = (b"SELECT * FROM " + table +
+        b" WHERE processing_node=0 AND " + to_date_sql + group_clause +
+        b" ORDER BY priority, date LIMIT ?")
+      args = tuple(base_args + group_args + [limit])
+      return Results(db.query(sql, 0, args=args))
+    def subquery(prio_suffix, cond_sql):
+      # SQLite forbids ORDER BY / LIMIT on intermediate compound-SELECT legs,
+      # so wrap each leg as a FROM-subquery.
+      return (b"SELECT * FROM ("
+        b"SELECT *, 3*priority" + prio_suffix + b" AS effective_priority"
+        b" FROM " + table +
+        b" WHERE " + cond_sql +
+        b" AND processing_node=0 AND " + to_date_sql + group_clause +
+        b" ORDER BY priority, date LIMIT ?)")
+    subqueries = [
+      subquery(b'-1', b'node = ?'),
+      subquery(b'', b'node=0'),
+    ]
+    # subquery 1: node = processing_node
+    args = [processing_node] + base_args + group_args + [limit]
+    # subquery 2: node = 0
+    args += base_args + group_args + [limit]
+    for x in node_set:
+      subqueries.append(subquery(b'-1', b'node = ?'))
+      args += [x] + base_args + group_args + [limit]
+    sql = (b"SELECT * FROM (" + b" UNION ALL ".join(subqueries) + b")"
+      b" ORDER BY effective_priority, date LIMIT ?")
+    args.append(limit)
+    result = Results(db.query(sql, 0, args=tuple(args)))
+    if not result:
+      fallback = subquery(b'+1', b'node>0')
+      fallback_args = tuple(base_args + group_args + [limit])
+      result = Results(db.query(fallback, 0, args=fallback_args))
+    return result
 
   @contextmanager
   def SQLLock(self, db, lock_name, timeout):

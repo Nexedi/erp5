@@ -27,10 +27,41 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from Shared.DC.ZRDB.Results import Results
 from ..Common.SQLDict import SQLDict as _SQLDict
-from .SQLBase import SQLBase, sort_message_key
-
+from .SQLBase import SQLBase
 
 class SQLDict(_SQLDict, SQLBase):
-  def _likeChildPathPattern(self, path):
-    return path + '/%'
+
+  def _sqlMethodIdCondition(self, db, method_id, group_method_id):
+    return b" AND method_id = ? AND group_method_id = ?", (
+      method_id, group_method_id,
+    )
+
+  def _selectParentMessage(self, db, processing_node, path_list,
+                           method_id, group_method_id):
+    sql_method_id, sub_args = self._sqlMethodIdCondition(
+      db, method_id, group_method_id)
+    placeholders = b",".join([b"?"] * len(path_list))
+    sql = (b"SELECT * FROM message"
+      b" WHERE processing_node IN (0, ?) AND path IN (" + placeholders + b")"
+      + sql_method_id + b" ORDER BY path LIMIT 1")
+    args = (processing_node,) + tuple(path_list) + sub_args
+    return Results(db.query(sql, 0, args=args))
+
+  def _selectSimilarChildren(self, db, path, method_id, group_method_id):
+    sql_method_id, sub_args = self._sqlMethodIdCondition(
+      db, method_id, group_method_id)
+    sql = (b"SELECT uid FROM message"
+      b" WHERE processing_node = 0 AND (path = ? OR path LIKE ?)"
+      + sql_method_id)
+    args = (path, path + '/%') + sub_args
+    return db.query(sql, 0, args=args)[1]
+
+  def _selectDuplicates(self, db, path, method_id, group_method_id):
+    sql_method_id, sub_args = self._sqlMethodIdCondition(
+      db, method_id, group_method_id)
+    sql = (b"SELECT uid FROM message"
+      b" WHERE processing_node = 0 AND path = ?" + sql_method_id)
+    args = (path,) + sub_args
+    return db.query(sql, 0, args=args)[1]

@@ -27,9 +27,51 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from Shared.DC.ZRDB.Results import Results
 from ..Common.SQLDict import SQLDict as _SQLDict
-from .SQLBase import SQLBase, sort_message_key
-
+from .SQLBase import SQLBase
 
 class SQLDict(_SQLDict, SQLBase):
-  pass
+
+  def _sqlMethodIdCondition(self, db, method_id, group_method_id):
+    quote = db.string_literal
+    return b" AND method_id = %s AND group_method_id = %s" % (
+      quote(method_id), quote(group_method_id),
+    )
+
+  def _selectParentMessage(self, db, processing_node, path_list,
+                           method_id, group_method_id):
+    quote = db.string_literal
+    sql_method_id = self._sqlMethodIdCondition(db, method_id, group_method_id)
+    sql = b"SELECT * FROM message" \
+      b" WHERE processing_node IN (0, %d) AND path IN (%s)%s" \
+      b" ORDER BY path LIMIT 1 FOR UPDATE%s" % (
+        processing_node,
+        b','.join(map(quote, path_list)),
+        sql_method_id,
+        b' SKIP LOCKED' if db.has_skip_locked else b'',
+      )
+    return Results(db.query(sql, 0))
+
+  def _selectSimilarChildren(self, db, path, method_id, group_method_id):
+    quote = db.string_literal
+    sql_method_id = self._sqlMethodIdCondition(db, method_id, group_method_id)
+    sql = b"SELECT uid FROM message" \
+      b" WHERE processing_node = 0 AND (path = %s OR path LIKE %s)%s" \
+      b" FOR UPDATE%s" % (
+        quote(path), quote(path.replace('_', r'\_') + '/%'),
+        sql_method_id,
+        b' SKIP LOCKED' if db.has_skip_locked else b'',
+      )
+    return db.query(sql, 0)[1]
+
+  def _selectDuplicates(self, db, path, method_id, group_method_id):
+    quote = db.string_literal
+    sql_method_id = self._sqlMethodIdCondition(db, method_id, group_method_id)
+    sql = b"SELECT uid FROM message" \
+      b" WHERE processing_node = 0 AND path = %s%s FOR UPDATE%s" % (
+        quote(path),
+        sql_method_id,
+        b' SKIP LOCKED' if db.has_skip_locked else b'',
+      )
+    return db.query(sql, 0)[1]
