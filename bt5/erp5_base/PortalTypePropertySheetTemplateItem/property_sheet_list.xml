@@ -11,6 +11,9 @@
   <item>ItemAggregation</item>
   <item>Reference</item>
  </portal_type>
+ <portal_type id="Order Builder">
+  <item>OrderBuilderConstraint</item>
+ </portal_type>
  <portal_type id="Organisation">
   <item>DefaultImage</item>
  </portal_type>
