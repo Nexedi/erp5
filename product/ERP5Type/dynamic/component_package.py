@@ -179,14 +179,23 @@ class ERP5ComponentPackageType(PackageType):
                                                    'ERP5 Component top-level Package')
     self.ref_manager = RefManager()
 
+  def _getSiteOrNone(self):
+    from Products.ERP5.ERP5Site import getSite
+    try:
+      return getSite()
+    except RuntimeError:
+      return None
+
   def createFilesystemImportDict(self):
     """
     Make legacy filesystem classes importable even after their migration to
     ZODB Components
     """
-    from Products.ERP5.ERP5Site import getSite
     from Acquisition import aq_base
-    component_tool = aq_base(getSite().portal_components)
+    site = self._getSiteOrNone()
+    if site is None:
+      return
+    component_tool = aq_base(site.portal_components)
     filesystem_import_dict = {}
     for component in component_tool.objectValues():
       if component.getValidationState() == 'validated':

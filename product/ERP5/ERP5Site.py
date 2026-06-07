@@ -269,14 +269,18 @@ class _site(threading.local):
   def __get(self, REQUEST=None):
     """Returns the currently processed site, optionally wrapped in a request
     """
-    while True:
+    while self.site:
       app, site_id = self.site[-1]
       app = app()
+      if app is None:
+        del self.site[-1]
+        continue
       if app._p_jar.opened:
         if REQUEST is None:
           return getattr(app, site_id)
         return getattr(app.__of__(RequestContainer(REQUEST=REQUEST)), site_id)
       del self.site[-1]
+    raise RuntimeError("getSite() called with no site set in this thread")
 
   def __set(self, site):
     app = aq_base(site.aq_parent)
