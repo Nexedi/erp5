@@ -2620,12 +2620,10 @@ class ERP5Generator(PortalGenerator):
 # do not need to know which backends exist.
 STORAGE_BACKENDS = {
   'erp5_mysql_innodb_catalog': {
-    'zsqlda':   'Products.ZMySQLDA',
-    'activity': 'Products.CMFActivity.Activity.MySQL',
+    'zsqlda':   'Products.ZMySQLDA'
   },
   'erp5_sqlite_catalog': {
-    'zsqlda':   'Products.ZSQLiteDA',
-    'activity': 'Products.CMFActivity.Activity.SQLite',
+    'zsqlda':   'Products.ZSQLiteDA'
   },
 }
 
@@ -2633,13 +2631,11 @@ STORAGE_BACKENDS = {
 AppInitializer_initialize = six.get_unbound_function(AppInitializer.initialize)
 def initialize(self):
   import Products.ZSQLDA
-  import Products.CMFActivity.Activity as CMFActivity
   AppInitializer.initialize = AppInitializer_initialize
 
   def configureAndInitialize(erp5_catalog_storage):
     backends = STORAGE_BACKENDS[erp5_catalog_storage]
     Products.ZSQLDA.configure(backends['zsqlda'])
-    CMFActivity.configure(backends['activity'])
     self.initialize()
 
   try:

@@ -358,7 +358,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       activity_tool.distribute()
       # XXX: duplicate ActivityTool.tic, without locking as we are being
       # multiple activity nodes in a single process.
-      for activity in six.itervalues(ActivityTool.activity_dict):
+      for activity in six.itervalues(
+          activity_tool.activity_dict()):
         while activity.dequeueMessage(activity_tool, node_id, ()):
           pass
     # Monkey-patch catalog to synchronise between main thread and the
@@ -2308,6 +2309,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       owner_reference TEXT NOT NULL DEFAULT '',
       PRIMARY KEY (uid)
       );
+      \0
       CREATE INDEX version ON %s (owner_reference);
       """ % (local_roles_table, local_roles_table)
     sql_catalog.newContent(
@@ -2503,7 +2505,9 @@ VALUES
       assignee_reference TEXT NOT NULL DEFAULT '',
       viewable_assignee_reference TEXT NOT NULL DEFAULT ''
       );
+      \0
       CREATE INDEX assignee_reference ON %s (assignee_reference);
+      \0
       CREATE INDEX viewable_assignee_reference ON %s (viewable_assignee_reference);
     """ % (local_roles_table, local_roles_table, local_roles_table)  
     sql_catalog.newContent(
@@ -2685,8 +2689,9 @@ VALUES
       viewable_assignee_reference TEXT NOT NULL DEFAULT '',
       PRIMARY KEY (uid)
       );
-
+      \0
       CREATE INDEX %s_assignee_reference ON %s (assignee_reference);
+      \0
       CREATE INDEX %s_viewable_assignee_reference ON %s (viewable_assignee_reference);
       """ % (local_roles_table, local_roles_table, local_roles_table,local_roles_table,local_roles_table)
 
@@ -2961,6 +2966,7 @@ VALUES
       viewable_assignee_reference TEXT NOT NULL DEFAULT '',
       PRIMARY KEY (uid)
       );
+      \0
       CREATE INDEX %s_viewable_assignee_reference ON %s (viewable_assignee_reference);
     """ % (local_roles_table, local_roles_table, local_roles_table)
 
@@ -3205,6 +3211,7 @@ VALUES
       viewable_assignee_reference TEXT NOT NULL DEFAULT '',
       PRIMARY KEY (uid)
       );
+      \0
       CREATE INDEX %s_viewable_assignee_reference ON %s (viewable_assignee_reference);
       """ % (local_roles_table, local_roles_table, local_roles_table)
     sql_catalog.newContent(

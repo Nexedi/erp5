@@ -72,8 +72,9 @@ class CommitFailed(Exception):
 
 def for_each_activity(wrapped):
   def wrapper(self):
-    getMessageList = self.portal.portal_activities.getMessageList
-    for activity in ActivityTool.activity_dict:
+    activity_tool = self.portal.portal_activities
+    getMessageList = activity_tool.getMessageList
+    for activity in activity_tool.activity_dict():
       wrapped(self, activity)
       self.abort()
       self.assertFalse([
@@ -151,13 +152,15 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       ERP5TypeTestCase.tearDown(self)
 
   def getMessageList(self, activity, **kw):
-    return ActivityTool.activity_dict[activity].getMessageList(
-      self.portal.portal_activities, **kw)
+    activity_tool = self.portal.portal_activities
+    return activity_tool.activity_dict()[activity].getMessageList(
+      activity_tool, **kw)
 
   def deleteMessageList(self, activity, message_list):
-    ActivityTool.activity_dict[activity].deleteMessageList(
-      self.portal.portal_activities.getSQLConnection(),
-      [m.uid for m in message_list])
+    activity_tool = self.portal.portal_activities
+    db = activity_tool.getSQLConnection()
+    activity_tool.activity_dict()[activity].deleteMessageList(
+      db, [m.uid for m in message_list])
     self.commit()
 
   def login(self):
@@ -809,14 +812,15 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       raise ValueError('This method always fail')
     Organisation.failingMethod = failingMethod
 
-    for activity in ActivityTool.activity_dict:
+    activity_dict = activity_tool.activity_dict()
+    for activity in activity_dict:
       # reset
       activity_tool.manageClearActivities()
       obj.setTitle(original_title)
       self.commit()
 
       # activate failing message and flush
-      for fail_activity in ActivityTool.activity_dict:
+      for fail_activity in activity_dict:
         obj.activate(activity = fail_activity).failingMethod()
       self.commit()
       self.flushAllActivities(silent=1, loop_size=100)
@@ -905,7 +909,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
         raise ConflictError if conflict else Exception
     def check(retry_list, **activate_kw):
       fail = retry_list[-1][0] is not None and 1 or 0
-      for activity in ActivityTool.activity_dict:
+      for activity in activity_tool.activity_dict():
         exec_count[0] = 0
         activity_tool.activate(activity=activity, priority=priority(1,6),
                                **activate_kw).doSomething(retry_list)
@@ -1246,7 +1250,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     Message.notifyUser = failingMethod
     Organisation.failingMethod = failingMethod
     try:
-      for activity in ActivityTool.activity_dict:
+      for activity in activity_tool.activity_dict():
         obj.activate(activity=activity, priority=6).failingMethod()
         self.commit()
         self.flushAllActivities(silent=1, loop_size=100)
@@ -1807,16 +1811,17 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.tic()
 
   def test_hasActivity(self):
+    activity_tool = self.portal.portal_activities
     active_object = self.portal.organisation_module.newContent(
                                             portal_type='Organisation')
-    active_process = self.portal.portal_activities.newActiveProcess()
+    active_process = activity_tool.newActiveProcess()
     self.tic()
 
     self.assertFalse(active_object.hasActivity())
     self.assertFalse(active_process.hasActivity())
 
     def test(obj, **kw):
-      for activity in ActivityTool.activity_dict:
+      for activity in activity_tool.activity_dict():
         active_object.activate(activity=activity, **kw).getTitle()
         self.commit()
         self.assertTrue(obj.hasActivity(), activity)
@@ -1963,7 +1968,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     Message.dump = staticmethod(dump)
     try:
       DB.query = query
-      for activity in ActivityTool.activity_dict:
+      for activity in activity_tool.activity_dict():
         # We'll activate N-1 times with `arg`, which is a long string that
         # should produce large messsage dumps and 1 time with
         # `last_message_arg`, for which dump is patched to artificially
@@ -2019,7 +2024,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     activity_tool.distribute()
     self.commit()
 
-    activity = ActivityTool.activity_dict['SQLDict']
+    activity = activity_tool.activity_dict()['SQLDict']
     activity.getProcessableMessageList(activity_tool, 1, ())
     self.commit()
     activity.getProcessableMessageList(activity_tool, 2, ())
@@ -2060,7 +2065,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     activity_tool = self.portal.portal_activities
     activity_tool.__class__.doSomething = processed.append
     try:
-      for activity in ActivityTool.activity_dict:
+      for activity in activity_tool.activity_dict():
         activity_tool.activate(activity=activity).doSomething(activity)
         self.commit()
         # Make first commit in dequeueMessage raise
@@ -2255,7 +2260,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       group_method_call_list.append(r)
     activity_tool.__class__.doSomething = doSomething
     try:
-      for activity in ActivityTool.activity_dict:
+      for activity in activity_tool.activity_dict():
         activity_kw = dict(activity=activity, serialization_tag=self.id(),
                            group_method_id='portal_activities/doSomething')
         obj1.activate(**activity_kw).dummy(1, x=None)
@@ -2386,7 +2391,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
         transaction.get().addBeforeCommitHook(_raise, (error,))
     obj.__class__.doSomething = doSomething
     try:
-      for activity in ActivityTool.activity_dict:
+      for activity in activity_tool.activity_dict():
         for conflict_error in False, True:
           weakref_list = []
           obj.activity_count = obj.on_error_count = 0
@@ -2533,7 +2538,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self._catch_log_errors()
     try:
       activity_tool.activity_failure_mail_notification = True
-      for kw['activity'] in ActivityTool.activity_dict:
+      for kw['activity'] in activity_tool.activity_dict():
         for kw['group_method_id'] in '', None:
           obj = activity_tool.newActiveProcess()
           self.tic()
