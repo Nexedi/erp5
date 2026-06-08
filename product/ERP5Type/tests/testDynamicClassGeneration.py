@@ -416,6 +416,112 @@ class TestPortalTypeClass(ERP5TypeTestCase):
     finally:
       PortalTypeMetaClass.generatePortalTypeAccessors = PortalTypeMetaClass_generatePortalTypeAccessors
 
+  def testConcurrentImportAndClassGeneration(self):
+    """Reproduce ABBA deadlock between aq_method_lock and import lock.
+
+    Real-world scenario:
+      Thread A: dynamic_module.__getattr__ holds aq_method_lock, calls
+        InitializeClass which does 'from AccessControl.Permission import ...'
+        needing the import lock.
+      Thread B: guarded_import triggers secureModule -> __import__ (level=1),
+        module executes and does another import (level=2), during which
+        find_module's if-path branch releases import lock only once (level
+        drops to 1, actual lock NOT freed), then blocks on aq_method_lock.
+
+    The fix must release ALL import lock levels before acquiring
+    aq_method_lock, then restore the same number of levels afterward.
+    """
+    import threading
+    import time
+    from Products.ERP5Type.dynamic import aq_method_lock, global_import_lock
+    from Products.ERP5Type.dynamic.component_package import (
+        COMPONENT_META_PATH_FINDER)
+
+    if six.PY3:
+      raise unittest.SkipTest(
+        "Python 3 import lock is per-module and reentrant")
+
+    import Products.ERP5Type
+    products_path = Products.ERP5Type.__path__
+
+    t1_ready = threading.Event()
+    t2_ready = threading.Event()
+    import_lock_held_after_release = [None]
+    errors = []
+
+    def thread_a():
+      """Hold aq_method_lock, then check if import lock is fully released.
+
+      After find_module calls release(), the import lock must be fully freed
+      (level=0) regardless of how many nested levels were held. If it's still
+      held, another thread needing the import lock while aq_method_lock is
+      held would deadlock (the real-world InitializeClass scenario).
+      """
+      try:
+        with aq_method_lock:
+          t1_ready.set()
+          t2_ready.wait(timeout=5)
+          # Wait for thread_b to enter find_module and call release()
+          time.sleep(0.5)
+          # With the bug: thread_b released once (level 2->1), lock still held
+          # With the fix: thread_b released all levels (2->0), lock freed
+          import_lock_held_after_release[0] = global_import_lock.held()
+        # aq_method_lock released here, thread_b unblocks in find_module
+      except Exception as e:
+        errors.append(e)
+
+    def thread_b():
+      """Call find_module with import lock at nested level (>= 2).
+
+      Reproduces the real call chain where secureModule's __import__ holds
+      the lock at level 1, module body does another import (level 2), and
+      during that nested import find_module is called with a Products path.
+      """
+      try:
+        t1_ready.wait(timeout=5)
+        # Simulate nested import context: lock at level 2
+        global_import_lock.acquire()  # level 1 (outer __import__)
+        global_import_lock.acquire()  # level 2 (nested import)
+        t2_ready.set()
+        # find_module enters if-path branch: releases lock, tries
+        # aq_method_lock (blocks until thread_a releases it), checks
+        # filesystem_import_dict, then re-acquires lock levels.
+        COMPONENT_META_PATH_FINDER.find_module(
+            'Products.ERP5Type._test_nonexistent_module',
+            products_path)
+        # Clean up: release the levels thread_b acquired
+        global_import_lock.release()
+        global_import_lock.release()
+      except Exception as e:
+        errors.append(e)
+        # Best-effort cleanup to avoid poisoning other tests
+        for _ in range(4):
+          try:
+            global_import_lock.release()
+          except RuntimeError:
+            break
+
+    t1 = threading.Thread(target=thread_a)
+    t2 = threading.Thread(target=thread_b)
+    t1.daemon = True
+    t2.daemon = True
+    t1.start()
+    t2.start()
+    t1.join(timeout=10)
+    t2.join(timeout=10)
+
+    self.assertFalse(t1.is_alive(),
+        "Thread A still blocked (should not happen in this test design)")
+    self.assertFalse(t2.is_alive(),
+        "Thread B deadlocked on aq_method_lock inside find_module "
+        "(thread A could not release aq_method_lock because it needed "
+        "the import lock which thread B still held)")
+    self.assertFalse(errors, errors)
+    self.assertFalse(import_lock_held_after_release[0],
+        "Import lock not fully released by find_module when held at nested "
+        "level. Single release() only decrements level (2->1) without "
+        "freeing the actual lock, causing ABBA deadlock with aq_method_lock.")
+
 class TestZodbPropertySheet(ERP5TypeTestCase):
   """
   XXX: WORK IN PROGRESS
