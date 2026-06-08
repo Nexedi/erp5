@@ -429,6 +429,7 @@ class getMySQLArguments(object):
       from Products.ZSQLDA.db import DB
       parse_connection_string_function = six.get_unbound_function(DB._parse_connection_string)
       parse_connection_string_function(self)
+
     return ''.join('-%s%s ' % (self.args_dict[k], v)
                    for k, v in six.iteritems(self._kw_args)
                    if k in self.args_dict
