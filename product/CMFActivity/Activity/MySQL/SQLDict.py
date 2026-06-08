@@ -28,7 +28,7 @@ from __future__ import absolute_import
 ##############################################################################
 
 from Shared.DC.ZRDB.Results import Results
-from ..Common.SQLDict import SQLDict as _SQLDict
+from ..SQLDict import SQLDict as _SQLDict
 from .SQLBase import SQLBase
 
 class SQLDict(_SQLDict, SQLBase):

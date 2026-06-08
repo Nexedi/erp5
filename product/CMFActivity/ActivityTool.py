@@ -515,7 +515,6 @@ class GroupedMessage(object):
   _guarded_writes = 1 # for result
 allow_class(GroupedMessage)
 
-activity_dict = {}
 
 class Method(object):
   __slots__ = (
@@ -557,7 +556,9 @@ class Method(object):
       portal_activities=portal_activities,
     )
     portal_activities.getActivityBuffer().deferredQueueMessage(
-      portal_activities, activity_dict[self._activity], m)
+      portal_activities,
+      ActivityTool.activity_dict(portal_activities.getSQLConnection())[self._activity],
+      m)
     if portal_activities.activity_tracking and m.is_registered:
       activity_tracking_logger.info('queuing message: activity=%s, object_path=%s, method_id=%s, args=%s, kw=%s, activity_kw=%s, user_name=%s' % (self._activity, '/'.join(m.object_path), m.method_id, m.args, m.kw, m.activity_kw, m.getUserId()))
 
@@ -714,6 +715,30 @@ class ActivityTool (BaseTool):
                 meta_types.append(meta_type)
         return meta_types
 
+    _activity_dict_cache = {}
+
+    @staticmethod
+    def activity_dict(db):
+      """Return the activity registry for the SQL backend of `db`."""
+      backend = 'MySQL'
+      for cls in type(db).__mro__:
+        if cls.__module__ == 'Products.ZSQLiteDA.db':
+          backend = 'SQLite'
+          break
+        if cls.__module__ == 'Products.ZMySQLDA.db':
+          break
+      cache = ActivityTool._activity_dict_cache
+      d = cache.get(backend)
+      if d is None:
+        from importlib import import_module
+        base = 'Products.CMFActivity.Activity.' + backend
+        d = cache[backend] = {
+          'SQLDict':   import_module(base + '.SQLDict').SQLDict(),
+          'SQLQueue':  import_module(base + '.SQLQueue').SQLQueue(),
+          'SQLJoblib': import_module(base + '.SQLJoblib').SQLJoblib(),
+        }
+      return d
+
     def getSQLConnection(self):
       return self.aq_inner.aq_parent.cmf_activity_sql_connection()
 
@@ -735,7 +760,7 @@ class ActivityTool (BaseTool):
     security.declarePrivate('initialize')
     def initialize(self):
       self.maybeMigrateConnectionClass()
-      for activity in six.itervalues(activity_dict):
+      for activity in six.itervalues(self.activity_dict(self.getSQLConnection())):
         activity.initialize(self, clear=False)
       # Remove old skin if any.
       skins_tool = self.getPortalObject().portal_skins
@@ -1353,7 +1378,7 @@ class ActivityTool (BaseTool):
           # before it could confirm there is nothing left to do.
           has_more_to_distribute = False
           # Call distribute on each queue
-          for activity in six.itervalues(activity_dict):
+          for activity in six.itervalues(self.activity_dict(self.getSQLConnection())):
             has_more_to_distribute |= activity.distribute(inner_self, node_count)
           if not has_more_to_distribute:
             break
@@ -1387,7 +1412,7 @@ class ActivityTool (BaseTool):
         # use a round-robin algorithm.
         # XXX: We always finish by iterating over all queues, in case that
         #      getPriority does not see messages dequeueMessage would process.
-        activity_list = ensure_list(activity_dict.values())
+        activity_list = ensure_list(self.activity_dict(self.getSQLConnection()).values())
         def sort_key(activity):
           return activity.getPriority(self, processing_node,
             node_family_id_set)
@@ -1426,7 +1451,7 @@ class ActivityTool (BaseTool):
       quote = db.string_literal
       return bool(db.query(b" UNION ALL ".join(
         activity.hasActivitySQL(quote, path=path, **kw)
-        for activity in six.itervalues(activity_dict)))[1])
+        for activity in six.itervalues(self.activity_dict(db))))[1])
 
     security.declarePrivate('getActivityBuffer')
     def getActivityBuffer(self, create_if_not_found=True):
@@ -1528,7 +1553,7 @@ class ActivityTool (BaseTool):
         object_path = obj
       else:
         object_path = obj.getPhysicalPath()
-      for activity in six.itervalues(activity_dict):
+      for activity in six.itervalues(self.activity_dict(self.getSQLConnection())):
         activity.flush(aq_inner(self), object_path, invoke=invoke, **kw)
 
     def invoke(self, message):
@@ -1708,7 +1733,7 @@ class ActivityTool (BaseTool):
                    activity_kw, method_id, *args, **kw):
       # Some Security Cheking should be made here XXX
       self.getActivityBuffer()
-      activity_dict[activity].queueMessage(aq_inner(self),
+      self.activity_dict(self.getSQLConnection())[activity].queueMessage(aq_inner(self),
         Message(path, active_process, activity_kw, method_id, args, kw,
           portal_activities=self))
 
@@ -1732,8 +1757,8 @@ class ActivityTool (BaseTool):
       if not(isinstance(message_uid_list, list)):
         message_uid_list = [message_uid_list]
       if message_uid_list:
-        activity_dict[activity].assignMessageList(self.getSQLConnection(),
-                                                     0, message_uid_list)
+        db = self.getSQLConnection()
+        self.activity_dict(db)[activity].assignMessageList(db, 0, message_uid_list)
       if REQUEST is not None:
         return REQUEST.RESPONSE.redirect('%s/%s' % (
           self.absolute_url(), 'view'))
@@ -1759,8 +1784,8 @@ class ActivityTool (BaseTool):
       """
       if not(isinstance(message_uid_list, list)):
         message_uid_list = [message_uid_list]
-      activity_dict[activity].deleteMessageList(
-        self.getSQLConnection(), message_uid_list)
+      db = self.getSQLConnection()
+      self.activity_dict(db)[activity].deleteMessageList(db, message_uid_list)
       if REQUEST is not None:
         return REQUEST.RESPONSE.redirect('%s/%s' % (
           self.absolute_url(), 'view'))
@@ -1771,7 +1796,7 @@ class ActivityTool (BaseTool):
       """
         Recreate tables, clearing all activities
       """
-      for activity in six.itervalues(activity_dict):
+      for activity in six.itervalues(self.activity_dict(self.getSQLConnection())):
         activity.initialize(self, clear=True)
 
       if RESPONSE is not None:
@@ -1802,10 +1827,10 @@ class ActivityTool (BaseTool):
         List messages waiting in queues
       """
       if activity:
-        return activity_dict[activity].getMessageList(aq_inner(self), **kw)
+        return self.activity_dict(self.getSQLConnection())[activity].getMessageList(aq_inner(self), **kw)
 
       message_list = []
-      for activity in six.itervalues(activity_dict):
+      for activity in six.itervalues(self.activity_dict(self.getSQLConnection())):
         try:
           message_list += activity.getMessageList(aq_inner(self), **kw)
         except AttributeError:
@@ -1835,7 +1860,7 @@ class ActivityTool (BaseTool):
       quote = db.string_literal
       return sum(x for x, in db.query(b" UNION ALL ".join(
         activity.countMessageSQL(quote, **kw)
-        for activity in six.itervalues(activity_dict)))[1])
+        for activity in six.itervalues(self.activity_dict(db))))[1])
 
     security.declareProtected( CMFCorePermissions.ManagePortal , 'newActiveProcess' )
     def newActiveProcess(self, REQUEST=None, **kw):
@@ -1848,11 +1873,11 @@ class ActivityTool (BaseTool):
 
     security.declarePrivate('getSQLTableNameSet')
     def getSQLTableNameSet(self):
-      return [x.sql_table for x in six.itervalues(activity_dict)]
+      return [x.sql_table for x in six.itervalues(self.activity_dict(self.getSQLConnection()))]
 
     # Required for tests (time shift)
     def timeShift(self, delay):
-      for activity in six.itervalues(activity_dict):
+      for activity in six.itervalues(self.activity_dict(self.getSQLConnection())):
         activity.timeShift(aq_inner(self), delay)
 
 InitializeClass(ActivityTool)

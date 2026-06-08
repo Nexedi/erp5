@@ -32,12 +32,12 @@ from six.moves import xrange
 from random import getrandbits
 from Products.ERP5Type.Utils import str2bytes
 from Products.CMFActivity.ActivityTool import Message
-from ..Common.SQLBase import (
+from ..SQLBase import (
   render_datetime,
   UID_SAFE_BITSIZE,
   UID_ALLOCATION_TRY_COUNT,
 )
-from ..Common.SQLJoblib import SQLJoblib as _SQLJoblib
+from ..SQLJoblib import SQLJoblib as _SQLJoblib
 from .SQLDict import SQLDict
 
 

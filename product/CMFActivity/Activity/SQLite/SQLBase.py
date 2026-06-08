@@ -35,7 +35,7 @@ from six.moves import xrange
 from Products.ERP5Type.Utils import str2bytes
 from Shared.DC.ZRDB.Results import Results
 from Products.CMFActivity.ActivityTool import Message
-from ..Common.SQLBase import (
+from ..SQLBase import (
   SQLBase as _SQLBase,
   sort_message_key,
   render_datetime,
