@@ -30,6 +30,7 @@ from __future__ import absolute_import
 import sqlite3
 from contextlib import contextmanager
 from random import getrandbits
+import six
 from six.moves import xrange
 from Products.ERP5Type.Utils import str2bytes
 from Shared.DC.ZRDB.Results import Results
@@ -66,6 +67,18 @@ class SQLBase(_SQLBase):
     return b'SELECT * FROM (SELECT %s FROM ' % (
       b','.join([str2bytes(c) for c in column_list]),
     )
+
+  def hasActivitySQL(self, quote, only_valid=False, only_invalid=False, **kw):
+    # Joined with UNION ALL by ActivityTool.hasActivity. SQLite disallows
+    # LIMIT on intermediate compound-SELECT legs, so push it inside a
+    # FROM-subquery.
+    where = [sqltest_dict[k](v, quote) for (k, v) in six.iteritems(kw) if v]
+    if only_valid:
+      where.append(b'processing_node > %d' % INVOKE_ERROR_STATE)
+    if only_invalid:
+      where.append(b'processing_node <= %d' % INVOKE_ERROR_STATE)
+    return b"SELECT * FROM (SELECT 1 FROM %s WHERE %s LIMIT 1)" % (
+      str2bytes(self.sql_table), b" AND ".join(where) or b"1")
 
   def prepareQueueMessageList(self, activity_tool, message_list):
     db = activity_tool.getSQLConnection()

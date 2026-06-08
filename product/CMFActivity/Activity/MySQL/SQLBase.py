@@ -30,6 +30,7 @@ from __future__ import absolute_import
 from contextlib import contextmanager
 from itertools import chain
 from random import getrandbits
+import six
 from six.moves import xrange
 import MySQLdb
 from MySQLdb.constants.ER import DUP_ENTRY
@@ -76,6 +77,17 @@ class SQLBase(_SQLBase):
     return b'(SELECT %s FROM ' % (
       b','.join([str2bytes(c) for c in column_list]),
     )
+
+  def hasActivitySQL(self, quote, only_valid=False, only_invalid=False, **kw):
+    # Joined with UNION ALL by ActivityTool.hasActivity; parens around each
+    # leg let MySQL accept LIMIT per leg.
+    where = [sqltest_dict[k](v, quote) for (k, v) in six.iteritems(kw) if v]
+    if only_valid:
+      where.append(b'processing_node > %d' % INVOKE_ERROR_STATE)
+    if only_invalid:
+      where.append(b'processing_node <= %d' % INVOKE_ERROR_STATE)
+    return b"(SELECT 1 FROM %s WHERE %s LIMIT 1)" % (
+      str2bytes(self.sql_table), b" AND ".join(where) or b"1")
 
   @contextmanager
   def SQLLock(self, db, lock_name, timeout):

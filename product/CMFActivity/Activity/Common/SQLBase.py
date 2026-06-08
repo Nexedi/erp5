@@ -273,14 +273,6 @@ class SQLBase(Queue):
         sqltest_dict[k](v, quote) for (k, v) in six.iteritems(kw) if v
         ) or b"1")
 
-  def hasActivitySQL(self, quote, only_valid=False, only_invalid=False, **kw):
-    where = [sqltest_dict[k](v, quote) for (k, v) in six.iteritems(kw) if v]
-    if only_valid:
-      where.append(b'processing_node > %d' % INVOKE_ERROR_STATE)
-    if only_invalid:
-      where.append(b'processing_node <= %d' % INVOKE_ERROR_STATE)
-    return b"SELECT 1 FROM %s WHERE %s LIMIT 1" % (
-      str2bytes(self.sql_table), b" AND ".join(where) or b"1")
 
   def getPriority(self, activity_tool, processing_node, node_set=None):
     db = activity_tool.getSQLConnection()
