@@ -73,10 +73,32 @@ class SQLBase(_SQLBase):
       + len(self._insert_separator)
       - len(self._insert_template % (str2bytes(self.sql_table), b'')))
 
-  def _dependencySubqueryPrefix(self, column_list):
-    return b'(SELECT %s FROM ' % (
+  def getNow(self, db):
+    """
+      Return the UTC date from the point of view of the SQL server.
+      Note that this value is not cached, and is not transactionnal on MySQL
+      side.
+    """
+    return db.query(b"SELECT UTC_TIMESTAMP(6)", 0)[1][0][0]
+
+  def _buildSubqueryList(self, column_list, table_name_list,
+                         dependency_value_dict, to_sql, quote,
+                         min_processing_node):
+    base_sql_suffix = b' WHERE processing_node > %i AND (%%s) LIMIT 1)' % (
+      min_processing_node,
+    )
+    sql_suffix_list = [
+      base_sql_suffix % to_sql(dependency_value, quote)
+      for dependency_value in dependency_value_dict
+    ]
+    base_sql_prefix = b'(SELECT %s FROM ' % (
       b','.join([str2bytes(c) for c in column_list]),
     )
+    return [
+      base_sql_prefix + str2bytes(table_name) + sql_suffix
+      for table_name in table_name_list
+      for sql_suffix in sql_suffix_list
+    ]
 
   def hasActivitySQL(self, quote, only_valid=False, only_invalid=False, **kw):
     # Joined with UNION ALL by ActivityTool.hasActivity; parens around each

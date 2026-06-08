@@ -205,18 +205,11 @@ _DEPENDENCY_TESTER_DICT = {
   ),
 }
 
-def getNow(db):
-  """
-    Return the UTC date from the point of view of the SQL server.
-    Note that this value is not cached, and is not transactionnal on MySQL
-    side.
-  """
-  return db.query(b"SELECT UTC_TIMESTAMP(6)", 0)[1][0][0]
-
 class SQLBase(Queue):
   """
     Define a set of common methods for SQL-based storage of activities.
   """
+
   def initialize(self, activity_tool, clear):
     db = activity_tool.getSQLConnection()
     create = self.createTableSQL()
@@ -447,19 +440,9 @@ class SQLBase(Queue):
         if len(column_list) == 1 else
         _IDENTITY
       )
-      base_sql_suffix = b' WHERE processing_node > %i AND (%%s) LIMIT 1)' % (
-        min_processing_node,
-      )
-      sql_suffix_list = [
-        base_sql_suffix % to_sql(dependency_value, quote)
-        for dependency_value in dependency_value_dict
-      ]
-      base_sql_prefix = self._dependencySubqueryPrefix(column_list)
-      subquery_list = [
-        base_sql_prefix + str2bytes(table_name) + sql_suffix
-        for table_name in table_name_list
-        for sql_suffix in sql_suffix_list
-      ]
+      subquery_list = self._buildSubqueryList(
+        column_list, table_name_list, dependency_value_dict, to_sql, quote,
+        min_processing_node)
       while subquery_list:
         # Join queries with a UNION, to reduce per-query latency.
         # Also, limit the number of subqueries per query, as their number can
@@ -486,7 +469,7 @@ class SQLBase(Queue):
     db = activity_tool.getSQLConnection()
     where_kw = {
       'processing_node': -1,
-      'to_date': getNow(db),
+      'to_date': self.getNow(db),
       'count': READ_MESSAGE_LIMIT,
     }
     validated_count = 0
@@ -611,7 +594,7 @@ class SQLBase(Queue):
           - uid_to_duplicate_uid_list_dict
     """
     db = activity_tool.getSQLConnection()
-    now_date = getNow(db)
+    now_date = self.getNow(db)
     uid_to_duplicate_uid_list_dict = {}
     try:
       while 1: # not a loop

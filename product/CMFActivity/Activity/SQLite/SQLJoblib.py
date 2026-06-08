@@ -84,7 +84,7 @@ class SQLJoblib(_SQLJoblib, SQLDict):
       if m.is_registered:
         date = m.activity_kw.get('at_date')
         if date is None:
-          date_sql = b"UTC_TIMESTAMP(6)"
+          date_sql = b"strftime('%Y-%m-%d %H:%M:%f','now')"
           date_args = ()
         else:
           date_sql = b'?'

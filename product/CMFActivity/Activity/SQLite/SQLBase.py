@@ -60,13 +60,34 @@ class SQLBase(_SQLBase):
     b" message) VALUES\n")
   _insert_separator = b",\n"
 
-  def _dependencySubqueryPrefix(self, column_list):
+  def getNow(self, db):
+    """
+      Return the UTC date from the point of view of the SQL server.
+    """
+    return db.query(
+      b"SELECT strftime('%Y-%m-%d %H:%M:%f','now')", 0)[1][0][0]
+
+  def _buildSubqueryList(self, column_list, table_name_list,
+                         dependency_value_dict, to_sql, quote,
+                         min_processing_node):
     # SQLite does not accept parenthesized SELECTs as compound-SELECT legs,
     # and disallows LIMIT on intermediate legs. Wrap each leg in a FROM
     # subquery instead.
-    return b'SELECT * FROM (SELECT %s FROM ' % (
+    base_sql_suffix = b' WHERE processing_node > %i AND (%%s) LIMIT 1)' % (
+      min_processing_node,
+    )
+    sql_suffix_list = [
+      base_sql_suffix % to_sql(dependency_value, quote)
+      for dependency_value in dependency_value_dict
+    ]
+    base_sql_prefix = b'SELECT * FROM (SELECT %s FROM ' % (
       b','.join([str2bytes(c) for c in column_list]),
     )
+    return [
+      base_sql_prefix + str2bytes(table_name) + sql_suffix
+      for table_name in table_name_list
+      for sql_suffix in sql_suffix_list
+    ]
 
   def hasActivitySQL(self, quote, only_valid=False, only_invalid=False, **kw):
     # Joined with UNION ALL by ActivityTool.hasActivity. SQLite disallows
@@ -79,6 +100,26 @@ class SQLBase(_SQLBase):
       where.append(b'processing_node <= %d' % INVOKE_ERROR_STATE)
     return b"SELECT * FROM (SELECT 1 FROM %s WHERE %s LIMIT 1)" % (
       str2bytes(self.sql_table), b" AND ".join(where) or b"1")
+
+  @contextmanager
+  def SQLLock(self, db, lock_name, timeout):
+    """
+    SQLite approximation of MySQL GET_LOCK / RELEASE_LOCK.
+    Yields 1 if write lock acquired, 0 on timeout.
+    """
+    acquired = 0
+    try:
+      # busy_timeout is in milliseconds
+      db.query(b"PRAGMA busy_timeout = %d" % int(timeout * 1000), max_rows=0)
+      db.query(b"BEGIN IMMEDIATE", max_rows=0)
+      acquired = 1
+    except sqlite3.OperationalError:
+      acquired = 0
+    try:
+      yield acquired
+    finally:
+      if acquired:
+        db.query(b"COMMIT", max_rows=0)
 
   def prepareQueueMessageList(self, activity_tool, message_list):
     db = activity_tool.getSQLConnection()
@@ -109,7 +150,7 @@ class SQLBase(_SQLBase):
       if m.is_registered:
         date = m.activity_kw.get('at_date')
         if date is None:
-          date_sql = b"UTC_TIMESTAMP(6)"
+          date_sql = b"strftime('%Y-%m-%d %H:%M:%f','now')"
           date_args = ()
         else:
           date_sql = b'?'
@@ -174,7 +215,8 @@ class SQLBase(_SQLBase):
     table = str2bytes(self.sql_table)
     if node_set is None:
       sql = (b"SELECT 3*priority, date FROM %s"
-        b" WHERE processing_node=0 AND date <= UTC_TIMESTAMP(6)"
+        b" WHERE processing_node=0"
+        b" AND date <= strftime('%%Y-%%m-%%d %%H:%%M:%%f','now')"
         b" ORDER BY priority, date LIMIT 1") % table
       return db.query(sql, 0)[1]
     def subquery(prio_suffix, cond_sql):
@@ -184,7 +226,8 @@ class SQLBase(_SQLBase):
         b"SELECT 3*priority" + prio_suffix + b" AS effective_priority, date"
         b" FROM " + table +
         b" WHERE " + cond_sql +
-        b" AND processing_node=0 AND date <= UTC_TIMESTAMP(6)"
+        b" AND processing_node=0"
+        b" AND date <= strftime('%Y-%m-%d %H:%M:%f','now')"
         b" ORDER BY priority, date LIMIT 1)")
     subqueries = [
       subquery(b'-1', b'node = ?'),
@@ -206,8 +249,8 @@ class SQLBase(_SQLBase):
                                  group_method_id, node_set):
     table = str2bytes(self.sql_table)
     to_date_sql = b"date <= ?"
-    # getNow(db) returns a string on SQLite (UDF result); tests may pass a
-    # DateTime instance which needs rendering.
+    # getNow returns a string; tests may pass a DateTime instance which
+    # needs rendering.
     base_args = [date if isinstance(date, str) else render_datetime(date)]
     if group_method_id:
       group_clause = b" AND group_method_id=?"
@@ -250,26 +293,6 @@ class SQLBase(_SQLBase):
       fallback_args = tuple(base_args + group_args + [limit])
       result = Results(db.query(fallback, 0, args=fallback_args))
     return result
-
-  @contextmanager
-  def SQLLock(self, db, lock_name, timeout):
-    """
-    SQLite approximation of MySQL GET_LOCK / RELEASE_LOCK.
-    Yields 1 if write lock acquired, 0 on timeout.
-    """
-    acquired = 0
-    try:
-      # busy_timeout is in milliseconds
-      db.query(b"PRAGMA busy_timeout = %d" % int(timeout * 1000), max_rows=0)
-      db.query(b"BEGIN IMMEDIATE", max_rows=0)
-      acquired = 1
-    except sqlite3.OperationalError:
-      acquired = 0
-    try:
-      yield acquired
-    finally:
-      if acquired:
-        db.query(b"COMMIT", max_rows=0)
 
   def createTableSQL(self):
     return """\
