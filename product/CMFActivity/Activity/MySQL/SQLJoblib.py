@@ -27,56 +27,22 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from six.moves import xrange
 from random import getrandbits
-from zLOG import LOG, TRACE, INFO, WARNING, ERROR, PANIC
 import MySQLdb
 from MySQLdb.constants.ER import DUP_ENTRY
-from .SQLBase import (
-  SQLBase, sort_message_key,
-  UID_SAFE_BITSIZE, UID_ALLOCATION_TRY_COUNT,
-)
-from Products.CMFActivity.ActivityTool import Message
 from Products.ERP5Type.Utils import str2bytes
+from Products.CMFActivity.ActivityTool import Message
+from ..Common.SQLBase import (
+  render_datetime,
+  UID_SAFE_BITSIZE,
+  UID_ALLOCATION_TRY_COUNT,
+)
+from ..Common.SQLJoblib import SQLJoblib as _SQLJoblib
 from .SQLDict import SQLDict
-from six.moves import xrange
 
-class SQLJoblib(SQLDict):
-  """
-    An extention of SQLDict, It is non transatactional and follow always-excute paradigm.
-    It uses a dictionary to store results and with hash of arguments as keys
-  """
-  sql_table = 'message_job'
-  uid_group = 'portal_activity_job'
 
-  def createTableSQL(self):
-    return """\
-CREATE TABLE %s (
-  `uid` BIGINT UNSIGNED NOT NULL,
-  `date` DATETIME(6) NOT NULL,
-  `path` VARCHAR(255) NOT NULL,
-  `active_process_uid` INT UNSIGNED NULL,
-  `method_id` VARCHAR(255) NOT NULL,
-  `processing_node` SMALLINT NOT NULL DEFAULT -1,
-  `priority` TINYINT NOT NULL DEFAULT 0,
-  `group_method_id` VARCHAR(255) NOT NULL DEFAULT '',
-  `tag` VARCHAR(255) NOT NULL,
-  `signature` BINARY(16) NOT NULL,
-  `serialization_tag` VARCHAR(255) NOT NULL,
-  `retry` TINYINT UNSIGNED NOT NULL DEFAULT 0,
-  `message` LONGBLOB NOT NULL,
-  PRIMARY KEY (`uid`),
-  KEY `processing_node_priority_date` (`processing_node`, `priority`, `date`),
-  KEY `node_group_priority_date` (`processing_node`, `group_method_id`, `priority`, `date`),
-  KEY `serialization_tag_processing_node` (`serialization_tag`, `processing_node`),
-  KEY (`path`),
-  KEY (`active_process_uid`),
-  KEY (`method_id`),
-  KEY (`tag`)
-) ENGINE=InnoDB""" % self.sql_table
-
-  def generateMessageUID(self, m):
-    return (tuple(m.object_path), m.method_id, m.activity_kw.get('signature'),
-                  m.activity_kw.get('tag'), m.activity_kw.get('group_id'))
+class SQLJoblib(_SQLJoblib, SQLDict):
 
   _insert_template = (b"INSERT INTO %s (uid,"
     b" path, active_process_uid, date, method_id, processing_node,"
@@ -93,7 +59,7 @@ CREATE TABLE %s (
         if reset_uid:
           reset_uid = False
           # Overflow will result into IntegrityError.
-          db.query(b"SET @uid := %s" % str2bytes(str(getrandbits(UID_SAFE_BITSIZE))))
+          db.query(b"SET @uid := %d" % getrandbits(UID_SAFE_BITSIZE))
         try:
           db.query(self._insert_template % (str2bytes(self.sql_table), values))
         except MySQLdb.IntegrityError as e:
@@ -141,51 +107,39 @@ CREATE TABLE %s (
     if values_list:
       insert(reset_uid)
 
-  def getProcessableMessageLoader(self, db, processing_node):
-    path_and_method_id_dict = {}
+  def _selectDuplicates(self, db, path, signature, method_id, group_method_id):
     quote = db.string_literal
-    def load(line):
-      # getProcessableMessageList already fetch messages with the same
-      # group_method_id, so what remains to be filtered on are path, method_id
-      # and signature
-      path = line.path
-      method_id = line.method_id
-      key = path, method_id
-      uid = line.uid
-      original_uid = path_and_method_id_dict.get(key)
-      if original_uid is None:
-        m = Message.load(line.message, uid=uid, line=line)
-        try:
-          # Select duplicates.
-          result = db.query(b"SELECT uid FROM message_job"
-            b" WHERE processing_node = 0 AND path = %s AND signature = %s"
-            b" AND method_id = %s AND group_method_id = %s FOR UPDATE%s" % (
-              quote(path), quote(line.signature),
-              quote(method_id), quote(line.group_method_id),
-              b' SKIP LOCKED' if db.has_skip_locked else b''
-            ), 0)[1]
-          uid_list = [x for x, in result]
-          if uid_list:
-            self.assignMessageList(db, processing_node, uid_list)
-          else:
-            db.query(b"COMMIT") # XXX: useful ?
-        except:
-          self._log(WARNING, 'Failed to reserve duplicates')
-          db.query(b"ROLLBACK")
-          raise
-        if uid_list:
-          self._log(TRACE, 'Reserved duplicate messages: %r' % uid_list)
-        path_and_method_id_dict[key] = uid
-        return m, uid, uid_list
-      # We know that original_uid != uid because caller skips lines we returned
-      # earlier.
-      return None, original_uid, [uid]
-    return load
+    sql = b"SELECT uid FROM message_job" \
+      b" WHERE processing_node = 0 AND path = %s AND signature = %s" \
+      b" AND method_id = %s AND group_method_id = %s FOR UPDATE%s" % (
+        quote(path), quote(signature),
+        quote(method_id), quote(group_method_id),
+        b' SKIP LOCKED' if db.has_skip_locked else b'',
+      )
+    return db.query(sql, 0)[1]
 
-  def getPriority(self, activity_tool, processing_node, node_set):
-    return SQLDict.getPriority(self, activity_tool, processing_node)
-
-  def getReservedMessageList(self, db, date, processing_node,
-                             limit=None, group_method_id=None, node_set=None):
-    return SQLDict.getReservedMessageList(self, db,
-      date, processing_node, limit, group_method_id)
+  def createTableSQL(self):
+    return """\
+CREATE TABLE %s (
+  `uid` BIGINT UNSIGNED NOT NULL,
+  `date` DATETIME(6) NOT NULL,
+  `path` VARCHAR(255) NOT NULL,
+  `active_process_uid` INT UNSIGNED NULL,
+  `method_id` VARCHAR(255) NOT NULL,
+  `processing_node` SMALLINT NOT NULL DEFAULT -1,
+  `priority` TINYINT NOT NULL DEFAULT 0,
+  `group_method_id` VARCHAR(255) NOT NULL DEFAULT '',
+  `tag` VARCHAR(255) NOT NULL,
+  `signature` BINARY(16) NOT NULL,
+  `serialization_tag` VARCHAR(255) NOT NULL,
+  `retry` TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  `message` LONGBLOB NOT NULL,
+  PRIMARY KEY (`uid`),
+  KEY `processing_node_priority_date` (`processing_node`, `priority`, `date`),
+  KEY `node_group_priority_date` (`processing_node`, `group_method_id`, `priority`, `date`),
+  KEY `serialization_tag_processing_node` (`serialization_tag`, `processing_node`),
+  KEY (`path`),
+  KEY (`active_process_uid`),
+  KEY (`method_id`),
+  KEY (`tag`)
+) ENGINE=InnoDB""" % self.sql_table
