@@ -49,13 +49,14 @@ class TestVanillaERP5Catalog(ERP5TypeTestCase, LogInterceptor):
   username = 'seb'
   new_erp5_sql_connection = 'erp5_sql_connection2'
   new_erp5_deferred_sql_connection = 'erp5_sql_deferred_connection2'
-  original_catalog_id = 'erp5_mysql_innodb'
   new_catalog_id = 'erp5_mysql_innodb2'
 
   def afterSetUp(self):
     portal = self.portal
     portal.acl_users._doAddUser(self.username, '', ['Manager'], [])
     self.loginByUserName(self.username)
+    self.original_catalog_id = portal.portal_catalog.getSQLCatalog().getId()
+    self.catalog_storage = self.portal.portal_templates.getInstalledBusinessTemplate('erp5_catalog').getTitle()
     self.tic()
 
   def beforeTearDown(self):
@@ -142,7 +143,10 @@ class TestVanillaERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     module = portal.organisation_module
     organisation = module.newContent(portal_type='Organisation', title="GreatTitle2")
     self.tic()
-    addSQLConnection = portal.manage_addProduct['ZMySQLDA'].manage_addZMySQLConnection
+    if  self.catalog_storage == 'erp5_mysql_innodb_catalog':
+      addSQLConnection = portal.manage_addProduct['ZMySQLDA'].manage_addZMySQLConnection
+    else:
+      addSQLConnection = portal.manage_addProduct['ZSQLiteDA'].manage_addZSQLiteConnection
     # Create new connectors
     addSQLConnection(self.new_erp5_sql_connection, '', new_connection_string)
     portal[self.new_erp5_sql_connection].manage_open_connection()
