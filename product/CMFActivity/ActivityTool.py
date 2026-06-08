@@ -1424,7 +1424,7 @@ class ActivityTool (BaseTool):
       path = None if obj is None else '/'.join(obj.getPhysicalPath())
       db = self.getSQLConnection()
       quote = db.string_literal
-      return bool(db.query(b"%s" % b" UNION ALL ".join(
+      return bool(db.query(b" UNION ALL ".join(
         activity.hasActivitySQL(quote, path=path, **kw)
         for activity in six.itervalues(activity_dict)))[1])
 
@@ -1833,7 +1833,7 @@ class ActivityTool (BaseTool):
       """
       db = self.getSQLConnection()
       quote = db.string_literal
-      return sum(x for x, in db.query(b"%s" % b" UNION ALL ".join(
+      return sum(x for x, in db.query(b" UNION ALL ".join(
         activity.countMessageSQL(quote, **kw)
         for activity in six.itervalues(activity_dict)))[1])
 
