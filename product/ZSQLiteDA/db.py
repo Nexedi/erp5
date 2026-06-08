@@ -21,7 +21,6 @@ from Shared.DC.ZRDB.TM import TM
 from DateTime import DateTime
 from ZODB.POSException import ConflictError
 import time
-import datetime
 import unicodedata
 
 _icon_xlate = {
@@ -217,16 +216,8 @@ class DB(TM):
             dt -= days
             return dt.earliestTime().strftime("%Y-%m-%d %H:%M:%S")
 
-        def utc_timestamp(precision):
-            now = datetime.datetime.utcnow()
-            if not precision:
-                return now.strftime("%Y-%m-%d %H:%M:%S")
-            s = now.strftime("%Y-%m-%d %H:%M:%S.%f")
-            return s if precision >= 6 else s[:20 + precision]
-
         self.db.create_function("SLEEP", 1, lambda x: time.sleep(x) or 0)
         self.db.create_function("SUBDATE", 2, subdate)
-        self.db.create_function("UTC_TIMESTAMP", 1, utc_timestamp)
 
         self.db.execute("PRAGMA journal_mode=WAL")
         self.db.execute("PRAGMA busy_timeout=10000")
