@@ -21,6 +21,7 @@ from Shared.DC.ZRDB.TM import TM
 from DateTime import DateTime
 from ZODB.POSException import ConflictError
 import time
+import datetime
 import unicodedata
 
 _icon_xlate = {
@@ -216,8 +217,16 @@ class DB(TM):
             dt -= days
             return dt.earliestTime().strftime("%Y-%m-%d %H:%M:%S")
 
+        def utc_timestamp(precision):
+            now = datetime.datetime.utcnow()
+            if not precision:
+                return now.strftime("%Y-%m-%d %H:%M:%S")
+            s = now.strftime("%Y-%m-%d %H:%M:%S.%f")
+            return s if precision >= 6 else s[:20 + precision]
+
         self.db.create_function("SLEEP", 1, lambda x: time.sleep(x) or 0)
         self.db.create_function("SUBDATE", 2, subdate)
+        self.db.create_function("UTC_TIMESTAMP", 1, utc_timestamp)
 
         self.db.execute("PRAGMA journal_mode=WAL")
         self.db.execute("PRAGMA busy_timeout=10000")
@@ -256,7 +265,7 @@ class DB(TM):
     # Low-level query
     # ------------------------------------------------------------------
 
-    def _query(self, query, allow_reconnect=False):
+    def _query(self, query, args=None, allow_reconnect=False):
         try:
             cursor = self.db.cursor()
             if isinstance(query, bytes):
@@ -269,8 +278,8 @@ class DB(TM):
                 self.db.rollback()
                 return
             else:
-                if 'create table' in query.lower():
-                    cursor.executescript(query)
+                if args:
+                    cursor.execute(query, args)
                 else:
                     cursor.execute(query)
                 desc = cursor.description
@@ -287,22 +296,27 @@ class DB(TM):
                 raise TimeoutReachedError("%s: %s" % (m, query))
             if allow_reconnect:
                 self._forceReconnection()
-                return self._query(query, allow_reconnect=False)
+                return self._query(query, args=args, allow_reconnect=False)
             else:
                 LOG('SQLITEDA', ERROR, 'query failed: %s' % query)
                 raise
         except Exception as m:
             if allow_reconnect:
                 self._forceReconnection()
-                return self._query(query, allow_reconnect=False)
+                return self._query(query, args=args, allow_reconnect=False)
             else:
                 LOG('SQLITEDA', ERROR, 'query failed: %s' % query)
                 raise
         finally:
             cursor.close()
 
-    def query(self, query_string, max_rows=1000):
-        """Execute query_string and return at most max_rows."""
+    def query(self, query_string, max_rows=1000, args=None):
+        """Execute query_string and return at most max_rows.
+
+        If args is provided, query_string must be a single statement using `?`
+        placeholders; sqlite3 binds the values. Mixing args with the `\\0`
+        multi-statement separator is not supported.
+        """
         self._use_TM and self._register()
         desc = None
         result = ()
@@ -312,23 +326,39 @@ class DB(TM):
         if query_string[-1:] == b';':
             query_string = query_string[:-1]
 
-        for qs in query_string.split(b'\0'):
-            qs = qs.strip()
-            if not qs:
-                continue
+        if args:
+            assert b'\0' not in query_string, (
+                "parameter-bound query cannot contain \\0 separator: %r"
+                % query_string)
+            qs = query_string.strip()
             select_match = match_select(qs)
             if select_match:
                 _, select = select_match.groups()
                 qs = b"SELECT %s" % select
                 if max_rows:
                     qs = b"%s LIMIT %d" % (qs, max_rows)
-
-            c = self._query(qs)
+            c = self._query(qs, args=args)
             if c:
-                if desc is not None and c.describe() is not None:
-                    raise Exception('Multiple select schema are not allowed')
                 desc = c.describe()
                 result = c.fetch_row(max_rows)
+        else:
+            for qs in query_string.split(b'\0'):
+                qs = qs.strip()
+                if not qs:
+                    continue
+                select_match = match_select(qs)
+                if select_match:
+                    _, select = select_match.groups()
+                    qs = b"SELECT %s" % select
+                    if max_rows:
+                        qs = b"%s LIMIT %d" % (qs, max_rows)
+
+                c = self._query(qs)
+                if c:
+                    if desc is not None and c.describe() is not None:
+                        raise Exception('Multiple select schema are not allowed')
+                    desc = c.describe()
+                    result = c.fetch_row(max_rows)
 
         if desc is None:
             return (), ()
@@ -491,7 +521,7 @@ class DB(TM):
                 "ALTER TABLE %s RENAME TO %s" % (new_name, name),
             ]
 
-            src_sql = ";\n".join(migration)
+            src_sql = "\0".join(migration)
 
             if src__:
                 return src_sql
@@ -513,17 +543,28 @@ class DeferredDB(DB):
         assert self._use_TM
         self._sql_string_list = []
 
-    def query(self, query_string, max_rows=1000):
+    def query(self, query_string, max_rows=1000, args=None):
         self._register()
         if isinstance(query_string, six.text_type):
             query_string = query_string.encode('utf-8')
-        for qs in query_string.split(b'\0'):
-            qs = qs.strip()
+        if args:
+            assert b'\0' not in query_string, (
+                "parameter-bound query cannot contain \\0 separator: %r"
+                % query_string)
+            qs = query_string.strip()
             if qs:
                 if match_select(qs):
                     raise sqlite3.NotSupportedError(
                         "can not SELECT in deferred connections")
-                self._sql_string_list.append(qs)
+                self._sql_string_list.append((qs, args))
+        else:
+            for qs in query_string.split(b'\0'):
+                qs = qs.strip()
+                if qs:
+                    if match_select(qs):
+                        raise sqlite3.NotSupportedError(
+                            "can not SELECT in deferred connections")
+                    self._sql_string_list.append((qs, None))
         return (), ()
 
     def _begin(self, *ignored):
@@ -532,8 +573,8 @@ class DeferredDB(DB):
     def _finish(self, *ignored):
         if self._sql_string_list:
             DB._begin(self)
-            for qs in self._sql_string_list:
-                self._query(qs)
+            for qs, qargs in self._sql_string_list:
+                self._query(qs, args=qargs)
             del self._sql_string_list[:]
             DB._finish(self)
 
