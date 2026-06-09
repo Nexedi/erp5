@@ -54,8 +54,8 @@ from ZODB.POSException import ConflictError
 from DateTime import DateTime
 from Products.CMFActivity.ActivityTool import (
   cancelProcessShutdown, shutdown, Message, getCurrentNode, getServerAddress)
-from MySQLdb import OperationalError
-from Products.ZSQLDA.db import DB
+from Products.ZSQLDA.MySQL.db import DB as MySQLDB
+from Products.ZSQLDA.SQLite.db import DB as SQLiteDB
 import gc
 import random
 import threading
@@ -124,6 +124,11 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
 
   def getOrganisation(self):
     return self.getOrganisationModule()._getOb(self.company_id)
+
+  def getDBClass(self):
+    if self.portal.erp5_catalog_storage == 'erp5_mysql_innodb_catalog':
+      return MySQLDB
+    return SQLiteDB
 
   def afterSetUp(self):
     super(TestCMFActivity, self).afterSetUp()
@@ -659,6 +664,11 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     """Try to execute active objects which may throw conflict errors
     while validating, and check if they are still executed."""
     activity_tool = self.portal.portal_activities
+    DB = self.getDBClass()
+    if self.portal.erp5_catalog_storage == 'erp5_mysql_innodb_catalog':
+      from MySQLdb import OperationalError
+    else:
+      from sqlite3 import OperationalError
 
     # Monkey patch Queue to induce conflict errors artificially.
     def query(self, query_string,*args, **kw):
@@ -1907,8 +1917,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     # Monkey patch to induce any error artificially in the sql connection.
     def query(self, query_string,*args, **kw):
       raise ValueError
-
-    from Products.ZSQLDA.db import DB
+    DB = self.getDBClass()
     DB.original_query = DB.query
     try:
       active_object.activate().getTitle()
@@ -1939,6 +1948,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       Speed up test by not interrupting the first transaction
       as soon as we have the information we want.
       """
+    DB = self.getDBClass()
     original_query = six.get_unbound_function(DB.query)
     def query(self, query_string, *args, **kw):
       if query_string.startswith(b'INSERT'):
@@ -2302,20 +2312,26 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
   def test_connection_migration(self):
     """
     Make sure the cmf_activity_sql_connection is automatically migrated from
-    the ZMySQLDA Connection class to ActivityConnection
+    the ZSQLDA Connection class to the backend-specific ActivityConnection
     """
-    # replace the activity connector with a standard ZMySQLDA one
     portal = self.portal
+    is_mysql = portal.erp5_catalog_storage == 'erp5_mysql_innodb_catalog'
     activity_tool = portal.portal_activities
     stdconn = portal.cmf_activity_sql_connection
     portal._delObject('cmf_activity_sql_connection')
-    portal.manage_addProduct['ZMySQLDA'].manage_addZMySQLConnection(
-        stdconn.id,
-        stdconn.title,
-        stdconn.connection_string,
-    )
+    add_zsqlda = portal.manage_addProduct['ZSQLDA']
+    if is_mysql:
+      add_zsqlda.manage_addZMySQLConnection(
+          stdconn.id, stdconn.title, stdconn.connection_string)
+      expected_old_meta_type = 'Z MySQL Database Connection'
+      expected_new_meta_type = 'CMFActivity MySQL Database Connection'
+    else:
+      add_zsqlda.manage_addZSQLiteConnection(
+          stdconn.id, stdconn.title, stdconn.connection_string)
+      expected_old_meta_type = 'Z SQLite Database Connection'
+      expected_new_meta_type = 'CMFActivity SQLite Database Connection'
     oldconn = portal.cmf_activity_sql_connection
-    self.assertEqual(oldconn.meta_type, 'Z MySQL Database Connection')
+    self.assertEqual(oldconn.meta_type, expected_old_meta_type)
     # force rebootstrap and check that migration of the connection happens
     # automatically
     from Products.ERP5Type.dynamic import portal_type_class
@@ -2324,28 +2340,30 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     activity_tool.activate(activity='SQLQueue').getId()
     self.tic()
     newconn = portal.cmf_activity_sql_connection
-    self.assertEqual(newconn.meta_type, 'CMFActivity Database Connection')
+    self.assertEqual(newconn.meta_type, expected_new_meta_type)
 
   def test_connection_installable(self):
     """
     Test if the cmf_activity_sql_connector can be installed
     """
-    # delete the activity connection
     portal = self.portal
+    is_mysql = portal.erp5_catalog_storage == 'erp5_mysql_innodb_catalog'
     stdconn = portal.cmf_activity_sql_connection
     portal._delObject('cmf_activity_sql_connection')
+    add_cmf = portal.manage_addProduct['CMFActivity']
     # check the installation form can be rendered
-    portal.manage_addProduct['CMFActivity'].connectionAdd(
-        portal.REQUEST
-    )
+    if is_mysql:
+      add_cmf.connectionAdd_mysql(portal.REQUEST)
+      manage_add = add_cmf.manage_addMySQLActivityConnection
+      expected_meta_type = 'CMFActivity MySQL Database Connection'
+    else:
+      add_cmf.connectionAdd_sqlite(portal.REQUEST)
+      manage_add = add_cmf.manage_addSQLiteActivityConnection
+      expected_meta_type = 'CMFActivity SQLite Database Connection'
     # check it can be installed
-    portal.manage_addProduct['CMFActivity'].manage_addActivityConnection(
-        stdconn.id,
-        stdconn.title,
-        stdconn.connection_string
-    )
+    manage_add(stdconn.id, stdconn.title, stdconn.connection_string)
     newconn = portal.cmf_activity_sql_connection
-    self.assertEqual(newconn.meta_type, 'CMFActivity Database Connection')
+    self.assertEqual(newconn.meta_type, expected_meta_type)
 
   def test_connection_sortkey(self):
     """

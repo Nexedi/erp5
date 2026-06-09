@@ -1345,10 +1345,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # Create new connectors
     if self.catalog_storage == 'erp5_mysql_innodb_catalog':
       addSQLConnection = self.portal.manage_addProduct[
-        "ZMySQLDA"].manage_addZMySQLConnection
+        "ZSQLDA"].manage_addZMySQLConnection
     else:
       addSQLConnection = self.portal.manage_addProduct[
-        "ZSQLiteDA"].manage_addZSQLiteConnection
+        "ZSQLDA"].manage_addZSQLiteConnection
 
     addSQLConnection(self.new_erp5_sql_connection,'', new_connection_string)
     new_connection = portal[self.new_erp5_sql_connection]
@@ -4268,10 +4268,10 @@ class CatalogToolUpgradeSchemaTestCase(ERP5TypeTestCase):
     db1, db2 = getExtraSqlConnectionStringList()[:2]
     if self.catalog_storage == 'erp5_mysql_innodb_catalog':
       addConnection = self.portal.manage_addProduct[
-        "ZMySQLDA"].manage_addZMySQLConnection
+        "ZSQLDA"].manage_addZMySQLConnection
     else:
       addConnection = self.portal.manage_addProduct[
-        "ZSQLiteDA"].manage_addZSQLiteConnection
+        "ZSQLDA"].manage_addZSQLiteConnection
     addConnection("erp5_test_connection_1", "", db1)
     addConnection("erp5_test_connection_2", "", db2)
     addConnection("erp5_test_connection_deferred_2", "", db2, deferred=True)

@@ -67,11 +67,11 @@ else:
   # Whether passing --save or not passing both --load and --save, the catalog
   # must be cleared of data from previous execution if any
   _print("Catalog will be recreated to clear data (if any) from previous execution")
-  import Products.ZMySQLDA.db
   from Products.ERP5.ERP5Site import default_sql_connection_string
   connection = os.environ.get('erp5_sql_connection_string', default_sql_connection_string)
   if os.environ.get('erp5_catalog_storage', '') == 'erp5_mysql_innodb_catalog':
-    sql_db = Products.ZMySQLDA.db.DB(connection)
+    from Products.ZSQLDA.MySQL import db
+    sql_db = db.DB(connection)
     _, view_list = sql_db.query("SHOW FULL TABLES WHERE table_type='VIEW'")
     if view_list:
       sql_db.query('DROP VIEW ' +
