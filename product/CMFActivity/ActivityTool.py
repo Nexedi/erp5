@@ -744,6 +744,7 @@ class ActivityTool (BaseTool):
       return self.aq_inner.aq_parent.cmf_activity_sql_connection()
 
     def maybeMigrateConnectionClass(self):
+      from ZODB.broken import Broken
       from Products.CMFActivity.ActivityConnection import (
         MySQLActivityConnection, SQLiteActivityConnection,
       )
@@ -754,15 +755,25 @@ class ActivityTool (BaseTool):
                          (MySQLActivityConnection, SQLiteActivityConnection))):
         # SQL Connection migration is needed
         LOG('ActivityTool', WARNING, "Migrating Activity Connection class")
-        parent = aq_parent(aq_inner(sql_connection))
-        parent._delObject(sql_connection.getId())
+        if isinstance(sql_connection, Broken):
+          # The old class is no longer importable (e.g. Products.ZMySQLDA
+          # consolidated into Products.ZSQLDA); read state from the pickle.
+          state = sql_connection.__Broken_state__
+          title = state.get('title', '')
+          connection_string = state.get('connection_string', '')
+          database_type = state.get('database_type')
+          parent = self.aq_inner.aq_parent
+        else:
+          title = sql_connection.title
+          connection_string = sql_connection.connection_string
+          database_type = getattr(sql_connection, 'database_type', None)
+          parent = aq_parent(aq_inner(sql_connection))
+        parent._delObject(connection_id)
         cls = (SQLiteActivityConnection
-               if getattr(sql_connection, 'database_type', None) == 'SQLite'
+               if database_type == 'SQLite'
                else MySQLActivityConnection)
-        new_sql_connection = cls(connection_id,
-                                 sql_connection.title,
-                                 sql_connection.connection_string)
-        parent._setObject(connection_id, new_sql_connection)
+        parent._setObject(connection_id,
+                          cls(connection_id, title, connection_string))
 
     security.declarePrivate('initialize')
     def initialize(self):

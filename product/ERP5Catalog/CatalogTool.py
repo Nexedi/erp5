@@ -413,6 +413,51 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
     def _isBootstrapRequired(self):
       return True
 
+    def maybeMigrateConnectionClass(self):
+      """Migrate erp5_sql_*_connection objects from old to new class.
+
+      Old Data.fs files reference Products.ZMySQLDA.DA.{Connection,
+      DeferredConnection}, which were consolidated into Products.ZSQLDA. ZODB
+      now unpickles such objects as ZODB.broken.Broken; rebuild them as the
+      proper Products.ZSQLDA.<backend> class, preserving id/title/string.
+      Mirrors CMFActivity.ActivityTool.maybeMigrateConnectionClass.
+      """
+      from ZODB.broken import Broken
+      from Products.ZSQLDA.MySQL.DA import (
+        Connection as MySQLConnection,
+        DeferredConnection as MySQLDeferredConnection,
+      )
+      from Products.ZSQLDA.SQLite.DA import (
+        Connection as SQLiteConnection,
+        DeferredConnection as SQLiteDeferredConnection,
+      )
+      portal = self.getPortalObject()
+      is_mysql = portal.erp5_catalog_storage == 'erp5_mysql_innodb_catalog'
+      expected_cls_by_id = {
+        'erp5_sql_connection':
+          MySQLConnection if is_mysql else SQLiteConnection,
+        'erp5_sql_deferred_connection':
+          MySQLDeferredConnection if is_mysql else SQLiteDeferredConnection,
+        'erp5_sql_transactionless_connection':
+          MySQLConnection if is_mysql else SQLiteConnection,
+      }
+      for connection_id, cls in expected_cls_by_id.items():
+        sql_connection = getattr(portal, connection_id, None)
+        if sql_connection is None or isinstance(sql_connection, cls):
+          continue
+        LOG('CatalogTool', WARNING,
+            "Migrating %s class" % connection_id)
+        if isinstance(sql_connection, Broken):
+          state = sql_connection.__Broken_state__
+          title = state.get('title', '')
+          connection_string = state.get('connection_string', '')
+        else:
+          title = sql_connection.title
+          connection_string = sql_connection.connection_string
+        portal._delObject(connection_id)
+        portal._setObject(connection_id,
+                          cls(connection_id, title, connection_string))
+
     def _bootstrap(self):
       # Get erp5 site
       parent = self.aq_parent
