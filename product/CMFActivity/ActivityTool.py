@@ -748,32 +748,26 @@ class ActivityTool (BaseTool):
       from Products.CMFActivity.ActivityConnection import (
         MySQLActivityConnection, SQLiteActivityConnection,
       )
+      portal = self.getPortalObject()
+      cls = (MySQLActivityConnection if portal.isMySQLCatalogStorage()
+             else SQLiteActivityConnection)
       connection_id = 'cmf_activity_sql_connection'
-      sql_connection = getattr(self, connection_id, None)
-      if (sql_connection is not None and
-          not isinstance(sql_connection,
-                         (MySQLActivityConnection, SQLiteActivityConnection))):
-        # SQL Connection migration is needed
-        LOG('ActivityTool', WARNING, "Migrating Activity Connection class")
-        if isinstance(sql_connection, Broken):
-          # The old class is no longer importable (e.g. Products.ZMySQLDA
-          # consolidated into Products.ZSQLDA); read state from the pickle.
-          state = sql_connection.__Broken_state__
-          title = state.get('title', '')
-          connection_string = state.get('connection_string', '')
-          database_type = state.get('database_type')
-          parent = self.aq_inner.aq_parent
-        else:
-          title = sql_connection.title
-          connection_string = sql_connection.connection_string
-          database_type = getattr(sql_connection, 'database_type', None)
-          parent = aq_parent(aq_inner(sql_connection))
-        parent._delObject(connection_id)
-        cls = (SQLiteActivityConnection
-               if database_type == 'SQLite'
-               else MySQLActivityConnection)
-        parent._setObject(connection_id,
-                          cls(connection_id, title, connection_string))
+      sql_connection = getattr(portal, connection_id, None)
+      if sql_connection is None or isinstance(sql_connection, cls):
+        return
+      LOG('ActivityTool', WARNING, "Migrating Activity Connection class")
+      if isinstance(sql_connection, Broken):
+        # The old class is no longer importable (e.g. Products.ZMySQLDA
+        # consolidated into Products.ZSQLDA); read state from the pickle.
+        state = sql_connection.__Broken_state__
+        title = state.get('title', '')
+        connection_string = state.get('connection_string', '')
+      else:
+        title = sql_connection.title
+        connection_string = sql_connection.connection_string
+      portal._delObject(connection_id)
+      portal._setObject(connection_id,
+                        cls(connection_id, title, connection_string))
 
     security.declarePrivate('initialize')
     def initialize(self):

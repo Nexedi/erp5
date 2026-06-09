@@ -425,15 +425,18 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         DeferredConnection as SQLiteDeferredConnection,
       )
       portal = self.getPortalObject()
-      is_mysql = portal.erp5_catalog_storage == 'erp5_mysql_innodb_catalog'
-      expected_cls_by_id = {
-        'erp5_sql_connection':
-          MySQLConnection if is_mysql else SQLiteConnection,
-        'erp5_sql_deferred_connection':
-          MySQLDeferredConnection if is_mysql else SQLiteDeferredConnection,
-        'erp5_sql_transactionless_connection':
-          MySQLConnection if is_mysql else SQLiteConnection,
-      }
+      if portal.isMySQLCatalogStorage():
+        expected_cls_by_id = {
+          'erp5_sql_connection': MySQLConnection,
+          'erp5_sql_deferred_connection': MySQLDeferredConnection,
+          'erp5_sql_transactionless_connection': MySQLConnection,
+        }
+      else:
+        expected_cls_by_id = {
+          'erp5_sql_connection': SQLiteConnection,
+          'erp5_sql_deferred_connection': SQLiteDeferredConnection,
+          'erp5_sql_transactionless_connection': SQLiteConnection,
+        }
       for connection_id, cls in expected_cls_by_id.items():
         sql_connection = getattr(portal, connection_id, None)
         if sql_connection is None or isinstance(sql_connection, cls):

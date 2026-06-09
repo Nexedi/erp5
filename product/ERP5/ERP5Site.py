@@ -339,6 +339,10 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     PortalObjectBase.__init__(self, id)
     self.creation_date = DateTime()
 
+  security.declarePublic('isMySQLCatalogStorage')
+  def isMySQLCatalogStorage(self):
+    return self.erp5_catalog_storage == 'erp5_mysql_innodb_catalog'
+
   security.declarePublic('getCoreBusinessTemplateList')
   def getCoreBusinessTemplateList(self):
     # Return the list of business templates expected to be installed when this
@@ -2331,7 +2335,7 @@ class ERP5Generator(PortalGenerator):
       if not sql_reset and p[id]().tables():
         raise Exception("Database %r is not empty." % connection_string)
 
-    if p.erp5_catalog_storage == 'erp5_mysql_innodb_catalog':
+    if p.isMySQLCatalogStorage():
       manage_add = p.manage_addProduct['ZSQLDA'].manage_addZMySQLConnection
     else:
       manage_add = p.manage_addProduct['ZSQLDA'].manage_addZSQLiteConnection
@@ -2344,7 +2348,7 @@ class ERP5Generator(PortalGenerator):
     addSQLConnection('erp5_sql_transactionless_connection',
                      'ERP5 Transactionless SQL Server Connection')
     # Add Activity SQL Connections
-    if p.erp5_catalog_storage == 'erp5_mysql_innodb_catalog':
+    if p.isMySQLCatalogStorage():
       manage_add = p.manage_addProduct['CMFActivity'].manage_addMySQLActivityConnection
     else:
       manage_add = p.manage_addProduct['CMFActivity'].manage_addSQLiteActivityConnection

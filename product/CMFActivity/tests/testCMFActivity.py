@@ -126,7 +126,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     return self.getOrganisationModule()._getOb(self.company_id)
 
   def getDBClass(self):
-    if self.portal.erp5_catalog_storage == 'erp5_mysql_innodb_catalog':
+    if self.portal.isMySQLCatalogStorage():
       return MySQLDB
     return SQLiteDB
 
@@ -665,7 +665,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     while validating, and check if they are still executed."""
     activity_tool = self.portal.portal_activities
     DB = self.getDBClass()
-    if self.portal.erp5_catalog_storage == 'erp5_mysql_innodb_catalog':
+    if self.portal.isMySQLCatalogStorage():
       from MySQLdb import OperationalError
     else:
       from sqlite3 import OperationalError
@@ -2315,7 +2315,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     the ZSQLDA Connection class to the backend-specific ActivityConnection
     """
     portal = self.portal
-    is_mysql = portal.erp5_catalog_storage == 'erp5_mysql_innodb_catalog'
+    is_mysql = portal.isMySQLCatalogStorage()
     activity_tool = portal.portal_activities
     stdconn = portal.cmf_activity_sql_connection
     portal._delObject('cmf_activity_sql_connection')
@@ -2347,7 +2347,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     Test if the cmf_activity_sql_connector can be installed
     """
     portal = self.portal
-    is_mysql = portal.erp5_catalog_storage == 'erp5_mysql_innodb_catalog'
+    is_mysql = portal.isMySQLCatalogStorage()
     stdconn = portal.cmf_activity_sql_connection
     portal._delObject('cmf_activity_sql_connection')
     add_cmf = portal.manage_addProduct['CMFActivity']
