@@ -72,6 +72,11 @@ class TestOOoImportMixin(ERP5TypeTestCase):
       portal_categories[function_bc].newContent(id='director', portal_type='Category', title='Director')
     if 'manager' not in portal_categories[function_bc]:
       portal_categories[function_bc].newContent(id='manager', portal_type='Category', title='Manager')
+    
+    # Set Cloudooo conversion server URL
+    conversion_server_url_list = self.portal.portal_preferences.getPreferredDocumentConversionServerUrlList() or ["https://cloudooo.erp5.net"]
+    system_preference = self.portal.portal_preferences.default_system_preference
+    system_preference.setPreferredDocumentConversionServerUrlList(conversion_server_url_list)
 
     self.portal.portal_caches.clearCache()
     self.tic()
@@ -116,6 +121,9 @@ class TestOOoImport(TestOOoImportMixin):
   ##################################
   def stepImportRawDataFile(self, sequence=None, sequence_list=None, **kw):
     f = self.makeFileUpload('import_data_list.ods')
+    # Content Type is normally set on upload, but `makeFileUpload` does not add it
+    # Fix it here for now.
+    f.headers['Content-Type'] = 'application/vnd.oasis.opendocument.spreadsheet'
     person_module = self.getPortal().person_module
     listbox=(
     { 'listbox_key': '001',
@@ -395,7 +403,7 @@ class TestOOoImport(TestOOoImportMixin):
 
     user_name = 'author'
     user_folder = self.portal.acl_users
-    user_folder._doAddUser(user_name, self.newPassword(), ['Author', 'Member'], [])
+    user_folder._doAddUser(user_name, self.newPassword(), ['Author', 'Member', 'Assignor'], [])
     user = user_folder.getUserById(user_name).__of__(user_folder)
     newSecurityManager(None, user)
 
