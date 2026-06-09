@@ -413,15 +413,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
     def _isBootstrapRequired(self):
       return True
 
+    security.declarePrivate('maybeMigrateConnectionClass')
     def maybeMigrateConnectionClass(self):
-      """Migrate erp5_sql_*_connection objects from old to new class.
-
-      Old Data.fs files reference Products.ZMySQLDA.DA.{Connection,
-      DeferredConnection}, which were consolidated into Products.ZSQLDA. ZODB
-      now unpickles such objects as ZODB.broken.Broken; rebuild them as the
-      proper Products.ZSQLDA.<backend> class, preserving id/title/string.
-      Mirrors CMFActivity.ActivityTool.maybeMigrateConnectionClass.
-      """
       from ZODB.broken import Broken
       from Products.ZSQLDA.MySQL.DA import (
         Connection as MySQLConnection,
