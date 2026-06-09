@@ -2332,9 +2332,9 @@ class ERP5Generator(PortalGenerator):
         raise Exception("Database %r is not empty." % connection_string)
 
     if p.erp5_catalog_storage == 'erp5_mysql_innodb_catalog':
-      manage_add = p.manage_addProduct['ZMySQLDA'].manage_addZMySQLConnection
+      manage_add = p.manage_addProduct['ZSQLDA'].manage_addZMySQLConnection
     else:
-      manage_add = p.manage_addProduct['ZSQLiteDA'].manage_addZSQLiteConnection
+      manage_add = p.manage_addProduct['ZSQLDA'].manage_addZSQLiteConnection
 
     addSQLConnection('erp5_sql_connection',
                      'ERP5 SQL Server Connection')
@@ -2344,7 +2344,10 @@ class ERP5Generator(PortalGenerator):
     addSQLConnection('erp5_sql_transactionless_connection',
                      'ERP5 Transactionless SQL Server Connection')
     # Add Activity SQL Connections
-    manage_add = p.manage_addProduct['CMFActivity'].manage_addActivityConnection
+    if p.erp5_catalog_storage == 'erp5_mysql_innodb_catalog':
+      manage_add = p.manage_addProduct['CMFActivity'].manage_addMySQLActivityConnection
+    else:
+      manage_add = p.manage_addProduct['CMFActivity'].manage_addSQLiteActivityConnection
     addSQLConnection('cmf_activity_sql_connection',
                      'CMF Activity SQL Server Connection')
 
@@ -2615,47 +2618,18 @@ class ERP5Generator(PortalGenerator):
           ['erp5_promise'], activate=True, install_dependency=True)
 
 
-# Mapping of erp5_catalog_storage value to the backend labels each facade
-# resolves to its own sub-modules. Owned here so the proxy products themselves
-# do not need to know which backends exist.
-STORAGE_BACKENDS = {
-  'erp5_mysql_innodb_catalog': {
-    'zsqlda':   'Products.ZMySQLDA'
-  },
-  'erp5_sqlite_catalog': {
-    'zsqlda':   'Products.ZSQLiteDA'
-  },
-}
-
 # Zope offers no mechanism to extend AppInitializer so let's monkey-patch.
 AppInitializer_initialize = six.get_unbound_function(AppInitializer.initialize)
 def initialize(self):
-  import Products.ZSQLDA
   AppInitializer.initialize = AppInitializer_initialize
-
-  def configureAndInitialize(erp5_catalog_storage):
-    backends = STORAGE_BACKENDS[erp5_catalog_storage]
-    Products.ZSQLDA.configure(backends['zsqlda'])
-    self.initialize()
-
+  self.initialize()
   try:
     kw = getConfiguration().product_config['initsite']
   except KeyError:
-    # in test
-    configureAndInitialize(os.environ.get('erp5_catalog_storage', 'erp5_mysql_innodb_catalog'))
     return
-
-  app = self.getApp()
   meta_type = ERP5Site.meta_type
-  for obj_id in app.objectIds(meta_type):
-    site = app.__dict__.get(obj_id)
-    site._p_activate()
-    configureAndInitialize(site.__dict__.get('erp5_catalog_storage'))
-    from ZODB.Connection import resetCaches
-    resetCaches()
+  for _ in self.getApp().objectIds(meta_type):
     return
-
-  configureAndInitialize(kw.get('erp5_catalog_storage', 'erp5_mysql_innodb_catalog'))
 
 
   # We defer the call to manage_addERP5Site via TimerService because:
@@ -2666,14 +2640,20 @@ def initialize(self):
   import inspect, sys, time
   from AccessControl.SecurityManagement import newSecurityManager
   from App.ZApplication import ZApplicationWrapper
-  from Products.ZSQLDA.db import DB, OperationalError
   def addERP5Site(REQUEST):
     default_kw = inspect.getcallargs(manage_addERP5Site, None, '')
     erp5_catalog_storage = kw.get('erp5_catalog_storage')
     if erp5_catalog_storage:
       default_kw['erp5_catalog_storage'] = erp5_catalog_storage
+    else:
+      erp5_catalog_storage = default_kw['erp5_catalog_storage']
     db = (kw.get('erp5_sql_connection_string') or
       default_kw['erp5_sql_connection_string'])
+    if erp5_catalog_storage == 'erp5_mysql_innodb_catalog':
+      from Products.ZSQLDA.MySQL.db import DB, OperationalError
+    else:
+      from Products.ZSQLDA.SQLite.db import DB, OperationalError
+
     # The lock is to avoid that multiple zopes try to create a site when
     # they're started at the same time, because this is a quite long operation
     # (-> high probably of conflict with a lot of wasted CPU).
@@ -2709,12 +2689,12 @@ def initialize(self):
       except OperationalError as e:
         if app is not None:
           raise
-        # MySQL server not ready (down or user not created).
+        # Database not ready (down or user not created).
         e = str(e)
         if last != e:
           last = e
           LOG('ERP5Site', WARNING,
-              'MySQL error while trying to create ERP5 site. Retrying...',
+              'Database error while trying to create ERP5 site. Retrying...',
               error=1)
         time.sleep(5)
   from Products.TimerService.timerserver.TimerServer import TimerRequest

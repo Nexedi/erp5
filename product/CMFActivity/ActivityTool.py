@@ -718,12 +718,6 @@ class ActivityTool (BaseTool):
     _activity_dict_cache = {}
 
     def activity_dict(self):
-      """Return the activity registry for this tool's SQL backend.
-
-      The SQL backend is detected once, the first time, and remembered. The
-      SQL connection is fetched lazily through getSQLConnection(), and only
-      when the cache is not yet initialized.
-      """
       cache = self._activity_dict_cache
       if cache:
         return cache
@@ -731,10 +725,10 @@ class ActivityTool (BaseTool):
       db = self.getSQLConnection()
       backend = 'MySQL'
       for cls in type(db).__mro__:
-        if cls.__module__ == 'Products.ZSQLiteDA.db':
+        if cls.__module__ == 'Products.ZSQLDA.SQLite.db':
           backend = 'SQLite'
           break
-        elif cls.__module__ == 'Products.ZMySQLDA.db':
+        elif cls.__module__ == 'Products.ZSQLDA.MySQL.db':
           break
 
       from importlib import import_module
@@ -750,18 +744,24 @@ class ActivityTool (BaseTool):
       return self.aq_inner.aq_parent.cmf_activity_sql_connection()
 
     def maybeMigrateConnectionClass(self):
-      from Products.CMFActivity.ActivityConnection import ActivityConnection
+      from Products.CMFActivity.ActivityConnection import (
+        MySQLActivityConnection, SQLiteActivityConnection,
+      )
       connection_id = 'cmf_activity_sql_connection'
       sql_connection = getattr(self, connection_id, None)
       if (sql_connection is not None and
-          not isinstance(sql_connection, ActivityConnection)):
+          not isinstance(sql_connection,
+                         (MySQLActivityConnection, SQLiteActivityConnection))):
         # SQL Connection migration is needed
-        LOG('ActivityTool', WARNING, "Migrating MySQL Connection class")
+        LOG('ActivityTool', WARNING, "Migrating Activity Connection class")
         parent = aq_parent(aq_inner(sql_connection))
         parent._delObject(sql_connection.getId())
-        new_sql_connection = ActivityConnection(connection_id,
-                                                sql_connection.title,
-                                                sql_connection.connection_string)
+        cls = (SQLiteActivityConnection
+               if getattr(sql_connection, 'database_type', None) == 'SQLite'
+               else MySQLActivityConnection)
+        new_sql_connection = cls(connection_id,
+                                 sql_connection.title,
+                                 sql_connection.connection_string)
         parent._setObject(connection_id, new_sql_connection)
 
     security.declarePrivate('initialize')

@@ -144,9 +144,9 @@ class TestVanillaERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     organisation = module.newContent(portal_type='Organisation', title="GreatTitle2")
     self.tic()
     if  self.catalog_storage == 'erp5_mysql_innodb_catalog':
-      addSQLConnection = portal.manage_addProduct['ZMySQLDA'].manage_addZMySQLConnection
+      addSQLConnection = portal.manage_addProduct['ZSQLDA'].manage_addZMySQLConnection
     else:
-      addSQLConnection = portal.manage_addProduct['ZSQLiteDA'].manage_addZSQLiteConnection
+      addSQLConnection = portal.manage_addProduct['ZSQLDA'].manage_addZSQLiteConnection
     # Create new connectors
     addSQLConnection(self.new_erp5_sql_connection, '', new_connection_string)
     portal[self.new_erp5_sql_connection].manage_open_connection()

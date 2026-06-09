@@ -63,23 +63,29 @@ def dump_threads():
         if reqinfo:
             reqinfo = " (%s)" % reqinfo
 
-        mysql_info = ''
+        sql_info = ''
         f = frame
+        query_codes = set()
         try:
-          from Products.ZSQLDA.db import DB
-          while f is not None:
-            code = f.f_code
-            if code is DB._query.__code__:
-              mysql_info = "\nMySQL query:\n%s\n" % f.f_locals['query']
-              break
-            f = f.f_back
+          from Products.ZSQLDA.MySQL.db import DB as MySQLDB
+          query_codes.add(MySQLDB._query.__code__)
         except ImportError:
           pass
+        try:
+          from Products.ZSQLDA.SQLite.db import DB as SQLiteDB
+          query_codes.add(SQLiteDB._query.__code__)
+        except ImportError:
+          pass
+        while f is not None:
+          if f.f_code in query_codes:
+            sql_info = "\nSQL query:\n%s\n" % f.f_locals['query']
+            break
+          f = f.f_back
 
         output = StringIO()
         traceback.print_stack(frame, file=output)
         res.append("Thread %s%s:\n%s%s" %
-            (thread_id, reqinfo, output.getvalue(), mysql_info))
+            (thread_id, reqinfo, output.getvalue(), sql_info))
 
     res.append("End of dump\n")
     result = '\n'.join(res)

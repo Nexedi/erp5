@@ -66,16 +66,25 @@ class Dumper(object):
         except Exception:
             return "[Unprintable request]\n" + traceback.format_exc()
 
-    # A fork of ZMySQLDA is maintained in ERP5 (http://www.erp5.com/)
+    # ZSQLDA backends are forks of ZMySQLDA/ZSQLiteDA maintained in ERP5
+    # (http://www.erp5.com/).
+    _query_code_set = set()
     try:
-        from Products.ZSQLDA.db import DB
+        from Products.ZSQLDA.MySQL.db import DB as _MySQLDB
+        _query_code_set.add(_MySQLDB._query.__code__)
+        del _MySQLDB
     except ImportError:
-        def _extract_sql(self, frame):
-            pass
-    else:
-        def _extract_sql(self, frame, func_code=DB._query.__code__):
+        pass
+    try:
+        from Products.ZSQLDA.SQLite.db import DB as _SQLiteDB
+        _query_code_set.add(_SQLiteDB._query.__code__)
+        del _SQLiteDB
+    except ImportError:
+        pass
+    if _query_code_set:
+        def _extract_sql(self, frame, code_set=_query_code_set):
             while frame is not None:
-                if frame.f_code is func_code:
+                if frame.f_code in code_set:
                     query = frame.f_locals['query']
                     if six.PY3 and isinstance(query, bytes):
                         return query.decode(
@@ -83,7 +92,10 @@ class Dumper(object):
                             errors='backslashreplace')
                     return query
                 frame = frame.f_back
-        del DB
+    else:
+        def _extract_sql(self, frame):
+            pass
+    del _query_code_set
 
     def format_log_entry(self, request, start, duration):
         subject = SUBJECT_FORMAT % (self.thread_id, start, duration)
