@@ -1,10 +1,10 @@
 <html>
-  <head><title>Add CMFActivity Database Connection</title></head>
+  <head><title>Add CMFActivity SQLite Database Connection</title></head>
   <body bgcolor="#FFFFFF" link="#000099" vlink="#555555" alink="#77003B">
 
-    <h2>Add CMFActivity Database Connection</h2>
+    <h2>Add CMFActivity SQLite Database Connection</h2>
 
-    <form action="manage_addActivityConnection" method="POST">
+    <form action="manage_addSQLiteActivityConnection" method="POST">
       <table cellspacing="2">
         <tr>
           <th align="LEFT" valign="TOP">Id</th>
@@ -45,8 +45,8 @@
 
 <dt><a hname="1"><sup>1</sup></a> Connection Strings</dt>
 <dd>
-    The connection string used for the CMFActivity Database Connection
-    has the same syntax as for ZMySQLDA.
+    The connection string used for the CMFActivity SQLite Database Connection
+    has the same syntax as for ZSQLiteDA.
 </dd></dl>
 
   </body>

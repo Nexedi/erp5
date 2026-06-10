@@ -57,6 +57,13 @@ import pytz
 import six
 import lxml.html
 
+skipUnlessMySQL = unittest.skipUnless(
+  os.environ.get('erp5_catalog_storage', 'erp5_mysql_innodb_catalog')
+  == 'erp5_mysql_innodb_catalog',
+  'MySQL backend only',
+)
+
+
 if six.PY2:
   FileIO = file
   from email import message_from_string as message_from_bytes
@@ -413,8 +420,7 @@ def _recreateMemcachedTool(portal):
   portal.newContent(id='portal_memcached', portal_type="Memcached Tool")
 
 # test runner shared functions
-
-from Products.ZMySQLDA.db import DB
+from Products.ZSQLDA.MySQL import DB
 class getMySQLArguments(object):
   """Returns arguments to pass to mysql by heuristically converting the
   connection string.
@@ -426,6 +432,7 @@ class getMySQLArguments(object):
     self.conv = None
     parse_connection_string_function = six.get_unbound_function(DB._parse_connection_string)
     parse_connection_string_function(self)
+
     return ''.join('-%s%s ' % (self.args_dict[k], v)
                    for k, v in six.iteritems(self._kw_args)
                    if k in self.args_dict
