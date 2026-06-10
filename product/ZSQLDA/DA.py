@@ -84,15 +84,30 @@
 ##############################################################################
 __doc__='''Database Connection
 
-$Id: DABase.py,v 1.5 2001/08/17 02:17:38 adustman Exp $'''
+$Id: DA.py,v 1.5 2001/08/17 02:17:38 adustman Exp $'''
 __version__='$Revision: 1.5 $'[11:-2]
 
-import Shared.DC.ZRDB.Connection, sys
+import os, sys
+import Shared.DC.ZRDB, Shared.DC.ZRDB.Connection
+import transaction
+from collections import defaultdict
+from weakref import WeakKeyDictionary
 from App.special_dtml import HTMLFile
+from App.ImageFile import ImageFile
+from DateTime import DateTime
 from ExtensionClass import Base
+from AccessControl import ClassSecurityInfo
+from Products.ERP5Type import IS_ZOPE2
 import Acquisition
 
-class Connection(Shared.DC.ZRDB.Connection.Connection):
+SHARED_DC_ZRDB_LOCATION = os.path.dirname(Shared.DC.ZRDB.__file__)
+
+# Connection pool shared by all backends. The key (_p_oid, _p_jar) is unique
+# per connection object so backends cannot collide.
+database_connection_pool = defaultdict(WeakKeyDictionary)
+
+
+class BaseConnection(Shared.DC.ZRDB.Connection.Connection):
     _isAnSQLConnection=1
 
     manage_options=Shared.DC.ZRDB.Connection.Connection.manage_options+(
@@ -102,8 +117,70 @@ class Connection(Shared.DC.ZRDB.Connection.Connection):
 
     manage_tables=HTMLFile('tables',globals())
     manage_browse=HTMLFile('browse',globals())
+    manage_properties=HTMLFile('connectionEdit',globals())
 
     info=None
+    icon = 'misc_/ZSQLDA/conn'
+
+    database_type = None
+    # Set to True on the deferred variant of a backend.
+    deferred = False
+    security = ClassSecurityInfo()
+    connect_on_load = False
+    if not IS_ZOPE2:
+        zmi_icon = 'fas fa-database'
+
+    def __init_subclass__(cls, **kw):
+        # Derive the registration metadata from database_type so each backend
+        # only declares database_type (+ deferred). Attributes set explicitly
+        # on the subclass (e.g. CMFActivity connections) are left untouched.
+        super().__init_subclass__(**kw)
+        database_type = cls.database_type
+        if database_type is None:
+            return
+        d = cls.__dict__
+        if 'id' not in d:
+            cls.id = '%s_database_connection' % database_type
+        if 'meta_type' not in d and 'title' not in d:
+            cls.meta_type = cls.title = 'Z %s %sDatabase Connection' % (
+                database_type, 'Deferred ' if cls.deferred else '')
+
+    def factory(self):
+        # Backend subclass returns its DB class.
+        raise NotImplementedError
+
+    security.declarePrivate('manage_beforeDelete')
+    def manage_beforeDelete(self, item, container):
+        database_connection_pool.get(self._p_oid, {}).pop(self._p_jar, None)
+
+    def connect(self, s):
+        self._v_connected = ''
+        if not self._p_oid:
+            transaction.savepoint(optimistic=True)
+        pool = database_connection_pool[self._p_oid]
+        connection = pool.get(self._p_jar)
+        DB = self.factory()
+        if connection.__class__ is not DB or connection._connection != s:
+            connection = pool[self._p_jar] = DB(s)
+        self._v_database_connection = connection
+        # XXX If date is used as such, it can be wrong because an existing
+        # connection may be reused. But this is suposedly only used as a
+        # marker to know if connection was successfull.
+        self._v_connected = DateTime()
+        return self
+
+    def sql_quote__(self, v, escapes={}):
+        try:
+            connection = self._v_database_connection
+        except AttributeError:
+            # The volatile attribute sometimes disappears.
+            # In this case, re-assign it by calling the connect method.
+            # Note that we don't call sql_quote__ recursively by intention,
+            # because if connect fails to assign the volatile attribute for
+            # any reason, that would generate an infinite loop.
+            self.connect(self.connection_string)
+            connection = self._v_database_connection
+        return connection.string_literal(v)
 
     def tpValues(self):
         #if hasattr(self, '_v_tpValues'): return self._v_tpValues
@@ -145,6 +222,31 @@ class Connection(Shared.DC.ZRDB.Connection.Connection):
 
     def manage_update(self, table, keys, cols, REQUEST=None):
         """Create an SQL update"""
+
+
+def manage_addConnection(self, Connection, DeferredConnection,
+                         id, title, connection_string,
+                         check=None, deferred=False, REQUEST=None):
+    """Shared body for the backends' manage_addZ<Backend>Connection."""
+    cls = DeferredConnection if deferred else Connection
+    connection = cls(id, title, connection_string)
+    self._setObject(id, connection)
+    if check:
+        connection.connect(connection_string)
+    if REQUEST is not None:
+        return self.manage_main(self, REQUEST)
+
+
+def build_misc_():
+    """Return the misc_ icon dict shared by all ZSQLDA backends."""
+    misc_ = {'conn': ImageFile(
+        os.path.join(SHARED_DC_ZRDB_LOCATION, 'www', 'DBAdapterFolder_icon.gif'))}
+    for icon in ('table', 'view', 'stable', 'what',
+                 'field', 'text', 'bin', 'int', 'float',
+                 'date', 'time', 'datetime'):
+        misc_[icon] = ImageFile(os.path.join('icons', '%s.gif') % icon, globals())
+    return misc_
+
 
 class TableBrowserCollection(Acquisition.Implicit):
     "Helper class for accessing tables via URLs"
