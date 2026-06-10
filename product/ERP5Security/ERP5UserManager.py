@@ -90,8 +90,7 @@ def getUserByLogin(portal, login, exact_match=True):
   #  by default (feature).
   return [x.getObject() for x in result if not exact_match
                                            or x['reference'] in login]
-
-@transactional_cached(lambda portal, *args: args)
+@transactional_cached(lambda *args: args)
 def getValidAssignmentList(user):
   """Returns list of valid assignments."""
   assignment_list = [x for x in user.contentValues(portal_type="Assignment") if x.getValidationState() == "open"]
