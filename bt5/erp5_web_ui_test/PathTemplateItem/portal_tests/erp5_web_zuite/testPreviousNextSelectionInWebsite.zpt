@@ -46,7 +46,7 @@
 </tr>
 <tr>
   <td>assertLocation</td>
-  <td>regexp:${base_url}/web_site_module/test_web_site(\?|$)</td>
+  <td>regexp:${base_url}/web_site_module/test_web_site/(\?|$)</td>
   <td></td>
 </tr>
 <tr>
@@ -86,7 +86,7 @@
 </tr>
 <tr>
   <td>assertLocation</td>
-  <td>regexp:${base_url}/web_site_module/test_web_site_2(\?|$)</td>
+  <td>regexp:${base_url}/web_site_module/test_web_site_2/(\?|$)</td>
   <td></td>
 </tr>
 <tr>
