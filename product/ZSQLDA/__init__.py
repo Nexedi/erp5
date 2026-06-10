@@ -88,18 +88,43 @@ $Id: __init__.py,v 1.4 2001/08/17 02:17:38 adustman Exp $'''
 __version__='$Revision: 1.4 $'[11:-2]
 
 from . import DA
+import sys
+import types
+from . import MySQL as MySQLDA
+from . import SQLite as SQLiteDA
 
-misc_=DA.misc_
+# Zope auto-publishes Products.ZSQLDA.misc_ as misc_/ZSQLDA/<key>; both
+# backends share the same icon set built from ZSQLDA/icons/.
+misc_ = DA.build_misc_()
 
 def initialize(context):
-
-    context.registerClass(
-        DA.Connection,
-        permission="Add Z MySQL Database Connections",
-        constructors=(DA.manage_addZMySQLConnectionForm,
-                      DA.manage_addZMySQLConnection),
-    )
     import Products
-    Products.meta_types += dict(Products.meta_types[-1],
-        name=DA.DeferredConnection.meta_type,
-        action=None),
+    for backend in (MySQLDA, SQLiteDA):
+        bt = backend.database_type
+        context.registerClass(
+            backend.Connection,
+            permission="Add Z %s Database Connections" % bt,
+            constructors=(getattr(backend, 'manage_addZ%sConnectionForm' % bt),
+                          getattr(backend, 'manage_addZ%sConnection' % bt)),
+        )
+        Products.meta_types += dict(Products.meta_types[-1],
+            name=backend.DeferredConnection.meta_type,
+            action=None),
+
+
+# BBB: Allow loading of deferred connections that were created
+#      before the merge of ZMySQLDDA into ZMySQLDA.
+assert 'Products.ZMySQLDDA' not in sys.modules, \
+    "please remove obsolete ZMySQLDDA product"
+for m in 'Products.ZMySQLDDA', 'Products.ZMySQLDDA.DA':
+    sys.modules[m] = m = types.ModuleType(m)
+m.DeferredConnection = MySQLDA.DeferredConnection
+
+# Products.ZMySQLDA was merged into Products.ZSQLDA.MySQL. Objects load as BBB
+# subclasses of the real classes and get re-classed in place at site bootstrap
+# (see Products.ERP5Type.dynamic.portal_type_class.synchronizeDynamicModules).
+for m in 'Products.ZMySQLDA', 'Products.ZMySQLDA.DA':
+    sys.modules[m] = m = types.ModuleType(m)
+for k in 'Connection', 'DeferredConnection':
+    setattr(m, k, type(k, (getattr(MySQLDA, k),), {'__module__': m.__name__}))
+del m, k
