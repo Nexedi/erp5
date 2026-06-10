@@ -37,7 +37,7 @@ from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Testing import ZopeTestCase
 from Products.ERP5Type.Globals import get_request
-from Products.ERP5Type.tests.utils import createZODBPythonScript
+from Products.ERP5Type.tests.utils import createZODBPythonScript, skipUnlessMySQL
 from ZPublisher.HTTPRequest import FileUpload
 from six.moves import cStringIO as StringIO
 from Products.ERP5Form.Selection import Selection
@@ -732,6 +732,7 @@ class TestListBox(ERP5TypeTestCase):
     self.assertEqual(form.getId(), request.get('listbox_form_id'))
     self.assertEqual(form.listbox.getId(), request.get('listbox_field_id'))
 
+  @skipUnlessMySQL
   def test_query_timeout(self):
     portal = self.getPortal()
     portal.ListBoxZuite_reset()
