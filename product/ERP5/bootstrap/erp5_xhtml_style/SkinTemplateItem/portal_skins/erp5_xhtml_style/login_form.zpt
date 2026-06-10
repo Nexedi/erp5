@@ -68,7 +68,7 @@
                 <div class="input">
                   <a tal:attributes="href string:${here/portal_url}/ERP5Site_redirectToFacebookLoginPage"
                      i18n:translate="" i18n:domain="ui">
-                    <img alt="Login with Facebook" src="facebook_login_button.png">
+                    <img alt="Login with Facebook" src="facebook_login_button.png"/>
                   </a>
                 </div>
               </div>
