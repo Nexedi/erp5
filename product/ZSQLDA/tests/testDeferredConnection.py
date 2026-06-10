@@ -27,9 +27,10 @@
 ##############################################################################
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import skipUnlessMySQL
 from AccessControl.SecurityManagement import newSecurityManager
 from MySQLdb import OperationalError
-from Products.ZMySQLDA.db import hosed_connection
+from Products.ZSQLDA.MySQL import hosed_connection
 
 UNCONNECTED_STATE = 0
 CONNECTED_STATE = 1
@@ -58,6 +59,7 @@ def fake_db_query(self, *args, **kw):
     raise OperationalError(hosed_connection[0], 'dummy exception')
   return self.original_query(*args, **kw)
 
+@skipUnlessMySQL
 class TestDeferredConnection(ERP5TypeTestCase):
   """
     Test MySQL Deferred Connection

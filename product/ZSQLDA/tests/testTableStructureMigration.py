@@ -31,8 +31,10 @@ from textwrap import dedent
 from MySQLdb import OperationalError
 from Shared.DC.ZRDB.DA import DA
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import skipUnlessMySQL
 
 
+@skipUnlessMySQL
 class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     return 'erp5_full_text_mroonga_catalog',
