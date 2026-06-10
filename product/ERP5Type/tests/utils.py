@@ -57,6 +57,13 @@ import pytz
 import six
 import lxml.html
 
+skipUnlessMySQL = unittest.skipUnless(
+  os.environ.get('erp5_catalog_storage', 'erp5_mysql_innodb_catalog')
+  == 'erp5_mysql_innodb_catalog',
+  'MySQL backend only',
+)
+
+
 if six.PY2:
   FileIO = file
   from email import message_from_string as message_from_bytes

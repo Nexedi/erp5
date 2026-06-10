@@ -172,11 +172,8 @@ class ERP5SQLite(ERP5):
   def getTestList(self):
     not_supported_list = [
       'testInventoryAPI', # inventory
-      'testDeferredConnection', # ZMySQLDA
-      'testTableStructureMigration', # ZMySQLDA
       'testFunctionalCore', # accounting
-      'testXHTML', # accounting
-      'testUpgradeInstanceWithOldDataFs' # ZMySQLDA
+      'testXHTML' # accounting
       ]
     return [x for x in self._getAllTestList() if (x.startswith('test') or x.startswith('erp5_core_test') or x.startswith('erp5_ui_test')) and (x not in not_supported_list)]
 
