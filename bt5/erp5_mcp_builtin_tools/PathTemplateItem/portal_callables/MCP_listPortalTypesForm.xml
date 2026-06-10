@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="JSON Form" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>MCP_listPortalTypeForm</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>MCP_listPortalTypesForm</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>JSON Form</string> </value>
+        </item>
+        <item>
+            <key> <string>response_schema</string> </key>
+            <value> <string>{\n
+  "type": "object",\n
+  "description": "Response containing a list of portal types with their metadata",\n
+  "properties": {\n
+    "portalTypes": {\n
+      "type": "array",\n
+      "description": "List of portal types with their metadata in structured format",\n
+      "items": {\n
+        "type": "object",\n
+        "description": "Portal type information",\n
+        "properties": {\n
+          "id": {\n
+            "type": "string",\n
+            "description": "Portal type ID (unique identifier)"\n
+          },\n
+          "allowed": {\n
+            "type": "boolean",\n
+            "description": "Whether it is allowed to query this portal type"\n
+          },\n
+          "restricted": {\n
+            "type": "boolean",\n
+            "description": "Whether the portal type is restricted. For restricted portal types, only some columns can be queried"\n
+          },\n
+          "business_application": {\n
+            "type": "string",\n
+            "description": "The business application (functional area) of the portal type."\n
+          },\n
+          "description": {\n
+            "type": "string",\n
+            "description": "A textual description of the portal type."\n
+          }\n
+        },\n
+        "required": [\n
+          "id",\n
+          "allowed",\n
+          "restricted",\n
+          "description"\n
+        ],\n
+        "additionalProperties": false\n
+      }\n
+    }\n
+  },\n
+  "required": [\n
+    "portalTypes"\n
+  ],\n
+  "additionalProperties": false\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>{\n
+  "type": "object",\n
+  "properties": {},\n
+  "additionalProperties": false\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>MCP_listPortalTypesForm</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
