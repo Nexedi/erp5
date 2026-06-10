@@ -87,19 +87,33 @@ __doc__='''Generic Database Adapter Package Registration
 $Id: __init__.py,v 1.4 2001/08/17 02:17:38 adustman Exp $'''
 __version__='$Revision: 1.4 $'[11:-2]
 
-from . import DA
+from . import DABase
+from .MySQL import DA as MySQLDA
+from .SQLite import DA as SQLiteDA
 
-misc_=DA.misc_
+# Zope auto-publishes Products.ZSQLDA.misc_ as misc_/ZSQLDA/<key>; both
+# backends share the same icon set built from ZSQLDA/icons/.
+misc_ = DABase.build_misc_()
 
 def initialize(context):
 
     context.registerClass(
-        DA.Connection,
+        MySQLDA.Connection,
         permission="Add Z MySQL Database Connections",
-        constructors=(DA.manage_addZMySQLConnectionForm,
-                      DA.manage_addZMySQLConnection),
+        constructors=(MySQLDA.manage_addZMySQLConnectionForm,
+                      MySQLDA.manage_addZMySQLConnection),
     )
     import Products
     Products.meta_types += dict(Products.meta_types[-1],
-        name=DA.DeferredConnection.meta_type,
+        name=MySQLDA.DeferredConnection.meta_type,
+        action=None),
+
+    context.registerClass(
+        SQLiteDA.Connection,
+        permission="Add Z SQLite Database Connections",
+        constructors=(SQLiteDA.manage_addZSQLiteConnectionForm,
+                      SQLiteDA.manage_addZSQLiteConnection),
+    )
+    Products.meta_types += dict(Products.meta_types[-1],
+        name=SQLiteDA.DeferredConnection.meta_type,
         action=None),
