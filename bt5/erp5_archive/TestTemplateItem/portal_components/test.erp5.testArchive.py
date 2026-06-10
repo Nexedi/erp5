@@ -169,7 +169,7 @@ class TestArchive(InventoryAPITestCase):
     self.checkRelativeUrlInSQLPathList(path_list, connection_id=self.original_connection_id)
 
     # Create new connectors for destination
-    addSQLConnection = portal.manage_addProduct['ZMySQLDA'] \
+    addSQLConnection = portal.manage_addProduct['ZSQLDA'] \
       .manage_addZMySQLConnection
     self.new_connection_id = 'erp5_sql_connection1'
     db1, db2 = getExtraSqlConnectionStringList()[:2]
