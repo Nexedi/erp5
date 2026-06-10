@@ -100,10 +100,10 @@ def getValidAssignmentList(user):
   login_date = DateTime()
   for assignment in assignment_list:
     if assignment.getStartDate() is not None and \
-           assignment.getStartDate() > login_date:
+           assignment.getStartDate() >= login_date:
       continue
     if assignment.getStopDate() is not None and \
-           assignment.getStopDate() < login_date:
+           assignment.getStopDate() <= login_date:
       continue
     valid_assignment_list.append(assignment)
   return valid_assignment_list
