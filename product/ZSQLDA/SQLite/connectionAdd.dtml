@@ -1,0 +1,60 @@
+<dtml-var manage_page_header>
+
+  <main class="container-fluid">
+
+  <dtml-var "manage_form_title(this(), _, form_title='Add Z SQLite Database Connection')">
+
+  <form action="manage_addZSQLiteConnection" method="post">
+    <div class="form-group row">
+      <label for="id" class="col-sm-4 col-md-3">
+        Id
+      </label>
+      <div class="col-sm-8 col-md-9">
+        <input id="id" name="id" class="form-control" value="" />
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="title" class="col-sm-4 col-md-3">
+        Title
+      </label>
+      <div class="col-sm-8 col-md-9">
+        <input id="title" name="title" type="text" class="form-control" value="" />
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="connection_string" class="col-sm-4 col-md-3">
+        Database Connection String&nbsp;<a href="#1"><sup>1</sup></a>
+      </label>
+      <div class="col-sm-8 col-md-9">
+        <input id="connection_string" name="connection_string" type="text" class="form-control" value="" />
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="check" class="col-sm-4 col-md-3">
+        Connect immediately
+      </label>
+      <div class="col-sm-8 col-md-9">
+        <input name="check" type="checkbox" value="yes" checked="checked" class="mr-1" />
+        <small>Open the database connection after instantiation.</small>
+      </div>
+    </div>
+
+    <div class="zmi-controls">
+      <input type="submit" class="btn btn-primary" value="Add" />
+    </div>
+  </form>
+
+  <hr class="my-5" />
+
+  <dl>
+    <dt><a name="1"><sup>1</sup></a>
+      Database Connection String
+    </dt>     
+  <dl>
+
+  </main>
+
+  <dtml-var manage_page_footer>
