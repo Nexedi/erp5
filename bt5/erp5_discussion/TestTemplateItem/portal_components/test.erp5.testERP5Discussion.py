@@ -30,7 +30,20 @@
 ##############################################################################
 
 import unittest
+from xml.dom.minidom import parseString
 from erp5.component.test.testDms import DocumentUploadTestCase
+
+
+def getNodeContent(node):
+  return node.childNodes[0].nodeValue
+
+
+def getSubnodeContent(node, tag_name, index=0):
+  try:
+    return getNodeContent(node.getElementsByTagName(tag_name)[index])
+  except IndexError:
+    return None
+
 
 class TestERP5Discussion(DocumentUploadTestCase):
   """Test for erp5_discussion business template.
@@ -50,7 +63,9 @@ class TestERP5Discussion(DocumentUploadTestCase):
             'erp5_knowledge_pad',
             'erp5_rss_style',
             'erp5_jquery',
-            'erp5_discussion', )
+            'erp5_discussion',
+            # the RSS feed <link> calls Base_getProjectAppBaseUrl (erp5_project)
+            'erp5_project', )
 
   def beforeTearDown(self):
     self.abort()
@@ -441,6 +456,68 @@ class TestERP5Discussion(DocumentUploadTestCase):
     ]
     attachment_list = post_value.DiscussionPost_getAttachmentList()
     self.assertEqual(1, len(attachment_list))
+
+  # ---------------------------------------------------------------
+  # DiscussionForum_viewLatestPostListAsRSS - project-app RSS feed
+  # ---------------------------------------------------------------
+
+  def _createForumThreadWithPosts(self, n_posts=2):
+    """Published group-predicate forum + one shared thread with n_posts posts."""
+    portal = self.portal
+    existing = set(portal.discussion_thread_module.objectIds())
+    group = portal.portal_categories.group.newContent(
+      portal_type='Category', title='RSS Feed Group')
+    forum = self.stepCreateForum(group)
+    forum.DiscussionForum_createNewDiscussionThread('rss-feed-thread', 'first post')
+    self.tic()
+    thread, = [x for x in portal.discussion_thread_module.objectValues()
+               if x.getId() not in existing]
+    for i in range(n_posts - 1):
+      thread.DiscussionThread_createNewDiscussionPost(
+        title='reply %d' % (i + 1), text_content='reply body %d' % (i + 1))
+    self.tic()
+    return forum, thread
+
+  def test_rss_feed_renders_items(self):
+    """The feed renders RSS with one <item> per post."""
+    forum, _thread = self._createForumThreadWithPosts(n_posts=2)
+    rss_xml = forum.DiscussionForum_viewLatestPostListAsRSS()
+    self.assertIn('<rss', rss_xml)
+    items = parseString(rss_xml).getElementsByTagName('item')
+    self.assertTrue(len(items) >= 2, 'feed should list both posts')
+
+  def test_rss_feed_link_uses_push_history_stored_state(self):
+    """Each item <link> is the project-app push_history_stored_state deep-link
+    seeding the forum (p.jio_key) and targeting the thread + last_post."""
+    forum, thread = self._createForumThreadWithPosts(n_posts=2)
+    base = self.portal.Base_getProjectAppBaseUrl()
+    post_count = thread.DiscussionThread_getDiscussionPostCount()
+    doc = parseString(forum.DiscussionForum_viewLatestPostListAsRSS())
+    links = [l for l in
+             (getSubnodeContent(i, 'link') for i in doc.getElementsByTagName('item'))
+             if l]
+    self.assertTrue(links, 'feed items must have <link>')
+    for link in links:
+      self.assertIn('#!push_history_stored_state', link)
+      self.assertIn(base, link)
+      self.assertIn('p.jio_key=%s' % forum.getRelativeUrl(), link)
+      self.assertIn('n.jio_key=%s' % thread.getRelativeUrl(), link)
+      self.assertIn('n.last_post=%s' % post_count, link)
+
+  def test_rss_feed_guid_is_opaque_unique_post_url(self):
+    """Each item <guid> is the post relative URL: opaque (not http), contains
+    discussion_thread_module/, and unique per post (reader dedup)."""
+    forum, _thread = self._createForumThreadWithPosts(n_posts=2)
+    doc = parseString(forum.DiscussionForum_viewLatestPostListAsRSS())
+    guids = [g for g in
+             (getSubnodeContent(i, 'guid') for i in doc.getElementsByTagName('item'))
+             if g]
+    self.assertTrue(guids, 'feed items must have <guid>')
+    for guid in guids:
+      self.assertFalse(guid.startswith('http://') or guid.startswith('https://'),
+                       'guid should be opaque, not a URL: %r' % guid)
+      self.assertIn('discussion_thread_module/', guid)
+    self.assertEqual(len(guids), len(set(guids)), 'guids must be unique per post')
 
 def test_suite():
   suite = unittest.TestSuite()
