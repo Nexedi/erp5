@@ -76,14 +76,16 @@
                         <string>my_preferred_conversion_cache_factory</string>
                         <string>my_preferred_synchronous_metadata_discovery</string>
                         <string>my_preferred_redirect_to_document</string>
-                        <string>my_preferred_pre_converted_only</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_preferred_pre_converted_only</string>
+                        <string>my_preferred_document_preview_max_allowed_size</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>
