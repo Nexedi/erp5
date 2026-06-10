@@ -84,12 +84,14 @@
     <dt><a name="1"><sup>1</sup></a>
       Database Connection String
     </dt>
+    <dtml-if "database_type == 'MySQL'">
     <dd>
       Information about how to format the connection string can be found
       in the <a href="https://zmysqlda.readthedocs.io/en/latest/connstring.html">
       documentation</a>.
     </dd>
-  <dl>
+    </dtml-if>
+  </dl>
 
   </main>
 
