@@ -352,6 +352,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return [
       'erp5_property_sheets',
       'erp5_core',
+      'erp5_catalog',
       self.erp5_catalog_storage,
       'erp5_jquery',
       'erp5_xhtml_style',
