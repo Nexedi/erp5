@@ -44,9 +44,7 @@ def initialize( context ):
   # Define object classes and tools
   from . import ActivityTool, ActiveProcess, ActivityConnection
   from .joblib import CMFActivityParallelBackend
-  object_classes = (ActiveProcess.ActiveProcess,
-                    #ActivityConnection.ActivityConnection
-                    )
+  object_classes = (ActiveProcess.ActiveProcess,)
   portal_tools = (ActivityTool.ActivityTool, )
   content_classes = ()
   content_constructors = ()
@@ -57,13 +55,27 @@ def initialize( context ):
                     content_classes=content_classes)
 
   # register manually instead of using object_classes above so we can reuse
-  # the ZMySQLDA icon without having to carry the gif around in our own product
+  # the ZSQLDA icon without having to carry the gif around in our own product
   context.registerClass(
-        ActivityConnection.ActivityConnection,
+        ActivityConnection.MySQLActivityConnection,
         permission='Add Z MySQL Database Connections', # reuse the permission
-        constructors=(ActivityConnection.manage_addActivityConnectionForm,
-                      ActivityConnection.manage_addActivityConnection),
+        constructors=(ActivityConnection.manage_addMySQLActivityConnectionForm,
+                      ActivityConnection.manage_addMySQLActivityConnection),
   )
+  context.registerClass(
+        ActivityConnection.SQLiteActivityConnection,
+        permission='Add Z SQLite Database Connections', # reuse the permission
+        constructors=(ActivityConnection.manage_addSQLiteActivityConnectionForm,
+                      ActivityConnection.manage_addSQLiteActivityConnection),
+  )
+
+
+from . import ActivityConnection as _ActivityConnection
+_ActivityConnection.ActivityConnection = type(
+    'ActivityConnection',
+    (_ActivityConnection.MySQLActivityConnection,),
+    {'__module__': _ActivityConnection.__name__})
+del _ActivityConnection
 
 # This is used by a script (external method) that can be run
 # to set up CMFActivity in an existing CMF Site instance.
