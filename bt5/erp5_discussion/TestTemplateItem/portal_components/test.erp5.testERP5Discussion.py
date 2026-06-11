@@ -63,9 +63,7 @@ class TestERP5Discussion(DocumentUploadTestCase):
             'erp5_knowledge_pad',
             'erp5_rss_style',
             'erp5_jquery',
-            'erp5_discussion',
-            # the RSS feed <link> calls Base_getProjectAppBaseUrl (erp5_project)
-            'erp5_project', )
+            'erp5_discussion', )
 
   def beforeTearDown(self):
     self.abort()
@@ -486,23 +484,19 @@ class TestERP5Discussion(DocumentUploadTestCase):
     items = parseString(rss_xml).getElementsByTagName('item')
     self.assertTrue(len(items) >= 2, 'feed should list both posts')
 
-  def test_rss_feed_link_uses_push_history_stored_state(self):
-    """Each item <link> is the project-app push_history_stored_state deep-link
-    seeding the forum (p.jio_key) and targeting the thread + last_post."""
-    forum, thread = self._createForumThreadWithPosts(n_posts=2)
-    base = self.portal.Base_getProjectAppBaseUrl()
-    post_count = thread.DiscussionThread_getDiscussionPostCount()
+  def test_rss_feed_link_blank_without_project_app(self):
+    """erp5_discussion does not hard-depend on erp5_project: without it the feed
+    still renders and the project-app deep-link is blank. The positive deep-link
+    assertions live in erp5_web_project_ui's testWebProjectForumRSS."""
+    forum, _thread = self._createForumThreadWithPosts(n_posts=2)
+    self.assertIsNone(getattr(forum, 'Base_getProjectAppBaseUrl', None),
+                      'erp5_project must NOT be installed for this test')
     doc = parseString(forum.DiscussionForum_viewLatestPostListAsRSS())
-    links = [l for l in
-             (getSubnodeContent(i, 'link') for i in doc.getElementsByTagName('item'))
-             if l]
-    self.assertTrue(links, 'feed items must have <link>')
-    for link in links:
-      self.assertIn('#!push_history_stored_state', link)
-      self.assertIn(base, link)
-      self.assertIn('p.jio_key=%s' % forum.getRelativeUrl(), link)
-      self.assertIn('n.jio_key=%s' % thread.getRelativeUrl(), link)
-      self.assertIn('n.last_post=%s' % post_count, link)
+    items = doc.getElementsByTagName('item')
+    self.assertTrue(len(items) >= 2)
+    for item in items:
+      self.assertFalse(getSubnodeContent(item, 'link'),
+                       'project-app link must be blank without erp5_project')
 
   def test_rss_feed_guid_is_opaque_unique_post_url(self):
     """Each item <guid> is the post relative URL: opaque (not http), contains
