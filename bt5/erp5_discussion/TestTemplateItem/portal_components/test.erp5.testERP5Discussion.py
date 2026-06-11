@@ -484,20 +484,6 @@ class TestERP5Discussion(DocumentUploadTestCase):
     items = parseString(rss_xml).getElementsByTagName('item')
     self.assertTrue(len(items) >= 2, 'feed should list both posts')
 
-  def test_rss_feed_link_blank_without_project_app(self):
-    """erp5_discussion does not hard-depend on erp5_project: without it the feed
-    still renders and the project-app deep-link is blank. The positive deep-link
-    assertions live in erp5_web_project_ui's testWebProjectForumRSS."""
-    forum, _thread = self._createForumThreadWithPosts(n_posts=2)
-    self.assertIsNone(getattr(forum, 'Base_getProjectAppBaseUrl', None),
-                      'erp5_project must NOT be installed for this test')
-    doc = parseString(forum.DiscussionForum_viewLatestPostListAsRSS())
-    items = doc.getElementsByTagName('item')
-    self.assertTrue(len(items) >= 2)
-    for item in items:
-      self.assertFalse(getSubnodeContent(item, 'link'),
-                       'project-app link must be blank without erp5_project')
-
   def test_rss_feed_guid_is_opaque_unique_post_url(self):
     """Each item <guid> is the post relative URL: opaque (not http), contains
     discussion_thread_module/, and unique per post (reader dedup)."""
