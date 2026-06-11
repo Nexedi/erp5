@@ -49,12 +49,14 @@
             <value> <string>state_change</string> </value>
         </item>
         <item>
-            <key> <string>id</string> </key>
-            <value> <string>script_Document_upload</string> </value>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
-            <key> <string>portal_type</string> </key>
-            <value> <string>Workflow Script</string> </value>
+            <key> <string>id</string> </key>
+            <value> <string>script_Document_updateLocalMetadata</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

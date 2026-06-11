@@ -39,6 +39,10 @@
             </value>
         </item>
         <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts77258012.2564464</string> </value>
+        </item>
+        <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
@@ -71,13 +75,29 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>6dfb685e2866d5cc8facbe8c7e9b3951</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <bytes>CONFIGURATION MANIFEST\n
+# generated on Thu Jul  9 18:22:47 2020\n
+CACHE:\n
+\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBTY3JpcHQ=\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBTY3JpcHQvY29kZW1pcnJvcl92aWV3\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfY29kZW1pcnJvci9XZWJQYWdlX3ZpZXdBc0ppb0ZvckNvZGVtaXJyb3I=\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBTY3JpcHQvY29kZW1pcnJvcl9jbG9uZQ==\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfY29kZW1pcnJvci9CYXNlX2Nsb25lRG9jdW1lbnRGb3JDb2RlbWlycm9yRWRpdG9y\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZQ==\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZS9jb2RlbWlycm9yX3ZpZXc=\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfY29kZW1pcnJvci9XZWJQYWdlTW9kdWxlX3ZpZXdXZWJQYWdlTGlzdEFzSmlvRm9yQ29kZW1pcnJvcg==\n
+\n
+NETWORK:\n
+*</bytes> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
@@ -106,6 +126,10 @@
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>902</int> </value>
         </item>
         <item>
             <key> <string>temp_conversion_data</string> </key>
@@ -171,24 +195,6 @@ cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfY29kZW1pcnJvci9XZWJQYWdlTW9kdWxlX3ZpZXdXZWJQ
                 </item>
               </dictionary>
             </value>
-        </item>
-        <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>CONFIGURATION MANIFEST\n
-# generated on Thu Jul  9 18:22:47 2020\n
-CACHE:\n
-\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBTY3JpcHQ=\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBTY3JpcHQvY29kZW1pcnJvcl92aWV3\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfY29kZW1pcnJvci9XZWJQYWdlX3ZpZXdBc0ppb0ZvckNvZGVtaXJyb3I=\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBTY3JpcHQvY29kZW1pcnJvcl9jbG9uZQ==\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfY29kZW1pcnJvci9CYXNlX2Nsb25lRG9jdW1lbnRGb3JDb2RlbWlycm9yRWRpdG9y\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZQ==\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZS9jb2RlbWlycm9yX3ZpZXc=\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfY29kZW1pcnJvci9XZWJQYWdlTW9kdWxlX3ZpZXdXZWJQYWdlTGlzdEFzSmlvRm9yQ29kZW1pcnJvcg==\n
-\n
-NETWORK:\n
-*</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -333,7 +339,7 @@ NETWORK:\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>977.57973.57460.43366</string> </value>
+                      <value> <string>1032.34054.33373.18995</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -349,8 +355,8 @@ NETWORK:\n
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1566312430.44</float>
-                              <string>UTC</string>
+                              <float>1777258012.25879</float>
+                              <string>GMT+2</string>
                             </tuple>
                           </state>
                         </object>

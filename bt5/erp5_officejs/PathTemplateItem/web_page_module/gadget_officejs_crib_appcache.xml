@@ -38,6 +38,10 @@
             </value>
         </item>
         <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts77258011.740534</string> </value>
+        </item>
+        <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
@@ -68,41 +72,11 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>fec44e97443edb9674649033fc51ac32</string> </value>
         </item>
         <item>
-            <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_crib.appcache</string> </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_crib_appcache</string> </value>
-        </item>
-        <item>
-            <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
-        </item>
-        <item>
-            <key> <string>portal_type</string> </key>
-            <value> <string>Web Manifest</string> </value>
-        </item>
-        <item>
-            <key> <string>short_title</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>CACHE MANIFEST\n
+            <key> <string>data</string> </key>
+            <value> <bytes>CACHE MANIFEST\n
 # generated on Fri, 09 Jun 2016 11:45:33 +0000\n
 # XXX + fonts\n
 # images/ajax-loader.gif\n
@@ -220,7 +194,39 @@ codemirror/mode/css/css.js\n
 codemirror/mode/htmlmixed/htmlmixed.js\n
 codemirror.gadget.js\n
 NETWORK:\n
-*</string> </value>
+*</bytes> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>gadget_officejs_crib.appcache</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>gadget_officejs_crib_appcache</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Manifest</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3492</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -365,7 +371,7 @@ NETWORK:\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>977.38881.34981.23125</string> </value>
+                      <value> <string>1032.34054.33373.18995</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -381,8 +387,8 @@ NETWORK:\n
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1582043061.05</float>
-                              <string>UTC</string>
+                              <float>1777258011.743732</float>
+                              <string>GMT+2</string>
                             </tuple>
                           </state>
                         </object>
