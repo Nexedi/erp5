@@ -1,4 +1,11 @@
-return context.portal_catalog(
+portal_catalog = context.getPortalObject().portal_catalog
+if kw.get('path'):
+  assert 'uid' not in kw
+  kw['uid'] = [
+    b.uid for b in portal_catalog(portal_type=kw['portal_type'], path=kw.pop('path'))
+  ] or [-1]
+
+return portal_catalog(
   explanation_portal_type="Production Order",
   parent_specialise_portal_type="Transformation Simulation Rule",
   delivery_uid=None,
