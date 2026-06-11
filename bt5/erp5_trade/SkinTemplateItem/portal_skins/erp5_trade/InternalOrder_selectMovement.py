@@ -1,3 +1,10 @@
+portal_catalog = context.getPortalObject().portal_catalog
+if kw.get('path'):
+  assert 'uid' not in kw
+  kw['uid'] = [
+    b.uid for b in portal_catalog(portal_type=kw['portal_type'], path=kw.pop('path'))
+  ] or [-1]
+
 kw['explanation_portal_type'] = 'Internal Order'
 kw['parent_specialise_portal_type'] = 'Delivery Simulation Rule'
 kw['grand_parent_simulation_state'] = 'confirmed'
@@ -8,4 +15,4 @@ kw['select_dict'] = dict(delivery_uid=None)
 kw['group_by'] = ('uid',)
 
 kw['src__'] = src__
-return context.portal_catalog(**kw)
+return portal_catalog(**kw)
