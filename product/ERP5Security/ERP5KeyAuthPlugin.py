@@ -58,6 +58,7 @@ from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.Utils import bytes2str, str2bytes
 from Products.ERP5Security.ERP5UserManager import ERP5UserManager, \
                                                   _AuthenticationFailure
+from Products.ERP5Security.Utils import hasValidAssignmentList
 from Products import ERP5Security
 
 
@@ -362,30 +363,11 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
           raise _AuthenticationFailure()
         user_value = user.getUserValue()
 
-        if True:
-          try:
-            # get assignment list
-            assignment_list = [x for x in user_value.contentValues(portal_type="Assignment") \
-                                 if x.getValidationState() == "open"]
-            valid_assignment_list = []
-            # check dates if exist
-            login_date = DateTime()
-            for assignment in assignment_list:
-              if assignment.getStartDate() is not None and \
-                        assignment.getStartDate() > login_date:
-                continue
-              if assignment.hasStopDate() and \
-                  assignment.getStopDate() < login_date:
-                continue
-              valid_assignment_list.append(assignment)
+        # get assignment list
+        if hasValidAssignmentList(user_value):
+          return (user.getId(), user.getUserName())
 
-            # validate
-            if len(valid_assignment_list) > 0:
-              return (user.getId(), user.getUserName())
-          finally:
-            pass
-
-          raise _AuthenticationFailure()
+        raise _AuthenticationFailure()
 
       #Cache Method for best performance
       _authenticateCredentials = CachingMethod(_authenticateCredentials,
