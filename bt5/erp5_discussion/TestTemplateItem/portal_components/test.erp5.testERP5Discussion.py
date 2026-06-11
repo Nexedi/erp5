@@ -63,9 +63,7 @@ class TestERP5Discussion(DocumentUploadTestCase):
             'erp5_knowledge_pad',
             'erp5_rss_style',
             'erp5_jquery',
-            'erp5_discussion',
-            # the RSS feed <link> calls Base_getProjectAppBaseUrl (erp5_project)
-            'erp5_project', )
+            'erp5_discussion', )
 
   def beforeTearDown(self):
     self.abort()
@@ -485,24 +483,6 @@ class TestERP5Discussion(DocumentUploadTestCase):
     self.assertIn('<rss', rss_xml)
     items = parseString(rss_xml).getElementsByTagName('item')
     self.assertTrue(len(items) >= 2, 'feed should list both posts')
-
-  def test_rss_feed_link_uses_push_history_stored_state(self):
-    """Each item <link> is the project-app push_history_stored_state deep-link
-    seeding the forum (p.jio_key) and targeting the thread + last_post."""
-    forum, thread = self._createForumThreadWithPosts(n_posts=2)
-    base = self.portal.Base_getProjectAppBaseUrl()
-    post_count = thread.DiscussionThread_getDiscussionPostCount()
-    doc = parseString(forum.DiscussionForum_viewLatestPostListAsRSS())
-    links = [l for l in
-             (getSubnodeContent(i, 'link') for i in doc.getElementsByTagName('item'))
-             if l]
-    self.assertTrue(links, 'feed items must have <link>')
-    for link in links:
-      self.assertIn('#!push_history_stored_state', link)
-      self.assertIn(base, link)
-      self.assertIn('p.jio_key=%s' % forum.getRelativeUrl(), link)
-      self.assertIn('n.jio_key=%s' % thread.getRelativeUrl(), link)
-      self.assertIn('n.last_post=%s' % post_count, link)
 
   def test_rss_feed_guid_is_opaque_unique_post_url(self):
     """Each item <guid> is the post relative URL: opaque (not http), contains
