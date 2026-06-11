@@ -477,6 +477,10 @@ def synchronizeDynamicModules(context, force=False):
           portal.portal_activities.initialize()
         except AttributeError:
           pass # no Activity Tool yet
+        try:
+          portal.portal_catalog.maybeMigrateConnectionClass()
+        except AttributeError:
+          pass # no Catalog Tool yet
 
         for tool_id in ("portal_properties", "portal_uidannotation",
                         "portal_uidgenerator", "portal_uidhandler"):
