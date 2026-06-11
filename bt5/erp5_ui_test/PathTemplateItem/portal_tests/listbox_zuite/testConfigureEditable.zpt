@@ -7,7 +7,7 @@
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Test Configure and editable fields<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/expected_failure_for_anonymous_selection" /></td></tr>
+<tr><td rowspan="1" colspan="3">Test Configure and editable fields</td></tr>
 </thead><tbody>
 <!-- Configure listbox to unselect an editable field and make sure we can still edit the listbox. -->
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
