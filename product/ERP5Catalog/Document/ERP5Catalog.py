@@ -195,6 +195,54 @@ class ERP5Catalog(Folder, Catalog):
     Catalog.__init__(self, id, title, container)
     Folder.__init__(self, id)
 
+  _MARKER = object()
+  def _getBaseCatalog(self):
+    """Return the configured Base Catalog (or None) — the SQLCatalog used as
+    a fallback for method lookup on this Default ERP5 Catalog. Skipped if the
+    base id equals this catalog's own id (would recurse forever)."""
+    base_catalog_id = getattr(aq_base(self.aq_parent), 'base_erp5_catalog_id', None)
+    if not base_catalog_id or base_catalog_id == self.getId():
+      return None
+    return self.aq_parent._getOb(base_catalog_id, None)
+
+  def _getOb(self, id, default=_MARKER):
+    """Look up a sub-object, falling back to the Base Catalog configured on
+    the parent CatalogTool when the id is not found locally. This implements
+    the 'Default ERP5 Catalog extends Base Catalog' design: methods present
+    only on the Base Catalog (erp5_catalog_base) become reachable through any
+    ERP5 Catalog that doesn't define them.
+    """
+    obj = Folder._getOb(self, id, default=self._MARKER)
+    if obj is not self._MARKER:
+      return obj
+    base_catalog = self._getBaseCatalog()
+    if base_catalog is not None:
+      obj = Folder._getOb(base_catalog, id, default=self._MARKER)
+      if obj is not self._MARKER:
+        return obj
+    if default is self._MARKER:
+      raise AttributeError(id)
+    return default
+
+  def _aq_dynamic(self, name):
+    """Acquisition-time fallback: if `name` is not found locally but exists on
+    the Base Catalog, return it wrapped in this catalog's acquisition context.
+    Lets `sql_catalog.<method>` (plain attribute access) reach Base-Catalog
+    methods, matching what `_getOb` does for explicit lookups.
+
+    Returns None to signal "I don't synthesize this name" so Zope continues the
+    normal acquisition chain.
+    """
+    if name.startswith('_') or name.startswith('aq_'):
+      return None
+    base_catalog = self._getBaseCatalog()
+    if base_catalog is None:
+      return None
+    obj = Folder._getOb(base_catalog, name, default=None)
+    if obj is None:
+      return None
+    return obj.__of__(self)
+
   # Filter content (ZMI))
   def filtered_meta_types(self, user=None):
     # Filters the list of available meta types.
