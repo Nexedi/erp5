@@ -130,6 +130,22 @@ $script.onload = function() {
 
   if (mode == "python") {
     editor.getModel().updateOptions({ tabSize: 2 });
+    fetch(portal_url + '/ERP5Site_getAutoconpleteWordList')
+    .then(function (response) {
+      if (response.ok) return response.json();
+      return [];
+    })
+    .then(function (keyword_string) {
+      if (!keyword_string) return;
+      monaco.editor.createModel(keyword_string, 'text/plain');
+      var editor = monaco.editor.create(document.getElementById('container'), {
+        value: '',
+        language: 'python',
+        wordBasedSuggestions: "allDocuments",
+      });
+      return editor;
+    })
+    .catch(function(err) { console.log("Autocompletion load failed", err); });
   }
   if (mode === "html") {
     monaco.languages.html.htmlDefaults.options.format.tabSize = 2;
