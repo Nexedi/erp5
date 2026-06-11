@@ -352,8 +352,13 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return [
       'erp5_property_sheets',
       'erp5_core',
-      'erp5_catalog_core',
+      # Backend catalog bt5 creates the Default ERP5 Catalog (e.g.
+      # `erp5_mysql_innodb` / `erp5_sqlite`); the auto-create branch in
+      # BusinessTemplate sets it as default (first catalog created).
+      # `erp5_catalog_base` ships shared methods into the `erp5_catalog_base`
+      # skin folder — the catalog reaches them through skin acquisition.
       self.erp5_catalog_storage,
+      'erp5_catalog_base',
       'erp5_jquery',
       'erp5_xhtml_style',
     ]

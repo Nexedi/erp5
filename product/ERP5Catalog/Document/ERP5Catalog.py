@@ -37,7 +37,6 @@ from Products.ZSQLCatalog.SQLCatalog import Catalog, CatalogError
 
 import OFS.History
 from AccessControl import ClassSecurityInfo
-from Acquisition import aq_base
 from zLOG import LOG, INFO, TRACE, WARNING, ERROR
 
 import time

@@ -201,6 +201,8 @@ def _getCatalogValue(acquisition_context):
   portal_catalog = acquisition_context.getPortalObject().portal_catalog
 
   default_catalog_id = getattr(portal_catalog, 'default_erp5_catalog_id', None)
+  if default_catalog_id is None:
+    return None
   if default_catalog_id not in catalog_id_list:
     return None
   try:
@@ -892,9 +894,13 @@ class ObjectTemplateItem(BaseTemplateItem):
         bta.addObject(str2bytes(f.getvalue()), key, path=path)
 
       if catalog_method_template_item:
-        # add all datas specific to catalog inside one file
+        # add all datas specific to catalog inside one file. generateXml
+        # may return None for objects with no recorded catalog properties
+        # (e.g. SkinTemplateItem ships many non-catalog-method objects) —
+        # skip the sidecar in that case to avoid empty `.catalog_keys.xml`.
         xml_data = self.generateXml(key)
-        bta.addObject(xml_data, key + '.catalog_keys', path=path)
+        if xml_data is not None:
+          bta.addObject(xml_data, key + '.catalog_keys', path=path)
 
   def _restoreSeparatelyExportedProperty(self, obj, data):
     class_name = obj.__class__.__name__
@@ -2042,7 +2048,152 @@ class CategoryTemplateItem(ObjectTemplateItem):
     return super(CategoryTemplateItem, self).install(context, trashbin, **kw)
 
 
-class SkinTemplateItem(ObjectTemplateItem):
+class _CatalogKeysMixin(object):
+  """Catalog-keys metadata support: lets a TemplateItem ship per-method
+  catalog properties (`<method_id>.catalog_keys.xml`) declaring which
+  CatalogTool properties (sql_catalog_object_list, sql_clear_catalog,
+  sql_catalog_delete_uid, etc.) each method participates in.
+
+  Used by CatalogMethodTemplateItem (methods that live under
+  portal_catalog/<catalog_id>/) and by SkinTemplateItem (methods that live
+  in skin folders and are reached by the catalog via acquisition).
+  """
+
+  def _initCatalogKeys(self):
+    if getattr(self, '_method_properties', None) is None:
+      self._method_properties = PersistentMapping()
+
+  def _extractMethodProperties(self, catalog, method_id):
+    """Returns a mapping {catalog_property_id: 1} for catalog properties
+    (those with `select_variable='getCatalogMethodIds'`) that reference
+    `method_id`. Empty mapping when the method isn't referenced anywhere.
+    """
+    method_properties = PersistentMapping()
+    if catalog.meta_type == 'ERP5 Catalog':
+      property_list = list(catalog.propertyMap())
+    else:
+      property_list = list(catalog._properties)
+    for prop in property_list:
+      if prop.get('select_variable') == 'getCatalogMethodIds':
+        # Properties defined via property sheet 'Catalog' may have both
+        # 'id' (eg '<id>_list') and 'base_id'; prefer base_id when present.
+        prop_id = prop.get('base_id', prop['id'])
+        if prop['type'] in ('string', 'selection') and \
+            getattr(catalog, prop_id, None) == method_id:
+          method_properties[prop_id] = 1
+        elif prop['type'] == 'multiple selection' and \
+            method_id in getattr(catalog, prop_id, ()):
+          method_properties[prop_id] = 1
+    return method_properties
+
+  def _generateCatalogKeysXml(self, method_id):
+    """Returns the `<method_id>.catalog_keys.xml` body, or None when this
+    method has no recorded properties (callers can skip writing the file)."""
+    self._initCatalogKeys()
+    method_property_dict = self._method_properties.get(method_id)
+    if not method_property_dict:
+      return None
+    xml_data = '<catalog_method>'
+    for method_property, value in six.iteritems(method_property_dict):
+      xml_data += '\n <item key="%s" type="int">' %(method_property,)
+      xml_data += '\n  <value>%s</value>' %(value,)
+      xml_data += '\n </item>'
+    xml_data += '\n</catalog_method>\n'
+    return xml_data
+
+  def _importCatalogKeysXml(self, file_name, file):
+    """Consume `<method_id>.catalog_keys.xml`. Returns True if file_name
+    was a catalog_keys file (and thus consumed), False otherwise."""
+    if not file_name.endswith('.catalog_keys.xml'):
+      return False
+    self._initCatalogKeys()
+    name = os.path.basename(file_name)
+    id = name.split('.', 1)[0]
+    xml = parse(file)
+    for method in xml.findall('item'):
+      key = method.get('key')
+      key_type = method.get('type')
+      value_node = method.find('value')
+      if key_type == 'str':
+        value = value_node.text or ''
+      elif key_type == 'int':
+        value = int(value_node.text)
+      elif key_type == 'tuple':
+        value = tuple([n.text for n in method.findall('value')])
+      else:
+        LOG('BusinessTemplate import catalog_keys, type unknown', 0, key_type)
+        continue
+      if (key in catalog_method_list or key in catalog_method_filter_list) \
+          and hasattr(self, key):
+        # Legacy archives (only CatalogMethodTemplateItem owns these attrs).
+        getattr(self, key)[id] = value
+      else:
+        # New-style key: method participates in catalog property `key`.
+        self._method_properties.setdefault(id, PersistentMapping())[key] = 1
+    return True
+
+  def _installCatalogKeys(self, catalog, method_id_list):
+    """Apply recorded properties on `catalog` for each method id."""
+    self._initCatalogKeys()
+    for method_id in method_id_list:
+      for key in self._method_properties.get(method_id, ()):
+        old_value = getattr(catalog, key, None)
+        if isinstance(old_value, str):
+          setattr(catalog, key, method_id)
+        elif isinstance(old_value, (list, tuple)):
+          if method_id not in old_value:
+            new_value = list(old_value) + [method_id]
+            new_value.sort()
+            setattr(catalog, key, tuple(new_value))
+
+  def _uninstallCatalogKeys(self, catalog, method_id_list):
+    """Remove method_id_list from `catalog`'s multiple-selection properties
+    and delete their filter dict entries."""
+    if catalog.meta_type == 'ERP5 Catalog':
+      property_list = list(catalog.propertyMap())
+    else:
+      property_list = list(catalog._properties)
+    filter_dict = catalog._getFilterDict()
+    for method_id in method_id_list:
+      for catalog_prop in property_list:
+        if catalog_prop.get('select_variable') == 'getCatalogMethodIds' \
+            and catalog_prop['type'] == 'multiple selection':
+          catalog_prop_id = catalog_prop.get('base_id', catalog_prop['id'])
+          old_value = getattr(catalog, catalog_prop_id, ())
+          if method_id in old_value:
+            new_value = list(old_value)
+            new_value.remove(method_id)
+            setattr(catalog, catalog_prop_id, tuple(new_value))
+      try:
+        del filter_dict[method_id]
+      except KeyError:
+        pass
+
+
+def _getDefaultCatalog(acquisition_context):
+  """Return the Default ERP5 Catalog or None — used by catalog-keys logic
+  in TemplateItems that don't necessarily ship CatalogMethodTemplateItem
+  paths (e.g. SkinTemplateItem)."""
+  portal_catalog = acquisition_context.getPortalObject().portal_catalog
+  default_catalog_id = getattr(portal_catalog, 'default_erp5_catalog_id', None)
+  if default_catalog_id is None:
+    return None
+  try:
+    return portal_catalog[default_catalog_id]
+  except KeyError:
+    return None
+
+
+class SkinTemplateItem(_CatalogKeysMixin, ObjectTemplateItem):
+
+  # Meta-types of objects that may participate in catalog properties when
+  # shipped via a skin folder. The catalog reaches them through skin
+  # acquisition; their ids appear in sql_catalog_object_list etc.
+  _CATALOG_METHOD_META_TYPE_SET = frozenset((
+    'Z SQL Method', 'ERP5 SQL Method',
+    'Script (Python)', 'ERP5 Python Script',
+    'External Method', 'ERP5 External Method',
+  ))
 
   def __init__(self, id_list, tool_id='portal_skins', **kw):
     ObjectTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
@@ -2056,6 +2207,37 @@ class SkinTemplateItem(ObjectTemplateItem):
             is not None):
           obj._delProperty(
               'business_template_registered_skin_selections')
+
+    # Record `catalog_keys`: for any shipped object whose meta_type is a
+    # catalog-method type, capture which Default Catalog properties (if any)
+    # reference its id, so install can re-apply them.
+    catalog = _getDefaultCatalog(context)
+    if catalog is not None:
+      self._initCatalogKeys()
+      for obj in six.itervalues(self._objects):
+        if getattr(obj, 'meta_type', None) in self._CATALOG_METHOD_META_TYPE_SET:
+          method_properties = self._extractMethodProperties(catalog, obj.id)
+          if method_properties:
+            self._method_properties[obj.id] = method_properties
+
+  def _importFile(self, file_name, file):
+    # Consume `<id>.catalog_keys.xml` siblings of skin methods, falling back
+    # to standard import for everything else.
+    if self._importCatalogKeysXml(file_name, file):
+      return
+    ObjectTemplateItem._importFile(self, file_name, file)
+
+  def export(self, context, bta, **kw):
+    # `catalog_method_template_item=1` makes ObjectTemplateItem.export call
+    # generateXml(key) and ship a `<key>.catalog_keys` sidecar. Our
+    # generateXml returns None for objects with no recorded properties; the
+    # export skips writing in that case (see ObjectTemplateItem.export).
+    ObjectTemplateItem.export(self, context, bta,
+                              catalog_method_template_item=1, **kw)
+
+  def generateXml(self, path):
+    obj = self._objects[path]
+    return self._generateCatalogKeysXml(obj.id)
 
   def preinstall(self, context, installed_item, **kw):
     modified_object_list = ObjectTemplateItem.preinstall(self, context, installed_item, **kw)
@@ -2092,6 +2274,24 @@ class SkinTemplateItem(ObjectTemplateItem):
         fixZSQLMethod(p, obj)
       if folder.aq_parent.meta_type == 'CMF Skins Tool':
         registerSkinFolder(skin_tool, folder)
+
+    # Re-apply catalog properties for any skin-folder method that declared
+    # them via `<id>.catalog_keys.xml`. Catalog reaches the methods through
+    # skin acquisition, so storing the method id in the catalog tuple is
+    # all we need to do here.
+    if getattr(self, '_method_properties', None):
+      catalog = _getDefaultCatalog(context)
+      if catalog is not None:
+        self._installCatalogKeys(catalog, list(self._method_properties))
+
+  def uninstall(self, context, **kw):
+    # Remove any catalog-property references to skin methods before the
+    # objects themselves go away.
+    if getattr(self, '_method_properties', None):
+      catalog = _getDefaultCatalog(context)
+      if catalog is not None:
+        self._uninstallCatalogKeys(catalog, list(self._method_properties))
+    ObjectTemplateItem.uninstall(self, context, **kw)
 
 class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
   # BUG: Let's suppose old BT defines
@@ -2977,7 +3177,7 @@ class PortalTypeTypeMixinTemplateItem(PortalTypeAllowedContentTypeTemplateItem):
   class_property = 'type_mixin'
   business_template_class_property = '_portal_type_type_mixin_item'
 
-class CatalogMethodTemplateItem(ObjectTemplateItem):
+class CatalogMethodTemplateItem(_CatalogKeysMixin, ObjectTemplateItem):
   """Template Item for catalog methods.
 
     This template item stores catalog method and install them in the
@@ -2999,42 +3199,6 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     for method in catalog_method_filter_list:
       setattr(self, method, PersistentMapping())
 
-  def _extractMethodProperties(self, catalog, method_id):
-    """Extracts properties for a given method in the catalog.
-    Returns a mapping of property name -> boolean """
-    method_properties = PersistentMapping()
-
-    if catalog.meta_type == 'ERP5 Catalog':
-      property_list = list(catalog.propertyMap())
-    else:
-      property_list = list(catalog._properties)
-
-    for prop in property_list:
-      if prop.get('select_variable') == 'getCatalogMethodIds':
-
-        # In case the properties are defined via property sheet 'Catalog', the
-        # object would have two IDs if it is of type 'selection' or
-        # 'multiple_selection': 'id' and 'base_id', usage of base_id is preferred
-        # while building objects as it maintains consistency between the old
-        # catalog and new erp5 catalog
-        prop_id = prop.get('base_id', prop['id'])
-
-        # IMPORTANT: After migration of Catalog, the properties which were of
-        # 'selection' type in ZSQL Catalog made more sense to be of 'string'
-        # type as they only contained one value. Also, putting them in
-        # 'selection' type, we would've ended up having to deal with accessors
-        # which end with '_list' which would've made no sense. So, we decided
-        # to move them to 'string' type
-        if prop['type'] in ('string', 'selection') and \
-            getattr(catalog, prop_id, None) == method_id:
-          method_properties[prop_id] = 1
-
-        elif prop['type'] == 'multiple selection' and \
-            method_id in getattr(catalog, prop_id, ()):
-          method_properties[prop_id] = 1
-
-    return method_properties
-
   def build(self, context, **kw):
     ObjectTemplateItem.build(self, context, **kw)
 
@@ -3043,10 +3207,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       LOG('BusinessTemplate build', 0, 'catalog not found')
       return
 
-    # upgrade old
-    if not hasattr(self, '_method_properties'):
-      self._method_properties = PersistentMapping()
-
+    self._initCatalogKeys()
     for obj in six.itervalues(self._objects):
       method_id = obj.id
       # Check if the method is sub-object of Catalog
@@ -3056,16 +3217,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
 
   def generateXml(self, path):
     obj = self._objects[path]
-    method_id = obj.id
-    xml_data = '<catalog_method>'
-    if method_id in self._method_properties:
-      for method_property, value in six.iteritems(self._method_properties[method_id]):
-        xml_data += '\n <item key="%s" type="int">' %(method_property,)
-        xml_data += '\n  <value>%s</value>' %(value,)
-        xml_data += '\n </item>'
-
-    xml_data += '\n</catalog_method>\n'
-    return xml_data
+    return self._generateCatalogKeysXml(obj.id)
 
   def preinstall(self, context, installed_item, **kw):
     """Compute diffs from catalog methods metadata and objects.
@@ -3121,7 +3273,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
         self._objects[path] = new_obj
 
     if force: # get all objects
-      values = six.itervalues(self._objects)
+      values = list(six.itervalues(self._objects))
     else: # get only selected object
       for key, value in six.iteritems(self._objects):
         if key in update_dict or force:
@@ -3131,21 +3283,10 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
               continue
           values.append(value)
 
+    self._installCatalogKeys(catalog, [obj.id for obj in values])
+
     for obj in values:
       method_id = obj.id
-
-      # Restore catalog properties for methods
-      if hasattr(self, '_method_properties'):
-        for key in self._method_properties.get(method_id, {}):
-          old_value = getattr(catalog, key, None)
-          if isinstance(old_value, str):
-            setattr(catalog, key, method_id)
-          elif isinstance(old_value, (list, tuple)):
-            if method_id not in old_value:
-              new_value = list(old_value) + [method_id]
-              new_value.sort()
-              setattr(catalog, key, tuple(new_value))
-
       method = catalog._getOb(method_id)
 
       # Restore filter:
@@ -3210,79 +3351,22 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
 
-    values = []
     object_path = kw.get('object_path', None)
-    # get required values
     if object_path is None:
-      values = six.itervalues(self._objects)
+      method_id_list = [obj.id for obj in six.itervalues(self._objects)]
     else:
-      try:
-        value = self._objects[object_path]
-      except KeyError:
-        value = None
-      if value is not None:
-        values.append(value)
-    for obj in values:
-      method_id = obj.id
-      if catalog.meta_type == 'ERP5 Catalog':
-        property_list = list(catalog.propertyMap())
-      else:
-        property_list = list(catalog._properties)
+      value = self._objects.get(object_path)
+      method_id_list = [value.id] if value is not None else []
 
-      # remove method references in portal_catalog
-      for catalog_prop in property_list:
-        if catalog_prop.get('select_variable') == 'getCatalogMethodIds'\
-            and catalog_prop['type'] == 'multiple selection':
-          # In case the properties are defined via property sheet 'Catalog', the
-          # object would have two IDs if it is of type 'selection' or
-          # 'multiple_selection': 'id' and 'base_id', usage of base_id is preferred
-          # while building objects as it maintains consistency between the old
-          # catalog and new erp5 catalog
-          catalog_prop_id = catalog_prop.get('base_id', catalog_prop['id'])
-          old_value = getattr(catalog, catalog_prop_id, ())
-          if method_id in old_value:
-            new_value = list(old_value)
-            new_value.remove(method_id)
-            # Better to set the attribute value as tuple as it would be consistent
-            # with both SQL Catalog and ERP5 Catalog.
-            setattr(catalog, catalog_prop_id, tuple(new_value))
-
-      filter_dict = catalog._getFilterDict()
-      try:
-        del filter_dict[method_id]
-      except KeyError:
-        pass
+    self._uninstallCatalogKeys(catalog, method_id_list)
 
     # uninstall objects
     ObjectTemplateItem.uninstall(self, context, **kw)
 
   def _importFile(self, file_name, file):
-    if file_name.endswith('.catalog_keys.xml'):
-      # recreate data mapping specific to catalog method
-      name = os.path.basename(file_name)
-      id = name.split('.', 1)[0]
-      xml = parse(file)
-      method_list = xml.findall('item')
-      for method in method_list:
-        key = method.get('key')
-        key_type = method.get('type')
-        value_node = method.find('value')
-        if key_type == "str":
-          value = value_node.text or ''
-        elif key_type == "int":
-          value = int(value_node.text)
-        elif key_type == "tuple":
-          value = tuple([value_node.text for value_node in method.findall('value')])
-        else:
-          LOG('BusinessTemplate import CatalogMethod, type unknown', 0, key_type)
-          continue
-        if key in catalog_method_list or key in catalog_method_filter_list:
-          getattr(self, key)[id] = value
-        else:
-          # new style key
-          self._method_properties.setdefault(id, PersistentMapping())[key] = 1
-    else:
-      ObjectTemplateItem._importFile(self, file_name, file, catalog_method_template_item=1)
+    if self._importCatalogKeysXml(file_name, file):
+      return
+    ObjectTemplateItem._importFile(self, file_name, file, catalog_method_template_item=1)
 
 
 class ActionTemplateItem(ObjectTemplateItem):
