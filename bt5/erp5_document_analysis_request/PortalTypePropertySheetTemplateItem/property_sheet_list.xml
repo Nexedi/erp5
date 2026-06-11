@@ -1,0 +1,12 @@
+<property_sheet_list>
+ <portal_type id="Document Analysis">
+  <item>Document</item>
+ </portal_type>
+ <portal_type id="Document Analysis Request">
+  <item>BaseCategory</item>
+  <item>Reference</item>
+ </portal_type>
+ <portal_type id="Document Conversion">
+  <item>Document</item>
+ </portal_type>
+</property_sheet_list>
