@@ -339,6 +339,10 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     PortalObjectBase.__init__(self, id)
     self.creation_date = DateTime()
 
+  security.declarePublic('isMySQLCatalogStorage')
+  def isMySQLCatalogStorage(self):
+    return self.erp5_catalog_storage == 'erp5_mysql_innodb_catalog'
+
   security.declarePublic('getCoreBusinessTemplateList')
   def getCoreBusinessTemplateList(self):
     # Return the list of business templates expected to be installed when this
@@ -348,6 +352,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return [
       'erp5_property_sheets',
       'erp5_core',
+      'erp5_catalog_core',
       self.erp5_catalog_storage,
       'erp5_jquery',
       'erp5_xhtml_style',
@@ -2331,8 +2336,11 @@ class ERP5Generator(PortalGenerator):
       if not sql_reset and p[id]().tables():
         raise Exception("Database %r is not empty." % connection_string)
 
-    # Add Z MySQL Connections
-    manage_add = p.manage_addProduct['ZMySQLDA'].manage_addZMySQLConnection
+    if p.isMySQLCatalogStorage():
+      manage_add = p.manage_addProduct['ZSQLDA'].manage_addZMySQLConnection
+    else:
+      manage_add = p.manage_addProduct['ZSQLDA'].manage_addZSQLiteConnection
+
     addSQLConnection('erp5_sql_connection',
                      'ERP5 SQL Server Connection')
     addSQLConnection('erp5_sql_deferred_connection',
@@ -2341,7 +2349,10 @@ class ERP5Generator(PortalGenerator):
     addSQLConnection('erp5_sql_transactionless_connection',
                      'ERP5 Transactionless SQL Server Connection')
     # Add Activity SQL Connections
-    manage_add = p.manage_addProduct['CMFActivity'].manage_addActivityConnection
+    if p.isMySQLCatalogStorage():
+      manage_add = p.manage_addProduct['CMFActivity'].manage_addMySQLActivityConnection
+    else:
+      manage_add = p.manage_addProduct['CMFActivity'].manage_addSQLiteActivityConnection
     addSQLConnection('cmf_activity_sql_connection',
                      'CMF Activity SQL Server Connection')
 
@@ -2625,6 +2636,7 @@ def initialize(self):
   for _ in self.getApp().objectIds(meta_type):
     return
 
+
   # We defer the call to manage_addERP5Site via TimerService because:
   # - we use ZPublisher so that get_request() works
   #   (see Localizer patch)
@@ -2633,14 +2645,20 @@ def initialize(self):
   import inspect, sys, time
   from AccessControl.SecurityManagement import newSecurityManager
   from App.ZApplication import ZApplicationWrapper
-  from Products.ZMySQLDA.db import DB, OperationalError
   def addERP5Site(REQUEST):
     default_kw = inspect.getcallargs(manage_addERP5Site, None, '')
     erp5_catalog_storage = kw.get('erp5_catalog_storage')
     if erp5_catalog_storage:
       default_kw['erp5_catalog_storage'] = erp5_catalog_storage
+    else:
+      erp5_catalog_storage = default_kw['erp5_catalog_storage']
     db = (kw.get('erp5_sql_connection_string') or
       default_kw['erp5_sql_connection_string'])
+    if erp5_catalog_storage == 'erp5_mysql_innodb_catalog':
+      from Products.ZSQLDA.MySQL.db import DB, OperationalError
+    else:
+      from Products.ZSQLDA.SQLite.db import DB, OperationalError
+
     # The lock is to avoid that multiple zopes try to create a site when
     # they're started at the same time, because this is a quite long operation
     # (-> high probably of conflict with a lot of wasted CPU).
@@ -2676,12 +2694,12 @@ def initialize(self):
       except OperationalError as e:
         if app is not None:
           raise
-        # MySQL server not ready (down or user not created).
+        # Database not ready (down or user not created).
         e = str(e)
         if last != e:
           last = e
           LOG('ERP5Site', WARNING,
-              'MySQL error while trying to create ERP5 site. Retrying...',
+              'Database error while trying to create ERP5 site. Retrying...',
               error=1)
         time.sleep(5)
   from Products.TimerService.timerserver.TimerServer import TimerRequest
