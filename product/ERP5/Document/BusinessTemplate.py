@@ -201,7 +201,18 @@ def _getCatalogValue(acquisition_context):
   portal_catalog = acquisition_context.getPortalObject().portal_catalog
 
   default_catalog_id = getattr(portal_catalog, 'default_erp5_catalog_id', None)
-  if default_catalog_id not in catalog_id_list:
+  if default_catalog_id is None:
+    return None
+  # Properties from .catalog_keys.xml always go on the Default ERP5 Catalog
+  # (it owns the runtime sql_catalog_object_list / sql_clear_catalog / etc.
+  # tuples that drive indexing). When the BT references the Base Catalog
+  # (e.g. erp5_catalog_base/erp5_catalog), still return the default catalog
+  # so its property tuples include the shared methods. The methods themselves
+  # live in the Base Catalog and are reached at runtime via the
+  # ERP5Catalog._getOb fallback.
+  base_catalog_id = getattr(portal_catalog, 'base_erp5_catalog_id', None)
+  if default_catalog_id not in catalog_id_list \
+      and (base_catalog_id is None or base_catalog_id not in catalog_id_list):
     return None
   try:
     return portal_catalog[default_catalog_id]
@@ -1385,6 +1396,13 @@ class ObjectTemplateItem(BaseTemplateItem):
               # `_setDefaultSqlCatalogId` to update both `default_sql_catalog_id`
               # and `default_erp5_catalog_id`
               container_container._setDefaultSqlCatalogId(container_path[-1])
+            elif getattr(container_container, 'base_erp5_catalog_id', None) is None \
+                and hasattr(container_container, '_setBaseErp5CatalogId'):
+              # Second (or later) catalog created and no base yet — adopt this
+              # one as the Base Catalog. The default catalog (already set
+              # above when the first catalog was created) extends it via
+              # ERP5Catalog._getOb fallback.
+              container_container._setBaseErp5CatalogId(container_path[-1])
             container = portal.unrestrictedTraverse(container_path)
           else:
             raise

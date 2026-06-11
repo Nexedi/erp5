@@ -352,8 +352,13 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return [
       'erp5_property_sheets',
       'erp5_core',
-      'erp5_catalog_core',
+      # Backend catalog bt5 must install before erp5_catalog_base so that the
+      # backend's SQLCatalog becomes the Default ERP5 Catalog (first catalog
+      # auto-created) and the Base Catalog (erp5_catalog) is auto-set when
+      # erp5_catalog_base creates the second catalog. See ERP5CatalogTool.base_erp5_catalog_id
+      # and the auto-set elif in BusinessTemplate.py CatalogMethodTemplateItem.install.
       self.erp5_catalog_storage,
+      'erp5_catalog_base',
       'erp5_jquery',
       'erp5_xhtml_style',
     ]

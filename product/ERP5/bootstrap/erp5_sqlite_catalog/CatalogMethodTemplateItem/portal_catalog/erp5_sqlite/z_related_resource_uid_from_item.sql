@@ -1,1 +1,0 @@
-<dtml-var table_0>.uid = item.resource_uid
