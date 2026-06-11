@@ -125,7 +125,12 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       else:
         if explanation is not None:
           explanation_cache = _getExplanationCache(explanation)
-          kw['path'] = explanation_cache.getSimulationPathPatternList()
+          kw['uid'] = [
+            self.portal.portal_catalog(
+              path=explanation_cache.getSimulationPathPatternList() or '/',
+              portal_type='Simulation Movement',
+            )
+          ] or -1
         if business_link is not None:
           kw['causality_uid'] = business_link.getUid()
         elif kw.get('causality_uid') is None:
