@@ -30,7 +30,20 @@
 ##############################################################################
 
 import unittest
+from xml.dom.minidom import parseString
 from erp5.component.test.testDms import DocumentUploadTestCase
+
+
+def getNodeContent(node):
+  return node.childNodes[0].nodeValue
+
+
+def getSubnodeContent(node, tag_name, index=0):
+  try:
+    return getNodeContent(node.getElementsByTagName(tag_name)[index])
+  except IndexError:
+    return None
+
 
 class TestERP5Discussion(DocumentUploadTestCase):
   """Test for erp5_discussion business template.
@@ -441,6 +454,64 @@ class TestERP5Discussion(DocumentUploadTestCase):
     ]
     attachment_list = post_value.DiscussionPost_getAttachmentList()
     self.assertEqual(1, len(attachment_list))
+
+  # ---------------------------------------------------------------
+  # DiscussionForum_viewLatestPostListAsRSS - project-app RSS feed
+  # ---------------------------------------------------------------
+
+  def _createForumThreadWithPosts(self, n_posts=2):
+    """Published group-predicate forum + one shared thread with n_posts posts."""
+    portal = self.portal
+    existing = set(portal.discussion_thread_module.objectIds())
+    group = portal.portal_categories.group.newContent(
+      portal_type='Category', title='RSS Feed Group')
+    forum = self.stepCreateForum(group)
+    forum.DiscussionForum_createNewDiscussionThread('rss-feed-thread', 'first post')
+    self.tic()
+    thread, = [x for x in portal.discussion_thread_module.objectValues()
+               if x.getId() not in existing]
+    for i in range(n_posts - 1):
+      thread.DiscussionThread_createNewDiscussionPost(
+        title='reply %d' % (i + 1), text_content='reply body %d' % (i + 1))
+    self.tic()
+    return forum, thread
+
+  def test_rss_feed_renders_items(self):
+    """The feed renders RSS with one <item> per post."""
+    forum, _thread = self._createForumThreadWithPosts(n_posts=2)
+    rss_xml = forum.DiscussionForum_viewLatestPostListAsRSS()
+    self.assertIn('<rss', rss_xml)
+    items = parseString(rss_xml).getElementsByTagName('item')
+    self.assertTrue(len(items) >= 2, 'feed should list both posts')
+
+  def test_rss_feed_link_blank_without_project_app(self):
+    """erp5_discussion does not hard-depend on erp5_project: without it the feed
+    still renders and the project-app deep-link is blank. The positive deep-link
+    assertions live in erp5_web_project_ui's testWebProjectForumRSS."""
+    forum, _thread = self._createForumThreadWithPosts(n_posts=2)
+    self.assertIsNone(getattr(forum, 'Base_getProjectAppBaseUrl', None),
+                      'erp5_project must NOT be installed for this test')
+    doc = parseString(forum.DiscussionForum_viewLatestPostListAsRSS())
+    items = doc.getElementsByTagName('item')
+    self.assertTrue(len(items) >= 2)
+    for item in items:
+      self.assertFalse(getSubnodeContent(item, 'link'),
+                       'project-app link must be blank without erp5_project')
+
+  def test_rss_feed_guid_is_opaque_unique_post_url(self):
+    """Each item <guid> is the post relative URL: opaque (not http), contains
+    discussion_thread_module/, and unique per post (reader dedup)."""
+    forum, _thread = self._createForumThreadWithPosts(n_posts=2)
+    doc = parseString(forum.DiscussionForum_viewLatestPostListAsRSS())
+    guids = [g for g in
+             (getSubnodeContent(i, 'guid') for i in doc.getElementsByTagName('item'))
+             if g]
+    self.assertTrue(guids, 'feed items must have <guid>')
+    for guid in guids:
+      self.assertFalse(guid.startswith('http://') or guid.startswith('https://'),
+                       'guid should be opaque, not a URL: %r' % guid)
+      self.assertIn('discussion_thread_module/', guid)
+    self.assertEqual(len(guids), len(set(guids)), 'guids must be unique per post')
 
 def test_suite():
   suite = unittest.TestSuite()
