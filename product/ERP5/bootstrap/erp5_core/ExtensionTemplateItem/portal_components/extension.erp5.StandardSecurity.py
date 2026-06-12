@@ -27,7 +27,7 @@
 from collections import defaultdict
 from itertools import product
 import six
-from DateTime import DateTime
+from Products.ERP5Security.ERP5UserManager import getValidAssignmentList
 
 _STOP_RECURSION_PORTAL_TYPE_SET = ('Base Category', 'ERP5 Site')
 
@@ -77,32 +77,26 @@ def getSecurityCategoryValueFromAssignment(self, rule_dict):
   category_value_set_dict = defaultdict(set)
   parent_category_value_dict = {}
   assignment_membership_dict_list = []
-  now = DateTime()
-  for assignment_value in self.objectValues(portal_type='Assignment'):
-    if assignment_value.getValidationState() == 'open' and (
-      not assignment_value.hasStartDate() or assignment_value.getStartDate() <= now
-    ) and (
-      not assignment_value.hasStopDate() or assignment_value.getStopDate() >= now
-    ):
-      assignment_membership_dict = {}
-      for base_category in base_category_set:
-        category_value_list = assignment_value.getAcquiredValueList(base_category)
-        if category_value_list:
-          assignment_membership_dict[base_category] = tuple(set(category_value_list))
-          category_value_set_dict[base_category].update(category_value_list)
-          if base_category in recursive_base_category_set:
-            for category_value in category_value_list:
-              while True:
-                parent_category_value = category_value.getParentValue()
-                if (
-                  category_value in parent_category_value_dict or
-                  parent_category_value.getPortalType() in _STOP_RECURSION_PORTAL_TYPE_SET
-                ):
-                  break
-                parent_category_value_dict[category_value] = parent_category_value
-                category_value = parent_category_value
-      if assignment_membership_dict:
-        assignment_membership_dict_list.append(assignment_membership_dict)
+  for assignment_value in getValidAssignmentList(self):
+    assignment_membership_dict = {}
+    for base_category in base_category_set:
+      category_value_list = assignment_value.getAcquiredValueList(base_category)
+      if category_value_list:
+        assignment_membership_dict[base_category] = tuple(set(category_value_list))
+        category_value_set_dict[base_category].update(category_value_list)
+        if base_category in recursive_base_category_set:
+          for category_value in category_value_list:
+            while True:
+              parent_category_value = category_value.getParentValue()
+              if (
+                category_value in parent_category_value_dict or
+                parent_category_value.getPortalType() in _STOP_RECURSION_PORTAL_TYPE_SET
+              ):
+                break
+              parent_category_value_dict[category_value] = parent_category_value
+              category_value = parent_category_value
+    if assignment_membership_dict:
+      assignment_membership_dict_list.append(assignment_membership_dict)
   result = []
   for base_category_list, recursion_list in six.iteritems(rule_dict):
     result_entry = set()
@@ -245,30 +239,24 @@ def getSecurityCategoryFromAssignment(
     return []
   user_path, = user_path_set
   person_object = self.getPortalObject().unrestrictedTraverse(user_path)
-  now = DateTime()
 
   # We look for every valid assignments of this user
-  for assignment in person_object.contentValues(filter={'portal_type': 'Assignment'}):
-    if assignment.getValidationState() == "open" and (
-      not assignment.hasStartDate() or assignment.getStartDate() <= now
-    ) and (
-      not assignment.hasStopDate() or assignment.getStopDate() >= now
-    ):
-      category_dict = {}
-      for base_category in base_category_list:
-        category_value_list = assignment.getAcquiredValueList(base_category)
-        if category_value_list:
-          for category_value in category_value_list:
-            if base_category in child_category_list:
-              if category_value.getPortalType() not in ('Base Category', 'ERP5 Site'):
-                while category_value.getPortalType() not in ('Base Category', 'ERP5 Site'):
-                  category_dict.setdefault(base_category, []).append('%s*' % category_value.getRelativeUrl())
-                  category_value = category_value.getParentValue()
-              else:
-                category_dict.setdefault(base_category, []).append(category_value.getRelativeUrl())
+  for assignment in getValidAssignmentList(person_object):
+    category_dict = {}
+    for base_category in base_category_list:
+      category_value_list = assignment.getAcquiredValueList(base_category)
+      if category_value_list:
+        for category_value in category_value_list:
+          if base_category in child_category_list:
+            if category_value.getPortalType() not in ('Base Category', 'ERP5 Site'):
+              while category_value.getPortalType() not in ('Base Category', 'ERP5 Site'):
+                category_dict.setdefault(base_category, []).append('%s*' % category_value.getRelativeUrl())
+                category_value = category_value.getParentValue()
             else:
               category_dict.setdefault(base_category, []).append(category_value.getRelativeUrl())
-      category_list.append(category_dict)
+          else:
+            category_dict.setdefault(base_category, []).append(category_value.getRelativeUrl())
+    category_list.append(category_dict)
 
   return category_list
 
