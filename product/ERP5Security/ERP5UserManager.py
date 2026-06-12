@@ -90,8 +90,7 @@ def getUserByLogin(portal, login, exact_match=True):
   #  by default (feature).
   return [x.getObject() for x in result if not exact_match
                                            or x['reference'] in login]
-
-@transactional_cached(lambda portal, *args: args)
+@transactional_cached(lambda *args: args)
 def getValidAssignmentList(user):
   """Returns list of valid assignments."""
   assignment_list = [x for x in user.contentValues(portal_type="Assignment") if x.getValidationState() == "open"]
@@ -100,10 +99,10 @@ def getValidAssignmentList(user):
   login_date = DateTime()
   for assignment in assignment_list:
     if assignment.getStartDate() is not None and \
-           assignment.getStartDate() > login_date:
+           assignment.getStartDate() >= login_date:
       continue
     if assignment.getStopDate() is not None and \
-           assignment.getStopDate() < login_date:
+           assignment.getStopDate() <= login_date:
       continue
     valid_assignment_list.append(assignment)
   return valid_assignment_list
