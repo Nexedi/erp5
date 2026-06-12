@@ -884,7 +884,7 @@ class TestKMSearch(TestKMMixIn):
       portal_templates = portal.portal_templates
       website = self.portal.web_site_module.km_test_web_site
       base_url = "http://www.erp5.org/dists/snapshot/bt5"
-      portal.manage_addProduct['ZMySQLDA'].manage_addZMySQLConnection(
+      portal.manage_addProduct['ZSQLDA'].manage_addZMySQLConnection(
                                             id=connection_id ,
                                             title="Sphinx",
                                             connection_string="dummy@127.0.0.1:9306")

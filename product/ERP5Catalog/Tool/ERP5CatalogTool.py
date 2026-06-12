@@ -100,6 +100,7 @@ class ERP5CatalogTool(BaseTool, CMFCore_CatalogTool):
     getObject = ZCatalog.getObject
 
     default_erp5_catalog_id = None
+    base_erp5_catalog_id = None
 
     def __init__(self, id=''):
         ZCatalog.__init__(self, self.getId())
@@ -123,6 +124,16 @@ class ERP5CatalogTool(BaseTool, CMFCore_CatalogTool):
       have accessors defined and there we'll need the attribute.
       """
       self.default_erp5_catalog_id = value
+
+    security.declarePublic('getBaseErp5CatalogId')
+    def getBaseErp5CatalogId(self):
+      """The id of the SQLCatalog instance used as a fallback when a method is
+      not found on the Default ERP5 Catalog.
+      """
+      return self.base_erp5_catalog_id
+
+    def _setBaseErp5CatalogId(self, value):
+      self.base_erp5_catalog_id = value
 
     # Filter content (ZMI))
     def filtered_meta_types(self, user=None):
