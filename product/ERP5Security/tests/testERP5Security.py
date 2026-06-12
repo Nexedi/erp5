@@ -735,6 +735,7 @@ class TestSecurityGroupsWithAssignmentParent(RoleManagementTestCaseBase):
       group_value=group.subcat.subcat_1.subcat_1_2,
       function_value=function.another_subcat,
     ).open()
+    self.commit()
     assertRoleItemsEqual(
       [
         'F1*_G1*',
@@ -1534,6 +1535,7 @@ class _TestLocalRoleManagementMixIn(object):
                                   site='subcat',
                                   function='another_subcat' )
     assignment.open()
+    self.commit()
     assertRoleItemsEqual(['F1_G1_S1', 'F2_G1_S1'])
     assignment.setGroup('another_subcat')
     assertRoleItemsEqual(['F1_G1_S1', 'F2_G1_S1'])
