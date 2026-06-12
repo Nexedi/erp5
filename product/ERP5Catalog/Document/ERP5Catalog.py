@@ -221,7 +221,7 @@ class ERP5Catalog(Folder, Catalog):
       if obj is not self._MARKER:
         return obj
     if default is self._MARKER:
-      raise AttributeError(id)
+      raise KeyError(id)
     return default
 
   def _aq_dynamic(self, name):
