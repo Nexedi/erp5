@@ -319,9 +319,20 @@ class ERP5Catalog(Folder, Catalog):
       HAS_ARGUMENT_SRC_METATYPE_SET + HAS_FUNC_CODE_METATYPE_SET):
     """Find ERP5 SQL methods in the current folder and above
     This function return a list of ids.
+    Methods that live only on the configured Base Catalog are merged in,
+    so configuration forms can select methods inherited from Base Catalog.
     """
-    return super(ERP5Catalog, self).getCatalogMethodIds(
+    ids = super(ERP5Catalog, self).getCatalogMethodIds(
                                       valid_method_meta_type_list)
+    base_catalog = self._getBaseCatalog()
+    if base_catalog is not None:
+      seen = {id_ for _, id_ in ids}
+      for item in base_catalog.getCatalogMethodIds(valid_method_meta_type_list):
+        if item[1] not in seen:
+          ids.append(item)
+          seen.add(item[1])
+      ids.sort()
+    return ids
 
   security.declarePublic('getPythonMethodIds')
   def getPythonMethodIds(self):
