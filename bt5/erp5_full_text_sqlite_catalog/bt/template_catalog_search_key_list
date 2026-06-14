@@ -1,0 +1,4 @@
+SearchableText | SqliteFullTextKey
+catalog_full_text.description | SqliteFullTextKey
+catalog_full_text.title | SqliteFullTextKey
+full_text.SearchableText | SqliteFullTextKey
