@@ -200,11 +200,20 @@ def _getCatalogValue(acquisition_context):
 
   portal_catalog = acquisition_context.getPortalObject().portal_catalog
 
+  # A business template installs its methods into the catalog(s) it names
+  # through the prefix of template_catalog_method_id_list. We prefer the site
+  # default catalog when it is among the targeted catalogs (the usual backend
+  # catalog case); otherwise the business template targets a single specific
+  # catalog (e.g. a shared catalog such as erp5_catalog_base).
   default_catalog_id = getattr(portal_catalog, 'default_erp5_catalog_id', None)
-  if default_catalog_id not in catalog_id_list:
+  if default_catalog_id in catalog_id_list:
+    catalog_id = default_catalog_id
+  elif len(catalog_id_list) == 1:
+    catalog_id = list(catalog_id_list)[0]
+  else:
     return None
   try:
-    return portal_catalog[default_catalog_id]
+    return portal_catalog[catalog_id]
   except KeyError:
     return None
 
@@ -1378,13 +1387,27 @@ class ObjectTemplateItem(BaseTemplateItem):
                 ),
               )
 
-            # Update default catalog ID
-            if len(container_container.objectIds()) == 1:
-              # Set the default catalog. Here, thanks to consistency between
-              # ERP5CatalogTool and ZSQLCatalog, we can use the explicit accessor
-              # `_setDefaultSqlCatalogId` to update both `default_sql_catalog_id`
-              # and `default_erp5_catalog_id`
-              container_container._setDefaultSqlCatalogId(container_path[-1])
+            # Register the freshly created catalog in the Catalog Tool. A
+            # business template which provides 'erp5_catalog' installs a backend
+            # (site) catalog; any other catalog installing methods is a shared
+            # catalog inherited by the backend catalogs and must never become
+            # the site default.
+            new_catalog_id = container_path[-1]
+            try:
+              provision_list = context.getProvisionList()
+            except AttributeError:
+              provision_list = ()
+            if 'erp5_catalog' in provision_list:
+              # Set the default catalog to the first backend catalog created.
+              # Thanks to consistency between ERP5CatalogTool and ZSQLCatalog,
+              # the explicit accessor `_setDefaultSqlCatalogId` updates both
+              # `default_sql_catalog_id` and `default_erp5_catalog_id`.
+              shared_id_list = container_container.getSharedSqlCatalogIdList()
+              if len([x for x in container_container.objectIds()
+                      if x not in shared_id_list]) == 1:
+                container_container._setDefaultSqlCatalogId(new_catalog_id)
+            else:
+              container_container._registerSharedSqlCatalog(new_catalog_id)
             container = portal.unrestrictedTraverse(container_path)
           else:
             raise

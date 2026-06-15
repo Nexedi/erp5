@@ -353,6 +353,11 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
       'erp5_property_sheets',
       'erp5_core',
       'erp5_catalog_core',
+      # Shared base catalog holding the database-agnostic catalog methods
+      # inherited by the backend catalog (erp5_catalog_storage). It must be
+      # installed before the backend so the erp5_catalog_base catalog instance
+      # exists when the backend catalog is set up.
+      'erp5_catalog_base',
       self.erp5_catalog_storage,
       'erp5_jquery',
       'erp5_xhtml_style',
