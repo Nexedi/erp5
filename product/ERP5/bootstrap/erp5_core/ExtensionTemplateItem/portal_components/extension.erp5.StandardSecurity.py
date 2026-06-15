@@ -27,7 +27,7 @@
 from collections import defaultdict
 from itertools import product
 import six
-from Products.ERP5Security.ERP5UserManager import getValidAssignmentList
+from Products.ERP5Security.Utils import getCachedValidAssignmentList
 
 _STOP_RECURSION_PORTAL_TYPE_SET = ('Base Category', 'ERP5 Site')
 
@@ -77,7 +77,7 @@ def getSecurityCategoryValueFromAssignment(self, rule_dict):
   category_value_set_dict = defaultdict(set)
   parent_category_value_dict = {}
   assignment_membership_dict_list = []
-  for assignment_value in getValidAssignmentList(self):
+  for assignment_value in getCachedValidAssignmentList(self):
     assignment_membership_dict = {}
     for base_category in base_category_set:
       category_value_list = assignment_value.getAcquiredValueList(base_category)
@@ -241,7 +241,7 @@ def getSecurityCategoryFromAssignment(
   person_object = self.getPortalObject().unrestrictedTraverse(user_path)
 
   # We look for every valid assignments of this user
-  for assignment in getValidAssignmentList(person_object):
+  for assignment in getCachedValidAssignmentList(person_object):
     category_dict = {}
     for base_category in base_category_list:
       category_value_list = assignment.getAcquiredValueList(base_category)
