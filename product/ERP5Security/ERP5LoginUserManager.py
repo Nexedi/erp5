@@ -37,6 +37,7 @@ from Products.PluggableAuthService.interfaces.plugins import IUserEnumerationPlu
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from DateTime import DateTime
 from Products import ERP5Security
+from Products.ERP5Security.Utils import getValidAssignmentList
 from AccessControl import SpecialUsers
 from Shared.DC.ZRDB.DA import DatabaseError
 from zLOG import LOG, ERROR
