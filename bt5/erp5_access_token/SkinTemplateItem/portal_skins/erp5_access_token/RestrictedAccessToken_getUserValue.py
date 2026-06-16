@@ -3,7 +3,7 @@ import hmac
 if REQUEST is not None:
   raise Unauthorized
 
-from Products.ERP5Security.Utils import getValidAssigmentList
+from Products.ERP5Security.Utils import getValidAssignmentList
 
 result = None
 access_token_document = context
