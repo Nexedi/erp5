@@ -98,8 +98,8 @@ wallpaper_url = web_section.getLayoutProperty("configuration_wallpaper_url", def
 if wallpaper_url is None:
   mapping_dict["extra_css_full_link_tag"] = ''
 else:
-  from base64 import urlsafe_b64encode
-  mapping_dict["extra_css_full_link_tag"] = '<link rel="stylesheet" href="data:text/css;base64,%s">' % bytes2str(urlsafe_b64encode(b"""
+  from base64 import b64encode
+  mapping_dict["extra_css_full_link_tag"] = '<link rel="stylesheet" href="data:text/css;base64,%s">' % bytes2str(b64encode(b"""
   html::after {
     content: "";
     opacity: 0.1;
