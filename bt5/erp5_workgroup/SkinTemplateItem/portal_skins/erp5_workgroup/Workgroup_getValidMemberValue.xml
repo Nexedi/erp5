@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Person_getActiveAssignmentList</string> </value>
+            <value> <string>Workgroup_getValidMemberValue</string> </value>
         </item>
       </dictionary>
     </pickle>
