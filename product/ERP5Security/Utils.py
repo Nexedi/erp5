@@ -29,7 +29,7 @@
 from DateTime import DateTime
 from Products.ERP5Type.Cache import CachingMethod, transactional_cached
 
-def getValidAssignmentList(user, return_bool=False, checked_permission=None):
+def _getValidAssignmentList(user, return_bool=False, checked_permission=None):
   """Returns list of valid assignments."""
   valid_assignment_list = []
   # check dates if exist
@@ -54,9 +54,17 @@ def getValidAssignmentList(user, return_bool=False, checked_permission=None):
     return False
   return valid_assignment_list
 
+def getValidAssignmentList(user, checked_permission=None):
+  """ Return a list of valid assignment. """
+  return _getValidAssignmentList(user=user, checked_permission=checked_permission)
+
+def hasValidAssignmentList(user):
+  """ Proceed with faster calculation and return a bool"""
+  return _getValidAssignmentList(user=user, return_bool=True)
+
 @transactional_cached(lambda *args: args)
 def getCachedValidAssignmentList(user):
   """ Returns list of valid assignments for a given user
     Only calculated once per transaction """
-  return getValidAssignmentList(user=user)
+  return _getValidAssignmentList(user=user)
 

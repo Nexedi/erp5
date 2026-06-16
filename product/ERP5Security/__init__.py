@@ -35,7 +35,7 @@ from AccessControl.SecurityInfo import ModuleSecurityInfo
 
 allow_module('Products.ERP5Security.Utils')
 ModuleSecurityInfo('Products.ERP5Security.Utils').declarePublic(
-    'getValidAssignmentList')
+  'getValidAssignmentList', 'hasValidAssignmentList', 'getCachedAssignmentList')
 
 # This user is used to bypass all security checks.
 SUPER_USER = '__erp5security-=__'

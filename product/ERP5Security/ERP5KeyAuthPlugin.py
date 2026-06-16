@@ -58,7 +58,7 @@ from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.Utils import bytes2str, str2bytes
 from Products.ERP5Security.ERP5UserManager import ERP5UserManager, \
                                                   _AuthenticationFailure
-from Products.ERP5Security.Utils import getValidAssignmentList
+from Products.ERP5Security.Utils import hasValidAssignmentList
 from Products import ERP5Security
 
 
@@ -364,7 +364,7 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
         user_value = user.getUserValue()
 
         # get assignment list
-        if getValidAssignmentList(user_value, return_bool=True):
+        if hasValidAssignmentList(user_value):
           return (user.getId(), user.getUserName())
 
         raise _AuthenticationFailure()

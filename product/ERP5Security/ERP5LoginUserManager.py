@@ -36,7 +36,7 @@ from Products.PluggableAuthService.interfaces.plugins import IAuthenticationPlug
 from Products.PluggableAuthService.interfaces.plugins import IUserEnumerationPlugin
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products import ERP5Security
-from Products.ERP5Security.Utils import getValidAssignmentList
+from Products.ERP5Security.Utils import hasValidAssignmentList
 from AccessControl import SpecialUsers
 from Shared.DC.ZRDB.DA import DatabaseError
 from zLOG import LOG, ERROR
@@ -141,7 +141,7 @@ class ERP5LoginUserManager(BasePlugin):
     if user_value.getValidationState() == 'deleted':
       return
     if user_value.getPortalType() in ('Person', ):
-      return getValidAssignmentList(user=user_value, return_bool=True)
+      return hasValidAssignmentList(user=user_value)
     return True
 
 

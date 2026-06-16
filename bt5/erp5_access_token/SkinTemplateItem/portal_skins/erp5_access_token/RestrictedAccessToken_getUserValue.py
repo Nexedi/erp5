@@ -3,7 +3,7 @@ import hmac
 if REQUEST is not None:
   raise Unauthorized
 
-from Products.ERP5Security.Utils import getValidAssignmentList
+from Products.ERP5Security.Utils import hasValidAssignmentList
 
 result = None
 access_token_document = context
@@ -31,7 +31,7 @@ if access_token_document.getValidationState() == 'validated':
         if agent_document.getValidationState() == 'deleted':
           return None
         now = DateTime()
-        if not getValidAssignmentList(agent_document, return_bool=True):
+        if not getValidAssignmentList(agent_document):
           return None
 
         user, = context.getPortalObject().acl_users.searchUsers(
