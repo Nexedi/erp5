@@ -30,6 +30,13 @@ from Products.PluggableAuthService.PluggableAuthService import registerMultiPlug
 from Products.PluggableAuthService.permissions import ManageGroups
 from Products.ERP5Type import IS_ZOPE2
 
+from AccessControl.SecurityInfo import allow_module
+from AccessControl.SecurityInfo import ModuleSecurityInfo
+
+allow_module('Products.ERP5Security.Utils')
+ModuleSecurityInfo('Products.ERP5Security.Utils').declarePublic(
+  'getValidAssignmentList', 'hasValidAssignmentList', 'getCachedAssignmentList')
+
 # This user is used to bypass all security checks.
 SUPER_USER = '__erp5security-=__'
 

@@ -3,6 +3,8 @@ import hmac
 if REQUEST is not None:
   raise Unauthorized
 
+from Products.ERP5Security.Utils import hasValidAssignmentList
+
 result = None
 access_token_document = context
 request = context.REQUEST
@@ -29,14 +31,7 @@ if access_token_document.getValidationState() == 'validated':
         if agent_document.getValidationState() == 'deleted':
           return None
         now = DateTime()
-        for assignment in agent_document.contentValues(portal_type='Assignment'):
-          if assignment.getValidationState() == "open" and (
-              not assignment.hasStartDate() or assignment.getStartDate() <= now
-            ) and (
-              not assignment.hasStopDate() or assignment.getStopDate() >= now
-            ):
-            break
-        else:
+        if not hasValidAssignmentList(agent_document):
           return None
 
         user, = context.getPortalObject().acl_users.searchUsers(
