@@ -35,8 +35,8 @@ from Products.PluggableAuthService.utils import classImplements
 from Products.PluggableAuthService.interfaces.plugins import IAuthenticationPlugin
 from Products.PluggableAuthService.interfaces.plugins import IUserEnumerationPlugin
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-from DateTime import DateTime
 from Products import ERP5Security
+from Products.ERP5Security.Utils import hasValidAssignment
 from AccessControl import SpecialUsers
 from Shared.DC.ZRDB.DA import DatabaseError
 from zLOG import LOG, ERROR
@@ -141,17 +141,7 @@ class ERP5LoginUserManager(BasePlugin):
     if user_value.getValidationState() == 'deleted':
       return
     if user_value.getPortalType() in ('Person', ):
-      now = DateTime()
-      for assignment in user_value.contentValues(portal_type="Assignment"):
-        if assignment.getValidationState() == "open" and (
-          not assignment.hasStartDate() or assignment.getStartDate() <= now
-        ) and (
-          not assignment.hasStopDate() or assignment.getStopDate() >= now
-        ):
-          return True
-      else:
-        return
-    
+      return hasValidAssignment(user=user_value)
     return True
 
 
