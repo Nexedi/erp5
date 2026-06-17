@@ -44,7 +44,6 @@ from Acquisition import aq_base, aq_inner, aq_parent, ImplicitAcquisitionWrapper
 from Products.CMFActivity.ActiveObject import ActiveObject
 from Products.CMFActivity.ActivityTool import GroupedMessage
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-from Products.ZMySQLDA.DA import DeferredConnection
 
 from AccessControl.PermissionRole import rolesForPermissionOn
 
@@ -414,6 +413,47 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
     def _isBootstrapRequired(self):
       return True
+
+    security.declarePrivate('maybeMigrateConnectionClass')
+    def maybeMigrateConnectionClass(self):
+      from ZODB.broken import Broken
+      from Products.ZSQLDA.MySQL.DA import (
+        Connection as MySQLConnection,
+        DeferredConnection as MySQLDeferredConnection,
+      )
+      from Products.ZSQLDA.SQLite.DA import (
+        Connection as SQLiteConnection,
+        DeferredConnection as SQLiteDeferredConnection,
+      )
+      portal = self.getPortalObject()
+      if portal.isMySQLCatalogStorage():
+        expected_cls_by_id = {
+          'erp5_sql_connection': MySQLConnection,
+          'erp5_sql_deferred_connection': MySQLDeferredConnection,
+          'erp5_sql_transactionless_connection': MySQLConnection,
+        }
+      else:
+        expected_cls_by_id = {
+          'erp5_sql_connection': SQLiteConnection,
+          'erp5_sql_deferred_connection': SQLiteDeferredConnection,
+          'erp5_sql_transactionless_connection': SQLiteConnection,
+        }
+      for connection_id, cls in expected_cls_by_id.items():
+        sql_connection = getattr(portal, connection_id, None)
+        if sql_connection is None or isinstance(sql_connection, cls):
+          continue
+        LOG('CatalogTool', WARNING,
+            "Migrating %s class" % connection_id)
+        if isinstance(sql_connection, Broken):
+          state = sql_connection.__Broken_state__
+          title = state.get('title', '')
+          connection_string = state.get('connection_string', '')
+        else:
+          title = sql_connection.title
+          connection_string = sql_connection.connection_string
+        portal._delObject(connection_id)
+        portal._setObject(connection_id,
+                          cls(connection_id, title, connection_string))
 
     def _bootstrap(self):
       # Get erp5 site
@@ -1426,6 +1466,9 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
     security.declareProtected(Permissions.ManagePortal, 'upgradeSchema')
     def upgradeSchema(self, sql_catalog_id=None, src__=0):
       """Upgrade all catalog tables, with ALTER or CREATE queries"""
+      from Products.ZSQLDA.MySQL.DA import DeferredConnection as MySQLDeferredConnection
+      from Products.ZSQLDA.SQLite.DA import DeferredConnection as SQLiteDeferredConnection
+      DeferredConnection = (MySQLDeferredConnection, SQLiteDeferredConnection)
       portal = self.getPortalObject()
       catalog = self.getSQLCatalog(sql_catalog_id)
 
@@ -1447,7 +1490,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         connection_by_connection_id[connection_id] = connection
         if isinstance(connection, DeferredConnection):
           for other_connection in portal.objectValues(
-                spec=('Z MySQL Database Connection',)):
+                spec=('Z MySQL Database Connection', 'Z SQLite Database Connection')):
             if connection_string == other_connection.connection_string:
               connection_by_connection_id[connection_id] = other_connection
               break
