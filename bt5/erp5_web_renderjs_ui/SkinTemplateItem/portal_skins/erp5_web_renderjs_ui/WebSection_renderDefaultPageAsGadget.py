@@ -56,6 +56,7 @@ def urljoin(base, url):
 
 mapping_dict = {
   "base_prefix": base_prefix,
+  "app_id": web_section.getWebSiteValue().getId(),
   "frontpage_gadget": web_section.getLayoutProperty("configuration_frontpage_gadget_url", default="worklist"),
   "jio_document_page_gadget": web_section.getLayoutProperty("configuration_default_jio_document_page_gadget_url", default="form"),
   "application_title": web_section.getLayoutProperty("configuration_application_title", default="ERP5"),

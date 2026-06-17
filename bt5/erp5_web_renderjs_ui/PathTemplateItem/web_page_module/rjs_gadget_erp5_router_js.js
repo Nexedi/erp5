@@ -1061,72 +1061,67 @@
       gadget.props = {
         options: {}
       };
-      return RSVP.all([
-        (function createJioSelection() {
-          return gadget.getDeclaredGadget("jio_selection")
-            .push(function (jio_gadget) {
-              gadget.props.jio_gadget = jio_gadget;
-              return jio_gadget.createJio({
-                type: "sha",
-                sub_storage: {
+      return gadget.getIndexedDBPrefix()
+        .push(function (prefix) {
+          return RSVP.all([
+            gadget.getDeclaredGadget("jio_selection")
+              .push(function (jio_gadget) {
+                gadget.props.jio_gadget = jio_gadget;
+                return jio_gadget.createJio({
+                  type: "sha",
+                  sub_storage: {
+                    type: "fallback",
+                    sub_storage: {
+                      type: "indexeddb",
+                      database: prefix + "selection"
+                    },
+                    fallback_storage: {
+                      type: "memory"
+                    }
+                  }
+                });
+              }),
+            gadget.getDeclaredGadget("jio_navigation_history")
+              .push(function (jio_gadget) {
+                gadget.props.jio_navigation_gadget = jio_gadget;
+                return jio_gadget.createJio({
+                  type: "query",
+                  sub_storage: {
+                    type: "fallback",
+                    sub_storage: {
+                      type: "indexeddb",
+                      database: prefix + "navigation_history"
+                    },
+                    fallback_storage: {
+                      type: "memory"
+                    }
+                  }
+                });
+              }),
+            gadget.getDeclaredGadget("jio_document_state")
+              .push(function (jio_gadget) {
+                gadget.props.jio_state_gadget = jio_gadget;
+                return jio_gadget.createJio({
                   type: "fallback",
                   sub_storage: {
                     type: "indexeddb",
-                    database: "selection"
+                    database: prefix + "document_state"
                   },
                   fallback_storage: {
                     type: "memory"
                   }
-                }
-              });
-            });
-        }()),
-        (function createJioNavigationHistory() {
-          return gadget.getDeclaredGadget("jio_navigation_history")
-            .push(function (jio_gadget) {
-              gadget.props.jio_navigation_gadget = jio_gadget;
-              return jio_gadget.createJio({
-                type: "query",
-                sub_storage: {
-                  type: "fallback",
-                  sub_storage: {
-                    type: "indexeddb",
-                    database: "navigation_history"
-                  },
-                  fallback_storage: {
-                    type: "memory"
-                  }
-                }
-              });
-            });
-        }()),
-        (function createJioDocumentState() {
-          return gadget.getDeclaredGadget("jio_document_state")
-            .push(function (jio_gadget) {
-              gadget.props.jio_state_gadget = jio_gadget;
-              return jio_gadget.createJio({
-                type: "fallback",
-                sub_storage: {
-                  type: "indexeddb",
-                  database: "document_state"
-                },
-                fallback_storage: {
-                  type: "memory"
-                }
-              });
-            });
-        }()),
-        (function createJioForContent() {
-          return gadget.getDeclaredGadget("jio_form_content")
-            .push(function (jio_form_content) {
-              gadget.props.jio_form_content = jio_form_content;
-              return jio_form_content.createJio({
-                type: "local",
-                sessiononly: true
-              });
-            });
-        }())
-      ]);
+                });
+              }),
+            gadget.getDeclaredGadget("jio_form_content")
+              .push(function (jio_form_content) {
+                gadget.props.jio_form_content = jio_form_content;
+                return jio_form_content.createJio({
+                  type: "local",
+                  sessiononly: true
+                });
+              })
+          ]);
+        });
     })
 
     .declareMethod('getCommandUrlForList', function getCommandUrlForList(
@@ -1229,6 +1224,7 @@
       this.props.modified = (options && options.modified);
     })
 
+    .declareAcquiredMethod('getIndexedDBPrefix', 'getIndexedDBPrefix')
     .declareAcquiredMethod('renderApplication', 'renderApplication')
     .declareAcquiredMethod('jio_allDocs', 'jio_allDocs')
     .declareAcquiredMethod('jio_getAttachment', 'jio_getAttachment')
