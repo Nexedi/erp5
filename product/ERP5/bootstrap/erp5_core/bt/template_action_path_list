@@ -49,6 +49,7 @@ Catalog Tool | hot_reindex
 Catalog Tool | view
 Catalog | catalog_filter_view
 Catalog | clear_catalog
+Catalog | combined_property
 Catalog | content_view
 Catalog | property
 Category Acquired Membership State Constraint | predicate
