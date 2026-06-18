@@ -185,7 +185,6 @@ def _getCatalog(acquisition_context):
     return [default_erp5_catalog_id] if default_erp5_catalog_id else []
   return list(set(catalog_method_id.split('/')[0] for catalog_method_id in catalog_method_id_list))
 
-
 def _getCatalogValue(acquisition_context):
   """
     Returns the catalog object which correspond to the ZSQLMethods
@@ -201,10 +200,16 @@ def _getCatalogValue(acquisition_context):
   portal_catalog = acquisition_context.getPortalObject().portal_catalog
 
   default_catalog_id = getattr(portal_catalog, 'default_erp5_catalog_id', None)
-  if default_catalog_id not in catalog_id_list:
+  default_catalog = portal_catalog[default_catalog_id] if default_catalog_id else None
+  shared_catalog_id = default_catalog._getSharedCatalogId() if default_catalog is not None else None
+
+  if default_catalog_id not in catalog_id_list \
+      and shared_catalog_id not in catalog_id_list:
     return None
+
+  catalog_id = default_catalog_id if default_catalog_id in catalog_id_list else shared_catalog_id
   try:
-    return portal_catalog[default_catalog_id]
+    return portal_catalog[catalog_id]
   except KeyError:
     return None
 
@@ -1378,20 +1383,30 @@ class ObjectTemplateItem(BaseTemplateItem):
                 ),
               )
 
-            # Update default catalog ID
-            if len(container_container.objectIds()) == 1:
+            if getattr(context, 'shared_catalog', None):
+              default_catalog_id = getattr(
+                container_container, 'default_erp5_catalog_id', None) \
+                or getattr(container_container, 'default_sql_catalog_id', None)
+              if default_catalog_id:
+                default_catalog = container_container._getOb(
+                  default_catalog_id, None)
+                if default_catalog is not None:
+                  default_catalog.shared_erp5_catalog_id = container_path[-1]
+            elif not getattr(container_container, 'default_erp5_catalog_id', None) \
+                and not getattr(container_container, 'default_sql_catalog_id', None):
               # Set the default catalog. Here, thanks to consistency between
               # ERP5CatalogTool and ZSQLCatalog, we can use the explicit accessor
               # `_setDefaultSqlCatalogId` to update both `default_sql_catalog_id`
               # and `default_erp5_catalog_id`
               container_container._setDefaultSqlCatalogId(container_path[-1])
+
             container = portal.unrestrictedTraverse(container_path)
           else:
             raise
         saved_uid_dict = {}
         subobjects_dict = {}
         portal_type_dict = {}
-        old_obj = container._getOb(object_id, None)
+        old_obj = container._getOb(object_id, None) if container.hasObject(object_id) else None
         object_existed = old_obj is not None
         if object_existed:
           if context.isKeepObject(path) and path not in update_dict:
@@ -5892,6 +5907,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
           elif prop_type in ('lines', 'tokens'):
             prop_dict[pid[:-5]] = (value or '').splitlines()
       self._edit(**prop_dict)
+
+      if 'shared_catalog' not in prop_dict and bt_item.get('shared_catalog'):
+        self.shared_catalog = int(bt_item['shared_catalog'])
 
       try:
         from erp5.component.module.WorkingCopy import NotAWorkingCopyError
