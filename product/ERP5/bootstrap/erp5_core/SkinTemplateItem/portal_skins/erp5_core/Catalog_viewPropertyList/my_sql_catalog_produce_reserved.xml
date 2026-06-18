@@ -115,7 +115,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:[(\'\', \'\')]+here.getCatalogMethodIds()</string> </value>
+            <value> <string>python:[(\'\', \'\')]+here.getCatalogMethodIds(include_shared=False)</string> </value>
         </item>
       </dictionary>
     </pickle>
