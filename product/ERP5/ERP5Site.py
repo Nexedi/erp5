@@ -353,6 +353,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
       'erp5_property_sheets',
       'erp5_core',
       self.erp5_catalog_storage,
+      'erp5_catalog_core',
       'erp5_jquery',
       'erp5_xhtml_style',
     ]
