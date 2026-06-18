@@ -699,7 +699,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
             local_roles=local_roles,
           )
       catalog = self.getSQLCatalog(sql_catalog_id)
-      method = getattr(catalog, catalog.sql_search_security, None)
+      method = getattr(catalog, catalog.getSqlSearchSecurity(), None)
       if allowedRolesAndUsers:
         allowedRolesAndUsers.sort()
         cache_key = tuple(allowedRolesAndUsers)
@@ -1433,7 +1433,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
       # group methods by connection
       method_list_by_connection_id = defaultdict(list)
-      for method_id in catalog.sql_clear_catalog:
+      for method_id in catalog.getSqlClearCatalogList():
         method = catalog[method_id]
         if hasattr(aq_base(method), 'connection_id'):
           method_list_by_connection_id[method.connection_id].append(method)
