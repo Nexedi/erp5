@@ -3022,6 +3022,14 @@ class TestDocumentWithSecurity(TestDocumentMixin):
 
     self.assertIn('I use reference to look up TEST', preview_html)
 
+  def test_no_preview_for_large_documents(self):
+    document = self.portal.document_module.newContent(
+      portal_type='Text',
+      data=b' ' * 1024 * 1024 * 10
+    )
+    preview_html = document.Document_getPreviewAsHTML().replace('\n', ' ')
+    self.assertIn('Document is too large to be previewed', preview_html)
+
   def test_DownloadableDocumentSize(self):
     '''Check that once the document is converted and cached, its size is
     correctly set'''
