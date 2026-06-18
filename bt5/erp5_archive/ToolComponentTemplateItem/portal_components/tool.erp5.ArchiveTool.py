@@ -169,21 +169,33 @@ class ArchiveTool(BaseTool):
     if update_destination_sql_catalog:
       sql_connection_id_dict = {source_connection_id : destination_connection_id,
                                 source_deferred_connection_id : destination_deferred_connection_id}
+      source_shared_sql_catalog = source_catalog._getSharedCatalog()
+      destination_shared_sql_catalog = destination_sql_catalog._getSharedCatalog()
+      if destination_shared_sql_catalog and (source_shared_sql_catalog == destination_shared_sql_catalog):
+        raise ValueError("Destination and source shared catalog can't be the same")
       portal_catalog.changeSQLConnectionIds(destination_sql_catalog,
+                                  sql_connection_id_dict)
+      portal_catalog.changeSQLConnectionIds(destination_shared_sql_catalog,
                                   sql_connection_id_dict)
 
     archive_sql_catalog = getattr(portal_catalog, archive_sql_catalog_id)
     if update_archive_sql_catalog:
       sql_connection_id_dict = {source_connection_id : archive_connection_id,
                                 source_deferred_connection_id : archive_deferred_connection_id}
+      source_shared_sql_catalog = source_catalog._getSharedCatalog()
+      archive_shared_sql_catalog = archive_sql_catalog._getSharedCatalog()
+      if archive_shared_sql_catalog and (source_shared_sql_catalog == archive_shared_sql_catalog):
+        raise ValueError("Archive and source shared catalog can't be the same")
       portal_catalog.changeSQLConnectionIds(archive_sql_catalog,
                                   sql_connection_id_dict)
-
+      portal_catalog.changeSQLConnectionIds(archive_shared_sql_catalog,
+                                  sql_connection_id_dict)
     # Clear destination and archive catalog if asked
     if clear_destination_sql_catalog:
       portal_catalog.manage_catalogClear(sql_catalog_id=destination_sql_catalog_id)
     if clear_archive_sql_catalog:
       portal_catalog.manage_catalogClear(sql_catalog_id=archive_sql_catalog_id)
+
 
     # validate archive
     archive.validate()
