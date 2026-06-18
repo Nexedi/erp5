@@ -629,6 +629,7 @@ class Catalog(Folder,
   sql_catalog_security_uid_columns = (' | security_uid',)
   sql_catalog_table_vote_scripts = ()
   sql_catalog_raise_error_on_uid_check = True
+  shared_erp5_catalog_id = None
 
   # These are ZODB variables, so shared by multiple Zope instances.
   # This is set to the last logical time when clearReserved is called.
@@ -684,7 +685,7 @@ class Catalog(Folder,
     Return the list of role keys.
     """
     role_key_dict = {}
-    for role_key in self.sql_catalog_role_keys:
+    for role_key in self.getSqlCatalogRoleKeysList():
       role, column = role_key.split('|')
       role_key_dict[role.strip()] = column.strip()
     return ensure_list(role_key_dict.items())
@@ -697,7 +698,7 @@ class Catalog(Folder,
     The default mappiny is {'': 'security_uid'}
     """
     local_roles_group_id_dict = {}
-    for local_roles_group_id_key in self.sql_catalog_security_uid_columns:
+    for local_roles_group_id_key in self.getSqlCatalogSecurityUidColumnsList():
       local_roles_group_id, column = local_roles_group_id_key.split('|')
       local_roles_group_id_dict[local_roles_group_id.strip()] = column.strip()
     return local_roles_group_id_dict
@@ -708,7 +709,7 @@ class Catalog(Folder,
     Return the list of local role keys.
     """
     local_role_key_dict = {}
-    for role_key in self.sql_catalog_local_role_keys:
+    for role_key in self.getSqlCatalogLocalRoleKeysList():
       role, column = role_key.split('|')
       local_role_key_dict[role.strip()] = column.strip()
     return ensure_list(local_role_key_dict.items())
@@ -843,8 +844,93 @@ class Catalog(Folder,
     self.subject_set_uid_dict[subject_list] = subject_set_uid
     return (subject_set_uid, subject_list)
 
+  security.declarePrivate('_getSharedCatalog')
+  def _getSharedCatalog(self):
+    shared_catalog_id = self._getSharedCatalogId()
+    if not shared_catalog_id:
+      return None
+    return self.aq_parent._getOb(shared_catalog_id, None)
+
+  security.declarePrivate('_getSharedCatalogId')
+  def _getSharedCatalogId(self):
+    return getattr(self, 'shared_erp5_catalog_id', None)
+
+  _MARKER = []
+
+  def _getLocalOb(self, container, id):
+    # ZSQLCatalog (OFS ObjectManager) stores its sub-objects as plain instance
+    # attributes, so look them up in __dict__ directly. Going through
+    # getattr/hasattr (as OFS.ObjectManager._getOb does) would re-enter
+    # Catalog.__getattr__ for the same id and recurse infinitely.
+    # ERP5Catalog overrides this method for its BTreeFolder2 storage.
+    if id[:1] != '_' and id in aq_base(container).__dict__:
+      return getattr(container, id)
+    return self._MARKER
+
+  def _getOb(self, id, default=_MARKER):
+    obj = self._getLocalOb(self, id)
+    if obj is not self._MARKER:
+      return obj
+    shared_catalog = self._getSharedCatalog()
+    if shared_catalog is not None:
+      obj = self._getLocalOb(shared_catalog, id)
+      if obj is not self._MARKER:
+        return aq_base(obj).__of__(self)
+
+    if default is self._MARKER:
+      raise KeyError(id)
+    return default
+
+  """
+  aq_dynamic → catalog.z_xxx
+  __getattr__ → getattr(catalog, 'z_xxx') / restrictedTraverse
+  __getitem__ → catalog['z_xxx']
+  """
+
+  def __getitem__(self, key):
+    return self._getOb(key, self._MARKER)
+
+  def _aq_dynamic(self, id):
+    if id.startswith('_') or id.startswith('aq_'):
+      return None
+    return self._getOb(id, None)
+
+  def __getattr__(self, name):
+    if name.startswith('_') or name.startswith('aq_'):
+      raise AttributeError(name)
+    obj = self._getOb(name, None)
+    if obj is None:
+      raise AttributeError(name)
+    return obj
+
+  security.declarePrivate('_getCombinedCatalogProperty')
+  def _getCombinedCatalogProperty(self, property_id):
+    value = getattr(self, property_id)
+    shared_catalog = self._getSharedCatalog()
+    if shared_catalog is None:
+      return value
+    # sorted is important to prevent order, like we did in BusinessTemplate
+    # https://lab.nexedi.com/nexedi/erp5/-/blob/eb5e9fc097aaf62030700e7ed5fd07681d0b877c/product/ERP5/Document/BusinessTemplate.py#L4664
+    return tuple(sorted(set(value) |  set(getattr(shared_catalog, property_id))))
+
+  security.declarePrivate('_getCatalogPropertyWithSharedFallback')
+  def _getCatalogPropertyWithSharedFallback(self, property_id):
+    value = getattr(self, property_id)
+    if value:
+      return value
+    shared_catalog = self._getSharedCatalog()
+    if shared_catalog is None:
+      return value
+    return getattr(shared_catalog, property_id)
+
   def getSqlClearCatalogList(self):
-    return self.sql_clear_catalog
+    return self._getCombinedCatalogProperty('sql_clear_catalog')
+
+  def getSqlCatalogClearReserved(self):
+    return self._getCatalogPropertyWithSharedFallback('sql_catalog_clear_reserved')
+
+  def getSqlSearchSecurity(self):
+    return self._getCatalogPropertyWithSharedFallback('sql_search_security')
 
   def _clear(self):
     """
@@ -887,7 +973,7 @@ class Catalog(Folder,
     self._last_clear_reserved_time += 1
 
   def getSqlGetitemByUid(self):
-    return self.sql_getitem_by_uid
+    return self._getCatalogPropertyWithSharedFallback('sql_getitem_by_uid')
 
   security.declarePrivate('getRecordForUid')
   def getRecordForUid(self, uid):
@@ -930,22 +1016,27 @@ class Catalog(Folder,
     self.names = names
 
   def getSqlSearchTablesList(self):
-    return list(self.sql_search_tables)
+    return list(self._getCombinedCatalogProperty('sql_search_tables'))
 
   security.declarePrivate('getCatalogSearchTableIds')
-  def getCatalogSearchTableIds(self):
-    """Return selected tables of catalog which are used in JOIN.
-       catalaog is always first
-    """
-    search_tables = self.getSqlSearchTablesList() or ['catalog']
+  def getCatalogSearchTableIds(self, include_shared=True):
+    # XXX Normalize the stored sql_search_tables: cast it to a list (the value can
+    # be a tuple, e.g. from the bootstrap or left by another test)
+    search_tables = list(self.sql_search_tables) or ['catalog']
     if search_tables[0] != 'catalog':
       search_tables = ['catalog'] + [x for x in search_tables if x != 'catalog']
-      # XXX: cast to tuple to avoid a mutable persistent property ?
       self.sql_search_tables = search_tables
-    return search_tables
+
+    """Return selected tables of catalog which are used in JOIN.
+       catalog is always first
+    """
+    if include_shared:
+      search_tables = self.getSqlSearchTablesList()
+
+    return ['catalog'] + [t for t in search_tables if t != 'catalog']
 
   def getSqlSearchResultKeysList(self):
-    return self.sql_search_result_keys
+    return self._getCombinedCatalogProperty('sql_search_result_keys')
 
   security.declarePublic('getCatalogSearchResultKeys')
   def getCatalogSearchResultKeys(self):
@@ -954,14 +1045,14 @@ class Catalog(Folder,
     return self.getSqlSearchResultKeysList()
 
   def getSqlCatalogMultiSchema(self):
-    return self.sql_catalog_multi_schema
+    return self._getCatalogPropertyWithSharedFallback('sql_catalog_multi_schema')
 
   def getSqlCatalogSchema(self):
-    return self.sql_catalog_schema
+    return self._getCatalogPropertyWithSharedFallback('sql_catalog_schema')
 
   @transactional_cache_decorator
   def _getCatalogSchema(self):
-    method = getattr(self, self.sql_catalog_multi_schema, None)
+    method = getattr(self, self.getSqlCatalogMultiSchema(), None)
     result = {}
     if method is None:
       # BBB: deprecated
@@ -1000,12 +1091,24 @@ class Catalog(Folder,
     return ensure_list(self._getCatalogSchema()[table])
 
   security.declarePublic('getColumnIds')
-  @transactional_cache_decorator
-  def getColumnIds(self):
+  def getColumnIds(self, include_shared=True):
     """
     Calls the show column method and returns dictionnary of
     Field Ids
     """
+    if include_shared:
+      return self._getColumnIds()
+    return self._getLocalColumnIds()
+
+  @transactional_cache_decorator
+  def _getColumnIds(self):
+    return self._buildColumnIds(include_shared=True)
+
+  @transactional_cache_decorator
+  def _getLocalColumnIds(self):
+    return self._buildColumnIds(include_shared=False)
+
+  def _buildColumnIds(self, include_shared):
     keys = set()
     add_key = keys.add
     table_dict = self._getCatalogSchema()
@@ -1013,10 +1116,10 @@ class Catalog(Folder,
       for field in table_dict.get(table, ()):
         add_key(field)
         add_key('%s.%s' % (table, field))  # Is this inconsistent ?
-    for related in self.getSQLCatalogRelatedKeyList():
+    for related in self.getSQLCatalogRelatedKeyList(include_shared=include_shared):
       related_tuple = related.split('|')
       add_key(related_tuple[0].strip())
-    for scriptable in self.getSQLCatalogScriptableKeyList():
+    for scriptable in self.getSQLCatalogScriptableKeyList(include_shared=include_shared):
       scriptable_tuple = scriptable.split('|')
       add_key(scriptable_tuple[0].strip())
     return sorted(keys)
@@ -1037,35 +1140,59 @@ class Catalog(Folder,
     return result
 
   security.declarePublic('getResultColumnIds')
-  @transactional_cache_decorator
-  def getResultColumnIds(self):
+  def getResultColumnIds(self, include_shared=True):
     """
     Calls the show column method and returns dictionnary of
     Field Ids
     """
+    if include_shared:
+      return self._getResultColumnIds()
+    return self._getLocalResultColumnIds()
+
+  @transactional_cache_decorator
+  def _getResultColumnIds(self):
+    return self._buildResultColumnIds(include_shared=True)
+
+  @transactional_cache_decorator
+  def _getLocalResultColumnIds(self):
+    return self._buildResultColumnIds(include_shared=False)
+
+  def _buildResultColumnIds(self, include_shared):
     keys = set()
     table_dict = self._getCatalogSchema()
-    for table in self.getCatalogSearchTableIds():
+    for table in self.getCatalogSearchTableIds(include_shared=include_shared):
       for field in table_dict.get(table, ()):
         keys.add('%s.%s' % (table, field))
     return sorted(keys)
 
   security.declarePublic('getSortColumnIds')
-  @transactional_cache_decorator
-  def getSortColumnIds(self):
+  def getSortColumnIds(self, include_shared=True):
     """
     Calls the show column method and returns dictionnary of
     Field Ids that can be used for a sort
     """
+    if include_shared:
+      return self._getSortColumnIds()
+    return self._getLocalSortColumnIds()
+
+  @transactional_cache_decorator
+  def _getSortColumnIds(self):
+    return self._buildSortColumnIds(include_shared=True)
+
+  @transactional_cache_decorator
+  def _getLocalSortColumnIds(self):
+    return self._buildSortColumnIds(include_shared=False)
+
+  def _buildSortColumnIds(self, include_shared):
     keys = set()
     table_dict = self._getCatalogSchema()
-    for table in self.getTableIds():
+    for table in self.getTableIds(include_shared=include_shared):
       for field in table_dict[table]:
         keys.add('%s.%s' % (table, field))
     return sorted(keys)
 
   security.declarePublic('getTableIds')
-  def getTableIds(self):
+  def getTableIds(self, include_shared=True):
     """
     Calls the show table method and returns dictionnary of
     Field Ids
@@ -1286,10 +1413,10 @@ class Catalog(Folder,
                               deferred=deferred)
 
   def getSqlCatalogObjectListList(self):
-    return self.sql_catalog_object_list
+    return self._getCombinedCatalogProperty('sql_catalog_object_list')
 
   def getSqlDeferredCatalogObjectListList(self):
-    return self.sql_deferred_catalog_object_list
+    return self._getCombinedCatalogProperty('sql_deferred_catalog_object_list')
 
   def _catalogObjectList(self, object_list, method_id_list=None,
                          disable_cache=0, check_uid=1, idxs=None, deferred=0):
@@ -1487,7 +1614,7 @@ class Catalog(Folder,
     return getattr(self, method_name)
 
   def getSqlCatalogDeleteUid(self):
-     return self.sql_catalog_delete_uid
+     return self._getCatalogPropertyWithSharedFallback('sql_catalog_delete_uid')
 
   security.declarePrivate('beforeUncatalogObject')
   def beforeUncatalogObject(self, path=None,uid=None):
@@ -1513,10 +1640,10 @@ class Catalog(Folder,
       method(uid=uid)
 
   def getSqlUncatalogObjectList(self):
-    return self.sql_uncatalog_object
+    return self._getCombinedCatalogProperty('sql_uncatalog_object')
 
   def getSqlDeferredUncatalogObjectList(self):
-    return self.sql_deferred_uncatalog_object
+    return self._getCombinedCatalogProperty('sql_deferred_uncatalog_object')
 
   security.declarePrivate('uncatalogObject')
   def uncatalogObject(self, path=None, uid=None):
@@ -1547,7 +1674,7 @@ class Catalog(Folder,
       method(uid = uid)
 
   def getSqlCatalogTranslationList(self):
-    return self.sql_catalog_translation_list
+    return self._getCatalogPropertyWithSharedFallback('sql_catalog_translation_list')
 
   security.declarePrivate('catalogTranslationList')
   def catalogTranslationList(self, object_list):
@@ -1558,7 +1685,7 @@ class Catalog(Folder,
                                   check_uid=0)
 
   def getSqlDeleteTranslationList(self):
-    return self.sql_delete_translation_list
+    return self._getCatalogPropertyWithSharedFallback('sql_delete_translation_list')
 
   security.declarePrivate('deleteTranslationList')
   def deleteTranslationList(self):
@@ -1574,7 +1701,7 @@ class Catalog(Folder,
       LOG('SQLCatalog', WARNING, 'could not delete translations', error=True)
 
   def getSqlUniqueValues(self):
-    return self.sql_unique_values
+    return self._getCatalogPropertyWithSharedFallback('sql_unique_values')
 
   security.declarePrivate('uniqueValuesFor')
   def uniqueValuesFor(self, name):
@@ -1583,7 +1710,7 @@ class Catalog(Folder,
     return method(column=name)
 
   def getSqlCatalogPaths(self):
-    return self.sql_catalog_paths
+    return self._getCatalogPropertyWithSharedFallback('sql_catalog_paths')
 
   security.declarePrivate('getPaths')
   def getPaths(self):
@@ -1592,7 +1719,7 @@ class Catalog(Folder,
     return method()
 
   def getSqlGetitemByPath(self):
-    return self.sql_getitem_by_path
+    return self._getCatalogPropertyWithSharedFallback('sql_getitem_by_path')
 
   security.declarePrivate('getUidForPath')
   def getUidForPath(self, path):
@@ -1667,49 +1794,54 @@ class Catalog(Folder,
     """ Accesses a single record for a given path """
     return self.getMetadataForPath(path)
 
-  security.declarePrivate('getCatalogMethodIds')
-  def getCatalogMethodIds(self,
-                          valid_method_meta_type_list=('Z SQL Method',
-                                                       'LDIF Method',
-                                                       'Script (Python)')
-                          ):
-    """Find Z SQL methods in the current folder and above
+  security.declarePublic('getCatalogMethodIds')
+  def getCatalogMethodIds(self, valid_method_meta_type_list=None, include_shared=True):
+    """Find catalog methods in the current folder and above, including the
+    shared catalog if any.
     This function return a list of ids.
     """
+    if valid_method_meta_type_list is None:
+      valid_method_meta_type_list = \
+        self.HAS_ARGUMENT_SRC_METATYPE_SET + self.HAS_FUNC_CODE_METATYPE_SET
     ids={}
     have_id=ids.__contains__
 
-    while self is not None:
-      if hasattr(self, 'objectValues'):
-        for o in self.objectValues(valid_method_meta_type_list):
-          if hasattr(o,'id'):
-            id=o.id
-            if not isinstance(id, str):
-              id=id()
-            if not have_id(id):
-              if hasattr(o,'title_and_id'): o=o.title_and_id()
-              else: o=id
-              ids[id]=id
-      if hasattr(self, 'aq_parent'): self=self.aq_parent
-      else: self=None
+    catalog_list = [self]
+    if include_shared:
+      shared_catalog = self._getSharedCatalog()
+      if shared_catalog is not None:
+        catalog_list.append(shared_catalog)
+
+    for catalog in catalog_list:
+      while catalog is not None:
+        if hasattr(catalog, 'objectValues'):
+          for o in catalog.objectValues(valid_method_meta_type_list):
+            if hasattr(o,'id'):
+              id=o.id
+              if not isinstance(id, str):
+                id=id()
+              if not have_id(id):
+                ids[id]=id
+        if hasattr(catalog, 'aq_parent'): catalog=catalog.aq_parent
+        else: catalog=None
 
     ids=[(item[1], item[0]) for item in six.iteritems(ids)]
     ids.sort()
     return ids
 
   security.declarePublic('getPythonMethodIds')
-  def getPythonMethodIds(self):
+  def getPythonMethodIds(self, include_shared=True):
     """
       Returns a list of all python scripts available in
       current sql catalog.
     """
-    return self.getCatalogMethodIds(valid_method_meta_type_list=('Script (Python)', ))
+    return self.getCatalogMethodIds(valid_method_meta_type_list=('Script (Python)', ), include_shared=include_shared)
 
   @transactional_cache_decorator
   def _getSQLCatalogRelatedKeySet(self):
     column_map = self.getColumnMap()
     column_set = set(column_map)
-    for related_key in self.sql_catalog_related_keys:
+    for related_key in self.getSqlCatalogRelatedKeysList():
       split_entire_definition = related_key.split('|')
       if len(split_entire_definition) != 2:
         LOG('SQLCatalog', WARNING, 'Malformed related key definition: %r. Ignored.' % (related_key, ))
@@ -1725,7 +1857,7 @@ class Catalog(Folder,
     return column_set
 
   security.declarePrivate('getSQLCatalogRelatedKeyList')
-  def getSQLCatalogRelatedKeyList(self, key_list=None):
+  def getSQLCatalogRelatedKeyList(self, key_list=None, include_shared=True):
     """
     Return the list of related keys.
     This method can be overidden in order to implement
@@ -1734,26 +1866,35 @@ class Catalog(Folder,
     if key_list is None:
       key_list = []
     column_map = self._getSQLCatalogRelatedKeySet()
+    if include_shared:
+      related_key_list = self.getSqlCatalogRelatedKeysList()
+    else:
+      related_key_list = self.sql_catalog_related_keys
     return self.getDynamicRelatedKeyList(
       [k for k in key_list if k not in column_map],
       sql_catalog_id=self.id,
-    ) + list(self.sql_catalog_related_keys)
+    ) + list(related_key_list)
 
   # Compatibililty SQL Sql
   security.declarePrivate('getSqlCatalogRelatedKeyList')
   getSqlCatalogRelatedKeyList = getSQLCatalogRelatedKeyList
 
   security.declarePrivate('getSQLCatalogScriptableKeyList')
-  def getSQLCatalogScriptableKeyList(self):
+  def getSQLCatalogScriptableKeyList(self, include_shared=True):
     """
     Return the list of scriptable keys.
     """
+    if include_shared:
+      return self.getSqlCatalogScriptableKeysList()
     return self.sql_catalog_scriptable_keys
+
+  def getSqlCatalogIndex(self):
+    return self._getCatalogPropertyWithSharedFallback('sql_catalog_index')
 
   @transactional_cache_decorator
   def _getTableIndex(self, table):
     table_index = {}
-    method = getattr(self, self.sql_catalog_index, '')
+    method = getattr(self, self.getSqlCatalogIndex(), '')
     if method in ('', None):
       return {}
     index = list(method(table=table))
@@ -1811,16 +1952,40 @@ class Catalog(Folder,
     return result
 
   def getSqlCatalogKeywordSearchKeysList(self):
-    return self.sql_catalog_keyword_search_keys
+    return self._getCombinedCatalogProperty('sql_catalog_keyword_search_keys')
 
   def getSqlCatalogFullTextSearchKeysList(self):
-    return self.sql_catalog_full_text_search_keys
+    return self._getCombinedCatalogProperty('sql_catalog_full_text_search_keys')
 
   def getSqlCatalogDatetimeSearchKeysList(self):
-    return self.sql_catalog_datetime_search_keys
+    return self._getCombinedCatalogProperty('sql_catalog_datetime_search_keys')
 
   def getSqlCatalogScriptableKeysList(self):
-    return self.sql_catalog_scriptable_keys
+    return self._getCombinedCatalogProperty('sql_catalog_scriptable_keys')
+
+  def getSqlCatalogRelatedKeysList(self):
+    return self._getCombinedCatalogProperty('sql_catalog_related_keys')
+
+  def getSqlCatalogRoleKeysList(self):
+    return self._getCombinedCatalogProperty('sql_catalog_role_keys')
+
+  def getSqlCatalogLocalRoleKeysList(self):
+    return self._getCombinedCatalogProperty('sql_catalog_local_role_keys')
+
+  def getSqlCatalogSecurityUidColumnsList(self):
+    return self._getCombinedCatalogProperty('sql_catalog_security_uid_columns')
+
+  def getSqlCatalogTableVoteScriptsList(self):
+    return self._getCombinedCatalogProperty('sql_catalog_table_vote_scripts')
+
+  def getSqlCatalogRequestKeysList(self):
+    return self._getCombinedCatalogProperty('sql_catalog_request_keys')
+
+  def getSqlCatalogMultivalueKeysList(self):
+    return self._getCombinedCatalogProperty('sql_catalog_multivalue_keys')
+
+  def getSqlCatalogTopicSearchKeysList(self):
+    return self._getCombinedCatalogProperty('sql_catalog_topic_search_keys')
 
   @transactional_cache_decorator
   def _getgetScriptableKeyDict(self):
@@ -2296,7 +2461,7 @@ class Catalog(Folder,
     return kw
 
   def getSqlCatalogSearchKeysList(self):
-    return self.sql_catalog_search_keys
+    return self._getCombinedCatalogProperty('sql_catalog_search_keys')
 
   @transactional_cache_decorator
   def _getSearchKeyDict(self):
@@ -2384,7 +2549,7 @@ class Catalog(Folder,
     )
 
   def getSqlSearchResults(self):
-    return self.sql_search_results
+    return self._getCatalogPropertyWithSharedFallback('sql_search_results')
 
   security.declarePrivate('getSearchResultsMethod')
   def getSearchResultsMethod(self):
@@ -2408,7 +2573,7 @@ class Catalog(Folder,
   __call__ = searchResults
 
   def getSqlCountResults(self):
-    return self.sql_count_results
+    return self._getCatalogPropertyWithSharedFallback('sql_count_results')
 
   security.declarePrivate('getCountResultsMethod')
   def getCountResultsMethod(self):
@@ -2430,7 +2595,7 @@ class Catalog(Folder,
     return isAdvancedSearchText(search_text, self.isValidColumn)
 
   def getSqlRecordObjectList(self):
-    return self.sql_record_object_list
+    return self._getCatalogPropertyWithSharedFallback('sql_record_object_list')
 
   security.declarePrivate('recordObjectList')
   def recordObjectList(self, path_list, catalog=1):
@@ -2441,7 +2606,7 @@ class Catalog(Folder,
     method(path_list=path_list, catalog=catalog)
 
   def getSqlDeleteRecordedObjectList(self):
-    return self.sql_delete_recorded_object_list
+    return self._getCatalogPropertyWithSharedFallback('sql_delete_recorded_object_list')
 
   security.declarePrivate('deleteRecordedObjectList')
   def deleteRecordedObjectList(self, uid_list=()):
@@ -2452,7 +2617,7 @@ class Catalog(Folder,
     method(uid_list=uid_list)
 
   def getSqlReadRecordedObjectList(self):
-    return self.sql_read_recorded_object_list
+    return self._getCatalogPropertyWithSharedFallback('sql_read_recorded_object_list')
 
   security.declarePrivate('readRecordedObjectList')
   def readRecordedObjectList(self, catalog=1):
@@ -2475,7 +2640,7 @@ class Catalog(Folder,
 
   def getSqlUpdateObjectList(self):
     try:
-      return self.sql_update_object
+      return self._getCombinedCatalogProperty('sql_update_object')
     except AttributeError:
       return ()
 
@@ -2528,8 +2693,11 @@ class Catalog(Folder,
             }
         return getEngine().getContext(data)
 
+  def getSqlOptimizerSwitch(self):
+    return self._getCatalogPropertyWithSharedFallback('sql_optimizer_switch')
+
   def _getOptimizerSwitch(self):
-    method_name = self.sql_optimizer_switch
+    method_name = self.getSqlOptimizerSwitch()
     try:
       method = getattr(self, method_name)
     except AttributeError:

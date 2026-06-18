@@ -37,7 +37,6 @@ from Products.ZSQLCatalog.SQLCatalog import Catalog, CatalogError
 
 import OFS.History
 from AccessControl import ClassSecurityInfo
-from Acquisition import aq_base
 from zLOG import LOG, INFO, TRACE, WARNING, ERROR
 
 import time
@@ -179,6 +178,19 @@ class ERP5Catalog(Folder, Catalog):
   isIndexable = 0
   __class_init__  = Catalog.__class_init__
 
+  def _getLocalOb(self, container, id):
+    # ERP5 catalogs are (H)BTreeFolder2 based: their sub-objects live in a BTree
+    # which Folder._getOb reads directly, without the getattr/hasattr dance that
+    # would re-enter Catalog.__getattr__ and recurse. This overrides the
+    # __dict__-based lookup ZSQLCatalog.Catalog uses for its ObjectManager
+    # storage.
+    return Folder._getOb(container, id, default=self._MARKER)
+
+  _getOb = Catalog._getOb
+  __getitem__ = Catalog.__getitem__
+  _aq_dynamic = Catalog._aq_dynamic
+  __getattr__ = Catalog.__getattr__
+
   # Note: superclass supports older variants of these metatypes, but we do not
   # expect these as content here. So just override superclass properties with
   # the new metatypes.
@@ -266,24 +278,17 @@ class ERP5Catalog(Folder, Catalog):
   def _setSqlSearchResultKeysList(self, value, **kw):
     self._baseSetSqlSearchResultKeysList(sorted(value), **kw)
 
-  security.declarePublic('getCatalogMethodIds')
-  def getCatalogMethodIds(self, valid_method_meta_type_list=
-      HAS_ARGUMENT_SRC_METATYPE_SET + HAS_FUNC_CODE_METATYPE_SET):
-    """Find ERP5 SQL methods in the current folder and above
-    This function return a list of ids.
-    """
-    return super(ERP5Catalog, self).getCatalogMethodIds(
-                                      valid_method_meta_type_list)
-
   security.declarePublic('getPythonMethodIds')
-  def getPythonMethodIds(self):
+  def getPythonMethodIds(self, include_shared=True):
     """
       Returns a list of all python scripts available in
       current sql catalog.
     """
     return self.getCatalogMethodIds(valid_method_meta_type_list=(
       'ERP5 External Method',
-      'ERP5 Python Script'))
+      'ERP5 Python Script'),
+      include_shared = True
+      )
 
   def manage_catalogClear(self, REQUEST=None, RESPONSE=None, URL1=None):
     """ Clears the catalog
