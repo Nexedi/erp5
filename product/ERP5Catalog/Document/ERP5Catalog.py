@@ -28,7 +28,7 @@
 ##############################################################################
 
 from Products.ERP5Type.Globals import InitializeClass
-from Products.ERP5Type.Core.Folder import Folder
+from Products.ERP5Type.Core.Folder import Folder, _BTREE_PROPERTY_ID
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type import PropertySheet
@@ -36,6 +36,7 @@ from Products.ERP5Type.patches.PropertyManager import PropertyManager
 from Products.ZSQLCatalog.SQLCatalog import Catalog, CatalogError
 
 import OFS.History
+from OFS.ObjectManager import BadRequestException
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from zLOG import LOG, INFO, TRACE, WARNING, ERROR
@@ -179,6 +180,34 @@ class ERP5Catalog(Folder, Catalog):
   isIndexable = 0
   __class_init__  = Catalog.__class_init__
 
+  def _getLocalOb(self, container, id):
+    # ERP5 catalogs are BTreeFolder2-based: their sub-objects live in the BTree
+    # storage (_BTREE_PROPERTY_ID, shared with Folder's handler table). Read it
+    # directly and do the BTree lookup inline, skipping ERP5's Folder._getOb
+    # handler-dispatch chain (_getFolderHandlerData + getattr + CMFBTreeFolder.
+    # _getOb) on this hot catalog-method lookup.
+    # The BTree attribute has a class default of None on BTreeFolder2Base, so
+    # getattr always resolves without re-entering Catalog.__getattr__. If it is
+    # None (HBTree or an uninitialized folder) fall back to the generic,
+    # handler-aware path.
+    tree = getattr(aq_base(container), _BTREE_PROPERTY_ID, None)
+    if tree is None:
+      return Folder._getOb(container, id, default=self._MARKER)
+    try:
+      return tree[id].__of__(container)
+    except KeyError:
+      return self._MARKER
+
+  _getOb = Catalog._getOb
+  __getitem__ = Catalog.__getitem__
+  _aq_dynamic = Catalog._aq_dynamic
+  __getattr__ = Catalog.__getattr__
+  def _checkId(self, id, allow_dup=0):
+    if not allow_dup and self._getLocalOb(self, id) is not self._MARKER:
+      raise BadRequestException(
+        'The id %r is invalid - it is already in use.' % id)
+    return Folder._checkId(self, id, allow_dup=1)
+
   # Note: superclass supports older variants of these metatypes, but we do not
   # expect these as content here. So just override superclass properties with
   # the new metatypes.
@@ -266,24 +295,17 @@ class ERP5Catalog(Folder, Catalog):
   def _setSqlSearchResultKeysList(self, value, **kw):
     self._baseSetSqlSearchResultKeysList(sorted(value), **kw)
 
-  security.declarePublic('getCatalogMethodIds')
-  def getCatalogMethodIds(self, valid_method_meta_type_list=
-      HAS_ARGUMENT_SRC_METATYPE_SET + HAS_FUNC_CODE_METATYPE_SET):
-    """Find ERP5 SQL methods in the current folder and above
-    This function return a list of ids.
-    """
-    return super(ERP5Catalog, self).getCatalogMethodIds(
-                                      valid_method_meta_type_list)
-
   security.declarePublic('getPythonMethodIds')
-  def getPythonMethodIds(self):
+  def getPythonMethodIds(self, include_shared=True):
     """
       Returns a list of all python scripts available in
       current sql catalog.
     """
     return self.getCatalogMethodIds(valid_method_meta_type_list=(
       'ERP5 External Method',
-      'ERP5 Python Script'))
+      'ERP5 Python Script'),
+      include_shared = True
+      )
 
   def manage_catalogClear(self, REQUEST=None, RESPONSE=None, URL1=None):
     """ Clears the catalog
