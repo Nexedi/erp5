@@ -186,6 +186,15 @@ def _getCatalog(acquisition_context):
   return list(set(catalog_method_id.split('/')[0] for catalog_method_id in catalog_method_id_list))
 
 
+def _redirectCatalogContainerId(business_template, catalog_id):
+  if not business_template.getSharedCatalog():
+    return catalog_id
+  default_id = getattr(
+    business_template.getPortalObject().portal_catalog,
+    'default_erp5_catalog_id', None)
+  return default_id or catalog_id
+
+
 def _getCatalogValue(acquisition_context):
   """
     Returns the catalog object which correspond to the ZSQLMethods
@@ -201,7 +210,8 @@ def _getCatalogValue(acquisition_context):
   portal_catalog = acquisition_context.getPortalObject().portal_catalog
 
   default_catalog_id = getattr(portal_catalog, 'default_erp5_catalog_id', None)
-  if default_catalog_id not in catalog_id_list:
+  if default_catalog_id not in catalog_id_list \
+      and not acquisition_context.getSharedCatalog():
     return None
   try:
     return portal_catalog[default_catalog_id]
@@ -996,8 +1006,13 @@ class ObjectTemplateItem(BaseTemplateItem):
     BaseTemplateItem.build(self, context, **kw)
     p = context.getPortalObject()
     for relative_url in self._archive:
+      traverse_url = relative_url
+      url_list = relative_url.split('/')
+      if len(url_list) > 2 and url_list[0] == 'portal_catalog':
+        url_list[1] = _redirectCatalogContainerId(context, url_list[1])
+        traverse_url = '/'.join(url_list)
       try:
-        obj = p.unrestrictedTraverse(relative_url)
+        obj = p.unrestrictedTraverse(traverse_url)
       except ValueError:
         raise ValueError("Can not access to %s" % relative_url)
       try:
@@ -1352,6 +1367,9 @@ class ObjectTemplateItem(BaseTemplateItem):
         path_list = path.split('/')
         container_path = path_list[:-1]
         object_id = path_list[-1]
+        if len(container_path) > 1 and container_path[-2] == 'portal_catalog':
+          container_path = container_path[:-1] + [
+            _redirectCatalogContainerId(context, container_path[-1])]
         try:
           container = self.unrestrictedResolveValue(portal, container_path)
         except KeyError:
@@ -1677,6 +1695,9 @@ class ObjectTemplateItem(BaseTemplateItem):
     for relative_url in object_keys:
       container_path = relative_url.split('/')[0:-1]
       object_id = relative_url.split('/')[-1]
+      if len(container_path) > 1 and container_path[-2] == 'portal_catalog':
+        container_path = container_path[:-1] + [
+          _redirectCatalogContainerId(context, container_path[-1])]
       try:
         container = self.unrestrictedResolveValue(portal, container_path)
         container._getOb(object_id) # We force access to the object to be sure
@@ -3111,8 +3132,11 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
 
       portal = self.getPortalObject()
       for path, obj in six.iteritems(self._objects):
-        method = self.unrestrictedResolveValue(portal, path)
         method_id = path.split('/')[-1]
+        url_list = path.split('/')
+        if len(url_list) > 2 and url_list[0] == 'portal_catalog':
+          url_list[1] = _redirectCatalogContainerId(context, url_list[1])
+        method = self.unrestrictedResolveValue(portal, '/'.join(url_list))
         if method.meta_type == 'Z SQL Method':
           method = changeObjectClass(catalog, method_id, sql_class)
         if method.meta_type == 'Script (Python)':
