@@ -103,9 +103,9 @@ class CoverageReport(unittest.TestCase):
   def _download_coverage_data(self):
     downloaded_coverage_path_set = set()
 
-    # erp5.util.testnode.ProcessManager applies a 4 hours MAX_TIMEOUT, give up
-    # before this timeout, otherwise this will be restarted forever in loop.
-    deadline = datetime.datetime.now() + datetime.timedelta(hours=3, minutes=30)
+    # TestResult_restartStuckLine redrafts a test line after 3 hours. Give up
+    # before that to avoid silent restart instead of a clean TimeoutError.
+    deadline = datetime.datetime.now() + datetime.timedelta(hours=2, minutes=45)
 
     coverage_data_directory = os.path.join(log_directory, 'coverage_data')
     if not os.path.exists(coverage_data_directory):

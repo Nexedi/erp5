@@ -10,10 +10,10 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>description</string>
                 <string>base_category</string>
+                <string>description</string>
                 <string>portal_type</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -97,6 +97,10 @@
                         <tuple>
                           <string>Organisation</string>
                           <string>Organisation</string>
+                        </tuple>
+                        <tuple>
+                          <string>Workgroup</string>
+                          <string>Workgroup</string>
                         </tuple>
                       </list>
                     </value>
