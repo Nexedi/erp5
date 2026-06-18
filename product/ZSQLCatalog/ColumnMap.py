@@ -309,7 +309,7 @@ class ColumnMap(object):
       return
 
     column_table_map = sql_catalog.getColumnMap()
-    table_vote_method_list = [getattr(sql_catalog, x) for x in sql_catalog.sql_catalog_table_vote_scripts]
+    table_vote_method_list = [getattr(sql_catalog, x) for x in sql_catalog.getSqlCatalogTableVoteScriptsList()]
 
     # Generate missing joins from default group (this is required to allow using related keys outside of queries: order_by, sort_on, ...)
     column_set = self.registry.get(DEFAULT_GROUP_ID, [])
