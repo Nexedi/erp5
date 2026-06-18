@@ -1368,6 +1368,16 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     new_catalog_id = portal_catalog.manage_pasteObjects(cp_data)[0]['new_id']
     new_catalog = portal_catalog[new_catalog_id]
 
+    # The new default catalog must own a separate shared catalog: hot reindexing
+    # re-points the destination shared catalog's connections in place and refuses
+    # to run when source and destination share the same one.
+    source_shared_catalog = original_catalog._getSharedCatalog()
+    shared_cp_data = portal_catalog.manage_copyObjects(
+      ids=(source_shared_catalog.getId(),))
+    new_shared_catalog_id = portal_catalog.manage_pasteObjects(
+      shared_cp_data)[0]['new_id']
+    new_catalog.shared_erp5_catalog_id = new_shared_catalog_id
+
     # Add new searchable table in new catalog
     if self.portal.isMySQLCatalogStorage():
       create_dummy_table_sql = """
@@ -1444,6 +1454,14 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # Flush message queue
     self.tic()
     self.assertEqual(portal_catalog.getSQLCatalog().getId(), new_catalog_id)
+    # The new default catalog's shared catalog got its connections re-pointed
+    # in place (no copy) to the new connectors.
+    new_shared_catalog = portal_catalog[new_shared_catalog_id]
+    shared_connection_id_set = set(
+      method.connection_id for method in new_shared_catalog.objectValues()
+      if method.meta_type in ('Z SQL Method', 'ERP5 SQL Method'))
+    self.assertNotIn(original_connection_id, shared_connection_id_set)
+    self.assertNotIn(original_deferred_connection_id, shared_connection_id_set)
     # Check that column map is updated according new structure of catalog.
     self.assertIn('dummy.dummy_title', portal_catalog.getSQLCatalog().getColumnMap())
     # Check more cached methods of SQLCatalog by building SQLQuery
