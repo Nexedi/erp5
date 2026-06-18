@@ -349,7 +349,7 @@ class PDFDocument(Image):
         raise
 
       result = {}
-      for line in bytes2str(command_result).splitlines():
+      for line in bytes2str(command_result, errors="ignore").splitlines():
         item_list = line.split(':')
         key = item_list[0].strip()
         value = ':'.join(item_list[1:]).strip()
