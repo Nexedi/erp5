@@ -23,7 +23,8 @@ class DeferredConnection(Connection):
         return DeferredDB
 
 
-manage_addZMySQLConnectionForm = HTMLFile('connectionAdd', globals())
+manage_addZMySQLConnectionForm = HTMLFile(
+    'connectionAdd', globals(), __name__='connectionAdd_mysql')
 
 
 def manage_addZMySQLConnection(self, id, title, connection_string,

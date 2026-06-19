@@ -23,7 +23,8 @@ class DeferredConnection(Connection):
         return DeferredDB
 
 
-manage_addZSQLiteConnectionForm = HTMLFile('connectionAdd', globals())
+manage_addZSQLiteConnectionForm = HTMLFile(
+    'connectionAdd', globals(), __name__='connectionAdd_sqlite')
 
 
 def manage_addZSQLiteConnection(self, id, title, connection_string,
