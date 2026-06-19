@@ -88,6 +88,8 @@ $Id: __init__.py,v 1.4 2001/08/17 02:17:38 adustman Exp $'''
 __version__='$Revision: 1.4 $'[11:-2]
 
 from . import DABase
+import sys
+import types
 from .MySQL import DA as MySQLDA
 from .SQLite import DA as SQLiteDA
 
@@ -96,27 +98,18 @@ from .SQLite import DA as SQLiteDA
 misc_ = DABase.build_misc_()
 
 def initialize(context):
-
-    context.registerClass(
-        MySQLDA.Connection,
-        permission="Add Z MySQL Database Connections",
-        constructors=(MySQLDA.manage_addZMySQLConnectionForm,
-                      MySQLDA.manage_addZMySQLConnection),
-    )
     import Products
-    Products.meta_types += dict(Products.meta_types[-1],
-        name=MySQLDA.DeferredConnection.meta_type,
-        action=None),
-
-    context.registerClass(
-        SQLiteDA.Connection,
-        permission="Add Z SQLite Database Connections",
-        constructors=(SQLiteDA.manage_addZSQLiteConnectionForm,
-                      SQLiteDA.manage_addZSQLiteConnection),
-    )
-    Products.meta_types += dict(Products.meta_types[-1],
-        name=SQLiteDA.DeferredConnection.meta_type,
-        action=None),
+    for backend in (MySQLDA, SQLiteDA):
+        bt = backend.database_type
+        context.registerClass(
+            backend.Connection,
+            permission="Add Z %s Database Connections" % bt,
+            constructors=(getattr(backend, 'manage_addZ%sConnectionForm' % bt),
+                          getattr(backend, 'manage_addZ%sConnection' % bt)),
+        )
+        Products.meta_types += dict(Products.meta_types[-1],
+            name=backend.DeferredConnection.meta_type,
+            action=None),
 
 
 # BBB: Allow loading of deferred connections that were created

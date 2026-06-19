@@ -107,7 +107,7 @@ SHARED_DC_ZRDB_LOCATION = os.path.dirname(Shared.DC.ZRDB.__file__)
 database_connection_pool = defaultdict(WeakKeyDictionary)
 
 
-class Connection(Shared.DC.ZRDB.Connection.Connection):
+class BaseConnection(Shared.DC.ZRDB.Connection.Connection):
     _isAnSQLConnection=1
 
     manage_options=Shared.DC.ZRDB.Connection.Connection.manage_options+(
@@ -117,15 +117,33 @@ class Connection(Shared.DC.ZRDB.Connection.Connection):
 
     manage_tables=HTMLFile('tables',globals())
     manage_browse=HTMLFile('browse',globals())
+    manage_properties=HTMLFile('connectionEdit',globals())
 
     info=None
+    icon = 'misc_/ZSQLDA/conn'
 
-    # Set by backend subclass to 'MySQL' or 'SQLite'.
     database_type = None
+    # Set to True on the deferred variant of a backend.
+    deferred = False
     security = ClassSecurityInfo()
     connect_on_load = False
     if not IS_ZOPE2:
         zmi_icon = 'fas fa-database'
+
+    def __init_subclass__(cls, **kw):
+        # Derive the registration metadata from database_type so each backend
+        # only declares database_type (+ deferred). Attributes set explicitly
+        # on the subclass (e.g. CMFActivity connections) are left untouched.
+        super().__init_subclass__(**kw)
+        database_type = cls.database_type
+        if database_type is None:
+            return
+        d = cls.__dict__
+        if 'id' not in d:
+            cls.id = '%s_database_connection' % database_type
+        if 'meta_type' not in d and 'title' not in d:
+            cls.meta_type = cls.title = 'Z %s %sDatabase Connection' % (
+                database_type, 'Deferred ' if cls.deferred else '')
 
     def factory(self):
         # Backend subclass returns its DB class.
@@ -204,6 +222,19 @@ class Connection(Shared.DC.ZRDB.Connection.Connection):
 
     def manage_update(self, table, keys, cols, REQUEST=None):
         """Create an SQL update"""
+
+
+def manage_addConnection(self, Connection, DeferredConnection,
+                         id, title, connection_string,
+                         check=None, deferred=False, REQUEST=None):
+    """Shared body for the backends' manage_addZ<Backend>Connection."""
+    cls = DeferredConnection if deferred else Connection
+    connection = cls(id, title, connection_string)
+    self._setObject(id, connection)
+    if check:
+        connection.connect(connection_string)
+    if REQUEST is not None:
+        return self.manage_main(self, REQUEST)
 
 
 def build_misc_():
