@@ -187,7 +187,7 @@ def _getCatalog(acquisition_context):
 
 
 def _redirectCatalogContainerId(business_template, catalog_id):
-  if not business_template.getSharedCatalog():
+  if not getattr(business_template, 'shared_catalog', None):
     return catalog_id
   default_id = getattr(
     business_template.getPortalObject().portal_catalog,
@@ -211,7 +211,7 @@ def _getCatalogValue(acquisition_context):
 
   default_catalog_id = getattr(portal_catalog, 'default_erp5_catalog_id', None)
   if default_catalog_id not in catalog_id_list \
-      and not acquisition_context.getSharedCatalog():
+      and not getattr(acquisition_context, 'shared_catalog', None):
     return None
   try:
     return portal_catalog[default_catalog_id]
