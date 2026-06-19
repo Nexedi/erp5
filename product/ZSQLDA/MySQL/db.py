@@ -112,8 +112,7 @@ from MySQLdb.constants import FIELD_TYPE, CR, ER, CLIENT
 from App.config import getConfiguration
 from Shared.DC.ZRDB.TM import TM
 from DateTime import DateTime
-from ..db import (DATETIME_to_DateTime_or_None, DATE_to_DateTime_or_None,
-                  ord_or_None, match_select)
+from ..db import BaseDB, DATETIME_to_DateTime_or_None, DATE_to_DateTime_or_None, ord_or_None, match_select
 from zLOG import LOG, ERROR, WARNING
 from ZODB.POSException import ConflictError
 
@@ -171,7 +170,7 @@ def _mysql_timestamp_converter(s):
                           s[8:10],s[10:12],s[12:14])]
         return DateTime("%04d-%02d-%02d %02d:%02d:%02d" % tuple(parts))
 
-class DB(TM):
+class DB(BaseDB):
     """This is the MySQL Database Connection Object."""
 
     conv=conversions.copy()
@@ -181,9 +180,6 @@ class DB(TM):
     conv[FIELD_TYPE.DECIMAL] = float
     conv[FIELD_TYPE.BIT] = ord_or_None
     del conv[FIELD_TYPE.TIME]
-
-    _sort_key = TM._sort_key
-    db = None
 
     def __init__(self,connection):
         """
@@ -272,12 +268,6 @@ class DB(TM):
         FIELD_TYPE.SHORT: "i", FIELD_TYPE.TIMESTAMP: "d",
         FIELD_TYPE.TINY: "i", FIELD_TYPE.YEAR: "i",
         }
-
-    _p_oid=_p_changed=_registered=None
-
-    def __del__(self):
-      if self.db is not None:
-        self.db.close()
 
     def _forceReconnection(self):
       db = self.db

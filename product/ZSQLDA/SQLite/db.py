@@ -19,8 +19,7 @@ from Products.ERP5Type.Timeout import TimeoutReachedError
 from App.config import getConfiguration
 from Shared.DC.ZRDB.TM import TM
 from DateTime import DateTime
-from ..db import (DATETIME_to_DateTime_or_None, DATE_to_DateTime_or_None,
-                  match_select)
+from ..db import BaseDB, DATETIME_to_DateTime_or_None, DATE_to_DateTime_or_None, match_select
 from ZODB.POSException import ConflictError
 import time
 import unicodedata
@@ -114,11 +113,7 @@ class SQLiteResult:
     def fetchall(self):
         return self._rows
 
-class DB(TM):
-    _sort_key = TM._sort_key
-    db = None
-    _transaction_begun = False
-
+class DB(BaseDB):
     def __init__(self, connection):
         self._connection = connection
         self._parse_connection_string()
@@ -148,12 +143,6 @@ class DB(TM):
     # ------------------------------------------------------------------
     # Connection lifecycle
     # ------------------------------------------------------------------
-
-    _p_oid = _p_changed = _registered = None
-
-    def __del__(self):
-        if self.db is not None:
-            self.db.close()
 
     def _forceReconnection(self):
         if self.db is not None:

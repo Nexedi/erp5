@@ -1,7 +1,7 @@
-"""Result-conversion helpers shared by the MySQL and SQLite db layers."""
 
 import re
 from DateTime import DateTime
+from Shared.DC.ZRDB.TM import TM
 
 
 # DateTime(str) is slow. As the date format is part of the specifications,
@@ -37,3 +37,14 @@ match_select = re.compile(
     br'(?:SET\s+STATEMENT\s+(.+?)\s+FOR\s+)?SELECT\s+(.+)',
     re.IGNORECASE | re.DOTALL,
 ).match
+
+
+class BaseDB(TM):
+    _sort_key = TM._sort_key
+    db = None
+    _p_oid = _p_changed = _registered = None
+    _transaction_begun = False
+
+    def __del__(self):
+        if self.db is not None:
+            self.db.close()
