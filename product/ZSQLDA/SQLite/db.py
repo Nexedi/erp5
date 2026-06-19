@@ -19,6 +19,8 @@ from Products.ERP5Type.Timeout import TimeoutReachedError
 from App.config import getConfiguration
 from Shared.DC.ZRDB.TM import TM
 from DateTime import DateTime
+from ..db import (DATETIME_to_DateTime_or_None, DATE_to_DateTime_or_None,
+                  match_select)
 from ZODB.POSException import ConflictError
 import time
 import unicodedata
@@ -30,43 +32,6 @@ _icon_xlate = {
     'blob': 'bin',
     'date': 'date', 'datetime': 'datetime', 'timestamp': 'datetime', 'time': 'time',
 }
-
-# ---------------------------------------------------------------------------
-# Type converters
-# ---------------------------------------------------------------------------
-
-def DATETIME_to_DateTime_or_None(s):
-    try:
-        date, time_part = s.split(' ')
-        year, month, day = date.split('-')
-        hour, minute, second = time_part.split(':')
-        return DateTime(
-            int(year), int(month), int(day),
-            int(hour), int(minute), float(second),
-            'UTC',
-        )
-    except Exception:
-        return None
-
-
-def DATE_to_DateTime_or_None(s):
-    try:
-        year, month, day = s.split('-')
-        return DateTime(int(year), int(month), int(day), 0, 0, 0, 'UTC')
-    except Exception:
-        return None
-
-
-def ord_or_None(s):
-    if s is not None:
-        return ord(s)
-
-
-match_select = re.compile(
-    br'(?:SET\s+STATEMENT\s+(.+?)\s+FOR\s+)?SELECT\s+(.+)',
-    re.IGNORECASE | re.DOTALL,
-).match
-
 
 # ---------------------------------------------------------------------------
 # UTF-8 collation (approximates utf8mb4_general_ci)
@@ -188,10 +153,7 @@ class DB(TM):
 
     def __del__(self):
         if self.db is not None:
-            try:
-                self.db.close()
-            except Exception:
-                pass
+            self.db.close()
 
     def _forceReconnection(self):
         if self.db is not None:
