@@ -5,7 +5,7 @@ SELECT
     'unixepoch'
   ) AS min,
   time(
-    (julianday('now') - julianday(AVG(date))) * 86400,
+   (julianday('now') - AVG(julianday(date))) * 86400,
     'unixepoch'
   ) AS avg,
   time(
