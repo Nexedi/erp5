@@ -1425,8 +1425,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
     security.declareProtected(Permissions.ManagePortal, 'upgradeSchema')
     def upgradeSchema(self, sql_catalog_id=None, src__=0):
       """Upgrade all catalog tables, with ALTER or CREATE queries"""
-      from Products.ZSQLDA.MySQL.DA import DeferredConnection as MySQLDeferredConnection
-      from Products.ZSQLDA.SQLite.DA import DeferredConnection as SQLiteDeferredConnection
+      from Products.ZSQLDA.MySQL import DeferredConnection as MySQLDeferredConnection
+      from Products.ZSQLDA.SQLite import DeferredConnection as SQLiteDeferredConnection
       DeferredConnection = (MySQLDeferredConnection, SQLiteDeferredConnection)
       portal = self.getPortalObject()
       catalog = self.getSQLCatalog(sql_catalog_id)
