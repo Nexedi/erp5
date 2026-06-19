@@ -84,7 +84,7 @@
 ##############################################################################
 __doc__='''Database Connection
 
-$Id: DABase.py,v 1.5 2001/08/17 02:17:38 adustman Exp $'''
+$Id: DA.py,v 1.5 2001/08/17 02:17:38 adustman Exp $'''
 __version__='$Revision: 1.5 $'[11:-2]
 
 import os, sys

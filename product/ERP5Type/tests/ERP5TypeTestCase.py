@@ -1005,9 +1005,9 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase, functional.F
 def _getZSQLDAConnectionClass():
   if os.environ.get('erp5_catalog_storage',
                     'erp5_mysql_innodb_catalog') == 'erp5_mysql_innodb_catalog':
-    from Products.ZSQLDA.MySQL.DA import Connection
+    from Products.ZSQLDA.MySQL import Connection
   else:
-    from Products.ZSQLDA.SQLite.DA import Connection
+    from Products.ZSQLDA.SQLite import Connection
   return Connection
 
 
@@ -1479,7 +1479,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
         ZSQLDA_Connection.connect = self.__original_ZSQLDA_connect
         for connector in self.__connector_set:
           connector.__dict__.pop('_v_database_connection', None)
-        from Products.ZSQLDA.DABase import database_connection_pool
+        from Products.ZSQLDA.DA import database_connection_pool
         for value in six.itervalues(database_connection_pool):
           value.clear()
         database_connection_pool.clear()

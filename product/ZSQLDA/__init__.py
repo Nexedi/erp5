@@ -87,15 +87,15 @@ __doc__='''Generic Database Adapter Package Registration
 $Id: __init__.py,v 1.4 2001/08/17 02:17:38 adustman Exp $'''
 __version__='$Revision: 1.4 $'[11:-2]
 
-from . import DABase
+from . import DA
 import sys
 import types
-from .MySQL import DA as MySQLDA
-from .SQLite import DA as SQLiteDA
+from . import MySQL as MySQLDA
+from . import SQLite as SQLiteDA
 
 # Zope auto-publishes Products.ZSQLDA.misc_ as misc_/ZSQLDA/<key>; both
 # backends share the same icon set built from ZSQLDA/icons/.
-misc_ = DABase.build_misc_()
+misc_ = DA.build_misc_()
 
 def initialize(context):
     import Products

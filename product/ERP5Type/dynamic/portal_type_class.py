@@ -477,7 +477,7 @@ def synchronizeDynamicModules(context, force=False):
             cls = type(conn)
             if cls.__module__ == 'Products.ZMySQLDA.DA':
               cls, = cls.__bases__
-              assert cls.__module__ == 'Products.ZSQLDA.MySQL.DA'
+              assert cls.__module__ == 'Products.ZSQLDA.MySQL'
               conn.__class__ = cls
               portal._p_changed = conn._p_changed = 1
 
