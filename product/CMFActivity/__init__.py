@@ -69,6 +69,14 @@ def initialize( context ):
                       ActivityConnection.manage_addSQLiteActivityConnection),
   )
 
+
+from . import ActivityConnection as _ActivityConnection
+_ActivityConnection.ActivityConnection = type(
+    'ActivityConnection',
+    (_ActivityConnection.MySQLActivityConnection,),
+    {'__module__': _ActivityConnection.__name__})
+del _ActivityConnection
+
 # This is used by a script (external method) that can be run
 # to set up CMFActivity in an existing CMF Site instance.
 cmfactivity_globals = globals()

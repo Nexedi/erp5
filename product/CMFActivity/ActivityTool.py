@@ -742,30 +742,23 @@ class ActivityTool (BaseTool):
       return self.aq_inner.aq_parent.cmf_activity_sql_connection()
 
     def maybeMigrateConnectionClass(self):
-      from ZODB.broken import Broken
       from Products.CMFActivity.ActivityConnection import (
         MySQLActivityConnection, SQLiteActivityConnection,
       )
       portal = self.getPortalObject()
       cls = (MySQLActivityConnection if portal.isMySQLCatalogStorage()
              else SQLiteActivityConnection)
-      connection_id = 'cmf_activity_sql_connection'
-      sql_connection = getattr(portal, connection_id, None)
-      if sql_connection is None or isinstance(sql_connection, cls):
-        return
-      LOG('ActivityTool', WARNING, "Migrating Activity Connection class")
-      if isinstance(sql_connection, Broken):
-        # The old class is no longer importable (e.g. Products.ZMySQLDA
-        # consolidated into Products.ZSQLDA); read state from the pickle.
-        state = sql_connection.__Broken_state__
-        title = state.get('title', '')
-        connection_string = state.get('connection_string', '')
-      else:
-        title = sql_connection.title
-        connection_string = sql_connection.connection_string
-      portal._delObject(connection_id)
-      portal._setObject(connection_id,
-                        cls(connection_id, title, connection_string))
+      sql_connection = getattr(portal, 'cmf_activity_sql_connection', None)
+      if sql_connection is not None:
+        conn = sql_connection.aq_base
+        # Migrate a plain ZSQLDA 'Connection' or the legacy 'ActivityConnection'
+        # (kept loadable as a subclass in __init__.py) to the backend-specific
+        # ActivityConnection. The target is a *subclass* of the source, so it is
+        # selected explicitly rather than read from __bases__.
+        if type(conn).__name__ in ('Connection', 'ActivityConnection'):
+          LOG('ActivityTool', WARNING, "Migrating Activity Connection class")
+          conn.__class__ = cls
+          portal._p_changed = conn._p_changed = 1
 
     security.declarePrivate('initialize')
     def initialize(self):
