@@ -104,7 +104,7 @@ MySQLdb_version_required = (0,9,2)
 
 _v = getattr(_mysql, 'version_info', (0,0,0))
 if _v < MySQLdb_version_required:
-    raise NotSupportedError("ZMySQLDA requires at least MySQLdb %s, %s found"
+    raise NotSupportedError("ZSQLDA.MySQL requires at least MySQLdb %s, %s found"
         % (MySQLdb_version_required, _v))
 
 from MySQLdb.converters import conversions
@@ -112,6 +112,7 @@ from MySQLdb.constants import FIELD_TYPE, CR, ER, CLIENT
 from App.config import getConfiguration
 from Shared.DC.ZRDB.TM import TM
 from DateTime import DateTime
+from ..db import BaseDB, DATETIME_to_DateTime_or_None, DATE_to_DateTime_or_None, ord_or_None, match_select
 from zLOG import LOG, ERROR, WARNING
 from ZODB.POSException import ConflictError
 
@@ -169,51 +170,8 @@ def _mysql_timestamp_converter(s):
                           s[8:10],s[10:12],s[12:14])]
         return DateTime("%04d-%02d-%02d %02d:%02d:%02d" % tuple(parts))
 
-# DateTime(str) is slow. As the date format is part of the specifications,
-# parse it ourselves to save time.
-def DATETIME_to_DateTime_or_None(s):
-    try:
-        date, time = s.split(' ')
-        year, month, day = date.split('-')
-        hour, minute, second = time.split(':')
-        return DateTime(
-            int(year),
-            int(month),
-            int(day),
-            int(hour),
-            int(minute),
-            float(second),
-            'UTC',
-        )
-    except Exception:
-        return None
-
-def DATE_to_DateTime_or_None(s):
-    try:
-        year, month, day = s.split('-')
-        return DateTime(
-            int(year),
-            int(month),
-            int(day),
-            0,
-            0,
-            0,
-            'UTC',
-        )
-    except Exception:
-        return None
-
-def ord_or_None(s):
-    if s is not None:
-        return ord(s)
-
-match_select = re.compile(
-    br'(?:SET\s+STATEMENT\s+(.+?)\s+FOR\s+)?SELECT\s+(.+)',
-    re.IGNORECASE | re.DOTALL,
-).match
-
-class DB(TM):
-    """This is the ZMySQLDA Database Connection Object."""
+class DB(BaseDB):
+    """This is the MySQL Database Connection Object."""
 
     conv=conversions.copy()
     conv[FIELD_TYPE.LONG] = int
@@ -222,9 +180,6 @@ class DB(TM):
     conv[FIELD_TYPE.DECIMAL] = float
     conv[FIELD_TYPE.BIT] = ord_or_None
     del conv[FIELD_TYPE.TIME]
-
-    _sort_key = TM._sort_key
-    db = None
 
     def __init__(self,connection):
         """
@@ -314,12 +269,6 @@ class DB(TM):
         FIELD_TYPE.TINY: "i", FIELD_TYPE.YEAR: "i",
         }
 
-    _p_oid=_p_changed=_registered=None
-
-    def __del__(self):
-      if self.db is not None:
-        self.db.close()
-
     def _forceReconnection(self):
       db = self.db
       if db is not None:
@@ -338,7 +287,7 @@ class DB(TM):
             ProgrammingError,
           ) or exception.message != 'closing a closed connection':
             LOG(
-              'ZMySQLDA.db',
+              'ZSQLDA.MySQL.db',
               WARNING,
               'Failed to close pre-existing connection, discarding it',
               error=True,
@@ -445,7 +394,7 @@ class DB(TM):
               self._forceReconnection()
               self.db.query(query)
             else:
-              LOG('ZMySQLDA', ERROR, 'query failed: %s' % (query,))
+              LOG('ZSQLDA.MySQL', ERROR, 'query failed: %s' % (query,))
               raise
         except ProgrammingError as m:
           if (allow_reconnect or not self._use_TM) and \
@@ -453,7 +402,7 @@ class DB(TM):
             self._forceReconnection()
             self.db.query(query)
           else:
-            LOG('ZMySQLDA', ERROR, 'query failed: %s' % (query,))
+            LOG('ZSQLDA.MySQL', ERROR, 'query failed: %s' % (query,))
             raise
         try:
           return self.db.store_result()
@@ -522,7 +471,7 @@ class DB(TM):
             if self._mysql_lock:
                 self._query("SELECT GET_LOCK('%s',0)" % self._mysql_lock, allow_reconnect=not self._transactions)
         except:
-            LOG('ZMySQLDA', ERROR, "exception during _begin",
+            LOG('ZSQLDA.MySQL', ERROR, "exception during _begin",
                 error=True)
             raise
 
@@ -559,9 +508,9 @@ class DB(TM):
             if self._transactions:
                 self._query("ROLLBACK")
             else:
-                LOG('ZMySQLDA', ERROR, "aborting when non-transactional")
+                LOG('ZSQLDA.MySQL', ERROR, "aborting when non-transactional")
         except OperationalError as m:
-            LOG('ZMySQLDA', ERROR, "exception during _abort",
+            LOG('ZSQLDA.MySQL', ERROR, "exception during _abort",
                 error=True)
             if m.args[0] not in hosed_connection:
                 raise
