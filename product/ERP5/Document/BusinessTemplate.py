@@ -5917,6 +5917,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
             prop_dict[pid[:-5]] = (value or '').splitlines()
       self._edit(**prop_dict)
 
+      if 'shared_catalog' not in prop_dict and bt_item.get('shared_catalog'):
+        self.shared_catalog = int(bt_item['shared_catalog'])
+
       try:
         from erp5.component.module.WorkingCopy import NotAWorkingCopyError
       # bootstrap (setupERP5Core()) or erp5_forge not installed
