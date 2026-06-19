@@ -117,3 +117,21 @@ def initialize(context):
     Products.meta_types += dict(Products.meta_types[-1],
         name=SQLiteDA.DeferredConnection.meta_type,
         action=None),
+
+
+# BBB: Allow loading of deferred connections that were created
+#      before the merge of ZMySQLDDA into ZMySQLDA.
+assert 'Products.ZMySQLDDA' not in sys.modules, \
+    "please remove obsolete ZMySQLDDA product"
+for m in 'Products.ZMySQLDDA', 'Products.ZMySQLDDA.DA':
+    sys.modules[m] = m = types.ModuleType(m)
+m.DeferredConnection = MySQLDA.DeferredConnection
+
+# Products.ZMySQLDA was merged into Products.ZSQLDA.MySQL. Objects load as BBB
+# subclasses of the real classes and get re-classed in place at site bootstrap
+# (see Products.ERP5Type.dynamic.portal_type_class.synchronizeDynamicModules).
+for m in 'Products.ZMySQLDA', 'Products.ZMySQLDA.DA':
+    sys.modules[m] = m = types.ModuleType(m)
+for k in 'Connection', 'DeferredConnection':
+    setattr(m, k, type(k, (getattr(MySQLDA, k),), {'__module__': m.__name__}))
+del m, k

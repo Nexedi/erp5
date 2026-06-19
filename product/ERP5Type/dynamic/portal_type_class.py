@@ -469,6 +469,18 @@ def synchronizeDynamicModules(context, force=False):
             continue
           tool._bootstrap()
           tool.__class__ = getattr(erp5.portal_type, tool.portal_type)
+
+        for conn_id in ('erp5_sql_connection', 'erp5_sql_deferred_connection','erp5_sql_transactionless_connection'):
+          conn = getattr(portal, conn_id, None)
+          if conn is not None:
+            conn = conn.aq_base
+            cls = type(conn)
+            if cls.__module__ == 'Products.ZMySQLDA.DA':
+              cls, = cls.__bases__
+              assert cls.__module__ == 'Products.ZSQLDA.MySQL.DA'
+              conn.__class__ = cls
+              portal._p_changed = conn._p_changed = 1
+
         # TODO: Create portal_activities here, and even before portal_types:
         #       - all code in ActiveObject could assume that it always exists
         #       - currently, some objects created very early are not indexed
@@ -477,10 +489,7 @@ def synchronizeDynamicModules(context, force=False):
           portal.portal_activities.initialize()
         except AttributeError:
           pass # no Activity Tool yet
-        try:
-          portal.portal_catalog.maybeMigrateConnectionClass()
-        except AttributeError:
-          pass # no Catalog Tool yet
+
 
         for tool_id in ("portal_properties", "portal_uidannotation",
                         "portal_uidgenerator", "portal_uidhandler"):

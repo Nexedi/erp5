@@ -43,19 +43,6 @@ def manage_addZMySQLConnection(self, id, title, connection_string,
     if REQUEST is not None:
         return self.manage_main(self, REQUEST)
 
-
-# BBB: Allow loading of deferred connections that were created
-#      before the merge of ZMySQLDDA into ZMySQLDA.
-import sys, types
-m = 'Products.ZMySQLDDA'
-assert m not in sys.modules, "please remove obsolete ZMySQLDDA product"
-sys.modules[m] = types.ModuleType(m)
-m += '.DA'
-sys.modules[m] = m = types.ModuleType(m)
-m.DeferredConnection = DeferredConnection
-del m
-
-
 __ac_permissions__ = (
     ('Add Z MySQL Database Connections',
      ('manage_addZMySQLConnectionForm',
