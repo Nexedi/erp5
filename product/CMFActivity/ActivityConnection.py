@@ -26,45 +26,46 @@
 #
 ##############################################################################
 
-from Products.ZMySQLDA.DA import Connection, DB
-from Products.ERP5Type.Globals import InitializeClass
 from App.special_dtml import HTMLFile
-from Acquisition import aq_parent
+from Products.ERP5Type.Globals import InitializeClass
+from Products.ZSQLDA.MySQL import Connection as MySQLConnection
+from Products.ZSQLDA.MySQL.db import DB as MySQLDB
+from Products.ZSQLDA.SQLite import Connection as SQLiteConnection
+from Products.ZSQLDA.SQLite.db import DB as SQLiteDB
 
 # If the sort order below doesn't work, we cannot guarantee the sort key
 # used below will actually result in the activity connection being committed
 # after the ZODB and Catalog data.
 assert '' < chr(0) < chr(1) < 'xxx' < chr(255), "Cannot guarantee commit of activities comes after the appropriate data"
 
-manage_addActivityConnectionForm = HTMLFile('dtml/connectionAdd', globals())
 
-def manage_addActivityConnection(self, id, title,
-                                 connection_string,
-                                 check=None, REQUEST=None):
-    """Add a DB connection to a folder"""
-    self._setObject(id, ActivityConnection(id, title, connection_string, check))
-    if REQUEST is not None: return self.manage_main(self,REQUEST)
+manage_addMySQLActivityConnectionForm = HTMLFile('dtml/connectionAdd_mysql', globals())
 
-class ActivityConnection(Connection):
-    """Products ZMySQLDA.DA.Connection subclass that tweaks the sortKey() of
-       the actual connection to commit after all other connections
-    """
-    meta_type = title = 'CMFActivity Database Connection'
-
-    # Declarative constructors
-    constructors = (manage_addActivityConnectionForm,
-                    manage_addActivityConnection)
-
-    # reuse the permission from ZMySQLDA
-    permission_type = 'Add Z MySQL Database Connections'
-
-    def factory(self):
-        return ActivityDB
-
-InitializeClass(ActivityConnection)
+def manage_addMySQLActivityConnection(self, id, title,
+                                      connection_string,
+                                      check=None, REQUEST=None):
+    """Add a MySQL CMFActivity DB connection to a folder"""
+    connection = MySQLActivityConnection(id, title, connection_string)
+    self._setObject(id, connection)
+    if check:
+        connection.connect(connection_string)
+    if REQUEST is not None: return self.manage_main(self, REQUEST)
 
 
-class ActivityDB(DB):
+manage_addSQLiteActivityConnectionForm = HTMLFile('dtml/connectionAdd_sqlite', globals())
+
+def manage_addSQLiteActivityConnection(self, id, title,
+                                       connection_string,
+                                       check=None, REQUEST=None):
+    """Add a SQLite CMFActivity DB connection to a folder"""
+    connection = SQLiteActivityConnection(id, title, connection_string)
+    self._setObject(id, connection)
+    if check:
+        connection.connect(connection_string)
+    if REQUEST is not None: return self.manage_main(self, REQUEST)
+
+
+class MySQLActivityDB(MySQLDB):
 
     _sort_key = chr(255)
 
@@ -72,3 +73,42 @@ class ActivityDB(DB):
     def isolation_level(self):
         if not self.innodb_locks_unsafe_for_binlog:
             return 'READ COMMITTED'
+
+
+class MySQLActivityConnection(MySQLConnection):
+    """ZSQLDA MySQL Connection subclass that tweaks the sortKey() of the
+       actual connection to commit after all other connections
+    """
+    meta_type = title = 'CMFActivity MySQL Database Connection'
+
+    constructors = (manage_addMySQLActivityConnectionForm,
+                    manage_addMySQLActivityConnection)
+
+    permission_type = 'Add Z MySQL Database Connections'
+
+    def factory(self):
+        return MySQLActivityDB
+
+InitializeClass(MySQLActivityConnection)
+
+
+class SQLiteActivityDB(SQLiteDB):
+
+    _sort_key = chr(255)
+
+
+class SQLiteActivityConnection(SQLiteConnection):
+    """ZSQLDA SQLite Connection subclass that tweaks the sortKey() of the
+       actual connection to commit after all other connections
+    """
+    meta_type = title = 'CMFActivity SQLite Database Connection'
+
+    constructors = (manage_addSQLiteActivityConnectionForm,
+                    manage_addSQLiteActivityConnection)
+
+    permission_type = 'Add Z SQLite Database Connections'
+
+    def factory(self):
+        return SQLiteActivityDB
+
+InitializeClass(SQLiteActivityConnection)
