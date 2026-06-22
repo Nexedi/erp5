@@ -100,6 +100,7 @@ class ERP5CatalogTool(BaseTool, CMFCore_CatalogTool):
     getObject = ZCatalog.getObject
 
     default_erp5_catalog_id = None
+    shared_erp5_catalog_id = None
 
     def __init__(self, id=''):
         ZCatalog.__init__(self, self.getId())
