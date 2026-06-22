@@ -476,6 +476,14 @@ class ZCatalog(Folder, Persistent, Implicit):
     if update_destination_sql_catalog:
       self.changeSQLConnectionIds(destination_sql_catalog,
                                   sql_connection_id_dict)
+      shared_catalog_id = aq_base(
+        destination_sql_catalog).__dict__.get('shared_erp5_catalog_id')
+      if shared_catalog_id and sql_connection_id_dict:
+        copy_id = self.manage_pasteObjects(
+          self.manage_copyObjects(ids=[shared_catalog_id]))[0]['new_id']
+        self.changeSQLConnectionIds(self._getOb(copy_id),
+                                    sql_connection_id_dict)
+        destination_sql_catalog.shared_erp5_catalog_id = copy_id
 
     # First of all, make sure that all root objects have uids.
     # XXX This is a workaround for tools (such as portal_simulation).
