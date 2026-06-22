@@ -37,7 +37,6 @@ from Products.ZSQLCatalog.SQLCatalog import Catalog, CatalogError
 
 import OFS.History
 from AccessControl import ClassSecurityInfo
-from Acquisition import aq_base
 from zLOG import LOG, INFO, TRACE, WARNING, ERROR
 
 import time
@@ -179,6 +178,11 @@ class ERP5Catalog(Folder, Catalog):
   isIndexable = 0
   __class_init__  = Catalog.__class_init__
 
+  _getOb = Catalog._getOb
+  __getitem__ = Catalog.__getitem__
+  _aq_dynamic = Catalog._aq_dynamic
+  __getattr__ = Catalog.__getattr__
+
   # Note: superclass supports older variants of these metatypes, but we do not
   # expect these as content here. So just override superclass properties with
   # the new metatypes.
@@ -272,8 +276,15 @@ class ERP5Catalog(Folder, Catalog):
     """Find ERP5 SQL methods in the current folder and above
     This function return a list of ids.
     """
-    return super(ERP5Catalog, self).getCatalogMethodIds(
+    ids = super(ERP5Catalog, self).getCatalogMethodIds(
                                       valid_method_meta_type_list)
+    shared_catalog = self._getSharedCatalog()
+    if shared_catalog is not None:
+      seen = set(i[1] for i in ids)
+      ids += [i for i in super(ERP5Catalog, shared_catalog).getCatalogMethodIds(
+                          valid_method_meta_type_list) if i[1] not in seen]
+      ids.sort()
+    return ids
 
   security.declarePublic('getPythonMethodIds')
   def getPythonMethodIds(self):
