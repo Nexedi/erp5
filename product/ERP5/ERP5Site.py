@@ -2655,9 +2655,9 @@ def initialize(self):
     db = (kw.get('erp5_sql_connection_string') or
       default_kw['erp5_sql_connection_string'])
     if erp5_catalog_storage == 'erp5_mysql_innodb_catalog':
-      from Products.ZSQLDA.MySQL.db import DB, OperationalError
+      from Products.ZSQLDA.MySQL import DB, OperationalError
     else:
-      from Products.ZSQLDA.SQLite.db import DB, OperationalError
+      from Products.ZSQLDA.SQLite import DB, OperationalError
 
     # The lock is to avoid that multiple zopes try to create a site when
     # they're started at the same time, because this is a quite long operation

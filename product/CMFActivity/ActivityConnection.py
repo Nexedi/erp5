@@ -29,9 +29,9 @@
 from App.special_dtml import HTMLFile
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ZSQLDA.MySQL import Connection as MySQLConnection
-from Products.ZSQLDA.MySQL.db import DB as MySQLDB
+from Products.ZSQLDA.MySQL import DB as MySQLDB
 from Products.ZSQLDA.SQLite import Connection as SQLiteConnection
-from Products.ZSQLDA.SQLite.db import DB as SQLiteDB
+from Products.ZSQLDA.SQLite import DB as SQLiteDB
 
 # If the sort order below doesn't work, we cannot guarantee the sort key
 # used below will actually result in the activity connection being committed

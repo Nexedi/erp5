@@ -420,7 +420,7 @@ def _recreateMemcachedTool(portal):
   portal.newContent(id='portal_memcached', portal_type="Memcached Tool")
 
 # test runner shared functions
-from Products.ZSQLDA.MySQL.db import DB
+from Products.ZSQLDA.MySQL import DB
 class getMySQLArguments(object):
   """Returns arguments to pass to mysql by heuristically converting the
   connection string.

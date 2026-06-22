@@ -70,13 +70,13 @@ class Dumper(object):
     # (http://www.erp5.com/).
     _query_code_set = set()
     try:
-        from Products.ZSQLDA.MySQL.db import DB as _MySQLDB
+        from Products.ZSQLDA.MySQL import DB as _MySQLDB
         _query_code_set.add(_MySQLDB._query.__code__)
         del _MySQLDB
     except ImportError:
         pass
     try:
-        from Products.ZSQLDA.SQLite.db import DB as _SQLiteDB
+        from Products.ZSQLDA.SQLite import DB as _SQLiteDB
         _query_code_set.add(_SQLiteDB._query.__code__)
         del _SQLiteDB
     except ImportError:

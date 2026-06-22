@@ -70,7 +70,7 @@ else:
   from Products.ERP5.ERP5Site import default_sql_connection_string
   connection = os.environ.get('erp5_sql_connection_string', default_sql_connection_string)
   if os.environ.get('erp5_catalog_storage', '') == 'erp5_mysql_innodb_catalog':
-    from Products.ZSQLDA.MySQL import db
+    from Products.ZSQLDA import MySQL as db
     sql_db = db.DB(connection)
     _, view_list = sql_db.query("SHOW FULL TABLES WHERE table_type='VIEW'")
     if view_list:

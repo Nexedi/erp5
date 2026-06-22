@@ -67,12 +67,12 @@ def dump_threads():
         f = frame
         query_codes = set()
         try:
-          from Products.ZSQLDA.MySQL.db import DB as MySQLDB
+          from Products.ZSQLDA.MySQL import DB as MySQLDB
           query_codes.add(MySQLDB._query.__code__)
         except ImportError:
           pass
         try:
-          from Products.ZSQLDA.SQLite.db import DB as SQLiteDB
+          from Products.ZSQLDA.SQLite import DB as SQLiteDB
           query_codes.add(SQLiteDB._query.__code__)
         except ImportError:
           pass

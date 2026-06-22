@@ -54,8 +54,8 @@ from ZODB.POSException import ConflictError
 from DateTime import DateTime
 from Products.CMFActivity.ActivityTool import (
   cancelProcessShutdown, shutdown, Message, getCurrentNode, getServerAddress)
-from Products.ZSQLDA.MySQL.db import DB as MySQLDB
-from Products.ZSQLDA.SQLite.db import DB as SQLiteDB
+from Products.ZSQLDA.MySQL import DB as MySQLDB
+from Products.ZSQLDA.SQLite import DB as SQLiteDB
 import gc
 import random
 import threading

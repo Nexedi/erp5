@@ -30,7 +30,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import skipUnlessMySQL
 from AccessControl.SecurityManagement import newSecurityManager
 from MySQLdb import OperationalError
-from Products.ZSQLDA.MySQL.db import hosed_connection
+from Products.ZSQLDA.MySQL import hosed_connection
 
 UNCONNECTED_STATE = 0
 CONNECTED_STATE = 1
