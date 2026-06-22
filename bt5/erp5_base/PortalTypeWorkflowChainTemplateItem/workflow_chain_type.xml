@@ -85,7 +85,7 @@
  </chain>
  <chain>
   <type>Notification Message</type>
-  <workflow>document_conversion_interaction_workflow, document_security_interaction_workflow, edit_workflow, notification_message_workflow, processing_status_workflow</workflow>
+  <workflow>document_conversion_interaction_workflow, document_security_interaction_workflow, edit_workflow, notification_message_workflow</workflow>
  </chain>
  <chain>
   <type>Organisation</type>
