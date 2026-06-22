@@ -197,6 +197,12 @@ class ERP5Catalog(Folder, Catalog):
       raise KeyError(id)
     return default
 
+  def __getitem__(self, key):
+    obj = self._getOb(key, self._MARKER)
+    if obj is not self._MARKER:
+      return obj
+    return Folder.__getitem__(self, key)
+
   def _aq_dynamic(self, id):
     if id.startswith('_') or id.startswith('aq_'):
       return None
