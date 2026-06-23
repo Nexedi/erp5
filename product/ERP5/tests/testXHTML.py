@@ -57,6 +57,7 @@ class TestXHTMLMixin(ERP5TypeTestCase):
   FORM_LISTBOX_EMPTY_SELECTION_PATH_LIST = ['erp5_web_widget_library/WebSection_viewContentListAsRSS',
                                             'erp5_discussion/DiscusionThread_viewContentListAsRSS',
                                             'erp5_discussion/WebSection_viewLatestDiscussionPostListAsRSS',
+                                            'erp5_discussion/DiscussionForum_viewLatestPostListAsRSS',
                                             'erp5_core/Base_viewHistoricalComparisonDiff',
                                             'erp5_diff/ERP5Site_viewDiffTwoObjectDialog',]
 
