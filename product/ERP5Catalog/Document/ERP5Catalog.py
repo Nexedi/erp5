@@ -185,10 +185,8 @@ class ERP5Catalog(Folder, Catalog):
     obj = Folder._getOb(self, id, default=self._MARKER)
     if obj is not self._MARKER:
       return obj
-    catalog_tool = self.aq_parent
-    shared_catalog_id = getattr(catalog_tool, 'shared_erp5_catalog_id', None)
-    if shared_catalog_id:
-      shared_catalog = catalog_tool[shared_catalog_id]
+    shared_catalog = self._getSharedCatalog()
+    if shared_catalog is not None:
       obj = Folder._getOb(shared_catalog, id, default=self._MARKER)
       if obj is not self._MARKER:
         return obj

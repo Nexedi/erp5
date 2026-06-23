@@ -378,6 +378,11 @@ class ZCatalog(Folder, Persistent, Implicit):
     """
     if self.getDefaultSqlCatalogId() == source_sql_catalog_id:
       self._setDefaultSqlCatalogId(destination_sql_catalog_id)
+      destination_shared_id = getattr(
+        aq_base(self._getOb(destination_sql_catalog_id)),
+        'shared_erp5_catalog_id', None)
+      if destination_shared_id:
+        self.shared_erp5_catalog_id = destination_shared_id
 
     LOG('_exchangeDatabases skin_selection_dict:',0,skin_selection_dict)
     if skin_selection_dict is not None:
@@ -476,6 +481,13 @@ class ZCatalog(Folder, Persistent, Implicit):
     if update_destination_sql_catalog:
       self.changeSQLConnectionIds(destination_sql_catalog,
                                   sql_connection_id_dict)
+      shared_catalog_id = getattr(self, 'shared_erp5_catalog_id', None)
+      if shared_catalog_id and sql_connection_id_dict:
+        copy_id = self.manage_pasteObjects(
+          self.manage_copyObjects(ids=[shared_catalog_id]))[0]['new_id']
+        self.changeSQLConnectionIds(self._getOb(copy_id),
+                                    sql_connection_id_dict)
+        destination_sql_catalog.shared_erp5_catalog_id = copy_id
 
     # First of all, make sure that all root objects have uids.
     # XXX This is a workaround for tools (such as portal_simulation).

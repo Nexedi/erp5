@@ -1383,6 +1383,14 @@ class ObjectTemplateItem(BaseTemplateItem):
 
             if getattr(context, 'shared_catalog', None):
               container_container.shared_erp5_catalog_id = container_path[-1]
+              default_catalog_id = getattr(
+                container_container, 'default_erp5_catalog_id', None) \
+                or getattr(container_container, 'default_sql_catalog_id', None)
+              if default_catalog_id:
+                default_catalog = container_container._getOb(
+                  default_catalog_id, None)
+                if default_catalog is not None:
+                  default_catalog.shared_erp5_catalog_id = container_path[-1]
             elif not getattr(container_container, 'default_erp5_catalog_id', None) \
                 and not getattr(container_container, 'default_sql_catalog_id', None):
               # Set the default catalog. Here, thanks to consistency between
