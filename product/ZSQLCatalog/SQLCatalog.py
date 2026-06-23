@@ -845,12 +845,10 @@ class Catalog(Folder,
 
   security.declarePrivate('_getSharedCatalog')
   def _getSharedCatalog(self):
-    catalog_tool = self.aq_parent
-    shared_catalog_id = getattr(aq_base(self), 'shared_erp5_catalog_id', None) \
-        or getattr(catalog_tool, 'shared_erp5_catalog_id', None)
+    shared_catalog_id = aq_base(self).__dict__.get('shared_erp5_catalog_id')
     if not shared_catalog_id or shared_catalog_id == self.id:
       return None
-    return catalog_tool._getOb(shared_catalog_id, None)
+    return self.aq_parent._getOb(shared_catalog_id, None)
 
   security.declarePrivate('_getCombinedCatalogPropertyList')
   def _getCombinedCatalogPropertyList(self, property_id):

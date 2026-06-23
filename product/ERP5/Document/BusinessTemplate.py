@@ -200,7 +200,10 @@ def _getCatalogValue(acquisition_context):
   portal_catalog = acquisition_context.getPortalObject().portal_catalog
 
   default_catalog_id = getattr(portal_catalog, 'default_erp5_catalog_id', None)
-  shared_catalog_id = getattr(portal_catalog, 'shared_erp5_catalog_id', None)
+  default_catalog = portal_catalog[default_catalog_id] \
+    if default_catalog_id else None
+  shared_catalog_id = aq_base(default_catalog).__dict__.get('shared_erp5_catalog_id') \
+    if default_catalog is not None else None
   if default_catalog_id not in catalog_id_list \
       and shared_catalog_id not in catalog_id_list:
     return None
@@ -1382,7 +1385,6 @@ class ObjectTemplateItem(BaseTemplateItem):
               )
 
             if getattr(context, 'shared_catalog', None):
-              container_container.shared_erp5_catalog_id = container_path[-1]
               default_catalog_id = getattr(
                 container_container, 'default_erp5_catalog_id', None) \
                 or getattr(container_container, 'default_sql_catalog_id', None)

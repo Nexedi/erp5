@@ -309,15 +309,12 @@ class ERP5Catalog(Folder, Catalog):
     """
     ids = super(ERP5Catalog, self).getCatalogMethodIds(
                                       valid_method_meta_type_list)
-    catalog_tool = self.aq_parent
-    shared_catalog_id = getattr(catalog_tool, 'shared_erp5_catalog_id', None)
-    if shared_catalog_id and shared_catalog_id != self.id:
-      shared_catalog = catalog_tool._getOb(shared_catalog_id, None)
-      if shared_catalog is not None:
-        seen = set(i[1] for i in ids)
-        ids += [i for i in super(ERP5Catalog, shared_catalog).getCatalogMethodIds(
-                            valid_method_meta_type_list) if i[1] not in seen]
-        ids.sort()
+    shared_catalog = self._getSharedCatalog()
+    if shared_catalog is not None:
+      seen = set(i[1] for i in ids)
+      ids += [i for i in super(ERP5Catalog, shared_catalog).getCatalogMethodIds(
+                          valid_method_meta_type_list) if i[1] not in seen]
+      ids.sort()
     return ids
 
   security.declarePublic('getPythonMethodIds')
