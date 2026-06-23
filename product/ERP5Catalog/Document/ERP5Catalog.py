@@ -179,6 +179,43 @@ class ERP5Catalog(Folder, Catalog):
   isIndexable = 0
   __class_init__  = Catalog.__class_init__
 
+  _MARKER = []
+
+  def _getOb(self, id, default=_MARKER):
+    obj = Folder._getOb(self, id, default=self._MARKER)
+    if obj is not self._MARKER:
+      return obj
+    catalog_tool = self.aq_parent
+    shared_catalog_id = getattr(catalog_tool, 'shared_erp5_catalog_id', None)
+    if shared_catalog_id:
+      shared_catalog = catalog_tool[shared_catalog_id]
+      obj = Folder._getOb(shared_catalog, id, default=self._MARKER)
+      if obj is not self._MARKER:
+        return obj
+
+    if default is self._MARKER:
+      raise KeyError(id)
+    return default
+
+  def __getitem__(self, key):
+    obj = self._getOb(key, self._MARKER)
+    if obj is not self._MARKER:
+      return obj
+    return Folder.__getitem__(self, key)
+
+  def _aq_dynamic(self, id):
+    if id.startswith('_') or id.startswith('aq_'):
+      return None
+    return self._getOb(id, None)
+
+  def __getattr__(self, name):
+    if name.startswith('_') or name.startswith('aq_'):
+      raise AttributeError(name)
+    obj = self._getOb(name, None)
+    if obj is None:
+      raise AttributeError(name)
+    return obj
+
   # Note: superclass supports older variants of these metatypes, but we do not
   # expect these as content here. So just override superclass properties with
   # the new metatypes.
@@ -272,8 +309,18 @@ class ERP5Catalog(Folder, Catalog):
     """Find ERP5 SQL methods in the current folder and above
     This function return a list of ids.
     """
-    return super(ERP5Catalog, self).getCatalogMethodIds(
+    ids = super(ERP5Catalog, self).getCatalogMethodIds(
                                       valid_method_meta_type_list)
+    catalog_tool = self.aq_parent
+    shared_catalog_id = getattr(catalog_tool, 'shared_erp5_catalog_id', None)
+    if shared_catalog_id and shared_catalog_id != self.id:
+      shared_catalog = catalog_tool._getOb(shared_catalog_id, None)
+      if shared_catalog is not None:
+        seen = set(i[1] for i in ids)
+        ids += [i for i in super(ERP5Catalog, shared_catalog).getCatalogMethodIds(
+                            valid_method_meta_type_list) if i[1] not in seen]
+        ids.sort()
+    return ids
 
   security.declarePublic('getPythonMethodIds')
   def getPythonMethodIds(self):
