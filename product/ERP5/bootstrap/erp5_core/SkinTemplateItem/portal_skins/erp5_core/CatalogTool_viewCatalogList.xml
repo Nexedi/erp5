@@ -87,7 +87,7 @@
                     <value>
                       <list>
                         <string>my_default_erp5_catalog_id</string>
-                        <string>my_shared_erp5_catalog_id</string>
+                        <string>your_shared_erp5_catalog_id</string>
                       </list>
                     </value>
                 </item>

@@ -13,16 +13,6 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>select_variable</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
                       <value> <string>mode</string> </value>
                   </item>
                   <item>
@@ -43,7 +33,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The ID of the Shared ERP5 Catalog</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -59,7 +51,7 @@
         </item>
         <item>
             <key> <string>select_variable</string> </key>
-            <value> <string>getERP5CatalogIdList</string> </value>
+            <value> <string>getCatalogMethodIds</string> </value>
         </item>
       </dictionary>
     </pickle>
