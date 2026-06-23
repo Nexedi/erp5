@@ -1,6 +1,7 @@
 """Project-app RSS deep-link for this post's thread, or '' when the project app
 (erp5_project / Base_getProjectAppBaseUrl) is not installed - so erp5_discussion
-does not hard-depend on erp5_project."""
+does not hard-depend on erp5_project.
+Only caller: DiscussionForum_viewLatestPostListAsRSS/listbox_link (the project-app forum RSS feed served from the forum object); unrelated to the Static Web Section redirect."""
 get_base = getattr(context, 'Base_getProjectAppBaseUrl', None)
 if get_base is None:
   return ''

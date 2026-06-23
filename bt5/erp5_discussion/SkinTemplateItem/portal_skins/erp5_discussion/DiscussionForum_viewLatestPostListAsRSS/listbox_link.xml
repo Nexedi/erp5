@@ -118,7 +118,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-python: cell.DiscussionPost_getProjectAppPostUrl()
+python: cell.DiscussionPost_getProjectAppPostUrl()  # per-item RSS link, computed in the forum/project-app context (not the web-section redirect); see the script
 
 ]]></string> </value>
         </item>
