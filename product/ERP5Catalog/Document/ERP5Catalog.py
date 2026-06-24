@@ -207,7 +207,7 @@ class ERP5Catalog(Folder, Catalog):
     if id.startswith('_') or id.startswith('aq_'):
       return None
     return self._getOb(id, None)
-  """
+
   def __getattr__(self, name):
     if name.startswith('_') or name.startswith('aq_'):
       raise AttributeError(name)
@@ -215,7 +215,7 @@ class ERP5Catalog(Folder, Catalog):
     if obj is None:
       raise AttributeError(name)
     return obj
-  """
+
   # Note: superclass supports older variants of these metatypes, but we do not
   # expect these as content here. So just override superclass properties with
   # the new metatypes.
