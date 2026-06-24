@@ -189,7 +189,7 @@ class ERP5Catalog(Folder, Catalog):
     if shared_catalog is not None:
       obj = Folder._getOb(shared_catalog, id, default=self._MARKER)
       if obj is not self._MARKER:
-        return obj
+        return aq_base(obj).__of__(self)
 
     if default is self._MARKER:
       raise KeyError(id)
