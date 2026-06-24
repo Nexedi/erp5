@@ -855,6 +855,43 @@ class Catalog(Folder,
   def _getSharedCatalogId(self):
     return getattr(self, 'shared_erp5_catalog_id', None)
 
+  _MARKER = []
+  _raw_folder_class = Folder
+
+  def _getOb(self, id, default=_MARKER):
+    obj = self._raw_folder_class._getOb(self, id, default=self._MARKER)
+    if obj is not self._MARKER:
+      return obj
+    shared_catalog = self._getSharedCatalog()
+    if shared_catalog is not None:
+      obj = self._raw_folder_class._getOb(shared_catalog, id, default=self._MARKER)
+      if obj is not self._MARKER:
+        return aq_base(obj).__of__(self)
+
+    if default is self._MARKER:
+      raise KeyError(id)
+    return default
+
+   """
+   aq_dynamic → catalog.z_xxx
+   __getattr__ → getattr(catalog, 'z_xxx') / restrictedTraverse
+   __getitem__ → catalog['z_xxx']
+   """
+  def __getitem__(self, key):
+    return self._getOb(key, self._MARKER)
+
+  def _aq_dynamic(self, id):
+    if id.startswith('_') or id.startswith('aq_'):
+      return None
+    return self._getOb(id, None)
+
+  def __getattr__(self, name):
+    if name.startswith('_') or name.startswith('aq_'):
+      raise AttributeError(name)
+    obj = self._getOb(name, None)
+    if obj is None:
+      raise AttributeError(name)
+    return obj
 
   security.declarePrivate('_getCombinedCatalogProperty')
   def _getCombinedCatalogProperty(self, property_id):

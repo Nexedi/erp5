@@ -37,7 +37,6 @@ from Products.ZSQLCatalog.SQLCatalog import Catalog, CatalogError
 
 import OFS.History
 from AccessControl import ClassSecurityInfo
-from Acquisition import aq_base
 from zLOG import LOG, INFO, TRACE, WARNING, ERROR
 
 import time
@@ -179,42 +178,11 @@ class ERP5Catalog(Folder, Catalog):
   isIndexable = 0
   __class_init__  = Catalog.__class_init__
 
-  _MARKER = []
-
-  def _getOb(self, id, default=_MARKER):
-    obj = Folder._getOb(self, id, default=self._MARKER)
-    if obj is not self._MARKER:
-      return obj
-    shared_catalog = self._getSharedCatalog()
-    if shared_catalog is not None:
-      obj = Folder._getOb(shared_catalog, id, default=self._MARKER)
-      if obj is not self._MARKER:
-        return aq_base(obj).__of__(self)
-
-    if default is self._MARKER:
-      raise KeyError(id)
-    return default
-
-  """
-  aq_dynamic → catalog.z_xxx
-  __getattr__ → getattr(catalog, 'z_xxx') / restrictedTraverse
-  __getitem__ → catalog['z_xxx']
-  """
-  def __getitem__(self, key):
-    return self._getOb(key, self._MARKER)
-
-  def _aq_dynamic(self, id):
-    if id.startswith('_') or id.startswith('aq_'):
-      return None
-    return self._getOb(id, None)
-
-  def __getattr__(self, name):
-    if name.startswith('_') or name.startswith('aq_'):
-      raise AttributeError(name)
-    obj = self._getOb(name, None)
-    if obj is None:
-      raise AttributeError(name)
-    return obj
+  _raw_folder_class = Folder
+  _getOb = Catalog._getOb
+  __getitem__ = Catalog.__getitem__
+  _aq_dynamic = Catalog._aq_dynamic
+  __getattr__ = Catalog.__getattr__
 
   # Note: superclass supports older variants of these metatypes, but we do not
   # expect these as content here. So just override superclass properties with
