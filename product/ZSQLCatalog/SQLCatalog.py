@@ -889,10 +889,18 @@ class Catalog(Folder,
   def __getattr__(self, name):
     if name.startswith('_') or name.startswith('aq_'):
       raise AttributeError(name)
-    obj = self._getOb(name, None)
-    if obj is None:
-      raise AttributeError(name)
-    return obj
+    raw_getattr = getattr(self._raw_folder_class, '__getattr__', None)
+    if raw_getattr is not None:
+      try:
+        return raw_getattr(self, name)
+      except AttributeError:
+        pass
+    shared_catalog = self._getSharedCatalog()
+    if shared_catalog is not None:
+      obj = self._raw_folder_class._getOb(shared_catalog, name, self._MARKER)
+      if obj is not self._MARKER:
+        return aq_base(obj).__of__(self)
+    raise AttributeError(name)
 
   security.declarePrivate('_getCombinedCatalogProperty')
   def _getCombinedCatalogProperty(self, property_id):
