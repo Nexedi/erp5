@@ -689,6 +689,14 @@ class TestMultiListField(ERP5TypeTestCase):
   def test_render_view(self):
     self.assertEqual('A<br />\nB', self.field.render_view(value=['a', 'b']))
 
+  def test_render_view_tuple(self):
+    self.assertEqual('A<br />\nB', self.field.render_view(value=('a', 'b')))
+
+  def test_render_items_odf_tuple(self):
+    self.assertEqual(
+        ['A', 'B'],
+        self.widget.render_items_odf(self.field, ('a', 'b'), self.portal.REQUEST))
+
   def test_render_odt(self):
     element = self.field.render_odt(as_string=False)
     self.assertEqual('{%(text)s}p' % NSMAP, element.tag)

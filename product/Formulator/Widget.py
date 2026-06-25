@@ -1103,7 +1103,7 @@ class MultiItemsWidget(ItemsWidget):
     return rendered_items
 
   def render_items_view(self, field, value, REQUEST):
-      if type(value) is not type([]):
+      if not isinstance(value, (list, tuple)):
           value = [value]
 
       items = field.get_value('items',
@@ -1129,7 +1129,7 @@ class MultiItemsWidget(ItemsWidget):
         self.render_items_view(field, value, REQUEST))
 
   def render_items_odf(self, field, value, REQUEST):
-    if type(value) is not type([]):
+    if not isinstance(value, (list, tuple)):
       value = [value]
 
     items = field.get_value('items',
