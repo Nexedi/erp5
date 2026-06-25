@@ -273,8 +273,7 @@ body.cke_editable a {
   text-decoration: none;
 }
 
-/* RSS Feed link button */
-.rss-link > .ui-field-contain > div a {
+.rss-link a {
   padding: 6pt 10pt 6pt 28pt;
   background-color: #FFF;
   color: #111;
@@ -286,7 +285,7 @@ body.cke_editable a {
   position: relative;
 }
 
-.rss-link > .ui-field-contain > div a::before {
+.rss-link a::before {
   font-family: FontAwesome;
   content: "\f09e";
   position: absolute;
