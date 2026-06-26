@@ -177,11 +177,11 @@ div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .ui-hidden {
   margin-top: 12px;
 }
 
-button:disabled{
+div[data-gadget-url$="gadget_erp5_page_project_page.html"] button:disabled {
   background-color:#FFC9A4;
 }
 
-input[type="submit"] {
+div[data-gadget-url$="gadget_erp5_page_project_page.html"] input[type="submit"] {
   -webkit-appearance: none;
 }
 
@@ -273,7 +273,7 @@ body.cke_editable a {
   text-decoration: none;
 }
 
-.rss-link a {
+.rss-link a:not(.edit-field) {
   padding: 6pt 10pt 6pt 28pt;
   background-color: #FFF;
   color: #111;
@@ -285,7 +285,7 @@ body.cke_editable a {
   position: relative;
 }
 
-.rss-link a::before {
+.rss-link a:not(.edit-field)::before {
   font-family: FontAwesome;
   content: "\f09e";
   position: absolute;
