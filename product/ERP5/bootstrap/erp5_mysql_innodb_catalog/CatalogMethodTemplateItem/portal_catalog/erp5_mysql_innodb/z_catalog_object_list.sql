@@ -1,10 +1,7 @@
-REPLACE INTO
+<dtml-let column_list="['security_uid', 'owner', 'viewable_owner', 'path', 'relative_url', 'parent_uid', 'id', 'description', 'title', 'meta_type', 'portal_type', 'opportunity_state', 'corporate_registration_code', 'ean13_code', 'validation_state', 'simulation_state', 'causality_state', 'invoice_state', 'payment_state', 'event_state', 'immobilisation_state', 'reference', 'grouping_reference', 'grouping_date', 'source_reference', 'destination_reference', 'string_index', 'int_index', 'float_index', 'has_cell_content', 'creation_date', 'modification_date']">
+INSERT INTO
   catalog
-  (`uid`, `security_uid`, `owner`, `viewable_owner`, `path`, `relative_url`, `parent_uid`, `id`, `description`, `title`, `meta_type`,
-   `portal_type`, `opportunity_state`, `corporate_registration_code`, `ean13_code`, `validation_state`, `simulation_state`,
-   `causality_state`, `invoice_state`, `payment_state`, `event_state`, `immobilisation_state`, `reference`, `grouping_reference`, `grouping_date`,
-   `source_reference`, `destination_reference`, `string_index`, `int_index`, `float_index`, `has_cell_content`, `creation_date`,
-   `modification_date`)
+  (`uid`, <dtml-in column_list>`<dtml-var sequence-item>`<dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>)
 VALUES
 <dtml-in prefix="loop" expr="_.range(_.len(uid))">
 (
@@ -44,3 +41,9 @@ VALUES
 )
 <dtml-if sequence-end><dtml-else>,</dtml-if>
 </dtml-in>
+ON DUPLICATE KEY UPDATE
+<dtml-in column_list>
+  `<dtml-var sequence-item>` = VALUES(`<dtml-var sequence-item>`),
+</dtml-in>
+  `indexation_timestamp` = DEFAULT
+</dtml-let>
