@@ -3162,6 +3162,7 @@ class TestProductsERP5DocumentCompatibility(Base):
 
     self.assertModuleImportable('TestProductsERP5DocumentCompatibility')
 
+    self.publish(self.portal.getPath())  # the filesystem import compatibility is populated on the first request.
     from Products.ERP5.Document.TestProductsERP5DocumentCompatibility import TestProductsERP5DocumentCompatibility  # pylint:disable=import-error,no-name-in-module
     self.assertEqual(TestProductsERP5DocumentCompatibility.test_attribute, 'TestProductsERP5DocumentCompatibility')
 
@@ -3182,6 +3183,7 @@ class TestComponentImporting(TestProductsERP5DocumentCompatibility):
     self.tic()
 
     self.assertModuleImportable('TestComponentImporting')
+    self.publish(self.portal.getPath())
     from erp5.component.document.TestComponentImporting import TestComponentImporting  # pylint:disable=import-error,no-name-in-module
 
     from Products.ERP5.Document.TestProductsERP5DocumentCompatibility import TestProductsERP5DocumentCompatibility  # pylint:disable=import-error,no-name-in-module
@@ -3218,7 +3220,7 @@ class TestProductsERP5TypeDocumentCompatibility(Base):
     self.tic()
 
     self.assertModuleImportable('TestProductsERP5TypeDocumentCompatibility')
-
+    self.publish(self.portal.getPath())
     from Products.ERP5Type.Document.TestProductsERP5TypeDocumentCompatibility import TestProductsERP5TypeDocumentCompatibility  # pylint:disable=import-error,no-name-in-module
     self.assertEqual(TestProductsERP5TypeDocumentCompatibility.generation, 1)
 
@@ -3231,6 +3233,7 @@ class TestProductsERP5TypeDocumentCompatibility(Base):
 """)
     self.tic()
     self.assertModuleImportable('TestProductsERP5TypeDocumentCompatibility')
+    self.publish(self.portal.getPath())
     from Products.ERP5Type.Document.TestProductsERP5TypeDocumentCompatibility import TestProductsERP5TypeDocumentCompatibility  # pylint:disable=import-error,no-name-in-module
     self.assertEqual(TestProductsERP5TypeDocumentCompatibility.generation, 2)
 

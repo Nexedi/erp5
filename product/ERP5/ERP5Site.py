@@ -538,6 +538,9 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
           # Portal Types may have been reset even if Components haven't
           # (change of Interaction Workflow...)
           synchronizeDynamicModules(self)
+      import erp5.component
+      if erp5.component.filesystem_import_dict is None:
+        erp5.component.createFilesystemImportDict()
 
     return self
 
