@@ -88,7 +88,7 @@
                       <list>
                         <string>my_reference</string>
                         <string>my_free_subscription_request_type</string>
-                        <string>my_effective_date</string>
+                        <string>my_start_date</string>
                         <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
