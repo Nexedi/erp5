@@ -13,6 +13,7 @@ from ZTUtils import make_query
 request=container.REQUEST
 portal = context.getPortalObject()
 Base_translateString = portal.Base_translateString
+absolute_url = context.absolute_url().rstrip('/')
 
 # Extra security
 if request.get('field_prefix', None):
@@ -32,7 +33,7 @@ if not silent_mode and not request.AUTHENTICATED_USER.has_permission('Modify por
   if selection_name:
     redirect_kw['selection_name'] = selection_name
     redirect_kw['selection_index'] = selection_index
-  return request['RESPONSE'].redirect('%s/%s?%s' % (context.absolute_url(), form_id, make_query(redirect_kw)))
+  return request['RESPONSE'].redirect('%s/%s?%s' % (absolute_url, form_id, make_query(redirect_kw)))
 
 # Get the form
 form = getattr(context,form_id)
@@ -273,7 +274,7 @@ if selection_name:
     selection_name=selection_name
   )
 redirect_url = '%s/%s?%s' % (
-    context.absolute_url(),
+    absolute_url,
     form_id,
     make_query(**redirect_url_kw)
     )
