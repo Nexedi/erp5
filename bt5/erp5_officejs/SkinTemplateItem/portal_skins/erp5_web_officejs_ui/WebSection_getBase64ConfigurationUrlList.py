@@ -22,7 +22,7 @@ try:
   hateoas_appcache = context.getLayoutProperty("hateoas_appcache", default="hateoas_appcache")
 
   router_file_reference = context.getLayoutProperty("configuration_router_gadget_url", default="")
-  if router_file_reference is "":
+  if router_file_reference == "":
     raise ValueError("Router Gadget Layout Property is missing")
   result_list = portal_catalog.getDocumentValueList(
     portal_type = 'Web Page',
