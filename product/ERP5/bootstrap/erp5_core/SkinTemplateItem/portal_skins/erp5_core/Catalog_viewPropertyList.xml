@@ -81,6 +81,7 @@
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>my_shared_erp5_catalog_id</string>
                         <string>my_sql_catalog_produce_reserved</string>
                         <string>my_sql_catalog_reserve_uid</string>
                         <string>my_sql_catalog_clear_reserved</string>

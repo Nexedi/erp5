@@ -1,0 +1,4 @@
+erp5_sqlite/z0_drop_email
+erp5_sqlite/z0_uncatalog_email
+erp5_sqlite/z_catalog_email_list
+erp5_sqlite/z_create_email
