@@ -1235,9 +1235,13 @@ class TemplateTool (BaseTool):
             if provider_title:
               for candidate in available_bt5_list:
                 if candidate.title == provider_title:
-                  bt5_set.add(\
-                    self.decodeRepositoryBusinessTemplateUid(
-                        candidate.uid))
+                  provider_bt5 = self.decodeRepositoryBusinessTemplateUid(
+                      candidate.uid)
+                  bt5_set.add(provider_bt5)
+                  for provider_dep_repository, provider_dep_id in \
+                      self.getDependencyList(provider_bt5):
+                    if provider_dep_repository != 'meta':
+                      bt5_set.add((provider_dep_repository, provider_dep_id))
                   break
             else:
               raise BusinessTemplateMissingDependency("Unable to resolve dependencies for %s, options are %s"
