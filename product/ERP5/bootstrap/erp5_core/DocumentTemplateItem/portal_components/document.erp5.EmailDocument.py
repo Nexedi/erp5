@@ -35,7 +35,6 @@ from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Utils import publishable, non_publishable, str2bytes
 from erp5.component.document.TextDocument import TextDocument
-from erp5.component.document.File import File
 from erp5.component.mixin.MailMessageMixin import MailMessageMixin, testCharsetAndConvert
 from erp5.component.mixin.DocumentProxyMixin import DocumentProxyMixin, DocumentProxyError
 from MethodObject import Method
@@ -149,7 +148,6 @@ class EmailDocument(TextDocument, MailMessageMixin):
                     , PropertySheet.Document
                     , PropertySheet.ExternalDocument
                     , PropertySheet.Url
-                    , PropertySheet.TextDocument
                     , PropertySheet.Arrow
                     , PropertySheet.Task
                     , PropertySheet.ItemAggregation
@@ -244,9 +242,9 @@ class EmailDocument(TextDocument, MailMessageMixin):
       # Return the standard text content if no file was provided
       # Or standard text content is not empty.
       if default is _MARKER:
-        return self._baseGetTextContent()
+        return TextDocument.getTextContent(self)
       else:
-        return self._baseGetTextContent(default)
+        return TextDocument.getTextContent(self, default)
 
     else:
       part = self._getMessageTextPart()
@@ -357,8 +355,4 @@ class EmailDocument(TextDocument, MailMessageMixin):
     """
     self.MailHost.send(message)
 
-  # Because TextDocument is base_convertable and not EmailDocument.
-  # getData must be implemented like File.getData is.
-  security.declareProtected(Permissions.AccessContentsInformation, 'getData')
-  getData = File.getData
   getContentInformation = MailMessageMixin.getContentInformation
