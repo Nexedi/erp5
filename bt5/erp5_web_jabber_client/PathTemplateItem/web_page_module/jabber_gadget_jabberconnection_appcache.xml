@@ -40,6 +40,10 @@
             </value>
         </item>
         <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts79676113.5986557</string> </value>
+        </item>
+        <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
@@ -65,9 +69,21 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>3ed953ddafe62e78c6d6e59484c24557</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <bytes>CACHE MANIFEST\n
+# generated on Mon, 8 Jun 2018 00:00:00 +0000\n
+\n
+CACHE:\n
+gadget_global.js\n
+gadget_jabberconnection.js\n
+strophe.js\n
+renderjs.js\n
+rsvp.js\n
+NETWORK:\n
+*</bytes> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
@@ -98,18 +114,8 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>CACHE MANIFEST\n
-# generated on Mon, 8 Jun 2018 00:00:00 +0000\n
-\n
-CACHE:\n
-gadget_global.js\n
-gadget_jabberconnection.js\n
-strophe.js\n
-renderjs.js\n
-rsvp.js\n
-NETWORK:\n
-*</string> </value>
+            <key> <string>size</string> </key>
+            <value> <int>154</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -248,7 +254,7 @@ NETWORK:\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>963.11851.42215.35874</string> </value>
+                      <value> <string>1033.10260.5195.25702</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -264,8 +270,8 @@ NETWORK:\n
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1528450792.31</float>
-                              <string>UTC</string>
+                              <float>1779676113.600767</float>
+                              <string>GMT+2</string>
                             </tuple>
                           </state>
                         </object>
