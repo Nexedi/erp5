@@ -65,6 +65,7 @@
                     <value>
                       <list>
                         <string>my_sql_catalog_search_keys_list</string>
+                        <string>my_sql_catalog_related_keys_list</string>
                         <string>my_sql_catalog_scriptable_keys_list</string>
                       </list>
                     </value>

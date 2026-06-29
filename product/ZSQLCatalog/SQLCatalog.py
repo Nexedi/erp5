@@ -1799,7 +1799,7 @@ class Catalog(Folder,
   def _getSQLCatalogRelatedKeySet(self):
     column_map = self.getColumnMap()
     column_set = set(column_map)
-    for related_key in self.sql_catalog_related_keys:
+    for related_key in self.getSqlCatalogRelatedKeysList():
       split_entire_definition = related_key.split('|')
       if len(split_entire_definition) != 2:
         LOG('SQLCatalog', WARNING, 'Malformed related key definition: %r. Ignored.' % (related_key, ))
@@ -1827,7 +1827,7 @@ class Catalog(Folder,
     return self.getDynamicRelatedKeyList(
       [k for k in key_list if k not in column_map],
       sql_catalog_id=self.id,
-    ) + list(self.sql_catalog_related_keys)
+    ) + list(self.getSqlCatalogRelatedKeysList())
 
   # Compatibililty SQL Sql
   security.declarePrivate('getSqlCatalogRelatedKeyList')
@@ -1911,6 +1911,9 @@ class Catalog(Folder,
 
   def getSqlCatalogScriptableKeysList(self):
     return self._getCombinedCatalogProperty('sql_catalog_scriptable_keys')
+
+  def getSqlCatalogRelatedKeysList(self):
+    return self._getCombinedCatalogProperty('sql_catalog_related_keys')
 
   @transactional_cache_decorator
   def _getgetScriptableKeyDict(self):
