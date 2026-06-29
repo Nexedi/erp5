@@ -37,20 +37,21 @@ from erp5.component.document.Document import Document, ConversionError, _MARKER,
 from erp5.component.document.File import File
 from erp5.component.module.WebDAVSupport import TextContent
 from erp5.component.document.Document import VALID_IMAGE_FORMAT_LIST, VALID_TEXT_FORMAT_LIST
+from erp5.component.mixin.TextContentMigrationMixin import TextContentMigrationMixin
 from io import BytesIO
 from string import Template
 
 # Mixin Import
 from erp5.component.mixin.CachedConvertableMixin import CachedConvertableMixin
 from Products.ERP5Type.mixin.text_content_history import TextContentHistoryMixin
-from Products.ERP5Type.Utils import guessEncodingFromText, bytes2str, str2bytes, str2unicode, unicode2str, publishable
+from Products.ERP5Type.Utils import bytes2str, str2bytes, str2unicode, unicode2str, publishable
 
 from lxml import html as etree_html
-from lxml import etree
 
-class TextDocument(CachedConvertableMixin, TextContentHistoryMixin, TextContent, File):
-  """A TextDocument impletents IDocument, IFile, IBaseConvertable, ICachedconvertable
-  and ITextConvertable
+class TextDocument(TextContentMigrationMixin, CachedConvertableMixin, TextContentHistoryMixin, TextContent, File):
+  """
+  A TextDocument implements IDocument, IFile, ICachedconvertable, ITextConvertable
+  and ITextDocument.
   """
 
   meta_type = 'ERP5 Text Document'
@@ -70,7 +71,7 @@ class TextDocument(CachedConvertableMixin, TextContentHistoryMixin, TextContent,
                     , PropertySheet.Document
                     , PropertySheet.ExternalDocument
                     , PropertySheet.Url
-                    , PropertySheet.TextDocument
+                    , PropertySheet.SubstitutableTextDocument
                     , PropertySheet.Data
                     , PropertySheet.Reference
                     )
@@ -145,6 +146,11 @@ class TextDocument(CachedConvertableMixin, TextContentHistoryMixin, TextContent,
     """
       Convert text using portal_transforms or oood
     """
+    if text_content is None:
+      # Note: we do not use `data` here because `getTextContent` is overidden
+      # in some cases, for instance on EmailDocument.
+      text_content = self.getTextContent()
+
     # XXX 'or DEFAULT_CONTENT_TYPE' is compaptibility code used for old
     # web_page that have neither content_type nor text_format. Migration
     # should be done to make all web page having content_type property
@@ -153,13 +159,11 @@ class TextDocument(CachedConvertableMixin, TextContentHistoryMixin, TextContent,
       format = 'html' # Force safe_html
     if not format:
       # can return document without conversion
-      return src_mimetype, self.getTextContent()
+      return src_mimetype, text_content
+
     portal = self.getPortalObject()
     mime_type = portal.mimetypes_registry.lookupExtension('name.%s' % format)
     original_mime_type = mime_type = str(mime_type)
-    if text_content is None:
-      # check if document has set text_content and convert if necessary
-      text_content = self.getTextContent()
     if text_content:
       kw['format'] = format
       convert_kw = {}
@@ -213,7 +217,7 @@ class TextDocument(CachedConvertableMixin, TextContentHistoryMixin, TextContent,
                                                **substitution_method_parameter_dict)
       return original_mime_type, result
     else:
-      # text_content is not set, return empty string instead of None
+      # data is not set, return empty string instead of None
       return original_mime_type, ''
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentBaseURL')
@@ -260,13 +264,11 @@ class TextDocument(CachedConvertableMixin, TextContentHistoryMixin, TextContent,
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTextContent')
   def getTextContent(self, default=_MARKER):
-    """Overridden method to check permission to access content in raw format
+    """
+    Overridden method to check permission to access content in raw format.
     """
     self._checkConversionFormatPermission(None)
-    if default is _MARKER:
-      return self._baseGetTextContent()
-    else:
-      return self._baseGetTextContent(default)
+    return self._getTextContent(default)
 
   # Backward compatibility for replacement of text_format by content_type
   security.declareProtected(Permissions.AccessContentsInformation, 'getTextFormat')
@@ -291,25 +293,16 @@ class TextDocument(CachedConvertableMixin, TextContentHistoryMixin, TextContent,
               'Usage of text_format is deprecated, use content_type instead')
     return self._setContentType(value)
 
-  def getData(self, default=_MARKER):
-    # type: (bytes) -> bytes | PData
-    """getData must returns original content but TextDocument accepts
-    data or text_content to store original content.
-    Fallback on text_content property if data is not defined
+  def _getData(self, default=_MARKER):
     """
-    if not self.hasData():
-      if default is _MARKER:
-        data = self._baseGetTextContent()
-      else:
-        data = self._baseGetTextContent(default)
-        if data is default:
-          return default
-      return str2bytes(data) if data is not None else None
+    Note: `File.getData` coerses to bytes.
+    """
+    if default is _MARKER:
+      data = File.getData(self)
     else:
-      if default is _MARKER:
-        return File.getData(self)
-      else:
-        return File.getData(self, default)
+      data = File.getData(self, default)
+
+    return data
 
   def updateContentMd5(self):
     """Update md5 checksum from the original file
@@ -317,4 +310,5 @@ class TextDocument(CachedConvertableMixin, TextContentHistoryMixin, TextContent,
     Overriden here because CachedConvertableMixin version does not
     understand the dynamic nature TextDocument's data.
     """
-    self._setContentMd5(md5(self.getData() or b'').hexdigest())
+    data = File.getData(self) or b''
+    self._setContentMd5(md5(data).hexdigest())
