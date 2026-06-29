@@ -44,6 +44,7 @@ from erp5.component.document.Document import ConversionError, Document, \
        VALID_IMAGE_FORMAT_LIST, VALID_TEXT_FORMAT_LIST
 from Products.ERP5Type.Utils import (guessEncodingFromText,
                                      bytes2str,
+                                     deprecated,
                                      fill_args_from_request,
                                      str2bytes,
                                      unicode2str)
@@ -62,7 +63,14 @@ from erp5.component.document.Document import global_server_proxy_uri_failure_tim
 from erp5.component.document.Document import enc, dec
 OOoServerProxy = DocumentConversionServerProxy
 
-class OOoDocument(OOoDocumentExtensibleTraversableMixin, File, TextConvertableMixin, Document):
+BASE_FORMAT_DICT = {
+  "Spreadsheet": "ods",
+  "Presentation": "odp",
+  "Text": "odt",
+  "Drawing": "odg",
+}
+
+class OOoDocument(OOoDocumentExtensibleTraversableMixin, TextConvertableMixin, File, Document):
   """
     A file document able to convert OOo compatible files to
     any OOo supported format, to capture metadata and to
@@ -216,6 +224,29 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, File, TextConvertableMi
 
     # XXX: handle possible OOOd server failure
     return response_dict['mime'], Pdata(dec(str2bytes(response_dict['data'])))
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getBaseData')
+  @deprecated
+  def getBaseData(self):
+    """
+    Backward-compatibility: convert to what used to be base format
+    when possible.
+    """
+    portal_type = self.getPortalType()
+    if portal_type not in BASE_FORMAT_DICT:
+      return super(OOoDocument, self).getBaseData()
+
+    _format = BASE_FORMAT_DICT[portal_type]
+    return self.convert(format=_format)[1]
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'hasBaseData')
+  @deprecated
+  def hasBaseData(self):
+    """
+    Method was mostly used to test for non-empty documents, simply check
+    for `data`.
+    """
+    return self.hasData()
 
   def _convert(self, format, frame=0, **kw): # pylint: disable=redefined-builtin
     """
