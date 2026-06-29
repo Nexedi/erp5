@@ -272,7 +272,7 @@ class TestIngestion(IngestionTestCase):
       document.edit(file=f)
       self.tic()
       self.assertTrue(document.hasFile())
-      if document.isSupportBaseDataConversion():
+      if document.isSupportTextConversion():
         self.assertIn('magic', document.SearchableText())
         self.assertIn('magic', str(document.asText()))
       else:
@@ -336,7 +336,7 @@ class TestIngestion(IngestionTestCase):
       count+=1
       self.assertEqual(document.getPortalType(), portal_type)
       self.assertEqual(document.getReference(), 'TEST')
-      if document.isSupportBaseDataConversion():
+      if document.isSupportTextConversion():
         self.assertIn('magic', document.SearchableText())
 
   def newPythonScript(self, script_id, argument_list, code):
@@ -491,7 +491,7 @@ class TestIngestion(IngestionTestCase):
       Upload a file from view form and make sure this increases the revision
     """
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
-    f = self.makeFileUpload('TEST-en-002.doc')
+    f = self.makeFileUpload('TEST-en-002.odt')
     revision = document.getRevision()
     document.edit(file=f)
     self.assertEqual(document.getRevision(), str(int(revision) + 1))
@@ -577,7 +577,6 @@ class TestIngestion(IngestionTestCase):
     """
     self.tic()
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
-    self.assertTrue(document.hasBaseData())
     self.assertIn('magic', document.SearchableText())
     self.assertIn('magic', str(document.asText()))
 
@@ -630,7 +629,7 @@ class TestIngestion(IngestionTestCase):
     # implemented in OOoDocument class - we don't really
     # need oood for getting/setting metadata...
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
-    newcontent = document.getBaseData()
+    newcontent = document.getData()
     builder = OOoBuilder(newcontent)
     xml_tree = etree.fromstring(builder.extract('meta.xml'))
     title = xml_tree.find('*/{%s}title' % xml_tree.nsmap['dc']).text
