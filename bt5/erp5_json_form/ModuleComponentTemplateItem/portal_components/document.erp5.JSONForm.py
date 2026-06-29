@@ -29,13 +29,12 @@ import json
 import jsonschema
 from erp5.component.module.JsonUtils import loadJson
 from erp5.component.document.JSONType import JSONType
-from erp5.component.document.TextDocument import TextDocument
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Utils import unicode2str
 
-class JSONForm(JSONType, TextDocument):
+class JSONForm(JSONType):
   """
   Represents a form with JSON Form
   """
