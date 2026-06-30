@@ -130,7 +130,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:[(\'\', \'\')]+here.getColumnIds()</string> </value>
+            <value> <string>python:[(\'\', \'\')]+here.getColumnIds(include_shared=False)</string> </value>
         </item>
       </dictionary>
     </pickle>

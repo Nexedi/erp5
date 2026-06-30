@@ -278,31 +278,17 @@ class ERP5Catalog(Folder, Catalog):
   def _setSqlSearchResultKeysList(self, value, **kw):
     self._baseSetSqlSearchResultKeysList(sorted(value), **kw)
 
-  security.declarePublic('getCatalogMethodIds')
-  def getCatalogMethodIds(self, valid_method_meta_type_list=
-      HAS_ARGUMENT_SRC_METATYPE_SET + HAS_FUNC_CODE_METATYPE_SET):
-    """Find ERP5 SQL methods in the current folder and above
-    This function return a list of ids.
-    """
-    ids = super(ERP5Catalog, self).getCatalogMethodIds(
-                                      valid_method_meta_type_list)
-    shared_catalog = self._getSharedCatalog()
-    if shared_catalog is not None:
-      seen = set(i[1] for i in ids)
-      ids += [i for i in super(ERP5Catalog, shared_catalog).getCatalogMethodIds(
-                          valid_method_meta_type_list) if i[1] not in seen]
-      ids.sort()
-    return ids
-
   security.declarePublic('getPythonMethodIds')
-  def getPythonMethodIds(self):
+  def getPythonMethodIds(self, include_shared=True):
     """
       Returns a list of all python scripts available in
       current sql catalog.
     """
     return self.getCatalogMethodIds(valid_method_meta_type_list=(
       'ERP5 External Method',
-      'ERP5 Python Script'))
+      'ERP5 Python Script'),
+      include_shared = True
+      )
 
   def manage_catalogClear(self, REQUEST=None, RESPONSE=None, URL1=None):
     """ Clears the catalog
