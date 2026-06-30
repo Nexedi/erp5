@@ -5542,6 +5542,12 @@ Business Template is a set of definitions, such as skins, portal types and categ
           LOG('Business Template', 0, 'no SQL Catalog available')
           update_catalog = 0
         else:
+          # change to default catalog if install only a shared catalog
+          portal_catalog = site.portal_catalog
+          default_catalog_id = getattr(portal_catalog, 'default_erp5_catalog_id', None)
+          default_catalog = portal_catalog[default_catalog_id] if default_catalog_id else None
+          if default_catalog is not None and catalog.id == default_catalog._getSharedCatalogId():
+            catalog = default_catalog
           LOG('Business Template', 0, 'Updating SQL Catalog')
           catalog.manage_catalogClear()
 
