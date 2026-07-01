@@ -26,9 +26,7 @@
         </item>
         <item>
             <key> <string>condition</string> </key>
-            <value>
-              <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -42,7 +40,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>combined_property</string> </value>
+            <value> <string>combined_catalog_filter_view</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -58,11 +56,11 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <float>5.0</float> </value>
+            <value> <float>3.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Combined Properties</string> </value>
+            <value> <string>Combined Filter</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -79,20 +77,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Catalog_viewCombinedPropertyList</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="Expression" module="Products.CMFCore.Expression"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>text</string> </key>
-            <value> <string>python: here.shared_erp5_catalog_id</string> </value>
+            <value> <string>string:${object_url}/Catalog_viewCombinedFilterableMethodList</string> </value>
         </item>
       </dictionary>
     </pickle>

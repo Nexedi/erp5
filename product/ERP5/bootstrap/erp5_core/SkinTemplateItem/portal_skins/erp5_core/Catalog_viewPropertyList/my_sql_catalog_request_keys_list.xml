@@ -53,7 +53,7 @@
                 <item>
                     <key> <string>default</string> </key>
                     <value>
-                      <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
@@ -67,7 +67,7 @@
                 <item>
                     <key> <string>items</string> </key>
                     <value>
-                      <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
@@ -119,7 +119,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:[(\'\', \'\')]+here.getColumnIds(include_shared=False)</string> </value>
+            <value> <string>here/sql_catalog_request_keys</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -132,7 +132,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/sql_catalog_request_keys</string> </value>
+            <value> <string>python:[(\'\', \'\')]+here.getColumnIds(include_shared=False)</string> </value>
         </item>
       </dictionary>
     </pickle>
