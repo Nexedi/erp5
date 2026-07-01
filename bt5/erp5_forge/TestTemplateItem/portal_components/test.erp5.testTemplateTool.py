@@ -693,7 +693,7 @@ class TestTemplateTool(ERP5TypeTestCase):
       operation_log = template_tool.installBusinessTemplateListFromRepository([bt5_name],
                             only_different=False, update_catalog=0)
 
-      self.assertIn("Installed %s with" % bt5_name, operation_log[0])
+      self.assertIn("Installed %s with" % bt5_name, operation_log[-1])
       bt = template_tool.getInstalledBusinessTemplate(bt5_name)
       self.assertNotEqual(bt.getId(), None)
       self.commit()
@@ -858,16 +858,18 @@ class TestTemplateTool(ERP5TypeTestCase):
 
     ordered_list = template_tool.sortBusinessTemplateList(new_bt5_list)
     # group orders
-    first_group = list(range(0, 5))
-    second_group =  list(range(5, 11))
-    third_group = list(range(11, 13))
-    fourth_group = list(range(13, 14))
+    first_group = list(range(0, 7))
+    second_group =  list(range(7, 13))
+    third_group = list(range(13, 15))
+    fourth_group = list(range(15, 16))
 
     expected_position_dict = {
       'erp5_property_sheets': first_group,
       'erp5_core_proxy_field_legacy': first_group,
       'erp5_mysql_innodb_catalog': first_group,
+      'erp5_catalog_core': first_group,
       'erp5_core': first_group,
+      'erp5_full_text_core': first_group,
       'erp5_xhtml_style': first_group,
       'erp5_jquery': second_group,
       'erp5_jquery_ui': second_group,
