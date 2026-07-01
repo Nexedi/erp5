@@ -163,6 +163,14 @@ class TestVanillaERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       )[0]['new_id'],
       new_id=self.new_catalog_id,
     )
+    # The new default catalog must own a separate shared catalog: hot reindexing
+    # re-points the destination shared catalog's connections in place and refuses
+    # to run when source and destination share the same one.
+    source_shared_catalog = portal_catalog[self.original_catalog_id]._getSharedCatalog()
+    new_shared_catalog_id = portal_catalog.manage_pasteObjects(
+      portal_catalog.manage_copyObjects(ids=(source_shared_catalog.getId(),)),
+    )[0]['new_id']
+    portal_catalog[self.new_catalog_id].shared_erp5_catalog_id = new_shared_catalog_id
     source_sql_connection_id_list = [original_connection_id, self.new_erp5_deferred_sql_connection]
     destination_sql_connection_id_list = [self.new_erp5_sql_connection, new_deferred_connection_id]
     portal_catalog.manage_hotReindexAll(
