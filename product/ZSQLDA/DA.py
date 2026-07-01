@@ -88,6 +88,7 @@ $Id: DA.py,v 1.5 2001/08/17 02:17:38 adustman Exp $'''
 __version__='$Revision: 1.5 $'[11:-2]
 
 import os, sys
+import six
 import Shared.DC.ZRDB, Shared.DC.ZRDB.Connection
 import transaction
 from collections import defaultdict
@@ -95,7 +96,7 @@ from weakref import WeakKeyDictionary
 from App.special_dtml import HTMLFile
 from App.ImageFile import ImageFile
 from DateTime import DateTime
-from ExtensionClass import Base
+from ExtensionClass import Base, ExtensionClass
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import IS_ZOPE2
 import Acquisition
@@ -107,6 +108,21 @@ SHARED_DC_ZRDB_LOCATION = os.path.dirname(Shared.DC.ZRDB.__file__)
 database_connection_pool = defaultdict(WeakKeyDictionary)
 
 
+class _ConnectionType(ExtensionClass):
+    # A metaclass, not __init_subclass__, so it also runs under Python 2.
+    def __init__(cls, name, bases, d):
+        super(_ConnectionType, cls).__init__(name, bases, d)
+        database_type = cls.database_type
+        if database_type is None:
+            return
+        if 'id' not in d:
+            cls.id = '%s_database_connection' % database_type
+        if 'meta_type' not in d and 'title' not in d:
+            cls.meta_type = cls.title = 'Z %s %sDatabase Connection' % (
+                database_type, 'Deferred ' if cls.deferred else '')
+
+
+@six.add_metaclass(_ConnectionType)
 class BaseConnection(Shared.DC.ZRDB.Connection.Connection):
     _isAnSQLConnection=1
 
@@ -129,21 +145,6 @@ class BaseConnection(Shared.DC.ZRDB.Connection.Connection):
     connect_on_load = False
     if not IS_ZOPE2:
         zmi_icon = 'fas fa-database'
-
-    def __init_subclass__(cls, **kw):
-        # Derive the registration metadata from database_type so each backend
-        # only declares database_type (+ deferred). Attributes set explicitly
-        # on the subclass (e.g. CMFActivity connections) are left untouched.
-        super().__init_subclass__(**kw)
-        database_type = cls.database_type
-        if database_type is None:
-            return
-        d = cls.__dict__
-        if 'id' not in d:
-            cls.id = '%s_database_connection' % database_type
-        if 'meta_type' not in d and 'title' not in d:
-            cls.meta_type = cls.title = 'Z %s %sDatabase Connection' % (
-                database_type, 'Deferred ' if cls.deferred else '')
 
     def factory(self):
         # Backend subclass returns its DB class.
