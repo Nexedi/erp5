@@ -143,6 +143,7 @@ class WendelinConfiguratorMixin(SecurityTestCase):
     return [
       'erp5_code_mirror',
       'erp5_mysql_innodb_catalog',
+      'erp5_catalog_core',
       'erp5_odt_style',
       'erp5_pdm',
       'erp5_svg_editor',
