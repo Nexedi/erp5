@@ -72,7 +72,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     self.tic()
     mark_replaced_bt_list = ["erp5_odt_style", "erp5_pdm", 'erp5_accounting',
            'erp5_configurator',
-           'erp5_ingestion_mysql_innodb_catalog', "erp5_configurator_standard"]
+           "erp5_configurator_standard"]
     for bt_name in mark_replaced_bt_list:
       bt = self.templates_tool.getInstalledBusinessTemplate(bt_name)
       if (bt is not None) and bt.getInstallationState() in ['installed',
@@ -687,15 +687,13 @@ class TestTemplateTool(ERP5TypeTestCase):
       return orig_manage_catalogClear(*args, **kw)
     ERP5Catalog.manage_catalogClear = manage_catalogClear
     try:
-      bt5_name = 'erp5_ingestion_mysql_innodb_catalog'
+      bt5_name = 'erp5_base'
       template_tool = self.portal.portal_templates
       self.tic()
-      bt = template_tool.getInstalledBusinessTemplate(bt5_name)
-      self.assertEqual(bt, None)
       operation_log = template_tool.installBusinessTemplateListFromRepository([bt5_name],
                             only_different=False, update_catalog=0)
 
-      self.assertIn("Installed %s with" % bt5_name, operation_log[0])
+      self.assertIn("Installed %s with" % bt5_name, operation_log[-1])
       bt = template_tool.getInstalledBusinessTemplate(bt5_name)
       self.assertNotEqual(bt.getId(), None)
       self.commit()
@@ -860,21 +858,22 @@ class TestTemplateTool(ERP5TypeTestCase):
 
     ordered_list = template_tool.sortBusinessTemplateList(new_bt5_list)
     # group orders
-    first_group = list(range(0, 5))
-    second_group =  list(range(5, 12))
-    third_group = list(range(12, 14))
-    fourth_group = list(range(14, 15))
+    first_group = list(range(0, 7))
+    second_group =  list(range(7, 13))
+    third_group = list(range(13, 15))
+    fourth_group = list(range(15, 16))
 
     expected_position_dict = {
       'erp5_property_sheets': first_group,
       'erp5_core_proxy_field_legacy': first_group,
       'erp5_mysql_innodb_catalog': first_group,
+      'erp5_catalog_core': first_group,
       'erp5_core': first_group,
+      'erp5_full_text_core': first_group,
       'erp5_xhtml_style': first_group,
       'erp5_jquery': second_group,
       'erp5_jquery_ui': second_group,
       'erp5_full_text_mroonga_catalog': second_group,
-      'erp5_ingestion_mysql_innodb_catalog': second_group,
       'erp5_base': second_group,
       'erp5_knowledge_pad': second_group,
       'erp5_ingestion': second_group,
