@@ -153,6 +153,7 @@ class TestWendelinTelecomConfigurator(SecurityTestCase):
     expected_business_template_list = [
       'erp5_code_mirror',
       'erp5_mysql_innodb_catalog',
+      'erp5_catalog_core',
       'erp5_pdm',
       'erp5_svg_editor',
       'erp5_jquery_plugin_mbmenu',
