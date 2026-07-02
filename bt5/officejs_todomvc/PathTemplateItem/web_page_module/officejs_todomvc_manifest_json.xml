@@ -40,6 +40,10 @@
             </value>
         </item>
         <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts79676274.220011</string> </value>
+        </item>
+        <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
@@ -73,9 +77,25 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>6835665d5d85c2bd7363efab467ad017</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <bytes>{\n
+  "short_name": "OfficeJS TodoMVC",\n
+  "name": "OfficeJS TodoMVC App",\n
+  "icons": [{\n
+    "src": "officejs_todomvc_icon.svg",\n
+    "sizes": "any",\n
+    "type": "image/svg"\n
+  }, {\n
+    "src": "officejs_todomvc_icon.png",\n
+    "sizes": "any",\n
+    "type": "image/png"\n
+  }],\n
+  "start_url": "./",\n
+  "display": "standalone"\n
+}</bytes> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
@@ -108,22 +128,8 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>{\n
-  "short_name": "OfficeJS TodoMVC",\n
-  "name": "OfficeJS TodoMVC App",\n
-  "icons": [{\n
-    "src": "officejs_todomvc_icon.svg",\n
-    "sizes": "any",\n
-    "type": "image/svg"\n
-  }, {\n
-    "src": "officejs_todomvc_icon.png",\n
-    "sizes": "any",\n
-    "type": "image/png"\n
-  }],\n
-  "start_url": "./",\n
-  "display": "standalone"\n
-}</string> </value>
+            <key> <string>size</string> </key>
+            <value> <int>315</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -258,7 +264,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>960.34282.23500.6178</string> </value>
+                      <value> <string>1033.10263.9856.14199</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -274,8 +280,8 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1499259585.11</float>
-                              <string>UTC</string>
+                              <float>1779676274.224205</float>
+                              <string>GMT+2</string>
                             </tuple>
                           </state>
                         </object>
