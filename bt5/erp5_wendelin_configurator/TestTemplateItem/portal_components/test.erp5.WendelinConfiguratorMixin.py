@@ -140,9 +140,11 @@ class WendelinConfiguratorMixin(SecurityTestCase):
       'erp5_wendelin_configurator'
     ]
   def getCommonBusinessTemplateList(self):
+    template_tool = self.portal.portal_templates
+    catalog_bt5_title = template_tool.getInstalledBusinessTemplate('erp5_catalog').getTitle()
     return [
       'erp5_code_mirror',
-      'erp5_mysql_innodb_catalog',
+      catalog_bt5_title,
       'erp5_catalog_core',
       'erp5_odt_style',
       'erp5_pdm',
