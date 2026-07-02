@@ -41,7 +41,6 @@ from Acquisition import aq_base
 from DateTime import DateTime
 from MySQLdb import ProgrammingError
 from OFS.ObjectManager import ObjectManager
-from Products.CMFActivity import ActivityTool
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import LogInterceptor, createZODBPythonScript, todo_erp5, getExtraSqlConnectionStringList
 from Products.PageTemplates.Expressions import getEngine
