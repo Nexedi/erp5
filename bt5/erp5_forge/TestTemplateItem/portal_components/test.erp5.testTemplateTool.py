@@ -860,15 +860,15 @@ class TestTemplateTool(ERP5TypeTestCase):
 
     ordered_list = template_tool.sortBusinessTemplateList(new_bt5_list)
     # group orders
-    first_group = list(range(0, 5))
-    second_group =  list(range(5, 12))
-    third_group = list(range(12, 14))
-    fourth_group = list(range(14, 15))
+    first_group = list(range(0, 6))
+    second_group =  list(range(6, 13))
+    third_group = list(range(13, 15))
+    fourth_group = list(range(15, 16))
+    catalog_bt5_title = template_tool.getInstalledBusinessTemplate('erp5_catalog').getTitle()
 
     expected_position_dict = {
       'erp5_property_sheets': first_group,
       'erp5_core_proxy_field_legacy': first_group,
-      'erp5_mysql_innodb_catalog': first_group,
       'erp5_core': first_group,
       'erp5_xhtml_style': first_group,
       'erp5_jquery': second_group,
@@ -881,6 +881,8 @@ class TestTemplateTool(ERP5TypeTestCase):
       'erp5_web': third_group,
       'erp5_crm': third_group,
       'erp5_credential': fourth_group}
+
+    expected_position_dict[catalog_bt5_title] = first_group
 
     for bt in ordered_list:
       self.assertTrue(ordered_list.index(bt) in expected_position_dict[bt[1]],
