@@ -35,7 +35,7 @@ from Products.CMFCore.CatalogTool import CatalogTool as CMFCoreCatalogTool
 from Products.ZSQLCatalog.ZSQLCatalog import ZCatalog
 from Products.ZSQLCatalog.SQLCatalog import ComplexQuery, SimpleQuery
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.Utils import publishable
+from Products.ERP5Type.Utils import publishable, non_publishable
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.users import system as system_user
 from Products.CMFCore.utils import UniqueObject, _getAuthenticatedUser, getToolByName
@@ -57,6 +57,11 @@ from Products.ZSQLCatalog.Utils import sqlquote
 import warnings
 from zLOG import LOG, PROBLEM, WARNING, INFO
 import six
+
+from typing import Any, TYPE_CHECKING
+if TYPE_CHECKING:
+  from collections.abc import Sequence
+  from ZPublisher.HTTPRequest import HTTPRequest
 
 ACQUIRE_PERMISSION_VALUE = []
 DYNAMIC_METHOD_NAME = 'z_related_'
@@ -787,10 +792,29 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       return query
 
     # searchResults has inherited security assertions.
-    def searchResults(self, sql_catalog_id=None, local_roles=None, **kw):
+    @non_publishable
+    def searchResults(
+      self,
+      sql_catalog_id=None,  # type: str | None
+      local_roles=None,  # type: str | Sequence[str] | None
+      **kw  # type: Any
+    ):
+        # type: (...) -> Sequence[Any]
         """
-        Calls ZCatalog.searchResults with extra arguments that
-        limit the results to what the user is allowed to see.
+        Execute a catalog query.
+        
+        It calls ``ZCatalog.searchResults`` with extra arguments that limit
+        the results to what the user is allowed to see.
+
+        Args:
+          sql_catalog_id: Identifier of the catalog to use.
+          local_roles: Allowed security roles for the query. It can be a
+            sequence of roles, or a string with the roles separated by ``";"``.
+          kwargs: Additional keyword arguments passed to the catalog search.
+
+        Returns:
+          The rows containing the query results.
+
         """
         #if not _checkPermission(
         #    Permissions.AccessInactivePortalContent, self):
