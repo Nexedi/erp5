@@ -35,6 +35,11 @@ def getSubnodeContent(node, tag_name, index=0):
     return None
 
 
+# Project-app base URL under test; supplied via the System Preference, never
+# hardcoded in the generic scripts (Base_getProjectAppBaseUrl reads it back).
+PROJECT_APP_BASE_URL = 'https://project.example.net'
+
+
 class TestWebProjectForumRSS(ERP5TypeTestCase):
   """Project-app RSS feed deep-link (requires erp5_project)."""
 
@@ -44,10 +49,22 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     return ('erp5_web_project_ui', 'erp5_web_project_ui_test')
 
+  def afterSetUp(self):
+    # Configure the project-app base URL through the System Preference so the
+    # feed's deep-links resolve; also exercises Base_getProjectAppBaseUrl.
+    self.preference = self.portal.portal_preferences.newContent(
+      portal_type='System Preference',
+      priority=1,
+      preferred_project_management_app_base_url=PROJECT_APP_BASE_URL)
+    if self.portal.portal_workflow.isTransitionPossible(self.preference, 'enable'):
+      self.preference.enable()
+    self.tic()
+
   def beforeTearDown(self):
     self.abort()
     for module in (self.portal.discussion_thread_module,):
       module.manage_delObjects(list(module.objectIds()))
+    self.portal.portal_preferences.manage_delObjects([self.preference.getId()])
     self.tic()
 
   def _createForumThreadWithPosts(self, n_posts=2):
@@ -77,7 +94,9 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     """Each item <link> is the project-app push_history_stored_state deep-link
     seeding the forum (p.jio_key) and targeting the thread + last_post."""
     forum, thread = self._createForumThreadWithPosts(n_posts=2)
+    # the getter returns exactly the configured System Preference value
     base = forum.Base_getProjectAppBaseUrl()
+    self.assertEqual(PROJECT_APP_BASE_URL, base)
     post_count = thread.DiscussionThread_getDiscussionPostCount()
     doc = parseString(forum.DiscussionForum_viewLatestPostListAsRSS())
     links = [l for l in
