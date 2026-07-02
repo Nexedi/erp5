@@ -151,6 +151,7 @@ class TestWendelinTelecomConfigurator(SecurityTestCase):
     """
     template_tool = self.portal.portal_templates
     catalog_bt5_title = template_tool.getInstalledBusinessTemplate('erp5_catalog').getTitle()
+    full_text_catalog_bt5_title = template_tool.getInstalledBusinessTemplate('erp5_full_text_catalog').getTitle()
 
     expected_business_template_list = [
       'erp5_code_mirror',
@@ -188,7 +189,7 @@ class TestWendelinTelecomConfigurator(SecurityTestCase):
       'erp5_trade',
       'erp5_wendelin_category',
       'erp5_accounting',
-      'erp5_full_text_mroonga_catalog',
+      full_text_catalog_bt5_title,
       'erp5_oauth2_resource',
       'erp5_wendelin',
       'erp5_jquery_plugin_jqchart',
