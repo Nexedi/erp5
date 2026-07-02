@@ -5,11 +5,14 @@ Only caller: DiscussionForum_viewLatestPostListAsRSS/listbox_link (the project-a
 get_base = getattr(context, 'Base_getProjectAppBaseUrl', None)
 if get_base is None:
   return ''
+base_url = get_base()
+if not base_url:
+  return ''
 thread = context.getParentValue()
 forum = thread.DiscussionThread_getDiscussionForum()
 if forum is None:
   return ''
 return ('%s/#!push_history_stored_state?p.jio_key=%s&p.page=form&p.view=view&'
         'n.jio_key=%s&n.page=form&n.view=view&n.last_post=%s'
-        % (get_base(), forum.getRelativeUrl(), thread.getRelativeUrl(),
+        % (base_url, forum.getRelativeUrl(), thread.getRelativeUrl(),
            thread.DiscussionThread_getDiscussionPostCount()))
