@@ -17,6 +17,9 @@ VALID_STATE_TUPLE = ('published', 'published_alive', 'released', 'released_alive
                      'shared', 'shared_alive')
 
 base_url = context.Base_getProjectAppBaseUrl()
+if not base_url:
+  raise ValueError("Project app base URL not configured - set the "
+                   "preferred_project_management_app_base_url System Preference")
 part_list = [x for x in (REQUEST.other.get('source_path') or '').split('/') if x]
 
 # Expect discussion_forum_module/<id> as the first two segments
