@@ -37,7 +37,7 @@ from erp5.component.document.Document import Document, ConversionError, _MARKER,
 from erp5.component.document.File import File
 from erp5.component.module.WebDAVSupport import TextContent
 from erp5.component.document.Document import VALID_IMAGE_FORMAT_LIST, VALID_TEXT_FORMAT_LIST
-from erp5.component.mixin.TextContentMigrationMixin import TextContentMigrationMixin
+from erp5.component.mixin.TextContentMigrationMixin import TextContentMigrationMixin, _parseContentType
 from io import BytesIO
 from string import Template
 
@@ -155,6 +155,7 @@ class TextDocument(TextContentMigrationMixin, CachedConvertableMixin, TextConten
     # web_page that have neither content_type nor text_format. Migration
     # should be done to make all web page having content_type property
     src_mimetype = self.getContentType() or DEFAULT_CONTENT_TYPE
+    src_mimetype, _ = _parseContentType(src_mimetype)
     if not format and src_mimetype == 'text/html':
       format = 'html' # Force safe_html
     if not format:
