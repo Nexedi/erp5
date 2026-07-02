@@ -35,8 +35,7 @@ def getSubnodeContent(node, tag_name, index=0):
     return None
 
 
-# Project-app base URL under test; supplied via the System Preference, never
-# hardcoded in the generic scripts (Base_getProjectAppBaseUrl reads it back).
+# Project-app base URL under test; supplied via the System Preference
 PROJECT_APP_BASE_URL = 'https://project.example.net'
 
 
@@ -50,8 +49,7 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     return ('erp5_web_project_ui', 'erp5_web_project_ui_test')
 
   def afterSetUp(self):
-    # Configure the project-app base URL through the System Preference so the
-    # feed's deep-links resolve; also exercises Base_getProjectAppBaseUrl.
+    # Configure the project-app base URL through the System Preference
     self.preference = self.portal.portal_preferences.newContent(
       portal_type='System Preference',
       priority=1,
