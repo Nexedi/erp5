@@ -38,6 +38,20 @@ from Products.ERP5Type.Utils import guessEncodingFromText, str2bytes, unicode2st
 
 from erp5.component.document.Document import _MARKER
 
+def _parseContentType(content_type):
+  if not content_type:
+    return ('', [])
+
+  # RFC2045, 5.1.  Syntax of the Content-Type Header Field
+  parts = content_type.split(";")
+  content_type = parts.pop(0)
+  extensions = dict((x.split("=")[0], x.split("=")[1]) for x in parts)
+  return (content_type, extensions)
+
+def _serializeContentType(content_type, extensions):
+  parts = [content_type] + ["=".join(x) for x in extensions.items()]
+  return "; ".join(parts)
+
 class TextContentMigrationMixin:
   """
   Defines setters and getters related to `text_content` (string). These methods
@@ -60,7 +74,7 @@ class TextContentMigrationMixin:
     return self.hasData()
 
   security.declarePrivate('_getTextContent')
-  def _getTextContent(self, default=_MARKER):
+  def _getTextContent(self, encoding='utf-8', default=_MARKER):
     """
     Return data as string. Both Py2 and Py3 should return 'str' type object.
     """
@@ -68,7 +82,18 @@ class TextContentMigrationMixin:
     if data is None:
       return None
 
-    text_content = data.decode(guessEncodingFromText(data) or 'utf-8')
+    # Encoding is set, in order of priority, by parameter, then content type,
+    # then guessing. If nothing works, use UTF-8.
+    content_type = self.getContentType()
+    if encoding is None and content_type:
+      (content_type, extensions) = _parseContentType(content_type)
+      if "charset" in extensions:
+        encoding = extensions["charset"]
+
+    if encoding is None:
+      encoding = guessEncodingFromText(data) or 'utf-8'
+
+    text_content = data.decode(encoding)
     if six.PY2 and isinstance(text_content, six.text_type):
       text_content = unicode2str(text_content)
 
@@ -78,7 +103,7 @@ class TextContentMigrationMixin:
   getTextContent = _getTextContent
 
   security.declarePrivate('_setTextContent')
-  def _setTextContent(self, text_content, **kw):
+  def _setTextContent(self, text_content, encoding='utf-8', **kw):
     """
     Setting text content is like setting data, but with a string argument.
     Slightly different from `getTextContent`: Py3 accepts 'str', but Py2
@@ -87,8 +112,15 @@ class TextContentMigrationMixin:
     data = text_content
     if data is not None:
       if six.PY2 and isinstance(data, six.text_type):
-        data = unicode2str(data)
-      data = str2bytes(data)
+        data = unicode2str(data, encoding=encoding)
+      data = str2bytes(data, encoding=encoding)
+
+    # Add charset information to content type, allows decoding more easily
+    content_type = self.getContentType()
+    if content_type and content_type.startswith("text/"):
+      (content_type, extensions) = _parseContentType(content_type)
+      extensions["charset"] = encoding
+      self.setContentType(_serializeContentType(content_type, extensions))
 
     self.setData(data, **kw)
 
