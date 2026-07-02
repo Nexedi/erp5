@@ -3050,31 +3050,41 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
 
     return method_properties
 
+  def _getCatalogForPath(self, path):
+    path_list = path.split('/')
+    if len(path_list) >= 3:
+      portal_catalog = self.getPortalObject().portal_catalog
+      catalog = getattr(portal_catalog, path_list[1], None)
+      if catalog is not None:
+        return catalog
+    return _getCatalogValue(self)
+
   def build(self, context, **kw):
     ObjectTemplateItem.build(self, context, **kw)
-
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate build', 0, 'catalog not found')
-      return
 
     # upgrade old
     if not hasattr(self, '_method_properties'):
       self._method_properties = PersistentMapping()
 
-    for obj in six.itervalues(self._objects):
+    for path, obj in six.iteritems(self._objects):
+      catalog = self._getCatalogForPath(path)
+      if catalog is None:
+        LOG('BusinessTemplate build', 0, 'catalog not found for %s' % path)
+        continue
       method_id = obj.id
       # Check if the method is sub-object of Catalog
       if method_id in catalog.objectIds():
-        self._method_properties[method_id] = self._extractMethodProperties(
+        self._method_properties[path] = self._extractMethodProperties(
                                                             catalog, method_id)
 
   def generateXml(self, path):
-    obj = self._objects[path]
-    method_id = obj.id
     xml_data = '<catalog_method>'
-    if method_id in self._method_properties:
-      for method_property, value in six.iteritems(self._method_properties[method_id]):
+    method_properties = self._method_properties.get(path)
+    if method_properties is None:
+      # BBB: old mappings are keyed by the bare method id
+      method_properties = self._method_properties.get(self._objects[path].id)
+    if method_properties:
+      for method_property, value in six.iteritems(method_properties):
         xml_data += '\n <item key="%s" type="int">' %(method_property,)
         xml_data += '\n  <value>%s</value>' %(value,)
         xml_data += '\n </item>'
@@ -3099,59 +3109,36 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
 
   def install(self, context, trashbin, **kw):
     ObjectTemplateItem.install(self, context, trashbin, **kw)
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-      return
-    # Make copies of attributes of the default catalog of portal_catalog.
-    sql_catalog_object_list = list(catalog.sql_catalog_object_list)
-    sql_uncatalog_object = list(catalog.sql_uncatalog_object)
-    sql_clear_catalog = list(catalog.sql_clear_catalog)
 
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
-    values = []
 
-    # When the default catalog is of 'ERP5 Catalog' meta_type, its better to ..
-    # convert all the CatalogMethodTemplateItems in the current BT to the
-    # allowed types for ERP5 Catalog, i.e, to ERP5 SQLMethod and ERP5 Python Script
-    # and update the self._objects dict accordingly
-    if catalog.meta_type == 'ERP5 Catalog':
-      import erp5
-      from Products.ERP5.Extensions.CheckPortalTypes import changeObjectClass
+    # Apply each method's properties to the catalog it belongs to, resolved
+    # from its path.
+    for path in self._objects:
+      if not force:
+        if path not in update_dict or update_dict[path] == 'nothing':
+          continue
 
-      # We need the dynamic portal_type classes for changing object classes
-      sql_class = getattr(erp5.portal_type, 'SQL Method')
-      script_class = getattr(erp5.portal_type, 'Python Script')
+      catalog = self._getCatalogForPath(path)
+      if catalog is None:
+        LOG('BusinessTemplate', 0, 'no SQL catalog was available for %s' % path)
+        continue
 
-      portal = self.getPortalObject()
-      for path, obj in six.iteritems(self._objects):
-        method = self.unrestrictedResolveValue(portal, path)
-        method_id = path.split('/')[-1]
-        if method.meta_type == 'Z SQL Method':
-          method = changeObjectClass(catalog, method_id, sql_class)
-        if method.meta_type == 'Script (Python)':
-          method = changeObjectClass(catalog, method_id, script_class)
-        new_obj  = method.aq_base
-        self._objects[path] = new_obj
+      method_id = path.split('/')[-1]
 
-    if force: # get all objects
-      values = six.itervalues(self._objects)
-    else: # get only selected object
-      for key, value in six.iteritems(self._objects):
-        if key in update_dict or force:
-          if not force:
-            action = update_dict[key]
-            if action == 'nothing':
-              continue
-          values.append(value)
-
-    for obj in values:
-      method_id = obj.id
+      # Make copies of the list-properties of this catalog.
+      sql_catalog_object_list = list(catalog.sql_catalog_object_list)
+      sql_uncatalog_object = list(catalog.sql_uncatalog_object)
+      sql_clear_catalog = list(catalog.sql_clear_catalog)
 
       # Restore catalog properties for methods
       if hasattr(self, '_method_properties'):
-        for key in self._method_properties.get(method_id, {}):
+        method_properties = self._method_properties.get(path)
+        if method_properties is None:
+          # BBB: old mappings are keyed by the bare method id
+          method_properties = self._method_properties.get(method_id)
+        for key in (method_properties or {}):
           old_value = getattr(catalog, key, None)
           if isinstance(old_value, str):
             setattr(catalog, key, method_id)
@@ -3220,25 +3207,21 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
         catalog.sql_clear_catalog = tuple(sql_clear_catalog)
 
   def uninstall(self, context, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-      return
-
-    values = []
     object_path = kw.get('object_path', None)
-    # get required values
+    # get required paths
     if object_path is None:
-      values = six.itervalues(self._objects)
+      path_list = list(self._objects)
+    elif object_path in self._objects:
+      path_list = [object_path]
     else:
-      try:
-        value = self._objects[object_path]
-      except KeyError:
-        value = None
-      if value is not None:
-        values.append(value)
-    for obj in values:
-      method_id = obj.id
+      path_list = []
+    for path in path_list:
+      catalog = self._getCatalogForPath(path)
+      if catalog is None:
+        LOG('BusinessTemplate', 0,
+            'no SQL catalog was available for %s' % path)
+        continue
+      method_id = path.split('/')[-1]
       if catalog.meta_type == 'ERP5 Catalog':
         property_list = list(catalog.propertyMap())
       else:
@@ -3273,9 +3256,10 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
 
   def _importFile(self, file_name, file):
     if file_name.endswith('.catalog_keys.xml'):
-      # recreate data mapping specific to catalog method
-      name = os.path.basename(file_name)
-      id = name.split('.', 1)[0]
+      # recreate data mapping specific to catalog method.
+      # keep the full object path (with the catalog folder) as the key
+      obj_path = file_name[:-len('.catalog_keys.xml')]
+      method_id = obj_path.rsplit('/', 1)[-1]
       xml = parse(file)
       method_list = xml.findall('item')
       for method in method_list:
@@ -3292,10 +3276,10 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
           LOG('BusinessTemplate import CatalogMethod, type unknown', 0, key_type)
           continue
         if key in catalog_method_list or key in catalog_method_filter_list:
-          getattr(self, key)[id] = value
+          getattr(self, key)[method_id] = value
         else:
           # new style key
-          self._method_properties.setdefault(id, PersistentMapping())[key] = 1
+          self._method_properties.setdefault(obj_path, PersistentMapping())[key] = 1
     else:
       ObjectTemplateItem._importFile(self, file_name, file, catalog_method_template_item=1)
 
@@ -4628,15 +4612,31 @@ class RoleTemplateItem(BaseTemplateItem):
 
 class CatalogKeyTemplateItemBase(BaseTemplateItem):
 
+  def _getCatalogList(self):
+    portal_catalog = self.getPortalObject().portal_catalog
+    catalog_list = []
+    for catalog_id in _getCatalog(self):
+      catalog = portal_catalog._getOb(catalog_id, None)
+      if catalog is not None and \
+          catalog.meta_type in ('SQLCatalog', 'ERP5 Catalog'):
+        catalog_list.append(catalog)
+    if not catalog_list:
+      catalog = _getCatalogValue(self)
+      if catalog is not None:
+        catalog_list.append(catalog)
+    return catalog_list
+
   def build(self, context, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
+    catalog_list = self._getCatalogList()
+    if not catalog_list:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
-    catalog_key_list = list(getattr(catalog, self.key_list_attr, []))
+    catalog_key_set = set()
+    for catalog in catalog_list:
+      catalog_key_set.update(getattr(catalog, self.key_list_attr, []))
     key_list = []
     for key in self._archive:
-      if key in catalog_key_list:
+      if key in catalog_key_set:
         key_list.append(key)
       elif not self.is_bt_for_diff:
         raise NotFound('%s %r not found in catalog' %(self.key_title, key))
@@ -4656,12 +4656,11 @@ class CatalogKeyTemplateItemBase(BaseTemplateItem):
     return action
 
   def install(self, context, trashbin, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
+    catalog_list = self._getCatalogList()
+    if not catalog_list:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
 
-    catalog_key_list = list(getattr(catalog, self.key_list_attr, []))
     if len(self._objects) == 0: # needed because of pop()
       return
     keys = []
@@ -4670,8 +4669,10 @@ class CatalogKeyTemplateItemBase(BaseTemplateItem):
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
     if force or self._getUpdateDictAction(update_dict) != 'nothing':
-      catalog_key_list = self._getUpdatedCatalogKeyList(catalog_key_list, keys)
-      setattr(catalog, self.key_list_attr, catalog_key_list)
+      for catalog in catalog_list:
+        catalog_key_list = list(getattr(catalog, self.key_list_attr, []))
+        catalog_key_list = self._getUpdatedCatalogKeyList(catalog_key_list, keys)
+        setattr(catalog, self.key_list_attr, catalog_key_list)
 
   def _getUpdatedCatalogKeyList(self, catalog_key_list, new_key_list):
     catalog_key_set = set(catalog_key_list) # copy
@@ -4679,20 +4680,18 @@ class CatalogKeyTemplateItemBase(BaseTemplateItem):
     return sorted(catalog_key_set)
 
   def uninstall(self, context, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-      return
-    catalog_key_list = list(getattr(catalog, self.key_list_attr, []))
+    catalog_list = self._getCatalogList()
     object_path = kw.get('object_path', None)
     if object_path is not None:
       object_keys = [object_path]
     else:
       object_keys = self._archive
-    for key in object_keys:
-      if key in catalog_key_list:
-        catalog_key_list.remove(key)
-    setattr(catalog, self.key_list_attr, catalog_key_list)
+    for catalog in catalog_list:
+      catalog_key_list = list(getattr(catalog, self.key_list_attr, []))
+      for key in object_keys:
+        if key in catalog_key_list:
+          catalog_key_list.remove(key)
+      setattr(catalog, self.key_list_attr, catalog_key_list)
     BaseTemplateItem.uninstall(self, context, **kw)
 
   # Function to generate XML Code Manually
