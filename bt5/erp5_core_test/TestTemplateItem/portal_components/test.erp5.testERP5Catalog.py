@@ -224,6 +224,26 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     return callable
 
   def afterSetUp(self):
+    if self.portal.isMySQLCatalogStorage():
+      self.deferred_connection_meta_type = 'Z MySQL Deferred Database Connection'
+      self._assertSearchableTextDifferentResult = self._assertSearchableTextDifferentResultMySQL
+      self._getAddSQLConnection = self._getAddSQLConnectionMySQL
+      self._getCreateDummyTableSQL = self._getCreateDummyTableSQLMySQL
+      self._getSingleUserRoleTableSQL = self._getSingleUserRoleTableSQLMySQL
+      self._getAssigneeRoleTableSQL = self._getAssigneeRoleTableSQLMySQL
+      self._getUserOrGroupRoleTableSQL = self._getUserOrGroupRoleTableSQLMySQL
+      self._getAnotherUserOrGroupRoleTableSQL = self._getAnotherUserOrGroupRoleTableSQLMySQL
+      self._getMonovaluedRoleTableSQL = self._getMonovaluedRoleTableSQLMySQL
+    else:
+      self.deferred_connection_meta_type = 'Z SQLite Deferred Database Connection'
+      self._assertSearchableTextDifferentResult = self._assertSearchableTextDifferentResultSQLite
+      self._getAddSQLConnection = self._getAddSQLConnectionSQLite
+      self._getCreateDummyTableSQL = self._getCreateDummyTableSQLSQLite
+      self._getSingleUserRoleTableSQL = self._getSingleUserRoleTableSQLSQLite
+      self._getAssigneeRoleTableSQL = self._getAssigneeRoleTableSQLSQLite
+      self._getUserOrGroupRoleTableSQL = self._getUserOrGroupRoleTableSQLSQLite
+      self._getAnotherUserOrGroupRoleTableSQL = self._getAnotherUserOrGroupRoleTableSQLSQLite
+      self._getMonovaluedRoleTableSQL = self._getMonovaluedRoleTableSQLSQLite
     self.default_catalog_id = self.portal.portal_catalog.getDefaultSqlCatalogId()
     uf = self.getPortal().acl_users
     uf._doAddUser(self.username, '', ['Manager'], [])
@@ -231,6 +251,161 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.loginByUserName(self.username)
     # make sure there is no message any more
     self.tic()
+
+  def _assertSearchableTextDifferentResultMySQL(self):
+    if 'ENGINE=Mroonga' in self.portal.erp5_sql_connection.manage_test('SHOW CREATE TABLE full_text')[0][1]:
+      # Mroonga
+      self.assertEqual(10, self.getCatalogTool().countResults(
+                portal_type='Organisation', SearchableText='different')[0][0])
+    else:
+      # MySQL
+      self.assertEqual([],
+          [x.getObject for x in self.getCatalogTool()(
+                  portal_type='Organisation', SearchableText='different')])
+      self.assertEqual(0, self.getCatalogTool().countResults(
+                portal_type='Organisation', SearchableText='different')[0][0])
+
+  def _assertSearchableTextDifferentResultSQLite(self):
+    self.assertEqual(10, self.getCatalogTool().countResults(
+      portal_type='Organisation', SearchableText='different')[0][0])
+
+  def _getAddSQLConnectionMySQL(self):
+    return self.portal.manage_addProduct["ZSQLDA"].manage_addZMySQLConnection
+
+  def _getAddSQLConnectionSQLite(self):
+    return self.portal.manage_addProduct["ZSQLDA"].manage_addZSQLiteConnection
+
+  def _getCreateDummyTableSQLMySQL(self):
+    return """
+      CREATE TABLE `dummy` (
+      `uid` BIGINT UNSIGNED NOT NULL,
+      `dummy_title` varchar(32) NOT NULL default '',
+      PRIMARY KEY  (`uid`)
+      ) ENGINE=InnoDB;
+      """
+
+  def _getCreateDummyTableSQLSQLite(self):
+    return """
+      CREATE TABLE dummy (
+      uid INTEGER NOT NULL,
+      dummy_title TEXT NOT NULL DEFAULT '',
+      PRIMARY KEY (uid)
+      );
+      """
+
+  def _getSingleUserRoleTableSQLMySQL(self, local_roles_table):
+    return """
+      CREATE TABLE `%s` (
+      `uid` BIGINT UNSIGNED NOT NULL,
+      `owner_reference` varchar(32) NOT NULL default '',
+      PRIMARY KEY  (`uid`),
+      KEY `version` (`owner_reference`)
+    ) ENGINE=InnoDB;
+    """ % local_roles_table
+
+  def _getSingleUserRoleTableSQLSQLite(self, local_roles_table):
+    return """
+      CREATE TABLE %s (
+      uid INTEGER NOT NULL,
+      owner_reference TEXT NOT NULL DEFAULT '',
+      PRIMARY KEY (uid)
+      );
+      \0
+      CREATE INDEX version ON %s (owner_reference);
+      """ % (local_roles_table, local_roles_table)
+
+  def _getAssigneeRoleTableSQLMySQL(self, local_roles_table):
+    return """
+      CREATE TABLE `%s` (
+      `uid` BIGINT UNSIGNED NOT NULL,
+      `assignee_reference` varchar(32) NOT NULL default '',
+      `viewable_assignee_reference` varchar(32) NOT NULL default '',
+      PRIMARY KEY  (`uid`),
+      KEY `assignee_reference` (`assignee_reference`),
+      KEY `viewable_assignee_reference` (`viewable_assignee_reference`)
+      ) ENGINE=InnoDB;
+      """ % local_roles_table
+
+  def _getAssigneeRoleTableSQLSQLite(self, local_roles_table):
+    return """
+      CREATE TABLE %s (
+      uid INTEGER PRIMARY KEY,
+      assignee_reference TEXT NOT NULL DEFAULT '',
+      viewable_assignee_reference TEXT NOT NULL DEFAULT ''
+      );
+      \0
+      CREATE INDEX assignee_reference ON %s (assignee_reference);
+      \0
+      CREATE INDEX viewable_assignee_reference ON %s (viewable_assignee_reference);
+    """ % (local_roles_table, local_roles_table, local_roles_table)
+
+  def _getUserOrGroupRoleTableSQLMySQL(self, local_roles_table):
+    return """
+      CREATE TABLE `%s` (
+      `uid` BIGINT UNSIGNED NOT NULL,
+      `assignee_reference` varchar(32) NOT NULL default '',
+      `viewable_assignee_reference` varchar(32) NOT NULL default '',
+      PRIMARY KEY  (`uid`),
+      KEY `assignee_reference` (`assignee_reference`),
+      KEY `viewable_assignee_reference` (`viewable_assignee_reference`)
+      ) ENGINE=InnoDB;
+      """ % local_roles_table
+
+  def _getUserOrGroupRoleTableSQLSQLite(self, local_roles_table):
+    return """
+      CREATE TABLE %s (
+      uid INTEGER NOT NULL,
+      assignee_reference TEXT NOT NULL DEFAULT '',
+      viewable_assignee_reference TEXT NOT NULL DEFAULT '',
+      PRIMARY KEY (uid)
+      );
+      \0
+      CREATE INDEX %s_assignee_reference ON %s (assignee_reference);
+      \0
+      CREATE INDEX %s_viewable_assignee_reference ON %s (viewable_assignee_reference);
+      """ % (local_roles_table, local_roles_table, local_roles_table,local_roles_table,local_roles_table)
+
+  def _getAnotherUserOrGroupRoleTableSQLMySQL(self, local_roles_table):
+    return """
+      CREATE TABLE `%s` (
+      `uid` BIGINT UNSIGNED NOT NULL,
+      `viewable_assignee_reference` varchar(32) NOT NULL default '',
+      PRIMARY KEY  (`uid`),
+      KEY `viewable_assignee_reference` (`viewable_assignee_reference`)
+      ) ENGINE=InnoDB;
+      """ % local_roles_table
+
+  def _getAnotherUserOrGroupRoleTableSQLSQLite(self, local_roles_table):
+    return """
+      CREATE TABLE %s (
+      uid INTEGER NOT NULL,
+      viewable_assignee_reference TEXT NOT NULL DEFAULT '',
+      PRIMARY KEY (uid)
+      );
+      \0
+      CREATE INDEX %s_viewable_assignee_reference ON %s (viewable_assignee_reference);
+    """ % (local_roles_table, local_roles_table, local_roles_table)
+
+  def _getMonovaluedRoleTableSQLMySQL(self, local_roles_table):
+    return """
+      CREATE TABLE `%s` (
+      `uid` BIGINT UNSIGNED NOT NULL,
+      `viewable_assignee_reference` varchar(32) NOT NULL default '',
+      PRIMARY KEY  (`uid`),
+      KEY `viewable_assignee_reference` (`viewable_assignee_reference`)
+      ) ENGINE=InnoDB;
+      """ % local_roles_table
+
+  def _getMonovaluedRoleTableSQLSQLite(self, local_roles_table):
+    return """
+      CREATE TABLE %s (
+      uid INTEGER NOT NULL,
+      viewable_assignee_reference TEXT NOT NULL DEFAULT '',
+      PRIMARY KEY (uid)
+      );
+      \0
+      CREATE INDEX %s_viewable_assignee_reference ON %s (viewable_assignee_reference);
+      """ % (local_roles_table, local_roles_table, local_roles_table)
 
   def beforeTearDown(self):
     # restore default_catalog
@@ -1121,12 +1296,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                                     'erp5_sql_deferred_connection',
                                     None)
     self.assertTrue(erp5_sql_deferred_connection is not None)
-    if self.portal.isMySQLCatalogStorage():
-      meta_type = 'Z MySQL Deferred Database Connection'
-    else:
-      meta_type = 'Z SQLite Deferred Database Connection'
-
-    self.assertEqual(meta_type, erp5_sql_deferred_connection.meta_type)
+    self.assertEqual(self.deferred_connection_meta_type,
+                     erp5_sql_deferred_connection.meta_type)
     for method in ['z0_uncatalog_fulltext',
                    'z_catalog_fulltext_list']:
       self.assertEqual('erp5_sql_deferred_connection',
@@ -1218,21 +1389,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
     # 'different' is found in more than 50% of records
     # MySQL ignores such a word, but Mroonga does not ignore.
-    if self.portal.isMySQLCatalogStorage():
-      if 'ENGINE=Mroonga' in self.portal.erp5_sql_connection.manage_test('SHOW CREATE TABLE full_text')[0][1]:
-        # Mroonga
-        self.assertEqual(10, self.getCatalogTool().countResults(
-                  portal_type='Organisation', SearchableText='different')[0][0])
-      else:
-        # MySQL
-        self.assertEqual([],
-            [x.getObject for x in self.getCatalogTool()(
-                    portal_type='Organisation', SearchableText='different')])
-        self.assertEqual(0, self.getCatalogTool().countResults(
-                  portal_type='Organisation', SearchableText='different')[0][0])
-    else:
-      self.assertEqual(10, self.getCatalogTool().countResults(
-        portal_type='Organisation', SearchableText='different')[0][0])
+    self._assertSearchableTextDifferentResult()
 
   def test_43_ManagePasteObject(self):
     person_module = self.getPersonModule()
@@ -1341,12 +1498,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       LOG('Testing... ',0, message)
 
     # Create new connectors
-    if self.portal.isMySQLCatalogStorage():
-      addSQLConnection = self.portal.manage_addProduct[
-        "ZSQLDA"].manage_addZMySQLConnection
-    else:
-      addSQLConnection = self.portal.manage_addProduct[
-        "ZSQLDA"].manage_addZSQLiteConnection
+    addSQLConnection = self._getAddSQLConnection()
 
     addSQLConnection(self.new_erp5_sql_connection,'', new_connection_string)
     new_connection = portal[self.new_erp5_sql_connection]
@@ -1378,22 +1530,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     new_catalog.shared_erp5_catalog_id = new_shared_catalog_id
 
     # Add new searchable table in new catalog
-    if self.portal.isMySQLCatalogStorage():
-      create_dummy_table_sql = """
-      CREATE TABLE `dummy` (
-      `uid` BIGINT UNSIGNED NOT NULL,
-      `dummy_title` varchar(32) NOT NULL default '',
-      PRIMARY KEY  (`uid`)
-      ) ENGINE=InnoDB;
-      """
-    else:
-      create_dummy_table_sql = """
-      CREATE TABLE dummy (
-      uid INTEGER NOT NULL,
-      dummy_title TEXT NOT NULL DEFAULT '',
-      PRIMARY KEY (uid)
-      );
-      """
+    create_dummy_table_sql = self._getCreateDummyTableSQL()
     drop_summy_table_sql = """
     DROP TABLE IF EXISTS `dummy`
     """
@@ -2309,25 +2446,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     sql_catalog.manage_setLocalRoles(user1, ['Author', 'Auditor', 'Manager'])
 
     local_roles_table = "test_local_roles"
-    if self.portal.isMySQLCatalogStorage():
-      create_local_role_table_sql = """
-      CREATE TABLE `%s` (
-      `uid` BIGINT UNSIGNED NOT NULL,
-      `owner_reference` varchar(32) NOT NULL default '',
-      PRIMARY KEY  (`uid`),
-      KEY `version` (`owner_reference`)
-    ) ENGINE=InnoDB;
-    """ % local_roles_table
-    else:
-      create_local_role_table_sql = """
-      CREATE TABLE %s (
-      uid INTEGER NOT NULL,
-      owner_reference TEXT NOT NULL DEFAULT '',
-      PRIMARY KEY (uid)
-      );
-      \0
-      CREATE INDEX version ON %s (owner_reference);
-      """ % (local_roles_table, local_roles_table)
+    create_local_role_table_sql = self._getSingleUserRoleTableSQL(local_roles_table)
     sql_catalog.newContent(
           portal_type='SQL Method',
           id='z_create_%s' % local_roles_table,
@@ -2503,29 +2622,7 @@ VALUES
     sql_catalog.manage_setLocalRoles(user1, ['Author', 'Auditor', 'Manager'])
 
     local_roles_table = "test_assignee_local_roles"
-    if self.portal.isMySQLCatalogStorage():
-      create_local_role_table_sql = """
-      CREATE TABLE `%s` (
-      `uid` BIGINT UNSIGNED NOT NULL,
-      `assignee_reference` varchar(32) NOT NULL default '',
-      `viewable_assignee_reference` varchar(32) NOT NULL default '',
-      PRIMARY KEY  (`uid`),
-      KEY `assignee_reference` (`assignee_reference`),
-      KEY `viewable_assignee_reference` (`viewable_assignee_reference`)
-      ) ENGINE=InnoDB;
-      """ % local_roles_table
-    else:
-      create_local_role_table_sql = """
-      CREATE TABLE %s (
-      uid INTEGER PRIMARY KEY,
-      assignee_reference TEXT NOT NULL DEFAULT '',
-      viewable_assignee_reference TEXT NOT NULL DEFAULT ''
-      );
-      \0
-      CREATE INDEX assignee_reference ON %s (assignee_reference);
-      \0
-      CREATE INDEX viewable_assignee_reference ON %s (viewable_assignee_reference);
-    """ % (local_roles_table, local_roles_table, local_roles_table)  
+    create_local_role_table_sql = self._getAssigneeRoleTableSQL(local_roles_table)
     sql_catalog.newContent(
           portal_type='SQL Method',
           id='z_create_%s' % local_roles_table,
@@ -2686,30 +2783,7 @@ VALUES
     sql_catalog.manage_setLocalRoles(user1, ['Author', 'Auditor', 'Manager'])
 
     local_roles_table = "test_user_or_group_local_roles"
-    if self.portal.isMySQLCatalogStorage():
-      create_local_role_table_sql = """
-      CREATE TABLE `%s` (
-      `uid` BIGINT UNSIGNED NOT NULL,
-      `assignee_reference` varchar(32) NOT NULL default '',
-      `viewable_assignee_reference` varchar(32) NOT NULL default '',
-      PRIMARY KEY  (`uid`),
-      KEY `assignee_reference` (`assignee_reference`),
-      KEY `viewable_assignee_reference` (`viewable_assignee_reference`)
-      ) ENGINE=InnoDB;
-      """ % local_roles_table
-    else:
-      create_local_role_table_sql = """
-      CREATE TABLE %s (
-      uid INTEGER NOT NULL,
-      assignee_reference TEXT NOT NULL DEFAULT '',
-      viewable_assignee_reference TEXT NOT NULL DEFAULT '',
-      PRIMARY KEY (uid)
-      );
-      \0
-      CREATE INDEX %s_assignee_reference ON %s (assignee_reference);
-      \0
-      CREATE INDEX %s_viewable_assignee_reference ON %s (viewable_assignee_reference);
-      """ % (local_roles_table, local_roles_table, local_roles_table,local_roles_table,local_roles_table)
+    create_local_role_table_sql = self._getUserOrGroupRoleTableSQL(local_roles_table)
 
     sql_catalog.newContent(
           portal_type='SQL Method',
@@ -2966,25 +3040,7 @@ VALUES
     sql_catalog.manage_setLocalRoles(user1, ['Author', 'Auditor', 'Manager'])
 
     local_roles_table = "another_test_user_or_group_local_roles"
-    if self.portal.isMySQLCatalogStorage():
-      create_local_role_table_sql = """
-      CREATE TABLE `%s` (
-      `uid` BIGINT UNSIGNED NOT NULL,
-      `viewable_assignee_reference` varchar(32) NOT NULL default '',
-      PRIMARY KEY  (`uid`),
-      KEY `viewable_assignee_reference` (`viewable_assignee_reference`)
-      ) ENGINE=InnoDB;
-      """ % local_roles_table
-    else:
-      create_local_role_table_sql = """
-      CREATE TABLE %s (
-      uid INTEGER NOT NULL,
-      viewable_assignee_reference TEXT NOT NULL DEFAULT '',
-      PRIMARY KEY (uid)
-      );
-      \0
-      CREATE INDEX %s_viewable_assignee_reference ON %s (viewable_assignee_reference);
-    """ % (local_roles_table, local_roles_table, local_roles_table)
+    create_local_role_table_sql = self._getAnotherUserOrGroupRoleTableSQL(local_roles_table)
 
     sql_catalog.newContent(
           portal_type='SQL Method',
@@ -3211,25 +3267,7 @@ VALUES
     sql_catalog = self.portal.portal_catalog.getSQLCatalog()
 
     local_roles_table = "person_document_test_user_or_group_local_roles"
-    if self.portal.isMySQLCatalogStorage():
-      create_local_role_table_sql = """
-      CREATE TABLE `%s` (
-      `uid` BIGINT UNSIGNED NOT NULL,
-      `viewable_assignee_reference` varchar(32) NOT NULL default '',
-      PRIMARY KEY  (`uid`),
-      KEY `viewable_assignee_reference` (`viewable_assignee_reference`)
-      ) ENGINE=InnoDB;
-      """ % local_roles_table
-    else:
-      create_local_role_table_sql = """
-      CREATE TABLE %s (
-      uid INTEGER NOT NULL,
-      viewable_assignee_reference TEXT NOT NULL DEFAULT '',
-      PRIMARY KEY (uid)
-      );
-      \0
-      CREATE INDEX %s_viewable_assignee_reference ON %s (viewable_assignee_reference);
-      """ % (local_roles_table, local_roles_table, local_roles_table)
+    create_local_role_table_sql = self._getMonovaluedRoleTableSQL(local_roles_table)
     sql_catalog.newContent(
           portal_type='SQL Method',
           id = 'z_create_%s' % local_roles_table,
@@ -4278,15 +4316,33 @@ class CatalogToolUpgradeSchemaTestCase(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     return ("erp5_full_text_mroonga_catalog",)
 
+  def _getAddSQLConnectionMySQL(self):
+    return self.portal.manage_addProduct["ZSQLDA"].manage_addZMySQLConnection
+
+  def _getAddSQLConnectionSQLite(self):
+    return self.portal.manage_addProduct["ZSQLDA"].manage_addZSQLiteConnection
+
+  def _assertTableDoesNotExistMySQL(self, query_method, table_name):
+    with self.assertRaisesRegex(ProgrammingError,
+                                 r"Table '.*\.%s' doesn't exist" % table_name):
+      query_method("SELECT b from %s" % table_name)
+
+  def _assertTableDoesNotExistSQLite(self, query_method, table_name):
+    with self.assertRaisesRegex(OperationalError, r"no such table: %s" % table_name):
+      query_method("SELECT b from %s" % table_name)
+
   def afterSetUp(self):
+    # Bind the backend-specific helpers depending on the catalog storage
+    # used by the running instance.
+    if self.portal.isMySQLCatalogStorage():
+      self._getAddSQLConnection = self._getAddSQLConnectionMySQL
+      self._assertTableDoesNotExist = self._assertTableDoesNotExistMySQL
+    else:
+      self._getAddSQLConnection = self._getAddSQLConnectionSQLite
+      self._assertTableDoesNotExist = self._assertTableDoesNotExistSQLite
     # Add two connections
     db1, db2 = getExtraSqlConnectionStringList()[:2]
-    if self.portal.isMySQLCatalogStorage():
-      addConnection = self.portal.manage_addProduct[
-        "ZSQLDA"].manage_addZMySQLConnection
-    else:
-      addConnection = self.portal.manage_addProduct[
-        "ZSQLDA"].manage_addZSQLiteConnection
+    addConnection = self._getAddSQLConnection()
     addConnection("erp5_test_connection_1", "", db1)
     addConnection("erp5_test_connection_2", "", db2)
     addConnection("erp5_test_connection_deferred_2", "", db2, deferred=True)
@@ -4397,25 +4453,9 @@ class CatalogToolUpgradeSchemaTestCase(ERP5TypeTestCase):
     self.query_connection_2("SELECT b from table2")
     self.query_connection_2("SELECT b from table_deferred2")
 
-    if self.portal.isMySQLCatalogStorage():
-      with self.assertRaisesRegex(ProgrammingError,
-                                   r"Table '.*\.table2' doesn't exist"):
-        self.query_connection_1("SELECT b from table2")
-      with self.assertRaisesRegex(ProgrammingError,
-                                   r"Table '.*\.table_deferred2' doesn't exist"):
-        self.query_connection_1("SELECT b from table_deferred2")
-      with self.assertRaisesRegex(ProgrammingError,
-                                   r"Table '.*\.table1' doesn't exist"):
-        self.query_connection_2("SELECT b from table1")
-    else:
-      with self.assertRaisesRegex(OperationalError, r"no such table: table2"):
-        self.query_connection_1("SELECT b from table2")
-
-      with self.assertRaisesRegex(OperationalError, r"no such table: table_deferred2"):
-        self.query_connection_1("SELECT b from table_deferred2")
-
-      with self.assertRaisesRegex(OperationalError, r"no such table: table1"):
-        self.query_connection_2("SELECT b from table1")
+    self._assertTableDoesNotExist(self.query_connection_1, "table2")
+    self._assertTableDoesNotExist(self.query_connection_1, "table_deferred2")
+    self._assertTableDoesNotExist(self.query_connection_2, "table1")
 
   def test_upgradeSchema_python_script(self):
     method = self.catalog.newContent(
