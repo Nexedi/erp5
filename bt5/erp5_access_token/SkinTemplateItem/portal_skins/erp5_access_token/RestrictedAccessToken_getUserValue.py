@@ -30,7 +30,6 @@ if access_token_document.getValidationState() == 'validated':
         # authentication)
         if agent_document.getValidationState() == 'deleted':
           return None
-        now = DateTime()
         if not hasValidAssignment(agent_document):
           return None
 

@@ -80,6 +80,10 @@ for line in line_list:
       # This part prints an image if the "thumbnail" column of listbox is supplied
       rss_item_string += ('\t\t\t<enclosure url="%s" type="image" />\n' % value)
       continue
+    elif key == 'guid':
+      # ERP5 does not generate url in guid by default
+      rss_item_string += ('\t\t\t<%s isPermaLink="false">%s</%s>\n' % (key,value or '',key))
+      continue
     rss_item_string += ('\t\t\t<%s>%s</%s>\n' % (key,value or '',key))
 
   # if required fields not present in listbox columns as label we
