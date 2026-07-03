@@ -846,10 +846,14 @@ class Catalog(Folder,
 
   security.declarePrivate('_getSharedCatalog')
   def _getSharedCatalog(self):
-    shared_catalog_id = self._getSharedCatalogId()
-    if not shared_catalog_id:
+    if not self._getSharedCatalogId():
       return None
-    return self.aq_parent._getOb(shared_catalog_id, None)
+    return self._getSharedCatalogById()
+
+  security.declarePrivate('_getSharedCatalogById')
+  @transactional_cache_decorator
+  def _getSharedCatalogById(self):
+    return self.aq_parent._getOb(self._getSharedCatalogId(), None)
 
   security.declarePrivate('_getSharedCatalogId')
   def _getSharedCatalogId(self):
