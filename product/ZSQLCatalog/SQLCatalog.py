@@ -917,7 +917,7 @@ class Catalog(Folder,
 
   security.declarePrivate('_getCatalogPropertyWithSharedFallback')
   def _getCatalogPropertyWithSharedFallback(self, property_id, include_shared=True):
-    value = getattr(self, property_id)
+    value = getattr(self, property_id, '')
     if value or not include_shared:
       return value
     shared_catalog = self._getSharedCatalog()
@@ -1054,7 +1054,14 @@ class Catalog(Folder,
 
   @transactional_cache_decorator
   def _getCatalogSchema(self):
-    method = getattr(self, self.getSqlCatalogMultiSchema(), None)
+    return self._buildCatalogSchema(include_shared=True)
+
+  @transactional_cache_decorator
+  def _getLocalCatalogSchema(self):
+    return self._buildCatalogSchema(include_shared=False)
+
+  def _buildCatalogSchema(self, include_shared=True):
+    method = getattr(self, self.getSqlCatalogMultiSchema(include_shared=include_shared) or '', None)
     result = {}
     if method is None:
       # BBB: deprecated
@@ -1062,12 +1069,14 @@ class Catalog(Folder,
               "than sql_catalog_multi_schema. It makes many SQL queries "
               "instead of one",
               DeprecationWarning)
-      method_name = self.getSqlCatalogSchema()
+      method_name = self.getSqlCatalogSchema(include_shared=include_shared)
+      if method_name is None:
+        return {}
       try:
         method = getattr(self, method_name)
       except AttributeError:
         return {}
-      for table in self.getCatalogSearchTableIds():
+      for table in self.getCatalogSearchTableIds(include_shared=include_shared):
         try:
           result[table] = [c.Field for c in method(table=table)]
         except (ConflictError, DatabaseError):
@@ -1110,11 +1119,11 @@ class Catalog(Folder,
   def _getLocalColumnIds(self):
     return self._buildColumnIds(include_shared=False)
 
-  def _buildColumnIds(self, include_shared):
+  def _buildColumnIds(self, include_shared=True):
     keys = set()
     add_key = keys.add
-    table_dict = self._getCatalogSchema()
-    for table in self.getCatalogSearchTableIds():
+    table_dict = self._getCatalogSchema() if include_shared else self._getLocalCatalogSchema()
+    for table in self.getCatalogSearchTableIds(include_shared=include_shared):
       for field in table_dict.get(table, ()):
         add_key(field)
         add_key('%s.%s' % (table, field))  # Is this inconsistent ?
@@ -1159,9 +1168,9 @@ class Catalog(Folder,
   def _getLocalResultColumnIds(self):
     return self._buildResultColumnIds(include_shared=False)
 
-  def _buildResultColumnIds(self, include_shared):
+  def _buildResultColumnIds(self, include_shared=True):
     keys = set()
-    table_dict = self._getCatalogSchema()
+    table_dict = self._getCatalogSchema() if include_shared else self._getLocalCatalogSchema()
     for table in self.getCatalogSearchTableIds(include_shared=include_shared):
       for field in table_dict.get(table, ()):
         keys.add('%s.%s' % (table, field))
@@ -1185,9 +1194,9 @@ class Catalog(Folder,
   def _getLocalSortColumnIds(self):
     return self._buildSortColumnIds(include_shared=False)
 
-  def _buildSortColumnIds(self, include_shared):
+  def _buildSortColumnIds(self, include_shared=True):
     keys = set()
-    table_dict = self._getCatalogSchema()
+    table_dict = self._getCatalogSchema() if include_shared else self._getLocalCatalogSchema()
     for table in self.getTableIds(include_shared=include_shared):
       for field in table_dict[table]:
         keys.add('%s.%s' % (table, field))
@@ -1199,7 +1208,9 @@ class Catalog(Folder,
     Calls the show table method and returns dictionnary of
     Field Ids
     """
-    return list(self._getCatalogSchema())
+    if include_shared:
+      return list(self._getCatalogSchema())
+    return list(self._getLocalCatalogSchema())
 
   security.declarePrivate('getUIDBuffer')
   def getUIDBuffer(self, force_new_buffer=False):

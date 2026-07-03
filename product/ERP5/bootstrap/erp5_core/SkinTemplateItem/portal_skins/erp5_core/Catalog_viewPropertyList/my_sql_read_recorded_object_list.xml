@@ -126,7 +126,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/sql_read_recorded_object_list</string> </value>
+            <value> <string>python: here.getSqlReadRecordedObjectList(include_shared=False)</string> </value>
         </item>
       </dictionary>
     </pickle>

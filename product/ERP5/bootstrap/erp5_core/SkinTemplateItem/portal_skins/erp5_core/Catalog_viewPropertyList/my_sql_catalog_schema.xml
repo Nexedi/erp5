@@ -126,7 +126,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/sql_catalog_schema</string> </value>
+            <value> <string>python: here.getSqlCatalogSchema(include_shared=False)</string> </value>
         </item>
       </dictionary>
     </pickle>

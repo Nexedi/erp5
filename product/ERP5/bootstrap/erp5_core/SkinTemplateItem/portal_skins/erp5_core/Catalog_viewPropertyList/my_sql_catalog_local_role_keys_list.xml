@@ -124,7 +124,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/sql_catalog_local_role_keys</string> </value>
+            <value> <string>python: here.getSqlCatalogLocalRoleKeysList(include_shared=False)</string> </value>
         </item>
       </dictionary>
     </pickle>

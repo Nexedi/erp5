@@ -110,7 +110,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/sql_catalog_scriptable_keys</string> </value>
+            <value> <string>python: here.getSqlCatalogScriptableKeysList(include_shared=False)</string> </value>
         </item>
       </dictionary>
     </pickle>

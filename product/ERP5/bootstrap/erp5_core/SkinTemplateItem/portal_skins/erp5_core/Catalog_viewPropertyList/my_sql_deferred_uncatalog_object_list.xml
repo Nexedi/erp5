@@ -117,7 +117,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/sql_deferred_uncatalog_object</string> </value>
+            <value> <string>python: here.getSqlDeferredUncatalogObjectList(include_shared=False)</string> </value>
         </item>
       </dictionary>
     </pickle>

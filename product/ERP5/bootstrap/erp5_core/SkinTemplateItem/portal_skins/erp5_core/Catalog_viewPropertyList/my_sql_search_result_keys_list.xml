@@ -117,7 +117,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/sql_search_result_keys</string> </value>
+            <value> <string>python: here.getSqlSearchResultKeysList(include_shared=False)</string> </value>
         </item>
       </dictionary>
     </pickle>

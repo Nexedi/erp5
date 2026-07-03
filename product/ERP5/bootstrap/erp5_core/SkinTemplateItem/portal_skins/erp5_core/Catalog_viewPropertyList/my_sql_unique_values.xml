@@ -126,7 +126,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/sql_unique_values</string> </value>
+            <value> <string>python: here.getSqlUniqueValues(include_shared=False)</string> </value>
         </item>
       </dictionary>
     </pickle>

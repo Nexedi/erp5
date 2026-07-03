@@ -126,7 +126,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/sql_delete_translation_list</string> </value>
+            <value> <string>python: here.getSqlDeleteTranslationList(include_shared=False)</string> </value>
         </item>
       </dictionary>
     </pickle>

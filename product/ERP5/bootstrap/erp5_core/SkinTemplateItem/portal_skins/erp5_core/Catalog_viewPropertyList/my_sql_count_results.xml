@@ -126,7 +126,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/sql_count_results</string> </value>
+            <value> <string>python: here.getSqlCountResults(include_shared=False)</string> </value>
         </item>
       </dictionary>
     </pickle>
