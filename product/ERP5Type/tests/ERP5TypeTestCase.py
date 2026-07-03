@@ -75,7 +75,6 @@ onsetup(patchActivityTool)()
 from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
 from Products.ZSQLCatalog.SQLCatalog import Query
 
-from Acquisition import aq_base
 
 if six.PY2:
   from contextlib import contextmanager
@@ -1233,38 +1232,71 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       template_tool = self.portal.portal_templates
       update_business_templates = os.environ.get('update_business_templates') is not None
       erp5_load_data_fs = int(os.environ.get('erp5_load_data_fs', 0))
-      BusinessTemplate_getModifiedObject = aq_base(
-        getattr(self.portal, 'BusinessTemplate_getModifiedObject', None))
 
-      update_only = os.environ.get('update_only', ())
-      if update_only:
-        update_only = update_only.split(',')
+      if update_business_templates:
+        # Use template_tool.upgradeSite for efficient BT upgrade:
+        # - Single transaction (no per-BT commits)
+        # - Revision-based skip (skips unchanged BTs)
+        # - Automatic dependency resolution
+        bt5_title_list = [title for url, title in business_template_list]
 
-      def _isUpdateOnlyBusinessTemplate(bt_title):
-        for expression in update_only:
-          if re.search(expression, bt_title):
-            return True
+        # Handle --update_only filtering (only when loading existing site)
+        update_only = os.environ.get('update_only', ())
+        if update_only and erp5_load_data_fs:
+          update_only = update_only.split(',')
+          bt5_title_list = [
+            t for t in bt5_title_list
+            if any(re.search(e, t) for e in update_only)
+          ]
 
-        return False
+        if not bt5_title_list:
+          return
 
+        # Register all BT repositories so upgradeSite can find and resolve
+        # dependencies
+        from Products.ERP5.ERP5Site import getBootstrapDirectory
+        bt5_path_list = [os.environ.get('erp5_tests_bootstrap_path') or
+                         getBootstrapDirectory()]
+        for path in os.environ['erp5_tests_bt5_path'].split(','):
+          if os.path.exists(os.path.join(path, "bt5list")):
+            bt5_path_list.append(path)
+          for path in glob(os.path.join(path, "*", "bt5list")):
+            bt5_path_list.append(os.path.dirname(path))
+        template_tool.updateRepositoryBusinessTemplateList(bt5_path_list)
+
+        # Clear catalog once if needed (instead of per-BT in old loop)
+        if int(os.environ.get('erp5_tests_recreate_catalog', 0)) or \
+            not erp5_load_data_fs:
+          self.portal.portal_catalog.manage_catalogClear()
+
+        if not quiet:
+          ZopeTestCase._print('Updating business templates ...\n')
+
+        _start = time.time()
+        message_list = template_tool.upgradeSite(
+          bt5_list=bt5_title_list,
+          delete_orphaned=False,
+          dry_run=False,
+        )
+
+        if not quiet:
+          for msg in message_list:
+            ZopeTestCase._print('  %s\n' % msg)
+          ZopeTestCase._print(
+            'Upgraded business templates (%.3fs)\n' % (
+              time.time() - _start,))
+        self.commit()
+        return
+
+      # Original code for normal (non-update) first-time install
       update_translation_table = False
       for url, bt_title in business_template_list:
-        if (update_business_templates and
-            erp5_load_data_fs and
-            update_only and
-            not _isUpdateOnlyBusinessTemplate(bt_title)):
-          continue
-
         start = time.time()
-        get_install_kw = False
         if bt_title in template_tool.getInstalledBusinessTemplateTitleList():
-          if update_business_templates:
-            if not quiet:
-              ZopeTestCase._print('Updating %s business template ... ' % bt_title)
-            if BusinessTemplate_getModifiedObject is not None:
-              get_install_kw = True
-          else:
-            continue
+          if not quiet:
+            ZopeTestCase._print(
+              'Skipping %s, already installed ... ' % bt_title)
+          continue
         else:
           if not quiet:
             ZopeTestCase._print('Adding %s business template ... ' % bt_title)
@@ -1276,20 +1308,12 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
           missing_dep_list = bt.getMissingDependencyList()
           if len(missing_dep_list) > 0:
             ZopeTestCase._print('(missing dependencies : %r) ' % missing_dep_list)
-        install_kw = None
-        if get_install_kw:
-          install_kw = {}
-          listbox_object_list = BusinessTemplate_getModifiedObject.__of__(bt)(
-            check_dependencies=False)
-          for listbox_line in listbox_object_list:
-            install_kw[listbox_line.object_id] = listbox_line.choice_item_list[0][1]
         bt.install(light_install=light_install,
-                   object_to_update=install_kw,
                    check_dependencies=False)
         update_translation_table = True
         if bt.isCatalogUpdatable() and (
             int(os.environ.get('erp5_tests_recreate_catalog', 0)) or \
-            int(os.environ.get('erp5_load_data_fs', 0)) == 0):
+            erp5_load_data_fs == 0):
           self.portal.portal_catalog.manage_catalogClear()
         # Release locks
         self.commit()
