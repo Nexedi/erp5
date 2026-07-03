@@ -849,7 +849,22 @@ class Catalog(Folder,
     shared_catalog_id = self._getSharedCatalogId()
     if not shared_catalog_id:
       return None
-    return self.aq_parent._getOb(shared_catalog_id, None)
+    # Cache key includes shared_catalog_id: shared_erp5_catalog_id can be changed
+    # within a transaction (hot reindexing, bt5 install) by a plain attribute
+    # assignment that does not call _clearCaches(), so it must be part of the
+    # cache key or a stale shared catalog would be returned.
+    try:
+      instance_id = self._v_physical_path
+    except AttributeError:
+      self._v_physical_path = instance_id = self.getPhysicalPath()
+    cache = getTransactionalVariable().setdefault(
+      'SQLCatalog._getSharedCatalog', {})
+    key = (instance_id, self._cache_sequence_number, shared_catalog_id)
+    try:
+      return cache[key]
+    except KeyError:
+      cache[key] = result = self.aq_parent._getOb(shared_catalog_id, None)
+      return result
 
   security.declarePrivate('_getSharedCatalogId')
   def _getSharedCatalogId(self):
@@ -871,11 +886,16 @@ class Catalog(Folder,
     obj = self._getLocalOb(self, id)
     if obj is not self._MARKER:
       return obj
-    shared_catalog = self._getSharedCatalog()
-    if shared_catalog is not None:
-      obj = self._getLocalOb(shared_catalog, id)
-      if obj is not self._MARKER:
-        return aq_base(obj).__of__(self)
+    # The shared catalog is reached through aq_parent, so it can only be resolved
+    # on an acquisition-wrapped catalog. Skipping the fallback on an unwrapped
+    # catalog keeps shared methods from looking local to OFS checkValidId's
+    # hasattr(aq_base(self), id) check.
+    if aq_base(self) is not self:
+      shared_catalog = self._getSharedCatalog()
+      if shared_catalog is not None:
+        obj = self._getLocalOb(shared_catalog, id)
+        if obj is not self._MARKER:
+          return aq_base(obj).__of__(self)
 
     if default is self._MARKER:
       raise KeyError(id)
