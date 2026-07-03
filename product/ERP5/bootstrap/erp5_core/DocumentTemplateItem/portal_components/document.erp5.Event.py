@@ -125,7 +125,6 @@ class Event(Movement, EmailDocument, AcknowledgeableMixin):
                     , PropertySheet.DublinCore
                     , PropertySheet.Task
                     , PropertySheet.Url
-                    , PropertySheet.TextDocument
                     , PropertySheet.Arrow
                     , PropertySheet.Movement
                     , PropertySheet.Event

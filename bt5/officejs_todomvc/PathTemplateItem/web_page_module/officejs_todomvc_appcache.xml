@@ -39,6 +39,10 @@
             </value>
         </item>
         <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts79676274.1252036</string> </value>
+        </item>
+        <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
@@ -62,9 +66,31 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>be0826f81e8d3f4665c1493c880d7407</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <bytes>CACHE MANIFEST\n
+# generated on Fri 09 Jun 2016 11:45:33 +0000\n
+CACHE:\n
+rsvp.js\n
+renderjs.js\n
+jiodev.js\n
+handlebars.js\n
+officejs_todomvc_icon.svg\n
+officejs_todomvc_icon.png\n
+officejs_todomvc.css\n
+officejs_todomvc_gadget_index.html\n
+officejs_todomvc_gadget_index.js\n
+officejs_todomvc_gadget_model.html\n
+officejs_todomvc_gadget_model.js\n
+officejs_todomvc_gadget_router.html\n
+officejs_todomvc_gadget_router.js\n
+officejs_todomvc_manifest.json\n
+officejs_todomvc_serviceworker.js\n
+/\n
+NETWORK:\n
+*</bytes> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
@@ -95,28 +121,8 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>CACHE MANIFEST\n
-# generated on Fri 09 Jun 2016 11:45:33 +0000\n
-CACHE:\n
-rsvp.js\n
-renderjs.js\n
-jiodev.js\n
-handlebars.js\n
-officejs_todomvc_icon.svg\n
-officejs_todomvc_icon.png\n
-officejs_todomvc.css\n
-officejs_todomvc_gadget_index.html\n
-officejs_todomvc_gadget_index.js\n
-officejs_todomvc_gadget_model.html\n
-officejs_todomvc_gadget_model.js\n
-officejs_todomvc_gadget_router.html\n
-officejs_todomvc_gadget_router.js\n
-officejs_todomvc_manifest.json\n
-officejs_todomvc_serviceworker.js\n
-/\n
-NETWORK:\n
-*</string> </value>
+            <key> <string>size</string> </key>
+            <value> <int>468</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -255,7 +261,7 @@ NETWORK:\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>960.35777.53431.31453</string> </value>
+                      <value> <string>1033.10263.9856.14199</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -271,8 +277,8 @@ NETWORK:\n
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1499344507.9</float>
-                              <string>UTC</string>
+                              <float>1779676274.139252</float>
+                              <string>GMT+2</string>
                             </tuple>
                           </state>
                         </object>
