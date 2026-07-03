@@ -61,6 +61,8 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>your_consistency</string>
+                        <string>your_consistency_acknowledge</string>
                         <string>your_comment</string>
                         <string>your_workflow_action</string>
                       </list>
