@@ -74,7 +74,7 @@ class TextContentMigrationMixin:
     return self.hasData()
 
   security.declarePrivate('_getTextContent')
-  def _getTextContent(self, encoding='utf-8', default=_MARKER):
+  def _getTextContent(self, default=_MARKER, encoding='utf-8'):
     """
     Return data as string. Both Py2 and Py3 should return 'str' type object.
     """
@@ -95,7 +95,7 @@ class TextContentMigrationMixin:
 
     text_content = data.decode(encoding)
     if six.PY2 and isinstance(text_content, six.text_type):
-      text_content = unicode2str(text_content)
+      text_content = unicode2str(text_content, encoding=encoding)
 
     return text_content
 
