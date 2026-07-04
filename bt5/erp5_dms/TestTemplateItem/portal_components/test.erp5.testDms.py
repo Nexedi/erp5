@@ -1431,6 +1431,17 @@ class TestDocument(TestDocumentMixin):
     # document can be saved in ZODB
     self.tic()
 
+  def test_PDF_broken_metadata(self):
+    document = self.portal.document_module.newContent(
+      portal_type='PDF',
+      file=self.makeFileUpload('broken_metadata.pdf'))
+    content_information = document.getContentInformation()
+    self.assertEqual(
+      content_information['Title'], 'broken')
+    self.assertEqual({True}, {isinstance(v, str) for v in content_information.values()})
+    # document can be saved in ZODB
+    self.tic()
+
   def test_upload_bad_pdf_file(self):
     """ Test that pypdf2 handle wrong formatted PDF """
     pdf = self.portal.document_module.newContent(
