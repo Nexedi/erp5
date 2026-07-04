@@ -279,6 +279,24 @@
             'python',
             yapfDocumentFormattingProvider
           );
+          fetch(new URL('ERP5Site_getAutoconpleteWordList', location.href).toString())
+          .then(function (response) {
+            if (response.ok) {
+              return response.json();
+            }
+            // Silently fail if the script doesn't exist yet
+            return '';
+          })
+          .then(function (keyword_string) {
+            if (!keyword_string) return;
+            monaco.editor.createModel(keyword_string, 'text/plain');
+            var editor = monaco.editor.create(document.getElementById('container'), {
+              value: '',
+              language: 'python',
+              wordBasedSuggestions: "allDocuments",
+            });
+            return editor;
+          });
 
           // diagnostics with ruff
           // for the case of python scripts, we rewrite the body to add a function
