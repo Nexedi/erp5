@@ -56,7 +56,13 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
       preferred_project_management_app_base_url=PROJECT_APP_BASE_URL)
     if self.portal.portal_workflow.isTransitionPossible(self.preference, 'enable'):
       self.preference.enable()
+    self.preference.recursiveReindexObject()
     self.tic()
+    # Flush the preference RAM cache so in-process reads see the enabled value.
+    self.portal.portal_caches.clearAllCache()
+    # Fail loudly here if the preference did not take effect (empty value would
+    # otherwise surface as confusing failures in every preference-reading test).
+    self.assertEqual(PROJECT_APP_BASE_URL, self.portal.Base_getProjectAppBaseUrl())
 
   def beforeTearDown(self):
     self.abort()
