@@ -17,7 +17,11 @@ VALUES
   <dtml-sqlvar expr="loop_item['resource_uid']" type="int">,
   <dtml-sqlvar expr="loop_item['variation']" type="string">,
   <dtml-sqlvar expr="loop_item['metric_type_uid']" type="int">,
-  <dtml-sqlvar expr="loop_item['quantity']" type="float">
+  <dtml-sqlvar expr="loop_item['quantity']" type="float">,
+  <dtml-sqlvar expr="loop_item['variation_text_line_1']" type="string" optional>,
+  <dtml-sqlvar expr="loop_item['variation_text_line_2']" type="string" optional>,
+  <dtml-sqlvar expr="loop_item['variation_text_line_3']" type="string" optional>,
+  <dtml-sqlvar expr="loop_item['variation_text_line_4']" type="string" optional>
 )
 <dtml-unless sequence-end>,</dtml-unless>
     </dtml-in>
