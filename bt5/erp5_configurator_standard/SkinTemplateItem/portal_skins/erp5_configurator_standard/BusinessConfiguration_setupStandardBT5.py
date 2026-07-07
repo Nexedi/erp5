@@ -2,7 +2,6 @@ configuration_save = context.restrictedTraverse(configuration_save_url)
 
 bt5_installation_list = ('erp5_dhtml_style',
                          'erp5_jquery_ui',
-                         'erp5_ingestion_mysql_innodb_catalog',
                          'erp5_dms',
                          'erp5_accounting',
                          'erp5_crm',
@@ -20,7 +19,7 @@ bt5_installation_list = ('erp5_dhtml_style',
                          'erp5_osoe_web_renderjs_ui',
                         )
 
-bt5_update_catalog = ('erp5_ingestion_mysql_innodb_catalog', 'erp5_accounting', )
+bt5_update_catalog = ('erp5_accounting', )
 
 for name in bt5_installation_list:
   configuration_save.addConfigurationItem("Standard BT5 Configurator Item",
