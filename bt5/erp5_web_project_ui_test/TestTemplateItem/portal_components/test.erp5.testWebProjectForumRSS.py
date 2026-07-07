@@ -20,6 +20,7 @@ deep-link is exercised here, where erp5_project is a natural dependency.
 """
 
 import unittest
+from collections import OrderedDict
 from xml.dom.minidom import parseString
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
@@ -113,6 +114,65 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
       self.assertIn('p.jio_key=%s' % forum.getRelativeUrl(), link)
       self.assertIn('n.jio_key=%s' % thread.getRelativeUrl(), link)
       self.assertIn('n.last_post=%s' % post_count, link)
+
+  def test_thread_url_helper_builds_push_history_jio_key(self):
+    """ListBox_getDiscussionThreadUrl (the SPA thread-row link) returns a
+    push_history command whose jio_key is the thread relative url."""
+    _forum, thread = self._createForumThreadWithPosts(n_posts=2)
+    brain, = self.portal.portal_catalog(uid=thread.getUid())
+    url_dict = self.portal.ListBox_getDiscussionThreadUrl(brain, url_dict=True)
+    self.assertEqual('push_history', url_dict['command'])
+    self.assertEqual(thread.getRelativeUrl(), url_dict['options']['jio_key'])
+
+  def test_thread_last_post_url_helper_carries_post_count(self):
+    """ListBox_getDiscussionThreadLastPostUrl adds last_post == the thread post
+    count: the page the SPA/RSS deep-link jumps to. A wrong count silently
+    sends the reader to the wrong page."""
+    _forum, thread = self._createForumThreadWithPosts(n_posts=3)
+    brain, = self.portal.portal_catalog(uid=thread.getUid())
+    url_dict = self.portal.ListBox_getDiscussionThreadLastPostUrl(
+      brain, url_dict=True)
+    self.assertEqual(thread.getRelativeUrl(), url_dict['options']['jio_key'])
+    self.assertEqual(3, thread.DiscussionThread_getDiscussionPostCount())
+    self.assertEqual(3, url_dict['options']['last_post'])
+
+  def test_last_post_widget_helpers_resolve_post_and_author(self):
+    """The last-post / author SPA widgets are thin wrappers over
+    DiscussionThread_getLastPost and DiscussionPost_getAuthorDict; assert those
+    resolve a Discussion Post in the thread and an author dict with its keys."""
+    _forum, thread = self._createForumThreadWithPosts(n_posts=2)
+    last_post = thread.DiscussionThread_getLastPost()
+    self.assertNotEqual(None, last_post)
+    self.assertEqual('Discussion Post', last_post.getPortalType())
+    self.assertEqual(thread.getRelativeUrl(),
+                     last_post.getParentValue().getRelativeUrl())
+    author_dict = last_post.DiscussionPost_getAuthorDict()
+    for key in ('author_title', 'author_url', 'author_signature',
+                'author_thumbnail_url'):
+      self.assertIn(key, author_dict)
+    self.assertTrue(author_dict['author_title'])
+
+  def test_filter_project_actions_promotes_project_view_regardless_of_order(self):
+    """Base_filterProjectActions must replace object_view with the project_view
+    actions even when object_view is iterated AFTER project_view: the dict-order
+    case that blanked the SPA (empty _links.view) before the ordering fix."""
+    project_view_action_list = [
+      {'id': 'project_view', 'title': 'Discussion Threads'}]
+    # OrderedDict forces the previously-crashing order: object_view inserted last.
+    actions = OrderedDict()
+    actions['project_view'] = project_view_action_list
+    actions['object_view'] = [{'id': 'view', 'title': 'View'},
+                              {'id': 'view_rss', 'title': 'RSS'}]
+    result = self.portal.Base_filterProjectActions(actions=actions)
+    self.assertEqual(project_view_action_list, result['object_view'])
+    self.assertEqual(project_view_action_list, result['project_view'])
+
+  def test_filter_project_actions_without_project_view_keeps_only_named(self):
+    """With no project_view category, object_view keeps only actions whose id
+    contains 'project_view' (none here, so it is emptied, not left populated)."""
+    actions = {'object_view': [{'id': 'view'}, {'id': 'view_rss'}]}
+    result = self.portal.Base_filterProjectActions(actions=actions)
+    self.assertEqual([], result['object_view'])
 
 
 def test_suite():
