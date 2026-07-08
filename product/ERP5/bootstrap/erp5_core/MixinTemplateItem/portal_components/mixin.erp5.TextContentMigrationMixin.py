@@ -68,7 +68,11 @@ class TextContentMigrationMixin:
     if data is None:
       return None
 
-    text_content = data.decode(guessEncodingFromText(data) or 'utf-8')
+    try:
+      text_content = data.decode('utf-8')
+    except UnicodeDecodeError:
+      text_content = data.decode(guessEncodingFromText(data))
+
     if six.PY2 and isinstance(text_content, six.text_type):
       text_content = unicode2str(text_content)
 
