@@ -26,6 +26,7 @@ from AccessControl.class_init import InitializeClass
 from App.special_dtml import DTMLFile
 from _thread import allocate_lock, get_ident
 from OFS.Folder import Folder
+from OFS.ObjectManager import BadRequestException
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import (
   access_contents_information,
@@ -849,6 +850,12 @@ class Catalog(Folder,
     shared_catalog_id = self._getSharedCatalogId()
     if not shared_catalog_id:
       return None
+    if aq_base(self) is self:
+      # An unwrapped catalog has no acquisition parent to reach the shared
+      # catalog. Shared methods are acquired, so they must stay invisible on the
+      # aq_base()'d view (used by OFS locality checks); returning None here keeps
+      # them invisible and avoids an AttributeError on self.aq_parent below.
+      return None
     # Cache key includes shared_catalog_id: shared_erp5_catalog_id can be changed
     # within a transaction (hot reindexing, bt5 install) by a plain attribute
     # assignment that does not call _clearCaches(), so it must be part of the
@@ -882,29 +889,52 @@ class Catalog(Folder,
       return getattr(container, id)
     return self._MARKER
 
+  def _checkId(self, id, allow_dup=0):
+    # Judge id uniqueness against LOCAL storage only: a shared-catalog method is
+    # acquired (resolved through __getattr__), not a local child, and must not
+    # block installing a local override into the default catalog. The standard
+    # check uses hasattr(aq_base(self), id), which Catalog.__getattr__ still
+    # answers with shared methods -- the z_related_* "already in use" install bug.
+    # Enforce uniqueness against this catalog's own storage, then run the format
+    # checks with allow_dup=1 (which skips super's shared-leaking dup test).
+    if not allow_dup and self._getLocalOb(self, id) is not self._MARKER:
+      raise BadRequestException(
+        'The id %r is invalid - it is already in use.' % id)
+    return super(Catalog, self)._checkId(id, allow_dup=1)
+
   def _getOb(self, id, default=_MARKER):
-    obj = self._getLocalOb(self, id)
-    if obj is not self._MARKER:
-      return obj
-    if aq_base(self) is not self:
+    # Local (default catalog) resolution is returned directly, uncached: the
+    # sub-object is already correctly acquisition-wrapped by _getLocalOb, and a
+    # catalog method (SQL Method) relies on that live context every call
+    # (aq_parent(self), lazy template cooking) -- caching an aq_base()'d copy and
+    # re-wrapping would give it a wrong/degenerate context. The lookup is a cheap
+    # __dict__/BTree access anyway.
+    ob = self._getLocalOb(self, id)
+    if ob is not self._MARKER:
+      return ob
+    # Shared-catalog fallback: this is the expensive part (a cross-catalog ZODB
+    # traversal) and is cached. _getSharedCatalog() returns None on an aq_base()'d
+    # catalog, so shared methods stay invisible there. shared_catalog_id is in the
+    # key: it can change within a transaction (hot reindexing) without bumping
+    # _cache_sequence_number.
+    shared_catalog = self._getSharedCatalog()
+    if shared_catalog is not None:
       try:
         instance_id = self._v_physical_path
       except AttributeError:
         self._v_physical_path = instance_id = self.getPhysicalPath()
       cache = getTransactionalVariable().setdefault('SQLCatalog._getOb', {})
-      key = (instance_id, self._cache_sequence_number, id)
+      key = (instance_id, self._cache_sequence_number,
+             self._getSharedCatalogId(), id)
       try:
         shared_ob = cache[key]
       except KeyError:
         shared_ob = self._MARKER
-        shared_catalog = self._getSharedCatalog()
-        if shared_catalog is not None:
-          found = self._getLocalOb(shared_catalog, id)
-          if found is not self._MARKER:
-            cache[key] = shared_ob = aq_base(found)
+        found = self._getLocalOb(shared_catalog, id)
+        if found is not self._MARKER:
+          cache[key] = shared_ob = aq_base(found)
       if shared_ob is not self._MARKER:
         return shared_ob.__of__(self)
-
     if default is self._MARKER:
       raise KeyError(id)
     return default
