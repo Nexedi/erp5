@@ -849,6 +849,12 @@ class Catalog(Folder,
     shared_catalog_id = self._getSharedCatalogId()
     if not shared_catalog_id:
       return None
+    if aq_base(self) is self:
+      # An unwrapped catalog has no acquisition parent to reach the shared
+      # catalog. Shared methods are acquired, so they must stay invisible on the
+      # aq_base()'d view (used by OFS locality checks); returning None here keeps
+      # them invisible and avoids an AttributeError on self.aq_parent below.
+      return None
     # Cache key includes shared_catalog_id: shared_erp5_catalog_id can be changed
     # within a transaction (hot reindexing, bt5 install) by a plain attribute
     # assignment that does not call _clearCaches(), so it must be part of the
@@ -883,28 +889,29 @@ class Catalog(Folder,
     return self._MARKER
 
   def _getOb(self, id, default=_MARKER):
-    obj = self._getLocalOb(self, id)
-    if obj is not self._MARKER:
-      return obj
-    if aq_base(self) is not self:
-      try:
-        instance_id = self._v_physical_path
-      except AttributeError:
-        self._v_physical_path = instance_id = self.getPhysicalPath()
-      cache = getTransactionalVariable().setdefault('SQLCatalog._getOb', {})
-      key = (instance_id, self._cache_sequence_number, id)
-      try:
-        shared_ob = cache[key]
-      except KeyError:
-        shared_ob = self._MARKER
+    try:
+      instance_id = self._v_physical_path
+    except AttributeError:
+      self._v_physical_path = instance_id = self.getPhysicalPath()
+    # A single per-transaction cache covers both default (local) and shared
+    # resolution. shared_catalog_id is part of the key: it can change within a
+    # transaction (hot reindexing) without bumping _cache_sequence_number. On an
+    # aq_base()'d catalog _getSharedCatalog() returns None, so the shared branch
+    # is naturally skipped and only local objects resolve there.
+    cache = getTransactionalVariable().setdefault('SQLCatalog._getOb', {})
+    key = (instance_id, self._cache_sequence_number, self._getSharedCatalogId(), id)
+    try:
+      ob = cache[key]
+    except KeyError:
+      ob = self._getLocalOb(self, id)
+      if ob is self._MARKER:
         shared_catalog = self._getSharedCatalog()
         if shared_catalog is not None:
-          found = self._getLocalOb(shared_catalog, id)
-          if found is not self._MARKER:
-            cache[key] = shared_ob = aq_base(found)
-      if shared_ob is not self._MARKER:
-        return shared_ob.__of__(self)
-
+          ob = self._getLocalOb(shared_catalog, id)
+      if ob is not self._MARKER:
+        cache[key] = ob = aq_base(ob)
+    if ob is not self._MARKER:
+      return ob.__of__(self)
     if default is self._MARKER:
       raise KeyError(id)
     return default

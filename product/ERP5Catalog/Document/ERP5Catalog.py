@@ -36,6 +36,7 @@ from Products.ERP5Type.patches.PropertyManager import PropertyManager
 from Products.ZSQLCatalog.SQLCatalog import Catalog, CatalogError
 
 import OFS.History
+from OFS.ObjectManager import BadRequestException
 from AccessControl import ClassSecurityInfo
 from zLOG import LOG, INFO, TRACE, WARNING, ERROR
 
@@ -190,6 +191,20 @@ class ERP5Catalog(Folder, Catalog):
   __getitem__ = Catalog.__getitem__
   _aq_dynamic = Catalog._aq_dynamic
   __getattr__ = Catalog.__getattr__
+
+  def _checkId(self, id, allow_dup=0):
+    # Judge id uniqueness against LOCAL storage only. A shared-catalog method is
+    # acquired (resolved through __getattr__), not a local child, so it must not
+    # block installing a local override into the default catalog. The standard
+    # check uses hasattr(aq_base(self), id), which Catalog.__getattr__ still
+    # answers with shared methods -> the z_related_* "already in use" install bug.
+    # Run the format checks with allow_dup=1 (skips the acquisition-fooled dup
+    # check), then enforce uniqueness against this catalog's own storage.
+    result = Folder._checkId(self, id, allow_dup=1)
+    if not allow_dup and self._getLocalOb(self, id) is not self._MARKER:
+      raise BadRequestException(
+        'The id %r is invalid - it is already in use.' % id)
+    return result
 
   # Note: superclass supports older variants of these metatypes, but we do not
   # expect these as content here. So just override superclass properties with
