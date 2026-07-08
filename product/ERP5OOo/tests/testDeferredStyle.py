@@ -31,7 +31,8 @@ import itertools
 import textwrap
 import unittest
 import textwrap
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.ERP5TypeTestCase \
+  import ERP5TypeTestCase, _getConversionServerUrlList
 from Products.ERP5OOo.OOoUtils import optimize_odf_xml_fragment
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Testing import ZopeTestCase
@@ -88,14 +89,18 @@ class DeferredStyleTestCase(ERP5TypeTestCase, ZopeTestCase.Functional):
         password=self.password,
       )
       login.validate()
+    preferred_document_conversion_server_url_list = _getConversionServerUrlList()
     system_preference = self.portal.portal_preferences._getOb('syspref', None)
     if system_preference is None:
       system_preference = self.portal.portal_preferences.newContent(
               id="syspref",
               portal_type="System Preference")
       system_preference.enable()
-    # Fallback to former behaviour
-    system_preference.edit(preferred_deferred_report_stored_as_document=False)
+    system_preference.edit(
+      # Fallback to former behaviour
+      preferred_deferred_report_stored_as_document=False,
+      preferred_document_conversion_server_url_list=preferred_document_conversion_server_url_list,
+    )
     # add categories
     if not getattr(self.portal.portal_categories.classification, 'collaborative', None):
       self.portal.portal_categories.classification.newContent(id="collaborative")
@@ -466,7 +471,6 @@ class TestDeferredStyleBase(DeferredStyleTestCase):
       data=part.get_payload(decode=True),
       temp_object=True,
     )
-    doc.convertToBaseFormat()
     report_as_txt = doc.asText()
 
     self.assertIn(
