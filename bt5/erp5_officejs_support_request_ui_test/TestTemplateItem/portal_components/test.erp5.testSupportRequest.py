@@ -748,3 +748,21 @@ class TestIngestPostAsWebMessage(SupportRequestTestCase):
     web_message, = post.getAggregateRelatedValueList()
     self.assertEqual(self.user, web_message.getSourceValue())
     self.assertEqual(manager_user_id, web_message.getOwnerInfo()['id'])
+
+  def test_Post_ingestWebMessageForSupportRequest_encoding(self):
+    support_request = self.portal.support_request_module.erp5_officejs_support_request_ui_test_support_reuqest_001
+    post = self.portal.post_module.newContent(
+        portal_type='HTML Post',
+        follow_up_value=support_request,
+        data=b'H\xc3\xa9h\xc3\xa9',
+    )
+    post.publish()
+    self.tic()
+    post.Post_ingestWebMessageForSupportRequest(
+      web_site_relative_url=self.getWebSite().getRelativeUrl())
+    self.tic()
+
+    web_message, = post.getAggregateRelatedValueList()
+    self.assertEqual(web_message.getTextContent(), "<p>Héhé</p>")
+    comment, = json.loads(support_request.SupportRequest_getCommentPostListAsJson())
+    self.assertEqual(comment['text'], u"<p>Héhé</p>")
