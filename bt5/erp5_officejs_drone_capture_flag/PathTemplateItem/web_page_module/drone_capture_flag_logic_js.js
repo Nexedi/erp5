@@ -801,6 +801,8 @@ var GameManager = /** @class */ (function () {
       .push(function () {
         return {
           'message': gadget._result_message,
+          'score': gadget._result_score,
+          'duration': gadget._simulation_duration,
           'content': gadget._flight_log,
           'console_log': console_log
         };
@@ -1135,7 +1137,8 @@ var GameManager = /** @class */ (function () {
 
   GameManager.prototype._finish = function () {
     console.log("Simulation finished");
-    this._result_message += " User score: " + this._calculateUserScore();
+    this._result_score = this._calculateUserScore();
+    this._simulation_duration = Math.round(this._game_duration) / 1000;
     this._canUpdate = false;
     return this.finish_deferred.resolve();
   };
