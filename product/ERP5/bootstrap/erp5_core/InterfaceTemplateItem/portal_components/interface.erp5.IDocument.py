@@ -196,7 +196,7 @@ class IDocument(Interface):
     **kw - can be various things - e.g. resolution
     """
 
-  def isSupportBaseDataConversion():
-    """This is a public interface to check a document that is support conversion
-    to base format and can be overridden in subclasses.
+  def isSupportTextConversion():
+    """This is a public interface to check if a document supports
+    conversion to text format.
     """

@@ -2174,7 +2174,7 @@ class TestImage(ERP5TypeTestCase):
         ('erp5_logo.gif', 'image/gif'),
         ('erp5_logo.tif', 'image/tiff'),
         ('broken.png', 'image/png'),
-        ('empty.png', 'application/unknown'),
+        ('empty.png', 'image/png'),
       ):
       image = self.portal.newContent(portal_type='Image', id=self.id())
       image.edit(file=self.makeFileUpload(filename))
