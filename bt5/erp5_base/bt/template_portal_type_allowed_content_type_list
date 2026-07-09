@@ -80,6 +80,7 @@ Person | Career
 Person | Chat Address
 Person | Credit Card
 Person | ERP5 Login
+Person | ERP5 WebAuthn Login
 Person | Email
 Person | Embedded File
 Person | External Identifier
