@@ -291,7 +291,7 @@ class ERP5TypeInformation(XMLObject,
       'payment_request',
       # DMS
       'document', 'web_document', 'file_document', 'embedded_document',
-      'recent_document', 'my_document', 'template_document',
+      'recent_document', 'my_document', 'template_document', 'ooo_document',
       'crawler_index',
       'post',
       # Solvers and simulation
