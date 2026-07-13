@@ -118,7 +118,7 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
   def test_thread_url_helper_builds_push_history_jio_key(self):
     """ListBox_getDiscussionThreadUrl (the SPA thread-row link) returns a
     push_history command whose jio_key is the thread relative url."""
-    _forum, thread = self._createForumThreadWithPosts(n_posts=2)
+    _, thread = self._createForumThreadWithPosts(n_posts=2)
     brain, = self.portal.portal_catalog(uid=thread.getUid())
     url_dict = self.portal.ListBox_getDiscussionThreadUrl(brain, url_dict=True)
     self.assertEqual('push_history', url_dict['command'])
@@ -128,7 +128,7 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     """ListBox_getDiscussionThreadLastPostUrl adds last_post == the thread post
     count: the page the SPA/RSS deep-link jumps to. A wrong count silently
     sends the reader to the wrong page."""
-    _forum, thread = self._createForumThreadWithPosts(n_posts=3)
+    _, thread = self._createForumThreadWithPosts(n_posts=3)
     brain, = self.portal.portal_catalog(uid=thread.getUid())
     url_dict = self.portal.ListBox_getDiscussionThreadLastPostUrl(
       brain, url_dict=True)
@@ -140,7 +140,7 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     """The last-post / author SPA widgets are thin wrappers over
     DiscussionThread_getLastPost and DiscussionPost_getAuthorDict; assert those
     resolve a Discussion Post in the thread and an author dict with its keys."""
-    _forum, thread = self._createForumThreadWithPosts(n_posts=2)
+    _, thread = self._createForumThreadWithPosts(n_posts=2)
     last_post = thread.DiscussionThread_getLastPost()
     self.assertNotEqual(None, last_post)
     self.assertEqual('Discussion Post', last_post.getPortalType())
