@@ -13,27 +13,22 @@
   $.mobile.hashListeningEnabled = false;
   $.mobile.pushStateEnabled = false;
 
-  // Per-app IndexedDB prefix. Sources, in order:
-  //  1. <script data-renderjs-configuration="app_id"> tag
-  //  2. URL path /...web_site_module/{site_id}/... — used by OfficeJS
-  //     apps whose landing pages are static HTML stored in the BT.
-  // Empty for renderjs_runner so existing ERP5JS state stays intact.
+  // Per-app IndexedDB prefix, read from the
+  // <script data-renderjs-configuration="app_id"> tag. On shared origins
+  // this tag is always injected server-side by the rendering skin
+  // (WebSection_renderDefaultPageAsGadget for the app shell,
+  // WebSection_renderOfficeJSApplicationPage for the bootloader), so the
+  // prefix isolates each app's IndexedDB databases from every other app
+  // on the same origin. When the tag is absent — standalone subdomain
+  // builds, where each app is its own origin — the prefix is empty and
+  // no isolation is needed. renderjs_runner also maps to the empty
+  // prefix so existing ERP5JS state stays intact.
   // Published to child gadgets via allowPublicAcquisition below.
-  // TODO: the URL fallback assumes a /erp5/web_site_module/{id}/ mount
-  // — it breaks under prod URL rewrites / virtual hosts that change the
-  // path layout. Replace with a real app_id tag on each landing page
-  // (or have ERP5 inject one at serve/precache time) before relying on
-  // this in production. Same heuristic also lives in the SW.
   var INDEXEDDB_PREFIX = (function () {
     var node = document.querySelector(
       'script[data-renderjs-configuration="app_id"]'
     ),
-      app_id = node && node.textContent.trim(),
-      match;
-    if (!app_id) {
-      match = window.location.pathname.match(/\/web_site_module\/([^/]+)/);
-      app_id = match && match[1];
-    }
+      app_id = node && node.textContent.trim();
     return (!app_id || app_id === "renderjs_runner")
       ? "" : app_id + "_";
   }());
