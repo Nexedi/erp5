@@ -30,9 +30,10 @@ var global = self, window = self;
     // (backward compatible). On ERP5 embedded, scope path is e.g.
     // "/erp5/web_site_module/officejs_text_editor/" -> prefix is
     // "officejs_text_editor_".
-    // TODO: scope-path heuristic breaks under prod URL rewrites /
-    // virtual hosts that change the path layout. Same TODO exists in
-    // both launchers; resolve all three together.
+    // Unlike the launchers (which read an injected app_id tag), a Service
+    // Worker has no DOM to read a config tag from, so the prefix is taken
+    // from registration.scope — the actual URL the SW was registered at,
+    // i.e. the real serving path rather than a guessed mount point.
     var scope_path = new URL(self.registration.scope).pathname;
     var parts = scope_path.replace(/\/+$/, '').split('/');
     var site_id = parts[parts.length - 1];

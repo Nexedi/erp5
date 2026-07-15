@@ -216,14 +216,13 @@ class TestEmbedOfficeJSInERP5JS(ERP5TypeTestCase):
   # WebSection_renderOfficeJSApplicationPage template vars test
   # -----------------------------------------------------------
   def test_render_page_includes_application_id(self):
-    """WebSection_renderOfficeJSApplicationPage passes application_id."""
-    # Verify the script source includes the application_id mapping key
-    script = getattr(self.portal, "WebSection_renderOfficeJSApplicationPage",
-                     None)
-    if script is not None:
-      body = script.body()
-      self.assertIn("application_id", body)
-      self.assertIn("app_version", body)
+    """WebSection_renderOfficeJSApplicationPage passes application_id as the
+    Web Site id, so the bootloader HTML gets a real app_id (no URL guessing
+    needed)."""
+    body = self.portal.WebSection_renderOfficeJSApplicationPage.body()
+    self.assertIn("application_id", body)
+    self.assertIn("app_version", body)
+    self.assertIn("getWebSiteValue().getId()", body)
 
   # -----------------------------------------------------------
   # Phase 6: per-app IndexedDB isolation
@@ -253,11 +252,26 @@ class TestEmbedOfficeJSInERP5JS(ERP5TypeTestCase):
 
   def test_render_default_page_includes_app_id(self):
     """WebSection_renderDefaultPageAsGadget passes app_id in mapping_dict."""
-    script = getattr(self.portal, "WebSection_renderDefaultPageAsGadget", None)
-    if script is not None:
-      body = script.body()
-      self.assertIn('"app_id"', body)
-      self.assertIn("getWebSiteValue().getId()", body)
+    body = self.portal.WebSection_renderDefaultPageAsGadget.body()
+    self.assertIn('"app_id"', body)
+    self.assertIn("getWebSiteValue().getId()", body)
+
+  def test_launchers_have_no_url_path_fallback(self):
+    """Both launchers derive the IndexedDB prefix solely from the injected
+    app_id tag; the removed /web_site_module/{id}/ URL heuristic must not
+    creep back in (it breaks under prod URL rewrites / virtual hosts)."""
+    for reference, module_id, portal_type in (
+      ("rjs_gadget_erp5_launcher_js", "erp5_launcher_nojqm.js", "Web Script"),
+      ("rjs_gadget_erp5_js", "erp5_launcher.js", "Web Script"),
+    ):
+      text_content = self._getWebPageText(
+        reference, module_id, portal_type=portal_type
+      )
+      if text_content is not None:
+        self.assertIn(
+          'script[data-renderjs-configuration="app_id"]', text_content
+        )
+        self.assertNotIn("web_site_module", text_content)
 
   def test_launcher_publishes_getIndexedDBPrefix_acquisition(self):
     """rjs_gadget_erp5_launcher_js publishes getIndexedDBPrefix via
