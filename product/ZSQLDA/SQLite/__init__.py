@@ -1,9 +1,7 @@
 import six
-import os
 import re
 import sqlite3
 from sqlite3 import OperationalError
-import warnings
 from contextlib import contextmanager
 
 try:
@@ -16,17 +14,26 @@ except ImportError:
 from zLOG import LOG, ERROR
 from Products.ERP5Type.Timeout import TimeoutReachedError
 
-from App.config import getConfiguration
 from Shared.DC.ZRDB.TM import TM
 from DateTime import DateTime
 from ..db import BaseDB, DATETIME_to_DateTime_or_None, DATE_to_DateTime_or_None, match_select
 from ZODB.POSException import ConflictError
 import time
 import unicodedata
+from datetime import datetime as stdlib_datetime, date as stdlib_date
 from App.special_dtml import HTMLFile
 from .. import DA
 
 database_type = 'SQLite'
+
+# Primary SQLite result codes that mean the connection/handle is broken (as
+# opposed to a query error), for which _query retries once after reconnecting.
+# Compared against the primary code (sqlite_errorcode & 0xFF) so extended
+# variants (e.g. the many SQLITE_IOERR_*) are covered too.
+_connection_lost_codes = frozenset((
+    sqlite3.SQLITE_CANTOPEN,
+    sqlite3.SQLITE_IOERR,
+))
 
 _icon_xlate = {
     'int': 'int', 'integer': 'int', 'smallint': 'int', 'bigint': 'int',
@@ -65,21 +72,28 @@ class SQLiteResult:
                 new_row = []
                 for val, col_desc in zip(row, description):
                     col_name = col_desc[0]
-                    # Date/datetime conversion by column name heuristic
-                    if col_name.endswith('date') and isinstance(val, str):
-                        if ' ' in val:
-                            val = DATETIME_to_DateTime_or_None(val)
+                    lowered = col_name.lower()
+                    if isinstance(val, stdlib_datetime):
+                        val = DateTime(val.year, val.month, val.day,
+                                       val.hour, val.minute,
+                                       val.second + val.microsecond / 1e6,
+                                       'UTC')
+                    elif isinstance(val, stdlib_date):
+                        val = DateTime(val.year, val.month, val.day,
+                                       0, 0, 0, 'UTC')
+                    elif isinstance(val, str):
+                        if lowered == 'date' or lowered.endswith('_date'):
+                            converted = (DATETIME_to_DateTime_or_None(val)
+                                         if ' ' in val
+                                         else DATE_to_DateTime_or_None(val))
+                            val = converted if converted is not None \
+                                else val.replace('\\0', '\0')
                         else:
-                            val = DATE_to_DateTime_or_None(val)
-                    else:
-                        if isinstance(val, str):
                             val = val.replace('\\0', '\0')
                     # Infer type code for items[]
                     value_type = col_desc[1]
                     if value_type is None:
-                        if isinstance(val, bool):
-                            value_type = "i"
-                        elif isinstance(val, int):
+                        if isinstance(val, (bool, int)):
                             value_type = "i"
                         elif isinstance(val, float):
                             value_type = "n"
@@ -158,7 +172,13 @@ class DB(BaseDB):
         self.db = sqlite3.connect(
             self._kw_args['db'],
             check_same_thread=False,
-            detect_types=sqlite3.PARSE_DECLTYPES # XXXXXX need to change also related column
+            # XXXX
+            # sqlite is file level lock, we can have multi write query
+            # _begin  --> file level lock
+            # insert  --> ok
+            # insert in other thread --> raise database is locked when timeout is passed
+            isolation_level=None,
+            detect_types=sqlite3.PARSE_DECLTYPES 
         )
 
         self.db.create_collation("utf8mb4_general_ci", utf8mb4_general_ci)
@@ -191,7 +211,7 @@ class DB(BaseDB):
         return r
 
     def columns(self, table_name):
-        cursor = self.db.execute("PRAGMA table_info('%s')" % table_name)
+        cursor = self.db.execute("SELECT * FROM pragma_table_info(?)", (table_name,))
         result = []
         for cid, name, col_type, notnull, default, pk in cursor.fetchall():
             short_type = col_type.lower().split('(')[0].strip()
@@ -212,26 +232,27 @@ class DB(BaseDB):
     # ------------------------------------------------------------------
 
     def _query(self, query, args=None, allow_reconnect=False):
+        cursor = None
         try:
             cursor = self.db.cursor()
             if isinstance(query, bytes):
                 query = query.decode()
-
-            if query.upper() == "COMMIT":
+            upper = query.strip().upper()
+            # we can have single query like "COMMIT" OR "ROLLBACK" with no open transaction
+            # use db can correctly handle such case
+            if upper == "COMMIT":
                 self.db.commit()
                 return
-            elif query.upper() == "ROLLBACK":
+            if upper == "ROLLBACK":
                 self.db.rollback()
                 return
+            if args:
+                cursor.execute(query, args)
             else:
-                if args:
-                    cursor.execute(query, args)
-                else:
-                    cursor.execute(query)
-                desc = cursor.description
-                rows = cursor.fetchall()
-                self.db.commit()
-                return SQLiteResult(rows, desc)
+                cursor.execute(query)
+            desc = cursor.description
+            rows = cursor.fetchall()
+            return SQLiteResult(rows, desc)
         except OperationalError as m:
             msg = str(m).lower()
             if "syntax error" in msg:
@@ -240,21 +261,30 @@ class DB(BaseDB):
                 raise ConflictError("%s: %s" % (m, query))
             if "timeout" in msg or "busy" in msg:
                 raise TimeoutReachedError("%s: %s" % (m, query))
-            if allow_reconnect:
+            code = getattr(m, "sqlite_errorcode", None)
+            if allow_reconnect and code is not None \
+                    and code & 0xFF in _connection_lost_codes:
                 self._forceReconnection()
                 return self._query(query, args=args, allow_reconnect=False)
-            else:
-                LOG('SQLITEDA', ERROR, 'query failed: %s' % query)
-                raise
-        except Exception as m:
-            if allow_reconnect:
-                self._forceReconnection()
-                return self._query(query, args=args, allow_reconnect=False)
-            else:
-                LOG('SQLITEDA', ERROR, 'query failed: %s' % query)
-                raise
+            LOG('SQLITEDA', ERROR, 'query failed: %s' % query)
+            raise
+        except Exception:
+            LOG('SQLITEDA', ERROR, 'query failed: %s' % query)
+            raise
         finally:
-            cursor.close()
+            if cursor is not None:
+                cursor.close()
+
+
+
+    def _apply_max_rows(self, qs, max_rows):
+        _trailing_limit_search = re.compile(br'\bLIMIT\b[^()]*$', re.I).search
+
+        if not max_rows:
+            return qs
+        if _trailing_limit_search(qs):
+            return b"SELECT * FROM (%s) LIMIT %d" % (qs, max_rows)
+        return b"%s LIMIT %d" % (qs, max_rows)
 
     def query(self, query_string, max_rows=1000, args=None):
         """Execute query_string and return at most max_rows.
@@ -280,9 +310,7 @@ class DB(BaseDB):
             select_match = match_select(qs)
             if select_match:
                 _, select = select_match.groups()
-                qs = b"SELECT %s" % select
-                if max_rows:
-                    qs = b"%s LIMIT %d" % (qs, max_rows)
+                qs = self._apply_max_rows(b"SELECT %s" % select, max_rows)
             c = self._query(qs, args=args)
             if c:
                 desc = c.describe()
@@ -295,9 +323,7 @@ class DB(BaseDB):
                 select_match = match_select(qs)
                 if select_match:
                     _, select = select_match.groups()
-                    qs = b"SELECT %s" % select
-                    if max_rows:
-                        qs = b"%s LIMIT %d" % (qs, max_rows)
+                    qs = self._apply_max_rows(b"SELECT %s" % select, max_rows)
 
                 c = self._query(qs)
                 if c:
@@ -339,39 +365,11 @@ class DB(BaseDB):
     # Transaction management
     # ------------------------------------------------------------------
 
-    def _begin(self, *ignored):
-        try:
-            self._transaction_begun = True
-            if self._transactions:
-                self._query(b"BEGIN", allow_reconnect=True)
-        except:
-            LOG('SQLiteDA', ERROR, "exception during _begin",
-                error=True)
-            raise
-
+    # No _begin/_finish/_abort overrides: the general path runs in SQLite
+    # isolation_level=None, so TM's defaults suffice
     def tpc_vote(self, *ignored):
         self._query(b"SELECT 1")
         return TM.tpc_vote(self, *ignored)
-
-    def _finish(self, *ignored):
-        if not self._transaction_begun:
-            return
-        self._transaction_begun = False
-        if self._transactions:
-            self._query(b"COMMIT")
-
-    def _abort(self, *ignored):
-        if not self._transaction_begun:
-            return
-        self._transaction_begun = False
-        try:
-            if self._transactions:
-                self._query(b"ROLLBACK")
-            else:
-                LOG('SQLiteDA', ERROR, "aborting when non-transactional")
-        except OperationalError as m:
-            LOG('SQLiteDA', ERROR, "exception during _abort",
-                error=True)
 
     @contextmanager
     def lock(self):
@@ -384,30 +382,23 @@ class DB(BaseDB):
         else:
             self._query("COMMIT")
 
-    def _getTableSchema(self, name,
-            create_lstrip=re.compile(r"[^(]+\(\s*").sub,
-            create_rmatch=re.compile(r"(.*\S)\s*\)\s*(.*)$", re.DOTALL).match,
-            create_split=re.compile(r",\n\s*").split,
-            column_match=re.compile(r"`(\w+)`\s+(.+)").match,
-            ):
+    def _getTableSchema(self, name, *args, **kw):
         result = self.query(
-            "SELECT sql FROM sqlite_master WHERE type='table' AND name='%s'" % name
+            "SELECT sql FROM sqlite_master WHERE type='table' AND name=?", args=(name,)
         )[1]
         if not result:
             raise OperationalError("no such table: %s" % name)
 
-        col_result = self.query("PRAGMA table_info(%s)" % name)[1]
+        col_result = self.query("SELECT * FROM pragma_table_info(?)", args=(name,))[1]
         columns = [(r[1], r[2]) for r in col_result]
 
-        idx_result = self.query("PRAGMA index_list(%s)" % name)[1]
-        key_set = set(r[1] for r in idx_result)
-
-        return columns, key_set, ""
+        # key_set (PRAGMA index_list) is unused by upgradeSchema, so skip the
+        # query; the empty set keeps the (columns, key_set, default) shape.
+        return columns, set(), ""
 
     _create_search = re.compile(
         r'\bCREATE\s+TABLE\s+(`?)(\w+)\1\s+', re.I
     ).search
-    _key_search = re.compile(r'\bKEY\s+(`[^`]+`)\s+(.+)').search
 
     def upgradeSchema(self, create_sql, create_if_not_exists=False,
                       initialize=None, src__=0):
