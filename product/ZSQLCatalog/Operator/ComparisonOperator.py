@@ -245,7 +245,7 @@ class SqliteComparisonOperator(MonovaluedComparisonOperator):
     sqlite_query = ""
     if normal_tokens:
       sqlite_query += " OR ".join(
-        [f"{t}*" for t in normal_tokens]
+        ["%s*" % t for t in normal_tokens]
       )
     if boolean_tokens:
       if sqlite_query:
