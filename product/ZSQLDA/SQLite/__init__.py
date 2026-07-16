@@ -22,11 +22,40 @@ from DateTime import DateTime
 from ..db import BaseDB, DATETIME_to_DateTime_or_None, DATE_to_DateTime_or_None, match_select
 from ZODB.POSException import ConflictError
 import time
+import threading
 import unicodedata
+from datetime import datetime as stdlib_datetime, date as stdlib_date
 from App.special_dtml import HTMLFile
 from .. import DA
 
 database_type = 'SQLite'
+
+_connection_lost_errors = (
+    "unable to open database",
+    "disk i/o error",
+    "not a database",
+    "closed database",
+    "cannot operate on a closed database",
+)
+
+# SQLite allows a single writer per database file. ERP5 opens several logical
+# connections (main, deferred, activity) to the same file, so they must share
+# one sqlite3 handle to avoid deadlocking against each other. The handle is
+# shared per (thread, file): within a thread there is a single Zope transaction
+# at a time, while distinct threads keep distinct handles.
+_thread_connections = {}
+
+
+class _SharedConnection(sqlite3.Connection):
+    # sqlite3.Connection is a C type with no __dict__; subclass so the handle
+    # can carry the id of the DB instance that owns the current transaction.
+    _zsqlda_txn_owner = None
+
+
+# Leading whitespace and SQL comments, so a transaction-control statement is
+# recognized even when a ZSQL method prefixes it with `-- ...` comment lines
+# (e.g. IdTool_zGenerateId begins with two comment lines before its BEGIN).
+_leading_sql_noise = re.compile(r'\A(?:\s+|--[^\n]*\n?|/\*.*?\*/)+', re.S)
 
 _icon_xlate = {
     'int': 'int', 'integer': 'int', 'smallint': 'int', 'bigint': 'int',
@@ -65,14 +94,31 @@ class SQLiteResult:
                 new_row = []
                 for val, col_desc in zip(row, description):
                     col_name = col_desc[0]
-                    # Date/datetime conversion by column name heuristic
-                    if col_name.endswith('date') and isinstance(val, str):
-                        if ' ' in val:
-                            val = DATETIME_to_DateTime_or_None(val)
+                    lowered = col_name.lower()
+                    if isinstance(val, stdlib_datetime):
+                        # PARSE_DECLTYPES may already have materialized a stdlib
+                        # datetime (declared date/timestamp columns); normalize
+                        # to a Zope DateTime, consistent with the string path.
+                        val = DateTime(val.year, val.month, val.day,
+                                       val.hour, val.minute,
+                                       val.second + val.microsecond / 1e6,
+                                       'UTC')
+                    elif isinstance(val, stdlib_date):
+                        val = DateTime(val.year, val.month, val.day,
+                                       0, 0, 0, 'UTC')
+                    elif isinstance(val, str):
+                        # Date conversion by column name, but only for genuine
+                        # date columns: exactly `date` or a `_date` suffix.
+                        # Substrings like `candidate`/`mandate` must NOT match.
+                        # If the value does not parse, keep the original string
+                        # rather than silently discarding it as None.
+                        if lowered == 'date' or lowered.endswith('_date'):
+                            converted = (DATETIME_to_DateTime_or_None(val)
+                                         if ' ' in val
+                                         else DATE_to_DateTime_or_None(val))
+                            val = converted if converted is not None \
+                                else val.replace('\\0', '\0')
                         else:
-                            val = DATE_to_DateTime_or_None(val)
-                    else:
-                        if isinstance(val, str):
                             val = val.replace('\\0', '\0')
                     # Infer type code for items[]
                     value_type = col_desc[1]
@@ -148,20 +194,21 @@ class DB(BaseDB):
     # Connection lifecycle
     # ------------------------------------------------------------------
 
-    def _forceReconnection(self):
-        if self.db is not None:
-            try:
-                self.db.close()
-            except Exception:
-                pass
-
-        self.db = sqlite3.connect(
+    def _connect(self):
+        db = sqlite3.connect(
             self._kw_args['db'],
             check_same_thread=False,
+            factory=_SharedConnection,
+            # Autocommit at the driver level: transaction bracketing is driven
+            # explicitly by the TM hooks (_begin -> BEGIN, _finish -> COMMIT,
+            # _abort -> ROLLBACK), mirroring the MySQL adapter. Without this,
+            # sqlite3's implicit transaction handling fights the explicit BEGIN
+            # issued in _begin and breaks lock()/upgradeSchema atomicity.
+            isolation_level=None,
             detect_types=sqlite3.PARSE_DECLTYPES # XXXXXX need to change also related column
         )
 
-        self.db.create_collation("utf8mb4_general_ci", utf8mb4_general_ci)
+        db.create_collation("utf8mb4_general_ci", utf8mb4_general_ci)
 
         def subdate(date_str, days):
             if date_str.lower() in ('current_date', 'now'):
@@ -171,11 +218,36 @@ class DB(BaseDB):
             dt -= days
             return dt.earliestTime().strftime("%Y-%m-%d %H:%M:%S")
 
-        self.db.create_function("SLEEP", 1, lambda x: time.sleep(x) or 0)
-        self.db.create_function("SUBDATE", 2, subdate)
+        db.create_function("SLEEP", 1, lambda x: time.sleep(x) or 0)
+        db.create_function("SUBDATE", 2, subdate)
 
-        self.db.execute("PRAGMA journal_mode=WAL")
-        self.db.execute("PRAGMA busy_timeout=10000")
+        db.execute("PRAGMA journal_mode=WAL")
+        db.execute("PRAGMA busy_timeout=10000")
+        return db
+
+    def _forceReconnection(self):
+        key = (threading.get_ident(), self._kw_args['db'])
+        conn = _thread_connections.get(key)
+        if conn is not None and conn is self.db:
+            # Our own handle is being reconnected because it died; drop it so a
+            # fresh one is created and shared with the other connections.
+            try:
+                conn.close()
+            except Exception:
+                pass
+            _thread_connections.pop(key, None)
+            conn = None
+        if conn is None:
+            conn = self._connect()
+            _thread_connections[key] = conn
+        self.db = conn
+
+    def __del__(self):
+        # The sqlite3 handle is shared between the logical connections of a
+        # thread (see _thread_connections) and outlives any single DB instance,
+        # so - unlike BaseDB.__del__ - it must not be closed when one instance
+        # is garbage-collected (e.g. replaced in the connection pool).
+        pass
 
     # ------------------------------------------------------------------
     # Schema inspection
@@ -212,26 +284,55 @@ class DB(BaseDB):
     # ------------------------------------------------------------------
 
     def _query(self, query, args=None, allow_reconnect=False):
+        cursor = None
         try:
             cursor = self.db.cursor()
             if isinstance(query, bytes):
                 query = query.decode()
+            # Ownership model: several logical connections (main, deferred,
+            # transactionless id generation) share one handle per thread. Only
+            # the connection that actually opened the transaction may COMMIT or
+            # ROLLBACK it; the others just join the in-progress transaction, so
+            # an explicit BEGIN/commit issued mid-transaction (IdTool_zGenerateId
+            # / IdTool_zCommit) becomes a no-op instead of clashing.
+            upper = _leading_sql_noise.sub('', query, count=1).strip().upper()
+            if upper.startswith("BEGIN"):
+                if not self.db.in_transaction:
+                    # Default to a DEFERRED begin so a read-only transaction
+                    # takes only a read lock (WAL allows concurrent readers)
+                    # rather than serializing behind the single writer.
+                    if "EXCLUSIVE" in upper:
+                        cursor.execute("BEGIN EXCLUSIVE")
+                    elif "IMMEDIATE" in upper:
+                        cursor.execute("BEGIN IMMEDIATE")
+                    else:
+                        cursor.execute("BEGIN")
+                    self.db._zsqlda_txn_owner = id(self)
+                return
+            if upper.startswith("COMMIT"):
+                if self.db.in_transaction and \
+                        self.db._zsqlda_txn_owner == id(self):
+                    self.db.commit()
+                    self.db._zsqlda_txn_owner = None
+                return
+            if upper.startswith("ROLLBACK"):
+                if self.db.in_transaction and \
+                        self.db._zsqlda_txn_owner == id(self):
+                    self.db.rollback()
+                    self.db._zsqlda_txn_owner = None
+                return
 
-            if query.upper() == "COMMIT":
-                self.db.commit()
-                return
-            elif query.upper() == "ROLLBACK":
-                self.db.rollback()
-                return
+            if args:
+                cursor.execute(query, args)
             else:
-                if args:
-                    cursor.execute(query, args)
-                else:
-                    cursor.execute(query)
-                desc = cursor.description
-                rows = cursor.fetchall()
-                self.db.commit()
-                return SQLiteResult(rows, desc)
+                cursor.execute(query)
+            desc = cursor.description
+            rows = cursor.fetchall()
+            # No commit here: transaction boundaries are controlled by the
+            # TM hooks (_begin/_finish/_abort). Committing per statement
+            # would defeat transactional atomicity and break lock()/
+            # upgradeSchema. See _forceReconnection (isolation_level=None).
+            return SQLiteResult(rows, desc)
         except OperationalError as m:
             msg = str(m).lower()
             if "syntax error" in msg:
@@ -240,21 +341,35 @@ class DB(BaseDB):
                 raise ConflictError("%s: %s" % (m, query))
             if "timeout" in msg or "busy" in msg:
                 raise TimeoutReachedError("%s: %s" % (m, query))
-            if allow_reconnect:
+            if allow_reconnect and any(e in msg for e in _connection_lost_errors):
                 self._forceReconnection()
                 return self._query(query, args=args, allow_reconnect=False)
-            else:
-                LOG('SQLITEDA', ERROR, 'query failed: %s' % query)
-                raise
-        except Exception as m:
-            if allow_reconnect:
-                self._forceReconnection()
-                return self._query(query, args=args, allow_reconnect=False)
-            else:
-                LOG('SQLITEDA', ERROR, 'query failed: %s' % query)
-                raise
+            LOG('SQLITEDA', ERROR, 'query failed: %s' % query)
+            raise
+        except Exception:
+            LOG('SQLITEDA', ERROR, 'query failed: %s' % query)
+            raise
         finally:
-            cursor.close()
+            if cursor is not None:
+                cursor.close()
+
+    # A LIMIT clause with nothing but non-parenthesis text after it to the end
+    # of the string is a *top-level* trailing LIMIT. An inner sub-query LIMIT is
+    # followed by a `)` and is deliberately not matched.
+    _trailing_limit_search = re.compile(br'\bLIMIT\b[^()]*$', re.I).search
+
+    def _apply_max_rows(self, qs, max_rows):
+        """Bound a SELECT to max_rows without producing a double LIMIT.
+
+        Appending ` LIMIT n` to a query that already ends in a LIMIT clause is
+        a SQLite syntax error, so in that case wrap the query as a sub-select so
+        max_rows still caps the result set.
+        """
+        if not max_rows:
+            return qs
+        if self._trailing_limit_search(qs):
+            return b"SELECT * FROM (%s) LIMIT %d" % (qs, max_rows)
+        return b"%s LIMIT %d" % (qs, max_rows)
 
     def query(self, query_string, max_rows=1000, args=None):
         """Execute query_string and return at most max_rows.
@@ -280,9 +395,7 @@ class DB(BaseDB):
             select_match = match_select(qs)
             if select_match:
                 _, select = select_match.groups()
-                qs = b"SELECT %s" % select
-                if max_rows:
-                    qs = b"%s LIMIT %d" % (qs, max_rows)
+                qs = self._apply_max_rows(b"SELECT %s" % select, max_rows)
             c = self._query(qs, args=args)
             if c:
                 desc = c.describe()
@@ -295,9 +408,7 @@ class DB(BaseDB):
                 select_match = match_select(qs)
                 if select_match:
                     _, select = select_match.groups()
-                    qs = b"SELECT %s" % select
-                    if max_rows:
-                        qs = b"%s LIMIT %d" % (qs, max_rows)
+                    qs = self._apply_max_rows(b"SELECT %s" % select, max_rows)
 
                 c = self._query(qs)
                 if c:
@@ -340,14 +451,14 @@ class DB(BaseDB):
     # ------------------------------------------------------------------
 
     def _begin(self, *ignored):
-        try:
-            self._transaction_begun = True
-            if self._transactions:
-                self._query(b"BEGIN", allow_reconnect=True)
-        except:
-            LOG('SQLiteDA', ERROR, "exception during _begin",
-                error=True)
-            raise
+        # The general path runs in SQLite autocommit (isolation_level=None): the
+        # write lock is taken and released per statement instead of being held
+        # for the whole transaction. On a single database file this is what lets
+        # concurrent writers (e.g. activity processing vs catalog updates in
+        # different threads) proceed without deadlocking. Explicit transactions
+        # are still bracketed by their own BEGIN ... COMMIT through _query, for
+        # lock()/upgradeSchema and the transactionless id generator.
+        self._transaction_begun = True
 
     def tpc_vote(self, *ignored):
         self._query(b"SELECT 1")
@@ -357,7 +468,7 @@ class DB(BaseDB):
         if not self._transaction_begun:
             return
         self._transaction_begun = False
-        if self._transactions:
+        if self._transactions and self.db.in_transaction:
             self._query(b"COMMIT")
 
     def _abort(self, *ignored):
@@ -366,7 +477,8 @@ class DB(BaseDB):
         self._transaction_begun = False
         try:
             if self._transactions:
-                self._query(b"ROLLBACK")
+                if self.db.in_transaction:
+                    self._query(b"ROLLBACK")
             else:
                 LOG('SQLiteDA', ERROR, "aborting when non-transactional")
         except OperationalError as m:
@@ -384,12 +496,7 @@ class DB(BaseDB):
         else:
             self._query("COMMIT")
 
-    def _getTableSchema(self, name,
-            create_lstrip=re.compile(r"[^(]+\(\s*").sub,
-            create_rmatch=re.compile(r"(.*\S)\s*\)\s*(.*)$", re.DOTALL).match,
-            create_split=re.compile(r",\n\s*").split,
-            column_match=re.compile(r"`(\w+)`\s+(.+)").match,
-            ):
+    def _getTableSchema(self, name, *args, **kw):
         result = self.query(
             "SELECT sql FROM sqlite_master WHERE type='table' AND name='%s'" % name
         )[1]
