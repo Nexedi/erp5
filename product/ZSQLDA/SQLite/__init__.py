@@ -1,6 +1,7 @@
 import six
 import re
 import sqlite3
+import threading
 from sqlite3 import OperationalError
 from contextlib import contextmanager
 
@@ -44,6 +45,16 @@ _icon_xlate = {
 }
 
 _trailing_limit_search = re.compile(br'\bLIMIT\b[^()]*$', re.I).search
+
+_file_lock_registry = {}
+_file_lock_registry_guard = threading.Lock()
+
+def _get_file_lock(path):
+    with _file_lock_registry_guard:
+        file_lock = _file_lock_registry.get(path)
+        if file_lock is None:
+            file_lock = _file_lock_registry[path] = threading.RLock()
+        return file_lock
 
 # ---------------------------------------------------------------------------
 # UTF-8 collation (approximates utf8mb4_general_ci)
@@ -382,14 +393,14 @@ class DB(BaseDB):
 
     @contextmanager
     def lock(self):
+        # Can't do query way, because it's file level locked
+        # we can have database is locked error
+        file_lock = _get_file_lock(self._kw_args['db'])
+        file_lock.acquire()
         try:
-            self._query("BEGIN EXCLUSIVE")
             yield
-        except Exception:
-            self._query("ROLLBACK")
-            raise
-        else:
-            self._query("COMMIT")
+        finally:
+            file_lock.release()
 
     def _getTableSchema(self, name, *args, **kw):
         result = self.query(
