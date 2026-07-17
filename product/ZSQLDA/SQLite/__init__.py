@@ -43,6 +43,8 @@ _icon_xlate = {
     'date': 'date', 'datetime': 'datetime', 'timestamp': 'datetime', 'time': 'time',
 }
 
+_trailing_limit_search = re.compile(br'\bLIMIT\b[^()]*$', re.I).search
+
 # ---------------------------------------------------------------------------
 # UTF-8 collation (approximates utf8mb4_general_ci)
 # ---------------------------------------------------------------------------
@@ -90,20 +92,23 @@ class SQLiteResult:
                                 else val.replace('\\0', '\0')
                         else:
                             val = val.replace('\\0', '\0')
-                    # Infer type code for items[]
-                    value_type = col_desc[1]
-                    if value_type is None:
+                    # Infer type code for items[] from the first non-NULL value
+                    if col_desc[1] is None and val is not None:
                         if isinstance(val, (bool, int)):
-                            value_type = "i"
+                            col_desc[1] = "i"
                         elif isinstance(val, float):
-                            value_type = "n"
+                            col_desc[1] = "n"
                         elif isinstance(val, DateTime):
-                            value_type = "d"
+                            col_desc[1] = "d"
                         else:
-                            value_type = "t"
-                        col_desc[1] = value_type
+                            col_desc[1] = "t"
                     new_row.append(val)
                 self._rows.append(tuple(new_row))
+
+        if description:
+            for col_desc in description:
+                if col_desc[1] is None:
+                    col_desc[1] = "t"
 
         self._description = [tuple(col) for col in description] if description else description
 
@@ -211,9 +216,13 @@ class DB(BaseDB):
         return r
 
     def columns(self, table_name):
-        cursor = self.db.execute("SELECT * FROM pragma_table_info(?)", (table_name,))
         result = []
-        for cid, name, col_type, notnull, default, pk in cursor.fetchall():
+        try:
+            c = self._query("SELECT * FROM pragma_table_info(?)", args=(table_name,))
+        except Exception:
+            return result
+
+        for cid, name, col_type, notnull, default, pk in c.fetch_row(0):
             short_type = col_type.lower().split('(')[0].strip()
             icon = _icon_xlate.get(short_type, 'what')
             result.append({
@@ -237,6 +246,7 @@ class DB(BaseDB):
             cursor = self.db.cursor()
             if isinstance(query, bytes):
                 query = query.decode()
+
             upper = query.strip().upper()
             # we can have single query like "COMMIT" OR "ROLLBACK" with no open transaction
             # use db can correctly handle such case
@@ -246,6 +256,7 @@ class DB(BaseDB):
             if upper == "ROLLBACK":
                 self.db.rollback()
                 return
+
             if args:
                 cursor.execute(query, args)
             else:
@@ -262,14 +273,14 @@ class DB(BaseDB):
             if "timeout" in msg or "busy" in msg:
                 raise TimeoutReachedError("%s: %s" % (m, query))
             code = getattr(m, "sqlite_errorcode", None)
-            if allow_reconnect and code is not None \
+            if (allow_reconnect or not self._use_TM) and code is not None \
                     and code & 0xFF in _connection_lost_codes:
                 self._forceReconnection()
                 return self._query(query, args=args, allow_reconnect=False)
-            LOG('SQLITEDA', ERROR, 'query failed: %s' % query)
+            LOG('ZSQLDA.SQLite', ERROR, 'query failed: %s' % query)
             raise
         except Exception:
-            LOG('SQLITEDA', ERROR, 'query failed: %s' % query)
+            LOG('ZSQLDA.SQLite', ERROR, 'query failed: %s' % query)
             raise
         finally:
             if cursor is not None:
@@ -278,8 +289,6 @@ class DB(BaseDB):
 
 
     def _apply_max_rows(self, qs, max_rows):
-        _trailing_limit_search = re.compile(br'\bLIMIT\b[^()]*$', re.I).search
-
         if not max_rows:
             return qs
         if _trailing_limit_search(qs):
@@ -422,6 +431,7 @@ class DB(BaseDB):
             old_cols = {c for c, _ in old_list}
 
             # Probe new schema via a temporary table then drop it immediately
+            self.query("DROP TABLE IF EXISTS %s" % new_name)
             self.query("CREATE TABLE %s %s" % (new_name, create_sql[m.end():]))
             try:
                 new_list, _, _ = self._getTableSchema(new_name)

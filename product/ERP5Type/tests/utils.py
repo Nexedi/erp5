@@ -63,6 +63,12 @@ skipUnlessMySQL = unittest.skipUnless(
   'MySQL backend only',
 )
 
+skipUnlessSQLite = unittest.skipUnless(
+  os.environ.get('erp5_catalog_storage', 'erp5_mysql_innodb_catalog')
+  == 'erp5_sqlite_catalog',
+  'SQLite backend only',
+)
+
 
 if six.PY2:
   FileIO = file
