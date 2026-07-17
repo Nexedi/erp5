@@ -693,6 +693,25 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     self._test_document_publication_workflow('Web Page',
         'share_alive_action')
 
+  def test_checkWebPagePublicationWorkflowRemovedConsistency(self):
+
+    web_page = self.portal.portal_types['Web Page']
+    template_tool = self.portal.portal_templates
+    original_workflow_list = list(web_page.getTypeWorkflowList())
+    original_consistency_list = [ str(x) for x in template_tool.checkConsistency()]
+
+    web_page.setTypeWorkflowList(
+        original_workflow_list + ['publication_workflow'])
+    try:
+      new_consistency_list = [str(x) for x in template_tool.checkConsistency(filter={'constraint_type': 'post_upgrade'}) if x not in original_consistency_list]
+      self.assertEqual(len(new_consistency_list), 1)
+      self.assertTrue('Web Page portal type should not have publication_workflow' in new_consistency_list[0])
+      template_tool.fixConsistency(filter={'constraint_type': 'post_upgrade'})
+      new_consistency_list = [str(x) for x in template_tool.checkConsistency(filter={'constraint_type': 'post_upgrade'}) if x not in original_consistency_list]
+      self.assertEqual(new_consistency_list, [])
+    finally:
+      web_page.setTypeWorkflowList(original_workflow_list)
+
   def _testImageConversionFromSVGToPNG(self, portal_type="Image",
                                        filename="user-TESTSVG-CASE-EMBEDDEDDATA"):
     """ Test Convert one SVG Image (Image, TextDocument, File ...) to
