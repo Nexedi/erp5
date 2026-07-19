@@ -25,6 +25,7 @@
 #
 ##############################################################################
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import skipUnlessMySQL
 from Products.ERP5Type.Utils import str2bytes
 import io
 import six.moves.urllib as urllib
@@ -157,6 +158,7 @@ class OldDataFsSetup(ERP5TypeTestCase):
     big_file.appendData('testdata1')
 
 
+@skipUnlessMySQL
 class TestUpgradeInstanceWithOldDataFs(OldDataFsSetup):
 
   def getBusinessTemplateList(self):
@@ -169,7 +171,6 @@ class TestUpgradeInstanceWithOldDataFs(OldDataFsSetup):
       'erp5_configurator',
       'erp5_pdm',
       'erp5_trade',
-      'erp5_ingestion_mysql_innodb_catalog',
       'erp5_ingestion',
       'erp5_crm',
       'erp5_jquery_ui',

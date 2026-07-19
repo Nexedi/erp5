@@ -25,6 +25,7 @@
 #
 ##############################################################################
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import skipUnlessMySQL
 from Products.ERP5Type.Timeout import TimeoutReachedError, Deadline
 import time
 
@@ -41,6 +42,7 @@ class TestTimeout(ERP5TypeTestCase):
   def afterSetUp(self):
     self.login()
 
+  @skipUnlessMySQL
   def test_query_deadline(self):
     # We create a Z SQL Method that takes too long
     method_id = 'Base_zSlowQuery'
