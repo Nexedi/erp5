@@ -43,7 +43,8 @@ from six.moves import cStringIO as StringIO
 from Products.ERP5Form.Selection import Selection
 from Products.Formulator.TALESField import TALESMethod
 from Products.ERP5Form.ListBox import ListBoxHTMLRenderer
-
+from Products.Formulator.Errors import FormValidationError
+from Products.ERP5Form.Form import field_value_cache
 
 class DummyFieldStorage:
   """A dummy FieldStorage to be wrapped in a FileUpload object.
@@ -583,6 +584,56 @@ class TestListBox(ERP5TypeTestCase):
     msg = "editable_in_listbox: %s, editable_in_line: %s" \
             % (editable_in_listbox, editable_in_line)
     self.assertEqual(len(editable_field_list) == 1, expected_editable, msg)
+
+  def test_editableColumnNotEnabledIsNotValidated(self):
+    portal = self.getPortal()
+    portal.ListBoxZuite_reset()
+
+    column_id = 'testcolumn'
+    field_id = 'listbox_%s' % column_id
+
+    listbox = portal.FooModule_viewFooList.listbox
+    listbox.ListBox_setPropertyList(
+      field_list_method='portal_catalog',
+      field_count_method='',
+      field_columns=['%s | Test Column' % column_id],
+      field_editable_columns=['%s | Test Column' % column_id],
+    )
+
+    form = portal.FooModule_viewFooList
+    if field_id in form.objectIds():
+      form.manage_delObjects([field_id])
+    form.manage_addField(field_id, column_id, 'StringField')
+    field = getattr(form, field_id)
+    field.values['editable'] = 1
+    form.groups['bottom'].remove(field_id)
+    form.groups['hidden'].append(field_id)
+
+    foo = portal.foo_module.newContent()
+    self.tic()
+    uid = foo.getUid()
+
+    request = get_request()
+    request.form.clear()
+    request.set('here', portal.foo_module)
+    listbox.get_value('default', render_format='list', REQUEST=request)
+    request.set('%s_uid' % listbox.id, [str(uid)])
+
+    field.values['enabled'] = 0
+    field_value_cache.clear()
+    try:
+      result = listbox.validate(request)
+    except FormValidationError as error:
+      self.fail(
+        'A disabled editable cell must not be validated, but validation '
+        'raised: %r' % [err.error_text for err in error.errors])
+    self.assertFalse(
+      any(column_id in row_result for row_result in result.values()),
+      'Disabled cell must not appear in the validated result: %r' % (result,))
+
+    field.values['enabled'] = 1
+    field_value_cache.clear()
+    self.assertRaises(FormValidationError, listbox.validate, request)
 
   def test_ObjectSupport(self):
     # make sure listbox supports rendering of simple objects
