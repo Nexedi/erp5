@@ -2930,6 +2930,7 @@ class ListBoxValidator(Validator.Validator):
                 if editable_field is not None:
                   REQUEST.set('cell', o) # We need cell
                   if editable_field.get_value('editable', REQUEST=REQUEST) and \
+                     editable_field.get_value('enabled', REQUEST=REQUEST) and \
                      editable_field.need_validate(REQUEST):
                     error_result_key = '%s_%s' % (editable_field.id, o.uid)
                     key = 'field_' + error_result_key
