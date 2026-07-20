@@ -15,17 +15,20 @@
     storage_list = {
     "local": {
       "setConfiguration": function (gadget) {
-        var configuration = {
-          type: "query",
-          sub_storage: {
-            type: "uuid",
-            sub_storage: {
-              type: "indexeddb",
-              database: "local_default"
-            }
-          }
-        };
-        return gadget.setSetting('jio_storage_description', configuration)
+        return gadget.getIndexedDBPrefix()
+          .push(function (prefix) {
+            var configuration = {
+              type: "query",
+              sub_storage: {
+                type: "uuid",
+                sub_storage: {
+                  type: "indexeddb",
+                  database: prefix + "local_default"
+                }
+              }
+            };
+            return gadget.setSetting('jio_storage_description', configuration);
+          })
           .push(function () {
             return gadget.setSetting('jio_storage_name', "LOCAL");
           })
@@ -66,6 +69,7 @@
     .declareAcquiredMethod("setSetting", "setSetting")
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
+    .declareAcquiredMethod("getIndexedDBPrefix", "getIndexedDBPrefix")
     .declareMethod("render", function (options) {
       var gadget = this;
       return gadget.updateHeader({page_title: "Storage Configuration"})
