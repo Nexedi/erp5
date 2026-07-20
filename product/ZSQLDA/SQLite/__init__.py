@@ -32,8 +32,8 @@ database_type = 'SQLite'
 # Compared against the primary code (sqlite_errorcode & 0xFF) so extended
 # variants (e.g. the many SQLITE_IOERR_*) are covered too.
 _connection_lost_codes = frozenset((
-    sqlite3.SQLITE_CANTOPEN,
-    sqlite3.SQLITE_IOERR,
+    getattr(sqlite3, 'SQLITE_CANTOPEN', 14),
+    getattr(sqlite3, 'SQLITE_IOERR', 10),
 ))
 
 _icon_xlate = {
@@ -46,6 +46,20 @@ _icon_xlate = {
 
 _trailing_limit_search = re.compile(br'\bLIMIT\b[^()]*$', re.I).search
 
+_leading_keyword_search = re.compile(
+    r'^(?:\s*--[^\n]*\n)*\s*([A-Za-z]+)').search
+
+_transaction_keywords = frozenset(('BEGIN', 'COMMIT', 'END', 'ROLLBACK'))
+
+_write_keywords = frozenset((
+    'INSERT', 'REPLACE', 'UPDATE', 'DELETE', 'CREATE', 'DROP', 'ALTER'))
+
+def _leading_keyword(query):
+    if isinstance(query, bytes):
+        query = query.decode('utf-8', 'replace')
+    m = _leading_keyword_search(query)
+    return m.group(1).upper() if m else ''
+
 _file_lock_registry = {}
 _file_lock_registry_guard = threading.Lock()
 
@@ -55,6 +69,65 @@ def _get_file_lock(path):
         if file_lock is None:
             file_lock = _file_lock_registry[path] = threading.RLock()
         return file_lock
+
+_sqlite_handles = threading.local()
+
+def _new_handle(path):
+    db = sqlite3.connect(
+        path,
+        check_same_thread=False,
+        isolation_level=None,
+        detect_types=sqlite3.PARSE_DECLTYPES,
+    )
+    db.create_collation("utf8mb4_general_ci", utf8mb4_general_ci)
+
+    def subdate(date_str, days):
+        if date_str.lower() in ('current_date', 'now'):
+            dt = DateTime()
+        else:
+            dt = DateTime(date_str)
+        dt -= days
+        return dt.earliestTime().strftime("%Y-%m-%d %H:%M:%S")
+
+    db.create_function("SLEEP", 1, lambda x: time.sleep(x) or 0)
+    db.create_function("SUBDATE", 2, subdate)
+
+    db.execute("PRAGMA journal_mode=WAL")
+    db.execute("PRAGMA busy_timeout=10000")
+    return db
+
+def _handle_map():
+    try:
+        return _sqlite_handles.map
+    except AttributeError:
+        m = _sqlite_handles.map = {}
+        return m
+
+def _get_handle(path):
+    m = _handle_map()
+    db = m.get(path)
+    if db is None:
+        db = m[path] = _new_handle(path)
+    return db
+
+def _reset_handle(path):
+    m = _handle_map()
+    old = m.pop(path, None)
+    if old is not None:
+        try:
+            old.close()
+        except Exception:
+            pass
+    db = m[path] = _new_handle(path)
+    return db
+
+def _close_handle(path):
+    conn = _handle_map().pop(path, None)
+    if conn is not None:
+        try:
+            conn.close()
+        except Exception:
+            pass
 
 # ---------------------------------------------------------------------------
 # UTF-8 collation (approximates utf8mb4_general_ci)
@@ -151,7 +224,7 @@ class DB(BaseDB):
     def __init__(self, connection):
         self._connection = connection
         self._parse_connection_string()
-        self._forceReconnection()
+        _get_handle(self._kw_args['db'])
 
         transactional = 1
         if self._try_transactions == '-':
@@ -178,40 +251,15 @@ class DB(BaseDB):
     # Connection lifecycle
     # ------------------------------------------------------------------
 
+    @property
+    def db(self):
+        return _get_handle(self._kw_args['db'])
+
+    def __del__(self):
+        pass
+
     def _forceReconnection(self):
-        if self.db is not None:
-            try:
-                self.db.close()
-            except Exception:
-                pass
-
-        self.db = sqlite3.connect(
-            self._kw_args['db'],
-            check_same_thread=False,
-            # XXXX
-            # sqlite is file level lock, we can have multi write query
-            # _begin  --> file level lock
-            # insert  --> ok
-            # insert in other thread --> raise database is locked when timeout is passed
-            isolation_level=None,
-            detect_types=sqlite3.PARSE_DECLTYPES 
-        )
-
-        self.db.create_collation("utf8mb4_general_ci", utf8mb4_general_ci)
-
-        def subdate(date_str, days):
-            if date_str.lower() in ('current_date', 'now'):
-                dt = DateTime()
-            else:
-                dt = DateTime(date_str)
-            dt -= days
-            return dt.earliestTime().strftime("%Y-%m-%d %H:%M:%S")
-
-        self.db.create_function("SLEEP", 1, lambda x: time.sleep(x) or 0)
-        self.db.create_function("SUBDATE", 2, subdate)
-
-        self.db.execute("PRAGMA journal_mode=WAL")
-        self.db.execute("PRAGMA busy_timeout=10000")
+        _reset_handle(self._kw_args['db'])
 
     # ------------------------------------------------------------------
     # Schema inspection
@@ -254,19 +302,26 @@ class DB(BaseDB):
     def _query(self, query, args=None, allow_reconnect=False):
         cursor = None
         try:
+            #LOG('query execution', 0, query)
             cursor = self.db.cursor()
             if isinstance(query, bytes):
                 query = query.decode()
 
-            upper = query.strip().upper()
-            # we can have single query like "COMMIT" OR "ROLLBACK" with no open transaction
-            # use db can correctly handle such case
-            if upper == "COMMIT":
-                self.db.commit()
+            keyword = _leading_keyword(query)
+            if keyword in _transaction_keywords:
+                if not self._transactions:
+                    return
+                if keyword == 'ROLLBACK':
+                    self.db.rollback()
+                elif keyword in ('COMMIT', 'END'):
+                    self.db.commit()
+                else:
+                    cursor.execute(query)
                 return
-            if upper == "ROLLBACK":
-                self.db.rollback()
-                return
+
+            if self._transaction_begun and keyword in _write_keywords \
+                    and not self.db.in_transaction:
+                cursor.execute("BEGIN IMMEDIATE")
 
             if args:
                 cursor.execute(query, args)
@@ -385,8 +440,34 @@ class DB(BaseDB):
     # Transaction management
     # ------------------------------------------------------------------
 
-    # No _begin/_finish/_abort overrides: the general path runs in SQLite
-    # isolation_level=None, so TM's defaults suffice
+    def _begin(self, *ignored):
+        #xxx nothing, it prevent to lock the database when it's a read
+        if self._transactions:
+            self._transaction_begun = True
+
+    def _finish(self, *ignored):
+        if not self._transaction_begun:
+            return
+        self._transaction_begun = False
+        if self._transactions and self.db.in_transaction:
+            self._query("COMMIT")
+
+    def _abort(self, *ignored):
+        if not self._transaction_begun:
+            return
+        self._transaction_begun = False
+        if not self._transactions:
+            return
+        if not self.db.in_transaction:
+            return
+        try:
+            self._query("ROLLBACK")
+        except OperationalError as m:
+            LOG('ZSQLDA.SQLite', ERROR, "exception during _abort", error=True)
+            code = getattr(m, "sqlite_errorcode", None)
+            if code is None or code & 0xFF not in _connection_lost_codes:
+                raise
+
     def tpc_vote(self, *ignored):
         self._query(b"SELECT 1")
         return TM.tpc_vote(self, *ignored)

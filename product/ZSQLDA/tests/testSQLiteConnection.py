@@ -32,6 +32,7 @@ import tempfile
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import skipUnlessSQLite
+from Products.ZSQLDA import SQLite
 from Products.ZSQLDA.SQLite import DB, DeferredDB
 
 
@@ -45,7 +46,7 @@ def _remove_db(path):
 
 def _safe_close(db):
   try:
-    db.db.close()
+    SQLite._close_handle(db._kw_args['db'])
   except Exception:
     pass
 
@@ -193,6 +194,21 @@ class TestSQLiteConnection(ERP5TypeTestCase):
       db.upgradeSchema(create_sql, create_if_not_exists=True), create_sql)
     self.assertIn('Y', [t['TABLE_NAME'] for t in db.tables()])
 
+  def test_transactional_commit_and_rollback(self):
+    db = self._make_db(transactionless=False)
+    self.assertTrue(db._transactions)
+    db._query(b"CREATE TABLE t (a INTEGER)")
+
+    db._begin()
+    db._query(b"INSERT INTO t VALUES (1)")
+    db._abort()
+    self.assertEqual(db._query(b"SELECT COUNT(*) FROM t").fetch_row()[0][0], 0)
+
+    db._begin()
+    db._query(b"INSERT INTO t VALUES (2)")
+    db._finish()
+    self.assertEqual(db._query(b"SELECT COUNT(*) FROM t").fetch_row()[0][0], 1)
+
   def test_reconnect_on_broken_handle(self):
     db = self._make_db()
     db.query(b"CREATE TABLE r (a INTEGER)")
@@ -221,7 +237,7 @@ class TestSQLiteConnection(ERP5TypeTestCase):
       def __getattr__(self, name):
         return getattr(self._real, name)
 
-    db.db = _ConnProxy(db.db)
+    SQLite._handle_map()[db._kw_args['db']] = _ConnProxy(db.db)
 
     calls = []
     original_force = db._forceReconnection
@@ -236,6 +252,30 @@ class TestSQLiteConnection(ERP5TypeTestCase):
     self.assertEqual(calls, [1])
     self.assertEqual(rows[0][0], 42)
 
+  def test_transactionless_write_during_open_transaction(self):
+    fd, path = tempfile.mkstemp(suffix='.sqlite')
+    os.close(fd)
+    self.addCleanup(_remove_db, path)
+    txn = DB(path)
+    self.addCleanup(_safe_close, txn)
+    txnless = DB('-' + path)
+
+    self.assertTrue(txn._transactions)
+    self.assertFalse(txnless._transactions)
+    self.assertIs(txn.db, txnless.db)
+
+    txn._query(b"CREATE TABLE portal_ids (a INTEGER)")
+    txn._begin()
+    txn._query(b"INSERT INTO portal_ids VALUES (1)")
+    self.assertTrue(txn.db.in_transaction)
+
+    txnless.query(b"DROP TABLE IF EXISTS portal_ids")
+
+    _, rows = txnless.query(
+      b"SELECT name FROM sqlite_master WHERE name='portal_ids'")
+    self.assertEqual(rows, ())
+    txn._abort()
+
 
 @skipUnlessSQLite
 class TestSQLiteDeferredConnection(ERP5TypeTestCase):
@@ -247,7 +287,7 @@ class TestSQLiteDeferredConnection(ERP5TypeTestCase):
     # Make queued statements harmless should the transaction ever commit them.
     prep = DB('-' + path)
     prep.query(b"CREATE TABLE t (a INTEGER)")
-    prep.db.close()
+    SQLite._close_handle(path)
     db = DeferredDB(path)
     self.addCleanup(_safe_close, db)
     self.addCleanup(self.abort)
