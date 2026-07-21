@@ -43,7 +43,15 @@
         <item>
             <key> <string>text_content_warning_message</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>W:208,  0: Cannot decode using encoding "ascii", unexpected byte at position 53 (invalid-encoded-data)</string>
+                <string>W:538,  0: Cannot decode using encoding "ascii", unexpected byte at position 40 (invalid-encoded-data)</string>
+                <string>W:968,  0: Cannot decode using encoding "ascii", unexpected byte at position 47 (invalid-encoded-data)</string>
+                <string>W:2959,  0: Cannot decode using encoding "ascii", unexpected byte at position 35 (invalid-encoded-data)</string>
+                <string>W:3655,  0: Cannot decode using encoding "ascii", unexpected byte at position 43 (invalid-encoded-data)</string>
+                <string>W:703, 27: Duplicate key \'amortisation_start_price\' in dictionary (duplicate-key)</string>
+                <string>W: 31,  0: Unused import unittest (unused-import)</string>
+              </tuple>
             </value>
         </item>
         <item>

@@ -288,6 +288,20 @@ class AmortisationRule(RuleMixin):
                                                            immo_cache_dict=immo_cache_dict)
         accounting_movement_list.extend(accounting_movements)
 
+      # Terminal unimmobilisation: if the last period has a stop_date,
+      # generate unimmobilisation movements (stop_immo, stop_amo, stop_output)
+      if len(immo_period_list) > 0 and immo_period_list[-1].get('stop_date') is not None:
+        immo_cache_dict['price'] = {}
+        immo_cache_dict['currency'] = {}
+        accounting_movements = self._getAccountingMovement(
+            immo_period=None,
+            previous_period=immo_period_list[-1],
+            next_period=None,
+            period_number=len(immo_period_list),
+            item=my_item,
+            immo_cache_dict=immo_cache_dict)
+        accounting_movement_list.extend(accounting_movements)
+
       ### The next step is to create the simulation movements
       # First, we delete all of the simulation movements which are children
       # of the applied rule, but which have not been aggregated.
@@ -785,6 +799,9 @@ class AmortisationRule(RuleMixin):
         if immo_period is None:
           if previous_period is not None:
             build_unimmo = 1
+            previous_method = previous_period['initial_method']
+            previous_stop_date = previous_period['stop_date']
+            previous_owner = previous_period['owner']
         else:
           if previous_period is not None:
             previous_method = previous_period['initial_method']
