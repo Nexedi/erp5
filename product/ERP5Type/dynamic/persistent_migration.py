@@ -261,6 +261,15 @@ def iter_py2_string_oids(f):
         ):
             yield ooid
 
+def migrate_object_to_python3(obj):
+    connection = obj._p_jar
+    with tempfile.TemporaryFile() as f:
+        connection.exportFile(obj._p_oid, f)
+        f.seek(0)
+        for oid in iter_py2_string_oids(f):
+            connection.get(oid)._p_changed = True
+            log.info("updated %s during _getCopy", oid_repr(oid))
+
 
 def enable_zodbupdate_load_monkey_patch():
     import six
@@ -390,14 +399,7 @@ def enable_zodbupdate_load_monkey_patch():
     from OFS.CopySupport import CopySource
     _original_getCopy = CopySource._getCopy
     def _getCopy_with_migration(self, container):
-        connection = self._p_jar
-        with tempfile.TemporaryFile() as f:
-            connection.exportFile(self._p_oid, f)
-            f.seek(0)
-            for oid in iter_py2_string_oids(f):
-                connection.get(oid)._p_changed = True
-                log.info("updated %s during _getCopy", oid_repr(oid))
-
+        migrate_object_to_python3(self)
         return _original_getCopy(self, container)
     CopySource._getCopy = _getCopy_with_migration
 
