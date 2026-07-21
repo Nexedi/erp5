@@ -28,7 +28,6 @@
 
 
 import random
-import unittest
 from Testing import ZopeTestCase
 from zExceptions import Unauthorized
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -701,7 +700,6 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     self.stepAggregateItems(sequence=sequence)
     self.stepDeliverPackingList(sequence=sequence)
     parameter_dict.update( {'amortisation_method':UNIMMOBILISING_METHOD,
-                            'amortisation_start_price':12000,
                             'amortisation_start_price':0,
                             'amortisation_duration':48,
                             'immobilisation_vat':0 })
