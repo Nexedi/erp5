@@ -810,3 +810,82 @@ class TestUpgrader(ERP5TypeTestCase):
     """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
+
+  def stepSetPersonTitleMultipleConstraint(self, sequence=None):
+    portal = self.portal
+    skin_folder = portal.portal_skins.custom
+    property_sheet_id = self.property_sheet_id
+    property_sheet = getattr(portal.portal_property_sheets, property_sheet_id, None)
+
+    script_id = "Person_setTitlePrefixConstraint"
+    custom_script = getattr(skin_folder, script_id, None)
+    if custom_script is None:
+      skin_folder.manage_addProduct['PythonScripts'].manage_addPythonScript(script_id)
+      custom_script = getattr(skin_folder, script_id)
+      custom_script.ZPythonScript_edit('fixit=False, **kw',
+        "if not context.getTitle().startswith('pre_'):\n"
+        "  return [\"Person's title prefix is wrong\",]\n"
+        "return []"
+      )
+    script_constraint_id = "person_title_prefix_constraint"
+    script_constraint = getattr(property_sheet, script_constraint_id, None)
+    if script_constraint is None:
+      script_constraint = property_sheet.newContent(
+        portal_type="Script Constraint",
+        id=script_constraint_id,
+      )
+    script_constraint.edit(
+      script_id=script_id,
+      constraint_type="post_upgrade",
+    )
+
+    script_id = "Person_setTitleSuffixConstraint"
+    custom_script = getattr(skin_folder, script_id, None)
+    if custom_script is None:
+      skin_folder.manage_addProduct['PythonScripts'].manage_addPythonScript(script_id)
+      custom_script = getattr(skin_folder, script_id)
+      custom_script.ZPythonScript_edit('fixit=False, **kw',
+        "if not context.getTitle().endswith('_post'):\n"
+        "  return [\"Person's title suffix is wrong\",]\n"
+        "return []"
+      )
+    script_constraint_id = "person_title_suffix_constraint"
+    script_constraint = getattr(property_sheet, script_constraint_id, None)
+    if script_constraint is None:
+      script_constraint = property_sheet.newContent(
+        portal_type="Script Constraint",
+        id=script_constraint_id,
+      )
+    script_constraint.edit(
+      script_id=script_id,
+      constraint_type="post_upgrade",
+    )
+
+  def stepCheckPostUpgradeMultipleErrorReported(self, sequence=None):
+    alarm = self.portal.portal_alarms.upgrader_check_post_upgrade
+    active_process = alarm.getLastActiveProcess()
+    if active_process is None:
+      self.fail("No active process found")
+    result_list = active_process.getResultList()
+    self.assertEqual(
+      result_list[0].detail,
+      ["Person's title prefix is wrong", "Person's title suffix is wrong"]
+    )
+
+  def test_all_post_upgrade_errors_are_reported(self):
+    """
+    Check that all the post-upgrade constraints that fail are reported
+    """
+    sequence_list = SequenceList()
+    sequence_string = """
+      stepCreatePerson
+      stepValidatePerson
+      stepCreatePersonEmptyPropertySheet
+      stepSetConstraintInPersonPortalType
+      stepSetPersonTitleMultipleConstraint
+      stepTic
+      stepActiveSensePostUpgradeAlarm
+      stepTic
+      stepCheckPostUpgradeMultipleErrorReported
+    """
+    sequence_list.addSequenceString(sequence_string)
