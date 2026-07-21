@@ -204,7 +204,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
 
     # Never delete anything: per-run unique items keep leftovers inert.
     # Cancel this run's documents in purchase_packing_list_module and
-    # accounting_module where the workflow allows it — cancelled drafts
+    # accounting_module where the workflow allows it - cancelled drafts
     # are no longer builder merge targets.
     portal = self.getPortal()
     preexisting = getattr(self, '_preexisting_id_dict', None)
@@ -534,7 +534,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     # Never delete from accounting_module: cancel draft leftovers tied to
     # test organisations so the builder cannot merge into them.
     # unlink=True also frees the simulation movements for rebuild,
-    # matching what deletion used to do — only for this run's documents.
+    # matching what deletion used to do - only for this run's documents.
     accounting_module = self.getAccountingModule()
     organisation_module = self.getOrganisationModule()
     test_organisation_set = set()
@@ -963,7 +963,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
 
   def stepBuildAccounting(self, sequence=None, sequence_list=None, **kw):
     """
-    Build accounting for this run's items only — an unscoped build would
+    Build accounting for this run's items only - an unscoped build would
     also build simulation movements left unbuilt by other tests
     """
     item_uid_list = [self._getItem('item%i' % i).getUid() for i in range(30)]
@@ -2954,7 +2954,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
 
 
   def _getTestAmortisationTransactionList(self):
-    # Only this run's transactions — pre-existing ones are out of scope
+    # Only this run's transactions - pre-existing ones are out of scope
     keep = getattr(self, '_preexisting_id_dict', {}).get('accounting', set())
     result = self.getPortal().portal_catalog(portal_type='Amortisation Transaction')
     return [o for o in (b.getObject() for b in result) if o.getId() not in keep]
@@ -3650,7 +3650,7 @@ class TestImmobilisation(TestImmobilisationMixin):
                   base_credit_b=account.AccountModule_getTotalSourceCredit(brain=account))
 
   def stepTestAccountingSectionStatistics(self, sequence=None, sequence_list=None, **kw):
-    # Assert deltas over the recorded base — pre-existing data stays untouched
+    # Assert deltas over the recorded base - pre-existing data stays untouched
     account = self.getPortal().account_module.account3
     self._setAccountingStatisticsPreference('group/group A')
     self.assertEqual(sequence.get('base_debit_a') + 10000.0,
