@@ -75,7 +75,7 @@ _sqlite_handles = threading.local()
 def _new_handle(path):
     db = sqlite3.connect(
         path,
-        check_same_thread=False,
+        #check_same_thread=False,
         isolation_level=None,
         detect_types=sqlite3.PARSE_DECLTYPES,
     )
