@@ -12,7 +12,6 @@ if size is not None:
 parent_uid_list = [
   x.uid for x in context.searchResults(
     portal_type='Discussion Thread',
-    sort_on=[('modification_date', 'descending')],
     validation_state=('published', 'published_alive', 'released',
                      'released_alive', 'shared', 'shared_alive'))
 ]
