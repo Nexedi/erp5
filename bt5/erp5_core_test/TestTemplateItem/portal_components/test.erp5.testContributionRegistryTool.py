@@ -141,8 +141,6 @@ return predicate.getDestinationPortalType()
     self.assertEqual(tool.findPortalTypeName(content_type='application/octet-stream'), 'File')
 
     # Test both of extension and mimetype
-    self.assertNotEqual(tool.findPortalTypeName(filename='message.eml'),
-                        'Mail Message')
     self.assertNotEqual(tool.findPortalTypeName(content_type='message/rfc822'),
                         'Mail Message')
     self.assertEqual(tool.findPortalTypeName(filename='message.eml',

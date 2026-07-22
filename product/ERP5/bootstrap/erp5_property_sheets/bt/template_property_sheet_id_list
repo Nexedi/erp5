@@ -161,6 +161,7 @@ StandardBT5ConfiguratorItem
 StandardProperty
 StockCapacity
 StringAttributeMatchConstraint
+SubstitutableTextDocument
 SupplyLine
 SupplyLink
 TALESConstraint
