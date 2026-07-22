@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Standard Property" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>elementary_type/float</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Duration, in seconds, for which issued Authorisation Codes are valid for.</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>authorisation_code_lifespan_property</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Standard Property</string> </value>
+        </item>
+        <item>
+            <key> <string>property_default</string> </key>
+            <value> <string>python: 30.</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
