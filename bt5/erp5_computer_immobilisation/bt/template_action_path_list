@@ -14,6 +14,8 @@ Computer Partition | model
 Computer Partition | view
 Computer | apply_computer_model
 Computer | computer_partition
+Computer | immobilisation_periods
+Computer | jump_amortisation_transaction
 Computer | model
 Computer | tcp_port_number
 Computer | view
