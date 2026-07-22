@@ -1,5 +1,6 @@
 CurrencyConstraint
 LoginConstraint
+OrderBuilderConstraint
 PreviousCausalityMovementGroup
 TemplateToolERP5LoginUserManagerConstraint
 CareerConstraint
