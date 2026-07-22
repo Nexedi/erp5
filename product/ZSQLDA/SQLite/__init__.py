@@ -60,15 +60,6 @@ def _leading_keyword(query):
     m = _leading_keyword_search(query)
     return m.group(1).upper() if m else ''
 
-_file_lock_registry = {}
-_file_lock_registry_guard = threading.Lock()
-
-def _get_file_lock(path):
-    with _file_lock_registry_guard:
-        file_lock = _file_lock_registry.get(path)
-        if file_lock is None:
-            file_lock = _file_lock_registry[path] = threading.RLock()
-        return file_lock
 
 _sqlite_handles = threading.local()
 
@@ -249,7 +240,6 @@ class DB(BaseDB):
     # ------------------------------------------------------------------
     # Connection lifecycle
     # ------------------------------------------------------------------
-
     @property
     def db(self):
         return _get_handle(self._kw_args['db'])
@@ -301,7 +291,6 @@ class DB(BaseDB):
     def _query(self, query, args=None, allow_reconnect=False):
         cursor = None
         try:
-            #LOG('query execution', 0, query)
             cursor = self.db.cursor()
             if isinstance(query, bytes):
                 query = query.decode()
@@ -473,14 +462,14 @@ class DB(BaseDB):
 
     @contextmanager
     def lock(self):
-        # Can't do query way, because it's file level locked
-        # we can have database is locked error
-        file_lock = _get_file_lock(self._kw_args['db'])
-        file_lock.acquire()
         try:
+            self._query("BEGIN EXCLUSIVE")
             yield
-        finally:
-            file_lock.release()
+        except Exception:
+            self._query("ROLLBACK")
+            raise
+        else:
+            self._query("COMMIT")
 
     def _getTableSchema(self, name, *args, **kw):
         result = self.query(
