@@ -562,9 +562,7 @@ class TestBug(ERP5TypeTestCase):
     bug_line = bug.Bug_doBugLineSendFastInputAction(batch_mode=1, title=title,
         text_content=text_content)
 
-    # `text_content` is set, then `data` is immediately reset because
-    # there is no recipient for the email.
-    self.assertIsNone(bug_line.getData())
+    self.assertEqual(text_content, bug_line.getTextContent())
     self.assertEqual(title, bug_line.getTitle())
     self.assertEqual('delivered', bug_line.getSimulationState())
 
