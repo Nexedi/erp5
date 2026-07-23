@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DiscussionPost_getProjectAppPostUrl</string> </value>
+            <value> <string>DiscussionPost_getRSSItemUrl</string> </value>
         </item>
       </dictionary>
     </pickle>
