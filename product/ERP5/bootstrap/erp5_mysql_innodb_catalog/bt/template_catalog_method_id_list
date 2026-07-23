@@ -71,6 +71,7 @@ erp5_mysql_innodb/z_create_catalog
 erp5_mysql_innodb/z_create_category
 erp5_mysql_innodb/z_create_deleted_catalog
 erp5_mysql_innodb/z_create_delivery
+erp5_mysql_innodb/z_create_email
 erp5_mysql_innodb/z_create_item
 erp5_mysql_innodb/z_create_measure
 erp5_mysql_innodb/z_create_predicate
