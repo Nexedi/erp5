@@ -154,6 +154,69 @@ return %s""" % (attribute, script_name, fake_return)
     )
 
 
+class TemporaryBaseRedirect(object):
+  """Context manager that replaces ``Base_redirect`` with a lightweight
+  ``TemporaryPythonScript`` stub so skin scripts can be called in tests
+  without triggering a real HTTP redirect.
+
+  Use this when the script under test calls ``Base_redirect`` to redirect
+  the user after performing an action.
+
+  Usage::
+
+    with TemporaryBaseRedirect(self.portal):
+      result = some_skin_script.someMethod(...)
+
+  The stub returns ``(context, message)`` where *context* is the skin
+  script's context object and *message* is the
+  ``portal_status_message`` from *keep_items*.
+  """
+  def __init__(self, portal):
+    self._redirect = TemporaryPythonScript(
+        portal, 'Base_redirect',
+        'redirect_url=None, keep_items=None, abort_transaction=False, '
+        'status_code=302, **kw',
+        "return context, (keep_items or {}).get('portal_status_message', '')")
+
+  def __enter__(self):
+    self._redirect.__enter__()
+
+  def __exit__(self, *args):
+    self._redirect.__exit__(*args)
+
+
+class TemporaryBaseRenderForm(object):
+  """Context manager that replaces ``Base_renderForm`` with a lightweight
+  ``TemporaryPythonScript`` stub so skin scripts can be called in tests
+  without rendering a real Zope form.
+
+  Use this when the script under test calls ``Base_renderForm`` to show
+  a form (often for further user input) after performing an action.
+
+  Usage::
+
+    with TemporaryBaseRenderForm(self.portal):
+      result = some_skin_script.someMethod(...)
+
+  The stub returns ``(form_id, message)`` where *form_id* is the form
+  identifier passed to ``Base_renderForm`` and *message* is either the
+  explicit *message* argument or the ``portal_status_message`` from
+  *keep_items*.
+  """
+  def __init__(self, portal):
+    self._render_form = TemporaryPythonScript(
+        portal, 'Base_renderForm',
+        'form_id=None, message=None, keep_items=None, **kw',
+        "return form_id, message or (keep_items or {}).get("
+        "'portal_status_message', '')")
+
+  def __enter__(self):
+    self._render_form.__enter__()
+
+  def __exit__(self, *args):
+    self._render_form.__exit__(*args)
+
+
 # dummy objects
 class DummyMailHostMixin(object):
   """Dummy Mail Host that doesn't really send messages and keep a copy in
