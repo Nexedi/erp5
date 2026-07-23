@@ -1,0 +1,49 @@
+&gt; OSOE Tutorial: https://osoe-project.nexedi.com/lesson/erp5-HowTo.Process.Incoming.Event/view
+
+### Prerequisites
+- An Event that represents incoming communication
+
+### Steps
+
+1. **Create the incoming Event**
+   ```
+   erp5_create(relative_url="event_module", portal_type="Mail Message")
+   ```
+
+2. **Fill in details** (source = external sender, destination = your organisation)
+   ```
+   erp5_write(relative_url="&lt;event_url&gt;", field_values={
+       "field_my_title": "Customer inquiry",
+       "field_my_text_content": "&lt;p&gt;Message from customer&lt;/p&gt;",
+       "field_my_source_title": "External Contact",
+       "field_my_destination_title": "Your Organisation"
+   })
+   ```
+   Use the organisation created in Session 1 as the destination.
+
+3. **Receive the Event** (marks it as received &#8212; single step from Draft)
+   ```
+   erp5_action(relative_url="&lt;event_url&gt;", action_name="initial_stop_action")
+   ```
+
+4. **Assign a recipient** (optional &#8212; set who should handle this event)
+   ```
+   erp5_write(relative_url="&lt;event_url&gt;", field_values={
+       "field_my_destination_title": "Responsible Person Name"
+   })
+   ```
+
+5. **Create a Follow-Up Ticket** (Support Request)
+   See the `manage_support_request` guide for creating a Support Request
+   linked to this event. In the OSOE tutorial, "Create Follow Up Ticket"
+   action on the event auto-creates a Support Request and delivers the event.
+
+6. **Deliver the Event** (if not auto-delivered by Follow-Up Ticket creation)
+   ```
+   erp5_action(relative_url="&lt;event_url&gt;", action_name="deliver_action")
+   ```
+
+### Workflow: Incoming vs Outgoing
+- **Outgoing**: `initial_deliver_action` or `plan_action` &#8594; `confirm_action` &#8594; `start_action`
+- **Incoming**: `initial_stop_action` (Draft &#8594; Received) &#8594; optionally `deliver_action`
+- Use `erp5_read` to check available transitions for the current state.

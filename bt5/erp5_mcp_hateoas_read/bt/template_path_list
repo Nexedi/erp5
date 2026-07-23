@@ -1,0 +1,11 @@
+portal_callables/erp5_collect**
+portal_callables/erp5_discover**
+portal_callables/erp5_download**
+portal_callables/erp5_guide**
+portal_callables/erp5_inspect**
+portal_callables/erp5_read**
+portal_callables/erp5_read_deep**
+portal_callables/erp5_search**
+portal_callables/erp5_thread_summary**
+portal_web_services/erp5_hateoas_mcp_ro**
+web_page_module/GUIDE-*

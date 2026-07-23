@@ -1,0 +1,201 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="MCP Tool" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_Copy_or_Move_Permission</string> </key>
+            <value>
+              <list>
+                <string>Assignor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
+                <string>Associate</string>
+                <string>Member</string>
+                <string>Assignee</string>
+                <string>Manager</string>
+                <string>Auditor</string>
+                <string>Owner</string>
+                <string>Developer</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_count</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>reference</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_mt_index</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>relative_url, all_editable=0, view=\'view\'</string> </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>specification/portal_callables/erp5_read_spec</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+Read a single ERP5 document with full field details, workflows, and metadata.\n
+\n
+    Returns field values with editability info, available workflow actions,\n
+    views/tabs, listbox metadata, download/print actions, and jump links.\n
+\n
+    USE THIS WHEN:\n
+    - You need full details of ONE document (all fields, types, editability).\n
+    - You need to check which fields are editable before calling erp5_write.\n
+    - You need to discover workflow actions before calling erp5_action.\n
+    - You need to find available views, download/print actions, or sub-object types.\n
+    - You need MatrixBox data (specify the view, e.g. view=\'quantity_view\').\n
+    - You need editable fields from ALL views at once - set all_editable=true.\n
+\n
+    DO NOT USE THIS WHEN:\n
+    - You need a full document tree with children - use erp5_read_deep instead.\n
+    - You need all rows from a listbox - use erp5_collect after reading.\n
+    - You want to search for documents - use erp5_search.\n
+\n
+    TYPICAL FLOWS:\n
+    - Edit: erp5_read (check editable fields) -> erp5_write.\n
+    - Workflow: erp5_read (check available actions) -> erp5_action.\n
+    - Listbox: erp5_read (get listbox metadata) -> erp5_collect (get all rows).\n
+\n
+    - Report: erp5_read on the module -> the \'reports\' array -> erp5_collect with\n
+      that name as \'view\' for the rows, or erp5_download with it as action_name\n
+      for a file. erp5_read on the report action itself shows the dialog: its\n
+      parameters, and under \'dialog.renders\' the form that actually holds the\n
+      rows. all_listboxes is null on a dialog - normal, and not a sign that there\n
+      is nothing to collect.\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_read</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>MCP Tool</string> </value>
+        </item>
+        <item>
+            <key> <string>read_only</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>reference</string> </key>
+            <value> <string>erp5_discover</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+Discover modules & tasks
+
+]]></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Length" module="BTrees.Length"/>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+</ZopeData>

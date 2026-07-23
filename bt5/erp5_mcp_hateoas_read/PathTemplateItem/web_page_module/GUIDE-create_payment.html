@@ -1,0 +1,86 @@
+&gt; OSOE Tutorial: https://osoe-project.nexedi.com/lesson/user-Howto.Create.A.Payment/view
+
+### Prerequisites
+- A Sale Invoice Transaction (journalised or posted)
+- An open Accounting Period covering the payment date
+- A bank account (Account for Bank Line) in the chart of accounts
+
+### Steps
+
+1. **Check available actions** on the invoice
+   ```
+   erp5_read(relative_url="accounting_module/&lt;invoice_id&gt;")
+   ```
+   Look for `create_related_payment` in the `actions` array.
+
+2. **Create the Payment** via dialog action
+   The `your_node` ("Account for Bank Line") field is **required**. Find the bank account:
+   ```
+   erp5_search(relative_url="account_module",
+       query='title:"Bank"',
+       select_list=["title", "account_type"])
+   ```
+   Then create the payment:
+   ```
+   erp5_dialog(relative_url="accounting_module/&lt;invoice_id&gt;",
+       action_name="create_related_payment",
+       params={"node": "account_module/bank"})
+   ```
+   The response returns the new Payment Transaction's `relative_url`.
+
+   Other dialog fields (all have defaults from the invoice):
+   - `payment_mode`: defaults to `wire_transfer` (options: cash, cheque, credit_card, paypal)
+   - `date`: defaults to 30 days after invoice date
+   - `payment`: Section Bank Account (optional, can be set after creation)
+   - `plan`: Plan Transaction checkbox (default: unchecked)
+
+3. **Set the Bank Account** on the payment (if not set via dialog)
+   ```
+   erp5_write(relative_url="&lt;payment_url&gt;",
+       field_values={"field_my_source_payment": "organisation_module/&lt;org_id&gt;/&lt;bank_id&gt;"})
+   ```
+
+4. **Confirm the Payment** (Draft &#8594; Confirmed)
+   ```
+   erp5_action(relative_url="&lt;payment_url&gt;", action_name="confirm_action")
+   ```
+
+5. **Journalise the Payment** (Confirmed &#8594; Journalised)
+   ```
+   erp5_action(relative_url="&lt;payment_url&gt;", action_name="start_action")
+   ```
+
+6. **Post to General Ledger** (Journalised &#8594; Posted)
+   ```
+   erp5_action(relative_url="&lt;payment_url&gt;", action_name="stop_action")
+   ```
+   Requires an open Accounting Period covering the payment date.
+
+### Payment Workflow States
+| State | Action to reach it | Action name |
+|---|---|---|
+| Draft | (auto from dialog) | &#8212; |
+| Confirmed | Confirm Transaction | `confirm_action` |
+| Journalised | Journalise Transaction | `start_action` |
+| Posted to GL | Post Transaction to General Ledger | `stop_action` |
+
+### Finding Existing Payments
+Use the invoice's jump links:
+```
+erp5_read(relative_url="accounting_module/&lt;invoice_id&gt;")
+```
+Look for `jump_to_related_payment` in `jumps`. Alternatively, search:
+```
+erp5_search(relative_url="accounting_module",
+    query='portal_type:"Payment Transaction"',
+    select_list=["title", "reference", "simulation_state", "destination_section_title"],
+    sort_on='["creation_date","descending"]')
+```
+
+### Notes
+- Payment Transactions link to both the Invoice and a Bank Account.
+- Payment workflow has an extra step vs invoices: Draft &#8594; Confirm &#8594; Journalise &#8594; Post.
+- The `your_node` dialog field is **required** &#8212; always pass `account_module/bank` (or the
+  correct bank account from `account_module`).
+- Once posted, the payment is considered settled.
+- An open Accounting Period is required for posting (same as invoices).

@@ -1,0 +1,91 @@
+&gt; OSOE Tutorial: https://osoe-project.nexedi.com/lesson/user-Howto.Manage.Support.Request/view
+
+### Prerequisites
+- Access to `support_request_module` and `event_module`
+
+### OSOE Flow
+The OSOE tutorial flow is: Create incoming event &#8594; Receive &#8594; Change recipient &#8594;
+Create Follow-Up Ticket (auto-creates Support Request and auto-delivers event) &#8594;
+Create Response from event &#8594; Send response.
+
+### Steps
+
+1. **Create an incoming Event** (the initial request)
+   ```
+   erp5_create(relative_url="event_module", portal_type="Web Message")
+   ```
+   ```
+   erp5_write(relative_url="&lt;event_url&gt;", field_values={
+       "field_my_title": "Support request subject",
+       "field_my_text_content": "&lt;p&gt;Description of the issue&lt;/p&gt;",
+       "field_my_source_title": "Customer Name",
+       "field_my_destination_title": "Your Organisation"
+   })
+   ```
+   ```
+   erp5_action(relative_url="&lt;event_url&gt;", action_name="initial_stop_action")
+   ```
+   Use the organisation created in Session 1 as the destination.
+
+2. **Assign a recipient** (who should handle this request)
+   ```
+   erp5_write(relative_url="&lt;event_url&gt;", field_values={
+       "field_my_destination_title": "Responsible Person Name"
+   })
+   ```
+
+3. **Create a Follow-Up Ticket** (Support Request)
+   In the OSOE web UI, use the "Create Follow Up Ticket" action on the event,
+   which auto-creates a Support Request and links the event to it.
+
+   Via MCP, create the Support Request manually:
+   ```
+   erp5_create(relative_url="support_request_module", portal_type="Support Request")
+   ```
+   ```
+   erp5_write(relative_url="&lt;sr_url&gt;", field_values={
+       "field_my_title": "Support request title",
+       "field_my_source_section_title": "Your Organisation"
+   })
+   ```
+
+4. **Link the Event to the Support Request**
+   ```
+   erp5_write(relative_url="&lt;event_url&gt;", field_values={
+       "field_my_default_follow_up_title": "Support request title"
+   })
+   ```
+
+5. **Create a response Event**
+   In the OSOE web UI, use "Create Response" action on the incoming event.
+   Via MCP, create the response manually:
+   ```
+   erp5_create(relative_url="event_module", portal_type="Web Message")
+   ```
+   ```
+   erp5_write(relative_url="&lt;response_event_url&gt;", field_values={
+       "field_my_title": "Re: Support request subject",
+       "field_my_text_content": "&lt;p&gt;Response to the customer&lt;/p&gt;",
+       "field_my_source_title": "Your Organisation",
+       "field_my_destination_title": "Customer Name",
+       "field_my_default_follow_up_title": "Support request title",
+       "field_my_causality_title": "Support request subject"
+   })
+   ```
+   - `causality_title` links this response to the original incoming event.
+
+6. **Send the response**
+   Check available transitions, then send:
+   ```
+   erp5_action(relative_url="&lt;response_event_url&gt;", action_name="initial_deliver_action")
+   ```
+   Or use the multi-step workflow if available (see `post_outgoing_event` guide).
+
+### Notes
+- Support Requests act as tickets that group related Events.
+- All Events linked to a Support Request appear in its listbox (via `default_follow_up_title`).
+- The OSOE "Create Follow Up Ticket" action on an event auto-creates the Support Request
+  and auto-delivers the event. Via MCP, these must be done as separate steps.
+- The OSOE "Create Response" action on an event pre-fills a new response event.
+  Via MCP, create the response event manually and link it.
+- Use `initial_stop_action` for incoming events, `initial_deliver_action` for outgoing.

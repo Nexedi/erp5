@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="JSON Form" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>erp5_read_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_read_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>JSON Form</string> </value>
+        </item>
+        <item>
+            <key> <string>response_schema</string> </key>
+            <value> <string>{\n
+  "additionalProperties": true, \n
+  "type": "object", \n
+  "description": "A single ERP5 document with fields and available actions.", \n
+  "properties": {\n
+    "prints": {\n
+      "type": "array"\n
+    }, \n
+    "error": {\n
+      "type": "string", \n
+      "description": "Error message; present only on failure."\n
+    }, \n
+    "relative_url": {\n
+      "type": "string"\n
+    }, \n
+    "parent": {\n
+      "type": "string"\n
+    }, \n
+    "title": {\n
+      "type": "string"\n
+    }, \n
+    "url": {\n
+      "type": "string"\n
+    }, \n
+    "fields": {\n
+      "type": "object"\n
+    }, \n
+    "portal_type": {\n
+      "type": "string"\n
+    }, \n
+    "views": {\n
+      "type": "array"\n
+    }, \n
+    "actions": {\n
+      "type": "array"\n
+    }, \n
+    "all_editable": {\n
+      "type": "boolean"\n
+    }, \n
+    "reports": {\n
+      "type": "array"\n
+    }, \n
+    "workflows": {\n
+      "type": "array"\n
+    }, \n
+    "fields_by_view": {\n
+      "type": "object"\n
+    }, \n
+    "exchanges": {\n
+      "type": "array"\n
+    }, \n
+    "jumps": {\n
+      "type": "array"\n
+    }, \n
+    "all_listboxes": {\n
+      "type": [\n
+        "object", \n
+        "null"\n
+      ]\n
+    }, \n
+    "has_create_action": {\n
+      "type": "boolean"\n
+    }\n
+  }\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>{\n
+  "additionalProperties": false, \n
+  "required": [\n
+    "relative_url"\n
+  ], \n
+  "type": "object", \n
+  "properties": {\n
+    "all_editable": {\n
+      "default": 0, \n
+      "type": [\n
+        "boolean", \n
+        "integer"\n
+      ], \n
+      "description": "Fetch ALL views and return only editable fields grouped by view name (ignores \'view\' when true)."\n
+    }, \n
+    "relative_url": {\n
+      "type": "string", \n
+      "description": "Document relative_url, e.g. person_module/1."\n
+    }, \n
+    "view": {\n
+      "default": "view", \n
+      "type": "string", \n
+      "description": "View/tab (default view)."\n
+    }\n
+  }\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>erp5_read input schema</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

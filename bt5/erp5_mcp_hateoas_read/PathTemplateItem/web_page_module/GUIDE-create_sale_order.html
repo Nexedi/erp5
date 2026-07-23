@@ -1,0 +1,144 @@
+&gt; OSOE Tutorial: https://osoe-project.nexedi.com/lesson/user-Howto.Create.Sale.Orders/view
+
+### Prerequisites
+- A validated client (Organisation or Person) in the system
+- Optionally, a validated Sale Trade Condition
+- Validated Products for order lines
+
+### Steps
+
+1. **Create the Sale Order**
+   ```
+   erp5_create(relative_url="sale_order_module", portal_type="Sale Order")
+   ```
+   &#8594; Note the `relative_url`.
+
+2. **Search for the client**
+   ```
+   erp5_search(relative_url="organisation_module",
+       query='title:"Client Name"',
+       select_list=["title", "default_address_city"])
+   ```
+
+3. **Search for Trade Conditions** (optional but recommended)
+   ```
+   erp5_search(relative_url="sale_trade_condition_module",
+       query='validation_state:"validated"',
+       select_list=["title", "reference"])
+   ```
+
+4. **Fill in the Sale Order header**
+   ```
+   erp5_write(relative_url="&lt;new_url&gt;", field_values={
+       "field_my_title": "Sale Order Title",
+       "field_my_destination_section_title": "Client Organisation",
+       "field_my_destination_title": "Client Organisation",
+       "field_my_source_title": "Your Organisation",
+       "field_my_specialise_title": "Standard Sale Terms",
+       "field_my_source_decision_title": "Seller Contact Name",
+       "field_my_destination_decision_title": "Buyer Contact Name",
+       "field_my_order": "normal",
+       "field_my_delivery_mode": "air",
+       "field_my_incoterm": "cpt"
+   })
+   ```
+   - Use the organisation created in Session 1 for `source_title`.
+   - `source_decision_title` &#8212; seller's contact person (RelationStringField).
+   - `destination_decision_title` &#8212; buyer's contact person (RelationStringField).
+   - `order` &#8212; priority (ListField: `"urgent"`, `"normal"`, `"low"`).
+   - `delivery_mode` &#8212; shipping mode (ListField). Check valid choices with `erp5_read`.
+   - `incoterm` &#8212; international commercial terms (ListField).
+
+5. **Apply Sale Trade Condition** (if set)
+   After setting `specialise_title`, check if there is an "Apply Sale Trade Condition"
+   action available:
+   ```
+   erp5_read(relative_url="&lt;new_url&gt;")
+   ```
+   Look in the `actions` or `workflows` for an apply action. This auto-fills currency,
+   supplier profile, and payment terms from the trade condition.
+
+6. **Set dates** (write separately to avoid date expansion issues)
+   ```
+   erp5_write(relative_url="&lt;new_url&gt;", field_values={
+       "field_my_start_date": "2025-01-15",
+       "field_my_stop_date": "2025-12-31"
+   })
+   ```
+
+7. **Fill Profile tab** (on `profile_view`, requires `form_id`)
+   ```
+   erp5_write(relative_url="&lt;new_url&gt;", field_values={
+       "field_my_source_administration_title": "Your Organisation",
+       "field_my_destination_administration_title": "Client Organisation"
+   }, form_id="SaleOrder_viewProfile", skip_validation=True)
+   ```
+   Note: The view name is `profile_view` but the form_id is `SaleOrder_viewProfile`.
+   ```
+   - `source_administration_title` &#8212; invoicing entity on the seller side.
+   - `destination_administration_title` &#8212; invoicing entity on the buyer side.
+
+8. **Create Sale Order Lines** (one per product)
+   ```
+   erp5_create(relative_url="&lt;sale_order_url&gt;", portal_type="Sale Order Line")
+   ```
+   ```
+   erp5_write(relative_url="&lt;line_url&gt;", field_values={
+       "field_my_title": "Product A",
+       "field_my_resource_title": "Product A",
+       "field_my_reference": "PROD-A-001",
+       "field_my_quantity": "10",
+       "field_my_price": "100.00",
+       "field_my_quantity_unit": "unit/piece"
+   })
+   ```
+   Repeat for each product/service.
+   - `reference` &#8212; line reference / product code.
+   - `quantity_unit` &#8212; must match the product's quantity unit.
+
+9. **Confirm the Sale Order** (when ready)
+   ```
+   erp5_action(relative_url="&lt;sale_order_url&gt;", action_name="confirm_action")
+   ```
+
+### Key Fields Reference (Sale Order)
+| Field | Key | Type | Notes |
+|---|---|---|---|
+| Title | `field_my_title` | StringField | Order title |
+| Client | `field_my_destination_section_title` | RelationStringField | Billing entity |
+| Recipient | `field_my_destination_title` | RelationStringField | Delivery entity |
+| Sender | `field_my_source_title` | RelationStringField | Your organisation (**required** for confirm) |
+| Trade Condition | `field_my_specialise_title` | RelationStringField | Applied terms |
+| Seller Contact | `field_my_source_decision_title` | RelationStringField | Seller's contact person |
+| Buyer Contact | `field_my_destination_decision_title` | RelationStringField | Buyer's contact person |
+| Priority | `field_my_order` | ListField | `"urgent"`, `"normal"`, `"low"` |
+| Delivery Mode | `field_my_delivery_mode` | ListField | Shipping mode |
+| Incoterm | `field_my_incoterm` | ListField | e.g. `cpt` |
+| Shipping Date | `field_my_start_date` | DateTimeField | **Required** for confirm |
+| Delivery Date | `field_my_stop_date` | DateTimeField | |
+| Currency | `field_my_price_currency` | ListField | Auto-set by trade condition |
+| Supplier | `field_my_source_section` | ListField | Auto-set by trade condition |
+
+### Key Fields Reference (Profile tab)
+| Field | Key | Type | Notes |
+|---|---|---|---|
+| Invoice Sender | `field_my_source_administration_title` | RelationStringField | Seller invoicing entity |
+| Invoice Recipient | `field_my_destination_administration_title` | RelationStringField | Buyer invoicing entity |
+
+### Sale Order Line Fields
+| Field | Key | Type | Notes |
+|---|---|---|---|
+| Title | `field_my_title` | StringField | Line description |
+| Product | `field_my_resource_title` | RelationStringField | Product/Service (relation) |
+| Reference | `field_my_reference` | StringField | Line/product reference |
+| Quantity | `field_my_quantity` | FloatField | Number of units |
+| Price | `field_my_price` | FloatField | Price per unit |
+| Quantity Unit | `field_my_quantity_unit` | ListField | e.g. `unit/piece` |
+
+### Notes
+- Setting `specialise_title` (Trade Condition) auto-fills currency, supplier, etc.
+- Look for an "Apply Sale Trade Condition" action after setting the trade condition.
+- `source_title` (Sender/Provider) is **required** before confirm &#8212; set it explicitly.
+- `start_date` (Shipping Date) is **required** &#8212; write dates in a separate call.
+- `source_section` = supplier (billing), `destination_section` = client (billing).
+- Available workflow: draft &#8594; plan/offer/order &#8594; confirm.

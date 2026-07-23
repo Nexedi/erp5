@@ -1,0 +1,165 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="JSON Form" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>erp5_collect_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_collect_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>JSON Form</string> </value>
+        </item>
+        <item>
+            <key> <string>response_schema</string> </key>
+            <value> <string>{\n
+  "additionalProperties": true, \n
+  "type": "object", \n
+  "description": "Rows collected from a listbox.", \n
+  "properties": {\n
+    "collected_count": {\n
+      "type": "integer"\n
+    }, \n
+    "truncated": {\n
+      "type": "boolean"\n
+    }, \n
+    "total_count": {\n
+      "type": "integer", \n
+      "description": "How many rows the listbox has for these filters, whether or not they were all collected. On a REPORT this is narrower than it looks: it counts the rows THIS call produced, so when count/offset window over the products it is the size of that window, not the size of the report. Nothing in the response gives the report total; to get it, call once without the windowing parameters."\n
+    }, \n
+    "count_only": {\n
+      "type": "boolean", \n
+      "description": "Present when count_only was asked for: only total_count was computed and no row was collected."\n
+    }, \n
+    "error": {\n
+      "type": "string", \n
+      "description": "Error message; present only on failure. Read \'hint\' with it - a path this tool cannot read is often a job for erp5_search."\n
+    }, \n
+    "hint": {\n
+      "type": "string", \n
+      "description": "What to do instead, when this tool is the wrong one for the question - searching across modules, or not knowing which module holds the document, is erp5_search\'s case."\n
+    }, \n
+    "items": {\n
+      "items": {\n
+        "type": "object"\n
+      }, \n
+      "type": "array"\n
+    }, \n
+    "columns": {\n
+      "type": "array"\n
+    }, \n
+    "filters_applied": {\n
+      "type": "object", \n
+      "description": "The column criteria actually handed to the listbox\'s list_method: \'filters\' merged with any \'column:value\' terms parsed out of \'query\'. Absent when no criterion was applied. A criterion listed here still has to survive SQLCatalog - see \'warning\'."\n
+    }, \n
+    "module_defaults": {\n
+      "type": "object", \n
+      "description": "The listbox\'s own default parameters, applied before any filter of yours and invisible in the UI - an accounting module, for one, scopes every row to a section category. Rows outside that scope cannot be reached through this module at all, whatever the filters say; erp5_search bypasses it, and passing the same key in \'filters\' overrides it. Read this first when rows you expect are missing."\n
+    }, \n
+    "full_text": {\n
+      "type": "string", \n
+      "description": "Whatever of \'query\' was left over for full-text matching against SearchableText. Absent when nothing was left over."\n
+    }, \n
+    "warning": {\n
+      "type": "string", \n
+      "description": "A criterion may not have been applied: the query used OR/NOT/parentheses, one column got a combination that cannot be expressed as a single criterion, a filter column is not among the module\'s search columns (SQLCatalog drops a column it cannot map, silently), or a date column got a single value, which tests one exact timestamp rather than a period. Read this before trusting total_count: in that respect the result is unfiltered, not empty."\n
+    }\n
+  }\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+{\n
+  "additionalProperties": false, \n
+  "required": [\n
+    "relative_url"\n
+  ], \n
+  "type": "object", \n
+  "properties": {\n
+    "relative_url": {\n
+      "type": "string", \n
+      "description": "Document/module path whose listbox to read. This tool always works inside ONE listbox; to search across modules use erp5_search with no relative_url."\n
+    }, \n
+    "listbox_id": {\n
+      "default": "listbox", \n
+      "type": "string", \n
+      "description": "Id of the listbox inside the form. Only needed when a form holds more than one; the error response then lists the available ids under listbox_id_list."\n
+    }, \n
+    "max_records": {\n
+      "default": 500, \n
+      "type": "integer", \n
+      "description": "How many rows to collect in one call, capped at 500. This caps collection only; it is not a report page size. A report that declares count/offset parameters of its own, listed under list_method_parameters in the response, is paged with those, passed in filters."\n
+    }, \n
+    "count_only": {\n
+      "default": false, \n
+      "type": [\n
+        "boolean", \n
+        "integer", \n
+        "string", \n
+        "null"\n
+      ], \n
+      "description": "Return only \'total_count\' for this listbox and these filters, without collecting rows. The count comes from the module\'s own list_method, so it is the number the module itself would show - which is not always the plain catalog\'s number that erp5_search counts."\n
+    }, \n
+    "sort_on": {\n
+      "default": null, \n
+      "type": [\n
+        "string", \n
+        "array", \n
+        "null"\n
+      ], \n
+      "description": "Column to order by: a column name (ascending), a [column, direction] pair, or a list of such pairs. Must be a column listed by erp5_inspect under sort_columns."\n
+    }, \n
+    "select_list": {\n
+      "default": [], \n
+      "type": "array", \n
+      "description": "Which columns to return. Empty means every column the listbox displays, as listed under columns in the response."\n
+    }, \n
+    "filters": {\n
+      "default": {}, \n
+      "type": [\n
+        "object", \n
+        "string", \n
+        "null"\n
+      ], \n
+      "description": "Column criteria, applied exactly as the module\'s own listbox applies them - the module\'s default parameters (section scope, portal types) are preserved, and related keys resolve. Example: {\\"accounting_transaction_mirror_section_title\\": \\"%Acme%\\"}. On a module listbox the keys are columns: erp5_inspect lists the usable ones under search_columns, and a key that is not one of them may be dropped by the catalog without an error, so read \'warning\' in the response. On a report view they are not columns at all - see the end of this note. Values use SQL LIKE wildcards (%), not full-text syntax. A range is a dict, e.g. {\\"operation_date\\": {\\"query\\": [\\"2024-06-01\\", \\"2024-07-01\\"], \\"range\\": \\"minmax\\"}} - range is one of min (>=), nmin (>), ngt (<=), max (<), minmax, minngt, nminmax, nminngt. A single date is an equality on one exact timestamp, not a period. Prefer this over \'query\' for anything field-specific. A JSON string is accepted too, for clients holding a cached tool spec. On a report view this is also how the parameters of the report itself travel: the response names them under list_method_parameters (for a stock report: start_date, price_included, count, offset), and they reach the report script as keyword arguments rather than as catalog criteria, so use the names of that script and not the your_ spelling used by the dialog. A criterion on a column that a report merely displays - quantity, say - is NOT applied: it reaches the script as a keyword argument the script ignores, and the response reports that under warning. Filter on the returned rows instead."\n
+    }, \n
+    "query": {\n
+      "default": null, \n
+      "type": [\n
+        "string", \n
+        "null"\n
+      ], \n
+      "description": "Full-text term(s) matched against SearchableText. \'column:value\' terms are extracted and applied as filters, including comparisons such as \'operation_date:>=2024-06-01 AND operation_date:<2024-07-01\', which become a real range criterion. OR, NOT and parentheses cannot be mapped and return a warning - use \'filters\' for those. Any column whose terms cannot be combined is reported in the warning and left unfiltered rather than guessed at."\n
+    }, \n
+    "view": {\n
+      "default": "view", \n
+      "type": "string", \n
+      "description": "Which form holds the listbox to read. The default is the module list view. It also accepts a REPORT ACTION NAME from the reports array of erp5_read or erp5_inspect, for example global_stock_report: this tool then follows the report parameter dialog through to the form that renders the table, returns those rows, and echoes what it resolved under report. The id of a rendered report form works here too."\n
+    }\n
+  }\n
+}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>erp5_collect input schema</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

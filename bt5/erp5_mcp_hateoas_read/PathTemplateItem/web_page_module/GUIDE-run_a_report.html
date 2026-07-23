@@ -1,0 +1,67 @@
+Run a report and read it as rows.
+
+A report is not a stored list of documents: it is an action that COMPUTES a table
+from parameters. erp5_read and erp5_inspect list the reports of a module under
+`reports`.
+
+### 1. Find the report
+
+    erp5_discover()
+    erp5_inspect(modules="&lt;module>")
+
+The `reports` array names them, each as {name, title}.
+
+### 2. Get the rows
+
+    erp5_collect(relative_url="&lt;module>", view="&lt;report action name>")
+
+A report action is a parameter dialog, and a dialog holds no rows itself;
+erp5_collect follows it through to the form that renders the table. The answer
+carries:
+
+- `items` and `columns` - the table itself
+- `report` - which dialog was followed, and to which form
+- `list_method` and `list_method_parameters` - the parameters the script behind
+  the report accepts, with their defaults
+
+### 3. Pass the report parameters
+
+Use the names from `list_method_parameters`, inside `filters`:
+
+    erp5_collect(relative_url="&lt;module>", view="&lt;report action name>",
+                 filters={"count": 20, "offset": 0})
+
+A dialog spells the same things `your_count`, `your_offset` and so on; the script
+knows them without that prefix. What each one does is decided by that script
+alone, so read `list_method_parameters` rather than assuming: a parameter named
+`count` is not necessarily a page size.
+
+### 4. Page through it
+
+A report that declares `count` and `offset` is paged with them: offset 0, then
+20, then 40. `max_records` only caps how many rows erp5_collect gathers in one
+call - it is not the page size of the report.
+
+When you pass a row limit, `total_count` describes the page you asked for. For
+the grand total, call once with `count_only=true` and no count/offset.
+
+### When a report has no single table
+
+Reports built from several sections keep those sections outside the view, so
+there is nothing for erp5_collect to read - most accounting reports are built
+that way. erp5_collect says so and names the alternative:
+
+    erp5_download(relative_url="accounting_module",
+                  action_name="trial_balance_report", action_type="report")
+
+### When you want a file rather than rows
+
+    erp5_download(relative_url="&lt;module>", action_name="&lt;report action name>",
+                  params={"format": "pdf"})
+
+### Why erp5_read answers all_listboxes: null on a report
+
+Reading a report action shows its DIALOG, and a dialog has no listbox. That is
+expected. The same answer carries a `dialog` block naming the form that does hold
+the rows, under `dialog.renders`, together with the erp5_collect call returning
+them.

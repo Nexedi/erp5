@@ -1,0 +1,190 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="MCP Tool" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_count</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_mt_index</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>count_only=False, limit=50, offset=0, query=None, relative_url=None, select_list=[], sort_on=None</string> </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>specification/portal_callables/erp5_search_spec</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+Search the ERP5 catalog, either across the whole portal or inside one module.\n
+\n
+    Omit relative_url and the search covers every module at once — the same\n
+    catalog the UI\'s global search field queries. Name a module and it is that\n
+    same catalog restricted to the module\'s contents, so scoping narrows, it\n
+    never reaches anything a portal-wide search would miss.\n
+\n
+    Results include each document\'s relative_url for further reading with erp5_read.\n
+\n
+    QUERY SYNTAX: \'column:value\' or \'column:"value with spaces"\' — terms are\n
+    ANDed, and the word AND between them is optional. Comparisons are\n
+    understood: \'modification_date:>=2024-06-01 AND modification_date:<2024-07-01\'\n
+    becomes ONE range criterion, quoted or not. OR, NOT and parentheses cannot\n
+    be mapped — the query is dropped whole and \'warning\' says so, so do not\n
+    write \'( a AND b )\'. Words with no column match title LIKE %words%, and\n
+    only when no column term is present. \'filters_applied\' echoes back what was\n
+    really sent to the catalog.\n
+\n
+    USE THIS WHEN:\n
+    - You are looking for documents ACROSS modules — this is the only tool that\n
+      can, by leaving relative_url out. erp5_collect always works inside one\n
+      listbox.\n
+    - You need to find documents by keyword, state, contributor, or other criteria.\n
+    - You want a paginated list of documents in a module.\n
+    - You need just a few fields per document (use select_list for efficiency).\n
+    - You need HOW MANY documents match — pass count_only=true.\n
+\n
+    DO NOT USE THIS WHEN:\n
+    - You are filtering or reading a column the module SHOWS in its listbox, such\n
+      as a related key like accounting_transaction_mirror_section_title\n
+      ("Personenkonto") or a date like operation_date — use erp5_collect. This\n
+      tool runs the plain catalog, so a module\'s own list_method and its\n
+      default parameters are not applied: such a column comes back empty and a\n
+      criterion on it either fails or is silently ignored. erp5_inspect lists\n
+      those columns under search_columns.\n
+    - You want the result a user sees in the module — use erp5_collect. Counts\n
+      can differ legitimately, because the listbox applies default parameters\n
+      (a section scope, for instance) that this tool knows nothing about.\n
+    - You need ALL rows from a document\'s embedded listbox — use erp5_collect instead.\n
+    - You want the full content of a single document — use erp5_read with its relative_url.\n
+    - You need a document tree (e.g. Sale Order + all Lines) — use erp5_read_deep.\n
+\n
+    NEXT STEPS: Use relative_url from results with erp5_read (single doc) or erp5_read_deep (tree).\n
+\n
+    WATCH THE \'hint\' AND \'warning\' KEYS: when this tool notices it has hit a\n
+    limit of the plain catalog path — a requested column empty in every row, or\n
+    a join the catalog cannot make on its own — it returns \'hint\' naming the\n
+    tool to use instead. \'warning\' means a criterion was not applied at all.\n
+    Either way the rows may be unfiltered or incomplete, so read it before\n
+    trusting them.\n
+\n
+    COUNTING: pass count_only=true and read \'total_count\'. That is one catalog\n
+    COUNT query against the same filters the search itself would apply — exact,\n
+    and independent of how many documents match. It returns no rows.\n
+\n
+    Without count_only there is still no total: \'count\' is the number of rows on\n
+    the page you asked for, and \'has_more\' is a heuristic (a full page came back,\n
+    so more probably exist). DO NOT use limit=1 to count — it answers count=1\n
+    whatever matches. Paging until has_more is false and summing \'count\' also\n
+    works, but costs one request per page and returns every row to do it.\n
+    
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_search</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>MCP Tool</string> </value>
+        </item>
+        <item>
+            <key> <string>read_only</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Search documents</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Length" module="BTrees.Length"/>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,120 @@
+&gt; OSOE Tutorial: https://osoe-project.nexedi.com/lesson/user-Howto.Create.Trade.Conditions/view
+
+### Prerequisites
+- Access to `sale_trade_condition_module` (verify with `erp5_discover`)
+- Your organisation created in Session 1 (with a validated Bank Account)
+
+### Steps
+
+1. **Create the Trade Condition**
+   ```
+   erp5_create(relative_url="sale_trade_condition_module", portal_type="Sale Trade Condition")
+   ```
+   &#8594; Note the `relative_url`.
+
+2. **Discover editable fields**
+   ```
+   erp5_read(relative_url="&lt;new_url&gt;", all_editable=True)
+   ```
+
+3. **Fill in trade condition details** (main `view`)
+   ```
+   erp5_write(relative_url="&lt;new_url&gt;", field_values={
+       "field_my_title": "Standard Sale Terms",
+       "field_my_reference": "STC-001",
+       "field_my_description": "Standard sale terms description",
+       "field_my_price_currency": "currency_module/EUR",
+       "field_my_incoterm": "cpt",
+       "field_my_comment": "VAT",
+       "field_my_source_section_title": "Your Organisation",
+       "field_my_specialise_title_list": ["Default Trade Business Process"]
+   })
+   ```
+   - Use the organisation created in Session 1 for `source_section_title`.
+   - The `specialise_title_list` links to a Business Process &#8212; this is **critical** for
+     the order&#8594;packing list&#8594;invoice chain to work. Search `business_process_module` to
+     find available ones.
+
+4. **Create a Payment Condition sub-object**
+   ```
+   erp5_create(relative_url="&lt;trade_condition_url&gt;", portal_type="Payment Condition")
+   ```
+   ```
+   erp5_write(relative_url="&lt;payment_condition_url&gt;", field_values={
+       "field_my_title": "30 Days Net from Invoice",
+       "field_my_payment_term": "30",
+       "field_my_trade_date": "trade_phase/trade/invoicing",
+       "field_my_payment_mode": "wire_transfer",
+       "field_my_efficiency": "1.0"
+   }, skip_validation=True)
+   ```
+   For split payments, create multiple Payment Conditions with different `efficiency`
+   values (e.g. 0.2 for 20% advance, 0.8 for 80% balance).
+
+5. **Set supplier profile** (on `view_profile` tab, requires `form_id`)
+   ```
+   erp5_write(relative_url="&lt;new_url&gt;", field_values={
+       "field_my_source_title": "Your Organisation",
+       "field_my_source_decision_title": "Your Organisation",
+       "field_my_source_administration_title": "Your Organisation"
+   }, form_id="SaleTradeCondition_viewProfile", skip_validation=True)
+   ```
+   These fields define who is the sender/provider, seller, and invoice sender.
+   Use the organisation created in Session 1.
+
+   Then **set the Payee** (supplier's bank account) &#8212; requires saving first so
+   the bank account choices populate:
+   ```
+   erp5_read(relative_url="&lt;new_url&gt;", view="view_profile")
+   ```
+   Check `my_source_payment.valid_choices` for available bank accounts, then:
+   ```
+   erp5_write(relative_url="&lt;new_url&gt;", field_values={
+       "field_my_source_payment": "organisation_module/&lt;org_id&gt;/&lt;bank_account_id&gt;"
+   }, form_id="SaleTradeCondition_viewProfile", skip_validation=True)
+   ```
+   The supplier organisation must have a validated Bank Account for this to work.
+
+6. **Validate the Trade Condition**
+   ```
+   erp5_action(relative_url="&lt;new_url&gt;", action_name="validate_action")
+   ```
+
+### Key Fields Reference (main view)
+| Field | Key | Type | Notes |
+|---|---|---|---|
+| Title | `field_my_title` | StringField | Condition name |
+| Reference | `field_my_reference` | StringField | Unique code |
+| Description | `field_my_description` | TextAreaField | Business process details |
+| Currency | `field_my_price_currency` | ListField | e.g. `currency_module/EUR` |
+| Incoterm | `field_my_incoterm` | ListField | e.g. `cpt` (Carriage Paid To) |
+| Comment | `field_my_comment` | TextAreaField | e.g. "VAT" |
+| Supplier | `field_my_source_section_title` | RelationStringField | Billing entity |
+| Business Process | `field_my_specialise_title_list` | MultiRelationStringField | **Required** &#8212; pass as list |
+| Client | `field_my_destination_section_title` | RelationStringField | Buyer (optional) |
+
+### Key Fields Reference (Payment Condition sub-object)
+| Field | Key | Type | Notes |
+|---|---|---|---|
+| Title | `field_my_title` | StringField | Description |
+| Term (Days) | `field_my_payment_term` | IntegerField | e.g. 30 |
+| Trade Date | `field_my_trade_date` | ListField | e.g. `trade_phase/trade/invoicing` |
+| Payment Mode | `field_my_payment_mode` | ListField | `wire_transfer`, `cash`, `cheque`, `credit_card`, `paypal` |
+| Percentage | `field_my_efficiency` | FloatField | 1.0 = 100%, 0.2 = 20% |
+| End of Month | `field_my_payment_end_of_month` | CheckBoxField | |
+
+### Key Fields Reference (view_profile)
+| Field | Key | Type | Notes |
+|---|---|---|---|
+| Sender/Provider | `field_my_source_title` | RelationStringField | Shipping entity |
+| Seller | `field_my_source_decision_title` | RelationStringField | Decision-maker |
+| Invoice Sender | `field_my_source_administration_title` | RelationStringField | Invoicing entity |
+| Payee | `field_my_source_payment` | ListField | Bank account (auto-populated) |
+
+### Notes
+- Trade Conditions define default terms for orders (currency, payment, parties).
+- **Must** link to a Business Process (`specialise_title_list`) for the sale&#8594;delivery&#8594;invoice chain.
+- `specialise_title_list` is a MultiRelationStringField &#8212; pass value as a **list**: `["Title"]`.
+- Payment terms use Payment Condition sub-objects (create via `erp5_create` on the trade condition).
+- Profile tab sets the supplier roles &#8212; these auto-fill on Sale Orders that use this condition.
+- When applied to a Sale Order, they auto-fill source_section, currency, sender, etc.

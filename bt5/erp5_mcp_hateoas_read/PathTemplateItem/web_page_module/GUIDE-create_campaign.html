@@ -1,0 +1,88 @@
+&gt; OSOE Tutorial: https://osoe-project.nexedi.com/lesson/user-Howto.Create.Campaigns/view
+
+### Prerequisites
+- Access to `campaign_module` (verify with `erp5_discover`)
+- Client organisation should exist
+- Your organisation should exist (created in Session 1)
+
+### Steps
+
+1. **Create the Campaign**
+   ```
+   erp5_create(relative_url="campaign_module", portal_type="Campaign")
+   ```
+   &#8594; Note the `relative_url`.
+
+2. **Discover editable fields**
+   ```
+   erp5_read(relative_url="&lt;new_url&gt;", all_editable=True)
+   ```
+
+3. **Fill in campaign details**
+   ```
+   erp5_write(relative_url="&lt;new_url&gt;", field_values={
+       "field_my_title": "Campaign Title",
+       "field_my_reference": "CAMP-001",
+       "field_my_start_date": "2025-01-01",
+       "field_my_stop_date": "2025-12-31",
+       "field_my_source_section_title": "Your Organisation",
+       "field_my_source_decision_title": "Supervisor Name",
+       "field_my_source_title": "Operations Manager Name",
+       "field_my_destination_title": "Target Organisation",
+       "field_my_source_trade_title_list": ["Operator 1", "Operator 2"],
+       "field_my_quantity": "100",
+       "field_my_quantity_unit": "unit/piece",
+       "field_my_price": "50.00",
+       "field_my_price_currency": "currency_module/EUR"
+   })
+   ```
+   - `source_section_title` &#8212; Your company (billing supplier). Use the organisation
+     created in Session 1.
+   - `source_decision_title` &#8212; Supervisor/approver (RelationStringField to Person).
+   - `source_title` &#8212; Operations manager running the campaign (RelationStringField).
+   - `destination_title` &#8212; Target organisation (RelationStringField).
+   - `source_trade_title_list` &#8212; Operators assigned to the campaign
+     (MultiRelationStringField &#8212; pass as a **list**).
+   - `quantity` / `quantity_unit` / `price` / `price_currency` &#8212; campaign budget details.
+
+4. **Open or Submit the Campaign**
+   Check available transitions with `erp5_read`:
+   ```
+   erp5_read(relative_url="&lt;new_url&gt;")
+   ```
+   Look at the `workflows` array for available actions.
+
+   **OSOE pattern** &#8212; use `open_action` (Open Ticket):
+   ```
+   erp5_action(relative_url="&lt;new_url&gt;", action_name="open_action")
+   ```
+
+   **Alternative** &#8212; some instances only have `submit_action`:
+   ```
+   erp5_action(relative_url="&lt;new_url&gt;", action_name="submit_action")
+   ```
+
+   Always check `erp5_read` to see which actions are available.
+
+### Key Fields Reference
+| Field | Key | Notes |
+|---|---|---|
+| Title | `field_my_title` | Campaign name |
+| Reference | `field_my_reference` | Unique identifier |
+| Start Date | `field_my_start_date` | ISO date |
+| Stop Date | `field_my_stop_date` | ISO date |
+| Billing Supplier | `field_my_source_section_title` | Your company (relation) |
+| Supervisor | `field_my_source_decision_title` | Approver (relation to Person) |
+| Operations Manager | `field_my_source_title` | Person running the campaign (relation) |
+| Target | `field_my_destination_title` | Target organisation (relation) |
+| Operators | `field_my_source_trade_title_list` | MultiRelation &#8212; pass as **list** |
+| Quantity | `field_my_quantity` | FloatField |
+| Quantity Unit | `field_my_quantity_unit` | ListField &#8212; e.g. `unit/piece` |
+| Price | `field_my_price` | FloatField &#8212; unit price |
+| Currency | `field_my_price_currency` | ListField &#8212; e.g. `currency_module/EUR` |
+
+### Notes
+- Campaign uses the Ticket workflow. The OSOE tutorial uses "Open Ticket" (`open_action`).
+  Some instances may only have `submit_action`. Always check available transitions.
+- The Campaign Type (`field_my_resource`) is a ListField (not free text):
+  use `service_module/marketing_*` values if available.

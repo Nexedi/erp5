@@ -1,0 +1,65 @@
+&gt; OSOE Tutorial: https://osoe-project.nexedi.com/lesson/user-Howto.Create.Organisations/view
+
+### Prerequisites
+- Access to `organisation_module` (verify with `erp5_discover`)
+
+### Steps
+
+1. **Create the Organisation document**
+   ```
+   erp5_create(relative_url="organisation_module", portal_type="Organisation")
+   ```
+   &#8594; Note the `relative_url` from the response.
+
+2. **Discover all editable fields**
+   ```
+   erp5_read(relative_url="&lt;new_url&gt;", all_editable=True)
+   ```
+
+3. **Fill in organisation details** (main `view`)
+   ```
+   erp5_write(relative_url="&lt;new_url&gt;", field_values={
+       "field_my_title": "Organisation Name",
+       "field_my_corporate_name": "Legal Name",
+       "field_my_role_list": "client",
+       "field_my_function": "sales",
+       "field_my_default_email_coordinate_text": "contact@example.com",
+       "field_my_default_telephone_coordinate_text": "+33 1 23 45 67 89"
+   })
+   ```
+   - `role_list` is a ParallelListField &#8212; e.g. `"client"`, `"supplier"`, `"internal"`.
+     Check valid choices with `erp5_read`.
+   - `function` is a ListField &#8212; e.g. `"sales"`, `"marketing"`, `"production"`.
+     Check valid choices with `erp5_read`.
+
+4. **Fill in address**
+   ```
+   erp5_write(relative_url="&lt;new_url&gt;", field_values={
+       "field_my_default_address_street_address": "123 Business Avenue",
+       "field_my_default_address_city": "Paris",
+       "field_my_default_address_zip_code": "75001",
+       "field_my_default_address_region": "europe/western_europe/france"
+   })
+   ```
+
+5. **Validate the Organisation**
+   ```
+   erp5_action(relative_url="&lt;new_url&gt;", action_name="validate_action")
+   ```
+
+### Key Fields Reference
+| Field | Key | Notes |
+|---|---|---|
+| Title | `field_my_title` | Display name |
+| Corporate Name | `field_my_corporate_name` | Legal name |
+| Corporate ID | `field_my_corporate_registration_code` | Registration number |
+| Role | `field_my_role_list` | ParallelListField &#8212; e.g. `"client"`, `"supplier"` |
+| Function | `field_my_function` | ListField &#8212; e.g. `"sales"`, `"marketing"` |
+| Email | `field_my_default_email_coordinate_text` | FormBox sub-field |
+| Phone | `field_my_default_telephone_coordinate_text` | FormBox sub-field |
+| Fax | `field_my_default_fax_coordinate_text` | FormBox sub-field |
+| Website | `field_my_default_url_string` | |
+| Street | `field_my_default_address_street_address` | Multi-line |
+| City | `field_my_default_address_city` | |
+| Zip | `field_my_default_address_zip_code` | |
+| Region | `field_my_default_address_region` | Category path |

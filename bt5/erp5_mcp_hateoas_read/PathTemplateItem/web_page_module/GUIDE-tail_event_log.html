@@ -1,0 +1,80 @@
+Use `erp5_log_tail` to read the server-side event log emitted by tests,
+Python Scripts, components, and ERP5 internals. This is the preferred
+debugging surface when working with `erp5_live_test`, `erp5_skin_call`,
+or any code running inside ERP5.
+
+### Why not `print()` or `self.fail(...)`?
+- `print()` output from live tests is swallowed by the test runner.
+- `self.fail("DATES: %r" % d)` aborts the test at the first probe &#8212; you
+  only get one checkpoint per run, and your test is now red.
+- `erp5_log_tail` doesn't touch the test at all. You can sprinkle log
+  lines anywhere, run the green test, and read every checkpoint at once.
+
+### Prerequisites
+- Must use the `erp5-mcp-portalmanager` entry point (enables the
+  `erp5_log_tail` tool).
+- The `IntrospectionTool` is part of the standard ERP5 install &#8212; no
+  setup needed.
+
+### Steps
+
+1. **Emit a log line from ERP5 Python code** (test, component, script):
+   ```python
+   from Products.ERP5Type.Log import log
+   log('my_probe', 'DEBUG dates=%r' % dates)
+   ```
+   `log()` is safe under restricted Python, so it also works in
+   `portal_skins` Python Scripts. Pick a distinctive category string
+   (here `my_probe`) so you can filter on it later.
+
+2. **Run the thing** &#8212; `erp5_live_test(...)`, `erp5_skin_call(...)`,
+   confirm a workflow action via `erp5_action(...)`, etc.
+
+3. **Read the matching log lines** (token-conscious by default):
+   ```
+   erp5_log_tail(grep="my_probe")
+   ```
+   &#8594; Returns `entry_count`, `line_count`, `truncated`, `dropped_entry_count`,
+     and `content` (HTML-unescaped, entries separated by `------`). The
+     inline response is capped to the most-recent `max_entries` (default 50,
+     max 500) so a noisy log can't blow up your context. The window is
+     also bounded by the IntrospectionTool's own buffer, so call this soon
+     after the operation you want to inspect.
+
+4. **For long debugging sessions, spill to disk**:
+   ```
+   erp5_log_tail(grep="my_probe", save_to_path="/tmp/probe.log")
+   ```
+   &#8594; Writes the FULL filtered content to disk and returns only metadata
+     (`entry_count`, `saved_to`, `size_bytes`, `sha256`) plus a short
+     `first_entry` / `last_entry` preview. `max_entries` is ignored on the
+     disk side. Use this when you expect many matches.
+
+### Reading ERP5's own log output
+The tail also exposes everything ERP5 logs itself:
+- `RuleTool Updating simulation for /erp5/...` (simulation expand)
+- `ManufacturingOrderBuilder_selectSimulationMovement, ...` (build steps)
+- `WARNING SQLCatalog Failed to call method ...` (indexing errors)
+- `WARNING DeprecationWarning ...`
+Use `grep` to focus on what you care about.
+
+### Typical debug loop
+```
+# 1. Add log() calls to the test method
+# 2. Run it
+erp5_live_test(test_list="testFoo", run_only="test_bar")
+# 3. Read what your test printed
+erp5_log_tail(grep="my_probe")
+# 4. Tweak assertions, rerun. The test stays green so you accumulate
+#    checkpoints across runs.
+```
+
+### Tips
+- The data endpoint is `{site_root}/portal_introspections/tailEventLog`
+  &#8212; the companion `IntrospectionTool_tailEventLog` only returns the
+  HTML viewer wrapper, which is useless to a tool client.
+- Don't use a generic category like `"DEBUG"` &#8212; many ERP5 components
+  log under generic tags. A distinctive `"yourproject_probe"` tag
+  saves you from grep collisions.
+- This is *not* a way to read old events. If the operation you want to
+  inspect has already scrolled out of the window, re-run it first.

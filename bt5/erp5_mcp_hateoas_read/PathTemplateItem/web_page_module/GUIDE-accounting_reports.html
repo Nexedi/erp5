@@ -1,0 +1,69 @@
+&gt; OSOE Tutorial: https://osoe-project.nexedi.com/lesson/user-Howto.Generate.Report/view
+
+### Reading these reports over MCP
+
+Every report below is listed by erp5_read and erp5_inspect under `reports`, and a
+report name passed to erp5_collect as `view` returns rows:
+
+    erp5_collect(relative_url="accounting_module", view="journal_report")
+
+Most reports in this module are built from SEVERAL sections, and those sections
+live outside the view erp5_collect reads. For those it says so and names the
+alternative, which is the rendered file:
+
+    erp5_download(relative_url="accounting_module",
+                  action_name="trial_balance_report", action_type="report")
+
+erp5_guide(tutorial="GUIDE-run_a_report") walks the whole sequence.
+
+### Available Reports (via Web UI)
+Access via the **Accounting module &#8594; Site Reports** tab.
+
+| Report | Description |
+|---|---|
+| Trial Balance | Summary of all account balances for a period |
+| General Ledger | Detailed list of all transactions per account |
+| Profit &amp; Loss | Revenue vs expenses for a period |
+| Balance Sheet | Assets, liabilities, and equity at a point in time |
+| Account Statement | Transactions for a specific account |
+| Journal | All transactions grouped by journal for a period |
+
+### Common Report Parameters
+| Parameter | Description |
+|---|---|
+| Section Category | Filter by organisation group (e.g. `group/my_group`) |
+| From Date | Start of reporting period |
+| At Date | End of reporting period (or point-in-time for Balance Sheet) |
+| Simulation State | Filter by document state (e.g. `stopped`, `delivered`) |
+| Account | Filter to a specific account (for Account Statement) |
+| Journal Type | Filter by journal type (for Journal report) |
+
+### What you CAN do via MCP
+
+1. **Search accounting transactions**
+   ```
+   erp5_search(relative_url="accounting_module",
+       query='portal_type:"Sale Invoice Transaction" AND simulation_state:"stopped"',
+       select_list=["title", "reference", "source_section_title",
+                    "destination_section_title", "start_date"],
+       sort_on='["start_date","descending"]')
+   ```
+
+2. **Read individual transactions**
+   ```
+   erp5_read(relative_url="accounting_module/&lt;transaction_id&gt;")
+   erp5_read_deep(relative_url="accounting_module/&lt;transaction_id&gt;")
+   ```
+
+3. **Search by account**
+   ```
+   erp5_search(relative_url="accounting_module",
+       query='portal_type:("Sale Invoice Transaction" OR "Purchase Invoice Transaction")',
+       select_list=["title", "simulation_state", "start_date"],
+       sort_on='["start_date","descending"]')
+   ```
+
+### Notes
+- The web UI (Accounting module &#8594; Site Reports) remains the place to read a multi-section report laid out for a human.
+- MCP can still help with individual transaction lookup, reading, and basic filtering.
+- A report rendering one table comes back as rows through erp5_collect; one built from several sections comes back as a file through erp5_download.

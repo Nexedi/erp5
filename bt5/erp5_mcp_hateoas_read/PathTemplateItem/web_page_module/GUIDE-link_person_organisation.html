@@ -1,0 +1,42 @@
+&gt; OSOE Tutorial: https://osoe-project.nexedi.com/lesson/user-Howto.Link.Persons.and.Organisations/view
+
+### Prerequisites
+- A validated Person and a validated Organisation
+
+### Steps
+
+1. **Find the Person**
+   ```
+   erp5_search(relative_url="person_module",
+       query='title:"Person Name"',
+       select_list=["title", "validation_state"])
+   ```
+
+2. **Read the Person to find career fields**
+   ```
+   erp5_read(relative_url="person_module/&lt;person_id&gt;")
+   ```
+   Look for `my_career_subordination_title` in the fields.
+
+3. **Link to the Organisation**
+   ```
+   erp5_write(relative_url="person_module/&lt;person_id&gt;", field_values={
+       "field_my_career_subordination_title": "Organisation Name"
+   })
+   ```
+   The relation field auto-resolves the organisation by title.
+
+4. **Optionally set the role within the organisation**
+   ```
+   erp5_write(relative_url="person_module/&lt;person_id&gt;", field_values={
+       "field_my_career_function_title": "Developer"
+   })
+   ```
+
+### Notes
+- `career_subordination_title` is a RelationStringField &#8212; set it by typing the
+  organisation's title and the UID is resolved automatically.
+- The Person's career section shows the linked organisation after saving.
+- You can also set `field_my_career_role` for the person's role category.
+- This step is optional if `career_subordination_title` was already set
+  during the `create_person` step.

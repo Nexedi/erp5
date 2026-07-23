@@ -1,0 +1,64 @@
+### Prerequisites
+- Must use the `erp5-mcp-portalmanager` entry point (enables the `erp5_live_test` tool)
+- Access to `portal_components` (verify with `erp5_discover`)
+
+### Steps
+
+1. **Find Test Components**
+   ```
+   erp5_search(
+     relative_url="portal_components",
+     query="portal_type:Test Component AND validation_state:validated",
+     select=["reference", "title"]
+   )
+   ```
+   &#8594; Lists all validated Test Components with their references.
+
+2. **Read the test source** (optional &#8212; to find specific test methods)
+   ```
+   erp5_read(relative_url="portal_components/&lt;id&gt;", all_editable=True)
+   ```
+   &#8594; The `text_content` field contains the Python test source code.
+
+3. **Run all tests in a component**
+   ```
+   erp5_live_test(component_path="portal_components/&lt;id&gt;")
+   ```
+   &#8594; Runs all test methods. Returns pass/fail count and any failure details.
+
+4. **Run a specific test method**
+   ```
+   erp5_live_test(
+     component_path="portal_components/&lt;id&gt;",
+     run_only="TestClassName.test_method_name"
+   )
+   ```
+   &#8594; Runs only the specified test method. Useful for debugging a single failure.
+
+### Interpreting Results
+- **OK**: All tests passed. The output shows the count of tests run.
+- **FAILED**: One or more tests failed. Check the traceback for details.
+- **ERROR**: A test raised an unexpected exception (not an assertion failure).
+
+### Tips
+- Test Components follow Python `unittest` conventions (classes inheriting from `ERP5TypeTestCase`)
+- Use `run_only` to iterate quickly on a failing test
+- If a test modifies data, it runs inside a transaction that gets rolled back
+
+### Debugging a live test: prefer `erp5_log_tail` over print/self.fail
+`print()` output is swallowed by the live-test runner and `self.fail()` aborts
+the test at the first probe. Instead, log from the test and read the log back:
+
+```python
+# Inside the test method:
+from Products.ERP5Type.Log import log
+log('my_probe', 'DEBUG dates=%r line=%r' % (dates, line))
+```
+
+Then after the test run:
+```
+erp5_log_tail(grep="my_probe")
+```
+
+This lets you capture *every* checkpoint in a single passing run.
+See `erp5_guide(tutorial="tail_event_log")` for the full pattern.

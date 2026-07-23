@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="JSON Form" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>erp5_read_deep_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_read_deep_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>JSON Form</string> </value>
+        </item>
+        <item>
+            <key> <string>response_schema</string> </key>
+            <value> <string>{\n
+  "additionalProperties": true, \n
+  "type": "object", \n
+  "description": "A document and its sub-object tree.", \n
+  "properties": {\n
+    "relative_url": {\n
+      "type": "string"\n
+    }, \n
+    "title": {\n
+      "type": "string"\n
+    }, \n
+    "fields": {\n
+      "type": "object"\n
+    }, \n
+    "portal_type": {\n
+      "type": "string"\n
+    }, \n
+    "error": {\n
+      "type": "string", \n
+      "description": "Error message; present only on failure."\n
+    }, \n
+    "children": {\n
+      "items": {\n
+        "type": "object"\n
+      }, \n
+      "type": "array"\n
+    }\n
+  }\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+{\n
+  "additionalProperties": false, \n
+  "required": [\n
+    "relative_url"\n
+  ], \n
+  "type": "object", \n
+  "properties": {\n
+    "max_depth": {\n
+      "default": 4, \n
+      "type": "integer", \n
+      "description": "Max recursion depth (<=10)."\n
+    }, \n
+    "relative_url": {\n
+      "type": "string", \n
+      "description": "Root document path."\n
+    }\n
+  }\n
+}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>erp5_read_deep input schema</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

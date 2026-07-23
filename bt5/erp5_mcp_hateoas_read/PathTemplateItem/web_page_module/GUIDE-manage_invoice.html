@@ -1,0 +1,105 @@
+&gt; OSOE Tutorial: https://osoe-project.nexedi.com/lesson/user-Howto.Manage.Invoices/view
+
+### Prerequisites
+- A delivered Packing List (ERP5's simulation alarm auto-generates a Sale Invoice Transaction)
+- An open Accounting Period covering the invoice date (required for posting to GL)
+
+### Steps
+
+1. **Find the Invoice** linked to the packing list
+   Use the `jumps` array from erp5_read on the packing list:
+   ```
+   erp5_read(relative_url="sale_packing_list_module/&lt;pl_id&gt;")
+   ```
+   Look for `jump_related_sale_invoice` in `jumps`. The invoice may take 1-2 minutes
+   to appear after delivery (async generation). Alternatively, search:
+   ```
+   erp5_search(relative_url="accounting_module",
+       query='portal_type:"Sale Invoice Transaction"',
+       select_list=["title", "reference", "simulation_state", "destination_section_title"],
+       sort_on='["creation_date","descending"]')
+   ```
+
+2. **Read the Invoice** to check its state and lines
+   The default view for a confirmed invoice is `confirmed_invoice_view` (may have no fields).
+   Use `accounting_view` to see fields and accounting lines:
+   ```
+   erp5_read(relative_url="accounting_module/&lt;invoice_id&gt;", view="accounting_view")
+   ```
+   Use `erp5_read_deep` to see all invoice lines:
+   ```
+   erp5_read_deep(relative_url="accounting_module/&lt;invoice_id&gt;")
+   ```
+
+3. **Journalise the Invoice** (Confirmed &#8594; Started)
+   ```
+   erp5_action(relative_url="&lt;invoice_url&gt;", action_name="start_action")
+   ```
+   This is `start_action` (titled "Journalise Transaction").
+
+4. **Review accounting lines** (between journalise and post)
+   ```
+   erp5_read(relative_url="&lt;invoice_url&gt;", view="accounting_view")
+   ```
+   The accounting_view listbox shows debit/credit lines. Check they are correct before posting.
+
+5. **Post to General Ledger** (Started &#8594; Stopped)
+   ```
+   erp5_action(relative_url="&lt;invoice_url&gt;", action_name="stop_action")
+   ```
+   This is `stop_action` (titled "Post Transaction to General Ledger").
+   **Requires** an Accounting Period covering the invoice date in "Started" state.
+   If you get "Date is not in a started Accounting Period", see the setup section below.
+
+6. **Definitively Close** (optional, Stopped &#8594; Delivered)
+   ```
+   erp5_action(relative_url="&lt;invoice_url&gt;", action_name="deliver_action")
+   ```
+   This is `deliver_action` (titled "Definitively Close Transaction").
+   A `restart_action` ("Restart Transaction") is also available to re-journalise.
+
+7. **Download/Print the Invoice** (any state)
+   ```
+   erp5_download(relative_url="&lt;invoice_url&gt;", action_name="invoice_print")
+   ```
+   Prints available: `invoice_print` (Print Invoice), `print` (generic Print).
+
+### Workflow States
+| State | OSOE Name | Action to reach it | Action name |
+|---|---|---|---|
+| Confirmed | (auto) | Auto from delivered packing list | &#8212; |
+| Started | Journalised | Journalise Transaction | `start_action` |
+| Stopped | Posted to GL | Post Transaction to General Ledger | `stop_action` |
+| Delivered | Closed | Definitively Close Transaction | `deliver_action` |
+
+### Setting Up an Accounting Period
+Posting to the general ledger requires a **Started** Accounting Period on the source
+section (organisation) that covers the invoice date. If none exists:
+
+1. **Create** an Accounting Period as a sub-object of the organisation:
+   ```
+   erp5_create(relative_url="organisation_module/&lt;org_id&gt;",
+       portal_type="Accounting Period",
+       field_values={"field_my_title": "2025",
+                     "field_my_short_title": "2025",
+                     "field_my_start_date": "2025-01-01",
+                     "field_my_stop_date": "2025-12-31"})
+   ```
+2. **Start** the Accounting Period:
+   ```
+   erp5_action(relative_url="&lt;period_url&gt;", action_name="start_action")
+   ```
+   The period is now in "Started" state and covers all dates in the range.
+
+To check existing periods, read the organisation's `financial_view`:
+```
+erp5_read(relative_url="organisation_module/&lt;org_id&gt;", view="financial_view")
+```
+The `listbox_period_list` shows all Accounting Periods.
+
+### Important Notes
+- The invoice is auto-generated in "Confirmed" state &#8212; no need to confirm it manually.
+- After journalising, the cancel action changes to `cancel_accounting_action`.
+- After journalising, the default view changes to `accounting_view` (from `confirmed_invoice_view`).
+- The invoice's `jumps` array includes `jump_to_related_payment` for navigating to payments.
+- Always review accounting lines between journalising and posting.

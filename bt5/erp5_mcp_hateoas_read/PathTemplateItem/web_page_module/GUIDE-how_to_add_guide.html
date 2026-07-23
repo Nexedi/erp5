@@ -1,0 +1,79 @@
+There are two ways to add a guide to the erp5_guide system:
+
+### Option A: Local Python Guide (in this repository)
+
+Best for: instance-independent tutorials based on OSOE lessons.
+
+1. **Create a new file** in `erp5_mcp/guides/` (e.g. `session6_newarea.py`).
+
+2. **Use the `@register` decorator**:
+   ```python
+   from erp5_mcp.guides import register
+
+   @register("my_guide_id", "Short title", session=6, order=1)
+   def guide_my_guide(name: str = None) -&gt; str:
+       entity = f' "{name}"' if name else ""
+       return f"""\
+   ## My Guide Title{entity}
+
+   &gt; OSOE Tutorial: https://osoe-project.nexedi.com/lesson/...
+
+   ### Prerequisites
+   - Access to `some_module` (verify with `erp5_discover`)
+
+   ### Steps
+   1. **Step one** ...
+   """
+   ```
+
+3. **Import the module** in `erp5_mcp/guides/__init__.py`:
+   ```python
+   from erp5_mcp.guides import session6_newarea  # noqa: E402, F401
+   ```
+
+4. **Run the tests**: `python -m pytest test_erp5_mcp.py -v -k guide`
+
+#### Key rules
+- Field names: always verify with `erp5_read(all_editable=True)` &#8212; never guess.
+- ListField values: no category prefix (e.g. `"af/accounting"` not `"function/af/accounting"`).
+- Workflow actions: say "check `erp5_read` for available actions" &#8212; names vary.
+- The `session` parameter groups guides (1=HR, 2=CRM, 3=Sales, 4=Logistics, 5=Accounting, 99=Dev).
+- Set `dev_mode=True` for guides that require portal manager access.
+
+### Option B: Remote Web Page Guide (on the ERP5 instance)
+
+Best for: instance-specific guides, domain knowledge, or guides maintained by non-developers.
+
+1. **Create a Web Page** in `web_page_module` on the ERP5 instance:
+   ```
+   erp5_create(relative_url="web_page_module", portal_type="Web Page")
+   ```
+
+2. **Set the reference** to follow the `GUIDE-TOPIC-NNN` pattern:
+   ```
+   erp5_write(relative_url="web_page_module/&lt;id&gt;", field_values={
+       "field_my_reference": "GUIDE-MYTOPIC-001",
+       "field_my_title": "My Guide Title",
+       "field_my_description": "Short description for the guide list",
+       "field_my_text_content": "&lt;h2&gt;Guide content in HTML&lt;/h2&gt;&lt;p&gt;Steps...&lt;/p&gt;"
+   })
+   ```
+
+3. **Share the Web Page alive** (recommended state for guides):
+   ```
+   erp5_action(relative_url="web_page_module/&lt;id&gt;", action="share_alive_action")
+   ```
+   "Shared alive" means the guide is visible and can still be edited without
+   going through a draft&#8594;publish cycle each time. Other accepted states are:
+   shared, released, released_alive, published, published_alive.
+
+4. The guide will automatically appear in `erp5_guide(tutorial="list")`
+   and can be accessed with `erp5_guide(tutorial="GUIDE-MYTOPIC-001")`.
+
+#### Naming convention
+- Reference format: `GUIDE-TOPIC-NNN` (e.g. `GUIDE-BUDGET-001`, `GUIDE-INVENTORY-003`)
+- TOPIC: short uppercase keyword for the domain area
+- NNN: three-digit number for ordering within the topic
+- Only Web Pages in a publication state (shared, shared_alive, released,
+  released_alive, published, published_alive) appear in the guide list.
+  **Draft** Web Pages are excluded.

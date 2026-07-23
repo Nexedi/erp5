@@ -1,0 +1,91 @@
+&gt; OSOE Tutorial: https://osoe-project.nexedi.com/lesson/user-Howto.Create.and.Manage.Products/view
+
+### Prerequisites
+- Access to `product_module` (verify with `erp5_discover`)
+
+### Steps
+
+1. **Create the Product**
+   ```
+   erp5_create(relative_url="product_module", portal_type="Product")
+   ```
+   &#8594; Note the `relative_url`.
+
+2. **Discover all editable fields**
+   ```
+   erp5_read(relative_url="&lt;new_url&gt;", all_editable=True)
+   ```
+
+3. **Fill in product details** (main `view`)
+   ```
+   erp5_write(relative_url="&lt;new_url&gt;", field_values={
+       "field_my_title": "Product Name",
+       "field_my_reference": "PROD-001",
+       "field_my_quantity_unit_list": "unit/piece",
+       "field_my_use_list": "trade/sale",
+       "field_my_product_line": "service",
+       "field_my_base_contribution_list": "base_amount/taxable"
+   })
+   ```
+   - `base_contribution_list` &#8212; defines tax applicability. Use
+     `"base_amount/taxable"` for products subject to tax.
+   - `individual_variation_base_category_list` &#8212; leave blank for simple products;
+     set for products with variations (advanced topic).
+
+4. **Set sale pricing** (on `sale_price_view`, requires `form_id`)
+   ```
+   erp5_write(relative_url="&lt;new_url&gt;", field_values={
+       "field_my_sale_supply_line_base_price": "100.00",
+       "field_my_sale_supply_line_price_currency": "currency_module/EUR",
+       "field_my_sale_supply_line_priced_quantity": "1.0"
+   }, form_id="Resource_viewDefaultSaleSupplyLine", skip_validation=True)
+   ```
+   - `priced_quantity` &#8212; the quantity for which the base price applies
+     (e.g. `"1.0"` means the price is per unit).
+
+5. **Set purchase pricing** (on `purchase_price_view`, requires `form_id`)
+   ```
+   erp5_write(relative_url="&lt;new_url&gt;", field_values={
+       "field_my_purchase_supply_line_base_price": "80.00",
+       "field_my_purchase_supply_line_price_currency": "currency_module/EUR",
+       "field_my_purchase_supply_line_priced_quantity": "1.0"
+   }, form_id="Resource_viewDefaultPurchaseSupplyLine", skip_validation=True)
+   ```
+
+6. **Validate the Product**
+   ```
+   erp5_action(relative_url="&lt;new_url&gt;", action_name="validate_action")
+   ```
+
+### Key Fields Reference (main view)
+| Field | Key | Type | Notes |
+|---|---|---|---|
+| Title | `field_my_title` | StringField | Product name |
+| Reference | `field_my_reference` | StringField | Unique code |
+| Quantity Unit | `field_my_quantity_unit_list` | ParallelListField | e.g. `unit/piece`, `time/day` |
+| Use | `field_my_use_list` | ParallelListField | e.g. `trade/sale`, `trade/purchase` |
+| Product Line | `field_my_product_line` | ListField | e.g. `service`, `product` |
+| Tax Contribution | `field_my_base_contribution_list` | MultiListField | e.g. `base_amount/taxable` |
+| Description | `field_my_description` | TextAreaField | Free text |
+
+### Key Fields Reference (sale_price_view)
+| Field | Key | Type | Notes |
+|---|---|---|---|
+| Sale Price | `field_my_sale_supply_line_base_price` | FloatField | Unit price |
+| Currency | `field_my_sale_supply_line_price_currency` | ListField | e.g. `currency_module/EUR` |
+| Priced Quantity | `field_my_sale_supply_line_priced_quantity` | FloatField | Qty for base price (e.g. `1.0`) |
+
+### Key Fields Reference (purchase_price_view)
+| Field | Key | Type | Notes |
+|---|---|---|---|
+| Purchase Price | `field_my_purchase_supply_line_base_price` | FloatField | Unit price |
+| Currency | `field_my_purchase_supply_line_price_currency` | ListField | e.g. `currency_module/EUR` |
+| Priced Quantity | `field_my_purchase_supply_line_priced_quantity` | FloatField | Qty for base price |
+
+### Notes
+- Products can be goods (physical) or services.
+- Sale pricing is on the `sale_price_view` tab &#8212; writing requires `form_id="Resource_viewDefaultSaleSupplyLine"`.
+- Purchase pricing is on `purchase_price_view` &#8212; writing requires `form_id="Resource_viewDefaultPurchaseSupplyLine"`.
+- Quantity unit uses `my_quantity_unit_list` (ParallelListField), not `my_quantity_unit`.
+- Variations (size, colour, etc.) &#8212; see `erp5_guide(tutorial="create_product_with_variations")`
+  for the complete variation workflow including MatrixBox pricing.

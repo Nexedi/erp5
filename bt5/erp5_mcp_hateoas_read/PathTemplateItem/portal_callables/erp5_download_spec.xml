@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="JSON Form" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>erp5_download_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_download_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>JSON Form</string> </value>
+        </item>
+        <item>
+            <key> <string>response_schema</string> </key>
+            <value> <string>{\n
+  "additionalProperties": true, \n
+  "type": "object", \n
+  "description": "Inline base64 file content or an error. The resource_link path returns rich content, not structuredContent.", \n
+  "properties": {\n
+    "dialog_method": {\n
+      "type": "string"\n
+    }, \n
+    "filename": {\n
+      "type": "string"\n
+    }, \n
+    "note": {\n
+      "type": "string"\n
+    }, \n
+    "content_base64": {\n
+      "type": "string"\n
+    }, \n
+    "content_type": {\n
+      "type": "string"\n
+    }, \n
+    "error": {\n
+      "type": "string", \n
+      "description": "Error message; present only on failure."\n
+    }, \n
+    "size": {\n
+      "type": "integer"\n
+    }\n
+  }\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>{\n
+  "additionalProperties": false, \n
+  "required": [\n
+    "relative_url", \n
+    "action_name"\n
+  ], \n
+  "type": "object", \n
+  "properties": {\n
+    "inline": {\n
+      "default": 0, \n
+      "type": [\n
+        "boolean", \n
+        "integer"\n
+      ], \n
+      "description": "Return the file inline as base64 instead of a resource_link (for hosts that can\'t fetch links, or for tiny files)."\n
+    }, \n
+    "params": {\n
+      "default": null, \n
+      "type": [\n
+        "object", \n
+        "null"\n
+      ], \n
+      "description": "Dialog params."\n
+    }, \n
+    "action_type": {\n
+      "default": "exchange", \n
+      "type": "string", \n
+      "description": "exchange or print."\n
+    }, \n
+    "relative_url": {\n
+      "type": "string", \n
+      "description": "Document path."\n
+    }, \n
+    "action_name": {\n
+      "type": "string", \n
+      "description": "Print/exchange action."\n
+    }\n
+  }\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>erp5_download input schema</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

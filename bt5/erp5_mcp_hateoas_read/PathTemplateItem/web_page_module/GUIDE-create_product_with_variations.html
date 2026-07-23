@@ -1,0 +1,128 @@
+&gt; OSOE Tutorial: https://osoe-project.nexedi.com/lesson/user-Howto.Create.and.Manage.Products/view
+&gt; (second half: "Complex Products with Variations")
+
+This extends the basic `create_product` guide with **variation support**: each
+variation gets its own purchase and sale price via MatrixBox fields.
+
+### Prerequisites
+- Access to `product_module` (verify with `erp5_discover`)
+
+### Steps
+
+1. **Create the Product**
+   ```
+   erp5_create(relative_url="product_module", portal_type="Product")
+   ```
+
+2. **Fill in product details** &#8212; including `individual_variation_base_category_list`
+   ```
+   erp5_write(relative_url="&lt;new_url&gt;", field_values={
+       "field_my_title": "Product With Variations",
+       "field_my_reference": "PROD-VAR-001",
+       "field_my_quantity_unit_list": "unit/piece",
+       "field_my_base_contribution_list": "base_amount/taxable",
+       "field_my_individual_variation_base_category_list": "variation"
+   })
+   ```
+   - `individual_variation_base_category_list` = `"variation"` enables individual
+     variations on this product. Check valid choices with `erp5_read`.
+
+3. **Add Product Individual Variations** (one per variant)
+   ```
+   erp5_create(relative_url="&lt;product_url&gt;", portal_type="Product Individual Variation",
+       field_values={"field_my_title": "Standard Model"})
+   erp5_create(relative_url="&lt;product_url&gt;", portal_type="Product Individual Variation",
+       field_values={"field_my_title": "Premium Model"})
+   ```
+   Each variation becomes a sub-object of the product.
+
+4. **Set Purchase pricing with variation axis**
+   First, set the base purchase fields and enable the "Variation" price axis:
+   ```
+   erp5_write(relative_url="&lt;product_url&gt;", field_values={
+       "field_my_purchase_supply_line_base_price": "10.00",
+       "field_my_purchase_supply_line_priced_quantity": "1.0",
+       "field_my_purchase_supply_line_price_currency": "currency_module/ZAR",
+       "field_my_purchase_supply_line_p_variation_base_category_list": "variation"
+   }, form_id="Resource_viewDefaultPurchaseSupplyLine", skip_validation=True)
+   ```
+   This makes a **MatrixBox** appear with one row per variation.
+
+5. **Read the MatrixBox to discover cell keys**
+   ```
+   erp5_read(relative_url="&lt;product_url&gt;", view="purchase_price_view")
+   ```
+   In the `matrixbox` field, look at `matrix_data` &#8212; each row has cells with
+   a `key` attribute like `matrixbox_base_price_cell_0_0_0`.
+
+6. **Write per-variation purchase prices** via MatrixBox
+   ```
+   erp5_write(relative_url="&lt;product_url&gt;", field_values={
+       "field_matrixbox_base_price_cell_0_0_0": "10",
+       "field_matrixbox_base_price_cell_1_0_0": "20"
+   }, form_id="Resource_viewDefaultPurchaseSupplyLine", skip_validation=True)
+   ```
+   - Cell keys follow the pattern `field_matrixbox_base_price_cell_&lt;row&gt;_&lt;col&gt;_&lt;tab&gt;`.
+   - The companion hidden fields (`variation_category_list`, `predicate_category_list`)
+     are auto-included from the MatrixBox defaults &#8212; you only need to provide the price cells.
+
+7. **Set Sale pricing with variation axis** &#8212; same pattern
+   ```
+   erp5_write(relative_url="&lt;product_url&gt;", field_values={
+       "field_my_sale_supply_line_base_price": "15.00",
+       "field_my_sale_supply_line_priced_quantity": "1.0",
+       "field_my_sale_supply_line_price_currency": "currency_module/ZAR",
+       "field_my_sale_supply_line_p_variation_base_category_list": "variation"
+   }, form_id="Resource_viewDefaultSaleSupplyLine", skip_validation=True)
+   ```
+
+8. **Write per-variation sale prices** via MatrixBox
+   ```
+   erp5_read(relative_url="&lt;product_url&gt;", view="sale_price_view")
+   ```
+   Then write the sale matrix cells (keys may differ from purchase):
+   ```
+   erp5_write(relative_url="&lt;product_url&gt;", field_values={
+       "field_matrixbox_base_price_cell_0_0_0": "15",
+       "field_matrixbox_base_price_cell_1_0_0": "25"
+   }, form_id="Resource_viewDefaultSaleSupplyLine", skip_validation=True)
+   ```
+
+9. **Validate the Product**
+   ```
+   erp5_action(relative_url="&lt;product_url&gt;", action_name="validate_action")
+   ```
+
+### MatrixBox Writing Pattern
+MatrixBox fields require a specific flow:
+1. **Enable the variation axis** &#8212; write `p_variation_base_category_list` and save
+2. **Read the view** &#8212; the MatrixBox appears with cell keys
+3. **Write the cells** &#8212; use the exact keys from step 2, prefixed with `field_`
+4. **Always include `form_id`** &#8212; the MatrixBox is view-specific
+5. **Always use `skip_validation=True`** &#8212; MatrixBox keys are not standard form fields
+
+### Quantity Steps (optional &#8212; tiered pricing)
+For quantity-based pricing tiers, set `quantity_step_list` before writing the matrix:
+```
+erp5_write(relative_url="&lt;product_url&gt;", field_values={
+    "field_my_sale_supply_line_quantity_step_list": ["50"]
+}, form_id="Resource_viewDefaultSaleSupplyLine", skip_validation=True)
+```
+This adds a quantity dimension to the MatrixBox (rows = variations x quantity ranges).
+Re-read the view to get updated cell keys, then write prices for each combination.
+
+### Key Fields Reference
+| Field | Key | View | Type |
+|---|---|---|---|
+| Individual Variation Categories | `field_my_individual_variation_base_category_list` | `view` | MultiListField |
+| Purchase Variation Axis | `field_my_purchase_supply_line_p_variation_base_category_list` | `purchase_price_view` | MultiListField |
+| Sale Variation Axis | `field_my_sale_supply_line_p_variation_base_category_list` | `sale_price_view` | MultiListField |
+| MatrixBox Price Cell | `field_matrixbox_base_price_cell_&lt;R&gt;_&lt;C&gt;_&lt;T&gt;` | varies | FloatField |
+
+### Notes
+- Product Individual Variation is the sub-object type &#8212; each has `my_title` and
+  `my_variation_base_category` (automatically set to `"variation"`).
+- The MatrixBox only appears after setting `p_variation_base_category_list` and saving.
+- Cell indices are 0-based: first variation = `cell_0_0_0`, second = `cell_1_0_0`.
+- Purchase and Sale views have **independent** MatrixBox instances with separate cells.
+- Always read the MatrixBox before writing to get the correct cell keys.

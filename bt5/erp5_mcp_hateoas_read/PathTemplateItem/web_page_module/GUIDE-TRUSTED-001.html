@@ -1,0 +1,78 @@
+<h2>Write trusted code: Module / Extension Components vs the sandbox</h2>
+
+<p>Skin scripts and <code>portal_callables</code> MCP tools run inside Zope's restricted sandbox:
+no <code>open</code>/<code>os</code>/<code>subprocess</code>, guarded imports, and <code>getattr</code> of
+underscore names (e.g. <code>__of__</code>) is refused. When a tool needs file IO, raw SQL,
+subprocess or product internals, put that part in a <b>ZODB Component</b> — validated components
+execute unrestricted.</p>
+
+<h3>Component kinds</h3>
+<ul>
+<li><code>Module Component</code> — module of helper functions/classes, imported as <code>from erp5.component.module.X import ...</code>.</li>
+<li><code>Extension Component</code> — legacy single-function hooks (also usable as helpers).</li>
+<li><code>Test Component</code> — live tests, run via <code>erp5_live_test</code>.</li>
+<li>Deploy with <code>erp5_component_write</code> (<code>body_file</code> + response <code>sha256</code> proves byte-exactness);
+<code>reset=true</code> revalidates and reloads everything.</li>
+</ul>
+
+<h3>ModuleSecurityInfo is mandatory for restricted importers</h3>
+<p>Without it, the first import from a skin script or MCP tool fails with
+<code>Unauthorized: import of 'erp5.component.module.erp5_version.X' is unauthorized</code> —
+even though the module loads fine; AccessControl simply does not know it may be imported.
+The error names the <b>versioned</b> path (<code>erp5_version</code>) and hides the real cause.
+Fix at the top of the module:</p>
+<pre>from AccessControl.SecurityInfo import ModuleSecurityInfo
+security = ModuleSecurityInfo(__name__)
+for name in ('myHelper', 'myOtherHelper'):
+  security.declarePublic(name)</pre>
+
+<h3>Debugging load failures</h3>
+<ul>
+<li>The sandbox error never contains the real traceback. <code>find_load_module</code> logs it —
+read <code>erp5_log_tail</code> with <code>grep</code>/<code>max_entries</code>.</li>
+<li>Real load errors (import-time exceptions) appear there as "Could not load Component module ...".</li>
+</ul>
+
+<h3>House pattern</h3>
+<p>The trusted module owns <b>all</b> filesystem / SQL / activity-queue work; the restricted tool
+body keeps validation, shaping and reporting (auditable, capped). Example on this instance:
+<code>module.erp5.MCPDevHelpers</code> (readFile/runSQL/activityStatus/drainActivities/scopedExport) behind
+the erp5_sql / erp5_activity_* / erp5_bt_commit tools.</p>
+
+<h3>Python 2.7 rules on this stack</h3>
+<ul>
+<li>Strings from ZODB/Localizer are native utf-8 <code>str</code>, from getHateoas they are <code>unicode</code>:
+<code>isinstance(x, str)</code> silently misses the latter — duck-type with <code>hasattr(x, 'strip')</code>.</li>
+<li><code>bool</code> is a subclass of <code>int</code>: test <code>isinstance(v, bool)</code> before numeric handling.</li>
+<li>json.dumps(ensure_ascii=False) on a str/unicode mix dies on the first umlaut — decode native str first
+(see <code>_mcp_unicode</code> in the existing tools).</li>
+<li>Local syntax check without booting Zope:
+<code>~/srv/runner/software/d363c3c396fea8ff52302e30a6b90fcb/bin/python -m py_compile file.py</code>;
+for script bodies wrap them in a function first (top-level <code>return</code> is Zope-legal only).</li>
+</ul>
+
+<h3>One-shot trusted glue: <code>erp5_trusted_exec</code></h3>
+<p>For a single trusted operation (a private method call, <code>upgradeSchema()</code>,
+<code>manage_addZSQLMethod</code>, a bulk reindex loop) there is no need to bootstrap a
+component + External Method by hand any more: <code>erp5_trusted_exec(source,
+function="run", args_json="[...]", kwargs_json="{...}")</code> deploys the
+payload as a temporary Extension Component (reference
+<code>MCPTrustedExec_&lt;sha-of-source&gt;</code> &mdash; identical payloads reuse the same
+component, so re-runs are idempotent), wires an External Method into
+<code>portal_skins/custom</code>, invokes the function with the <b>ERP5 site as first
+argument</b> (name the parameter anything but <code>self</code> &mdash; JSON args bind from
+the 2nd parameter on) and deletes both artifacts again &mdash; unless
+<code>keep=true</code> (then the ids are returned). Error &rArr; the transaction is
+aborted: nothing the function did is persisted and no temp artifact is left
+behind. For a <b>persistent</b> trusted helper module, still use
+<code>erp5_component_write</code> as above.</p>
+<ul>
+<li><code>custom[ext_id].__of__(portal)</code> is refused by the restricted sandbox for
+ExternalMethod instances ("not allowed to access '__of__' in this context").</li>
+<li>Never resolve a just-added skin object through <code>getattr(portal, id)</code>
+inside the request that created it: the per-process skin location cache does
+not know it, and priming that cache (<code>initializeCache</code>) there can wedge
+a Zope thread for hours. Bind through the folder
+(<code>getattr(portal.portal_skins.custom, id)</code>) &mdash; which is exactly what
+<code>erp5_trusted_exec</code> does, and pass the portal explicitly.</li>
+</ul>

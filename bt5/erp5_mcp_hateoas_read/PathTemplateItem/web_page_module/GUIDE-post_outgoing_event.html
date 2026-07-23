@@ -1,0 +1,52 @@
+&gt; OSOE Tutorial: https://osoe-project.nexedi.com/lesson/user-Howto.Post.Outgoing.Events/view
+
+### Prerequisites
+- An Event document in `draft` or `planned` state (use `create_event` guide first)
+
+### Pattern A: OSOE multi-step workflow
+The OSOE tutorial uses a 3-step process: Plan &#8594; Confirm &#8594; Send.
+
+1. **Plan the Event** (Draft &#8594; Planned)
+   ```
+   erp5_action(relative_url="event_module/&lt;event_id&gt;", action_name="plan_action")
+   ```
+
+2. **Confirm the Event** (Planned &#8594; Confirmed)
+   ```
+   erp5_action(relative_url="event_module/&lt;event_id&gt;", action_name="confirm_action")
+   ```
+
+3. **Send the Event** (Confirmed &#8594; Started/Delivered)
+   ```
+   erp5_action(relative_url="event_module/&lt;event_id&gt;", action_name="start_action")
+   ```
+
+### Pattern B: Direct delivery (simplified)
+Some instances allow a single-step transition from Draft to Delivered.
+
+1. **Deliver the Event** (Draft &#8594; Delivered)
+   ```
+   erp5_action(relative_url="event_module/&lt;event_id&gt;", action_name="initial_deliver_action")
+   ```
+
+### Choosing the right pattern
+Always check `erp5_read` to see available transitions:
+```
+erp5_read(relative_url="event_module/&lt;event_id&gt;")
+```
+Look at the `workflows` array for available actions. Use whichever actions
+are available on your instance.
+
+### Workflow Reference
+| Action | Transition | Pattern |
+|---|---|---|
+| `plan_action` | Draft &#8594; Planned | A (OSOE) |
+| `confirm_action` | Planned &#8594; Confirmed | A (OSOE) |
+| `start_action` | Confirmed &#8594; Started | A (OSOE) |
+| `initial_deliver_action` | Draft &#8594; Delivered | B (simplified) |
+| `initial_stop_action` | Draft &#8594; Received | Incoming events |
+
+### Notes
+- The OSOE tutorial uses the multi-step workflow (Pattern A).
+- Always check `erp5_read` workflows array to confirm available actions.
+- For incoming events, use `initial_stop_action` (see `process_incoming_event` guide).

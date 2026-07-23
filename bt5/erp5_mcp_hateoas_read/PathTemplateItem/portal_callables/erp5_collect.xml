@@ -1,0 +1,219 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="MCP Tool" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_Copy_or_Move_Permission</string> </key>
+            <value>
+              <list>
+                <string>Assignor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
+                <string>Associate</string>
+                <string>Member</string>
+                <string>Assignee</string>
+                <string>Manager</string>
+                <string>Auditor</string>
+                <string>Owner</string>
+                <string>Developer</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_count</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>reference</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_mt_index</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>relative_url, count_only=False, filters={}, listbox_id=\'listbox\', max_records=500, query=None, select_list=[], sort_on=None, view=\'view\'</string> </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>specification/portal_callables/erp5_collect_spec</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+Collect rows from a document\'s listbox - or from a REPORT - with automatic pagination.\n
+\n
+    Reads a document, finds its listbox, and pages through the rows. Returns flat\n
+    row data (not full document details - use erp5_read on individual rows for that).\n
+\n
+    Rows come from the module\'s OWN list_method, so this is what the module itself\n
+    shows: its default parameters (section scope, portal types) still apply and\n
+    related keys resolve. Filter with \'filters\' (column criteria, ranges, LIKE\n
+    wildcards) rather than \'query\' for anything field-specific, and count with\n
+    count_only=true.\n
+\n
+    A REPORT COMES BACK HERE AS ROWS, NOT AS A FILE.\n
+    Report actions are the names in the \'reports\' array of erp5_read and\n
+    erp5_inspect, e.g. \'global_stock_report\' on product_module. A report is a table\n
+    sitting behind a parameter dialog: pass the report action name as \'view\' and\n
+    this tool follows that dialog to the form which really holds the rows.\n
+\n
+        erp5_collect(relative_url="product_module", view="global_stock_report")\n
+\n
+    The answer then carries \'report\' (which dialog was followed to which form),\n
+    \'list_method\' and \'list_method_parameters\' - the parameter names the report\'s\n
+    own script accepts. Pass those in \'filters\' under exactly those names; the\n
+    dialog\'s your_* widgets are only the UI spelling of the same things. When a\n
+    report declares count/offset parameters, that is how you page through it -\n
+    this tool\'s own max_records only caps how many rows it collects in one call.\n
+\n
+    USE THIS WHEN:\n
+    - You need ALL rows from a listbox (e.g. all posts in a thread, all events on a ticket).\n
+    - You want a report\'s numbers as a table: view=<report action name>.\n
+    - You want to filter or sort listbox contents.\n
+    - You are filtering or reading a column the module SHOWS in its listbox, such as a\n
+      related key (e.g. accounting_transaction_mirror_section_title) or a date like\n
+      operation_date - the plain catalog behind erp5_search cannot serve those.\n
+    - The listbox has more rows than a single page shows.\n
+\n
+    DO NOT USE THIS WHEN:\n
+    - You need the full document tree with nested children - use erp5_read_deep instead.\n
+      erp5_collect returns flat rows; erp5_read_deep returns a recursive tree.\n
+    - You want to search ACROSS modules - use erp5_search with no relative_url.\n
+    - You want a report or export as a FILE (PDF/ODS/XLSX) rather than as rows -\n
+      use erp5_download.\n
+\n
+    PREREQUISITE: either the view has a listbox (erp5_read lists it under\n
+    \'all_listboxes\'), or \'view\' is a report action name from the \'reports\' array.\n
+    On a report dialog erp5_read answers all_listboxes: null and explains under\n
+    \'dialog\' where the rows are - that is expected and does not mean there are\n
+    none. erp5_inspect lists the column names accepted by filters/sort_on.\n
+    
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_collect</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>MCP Tool</string> </value>
+        </item>
+        <item>
+            <key> <string>read_only</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>reference</string> </key>
+            <value> <string>erp5_discover</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+Discover modules & tasks
+
+]]></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Length" module="BTrees.Length"/>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+</ZopeData>

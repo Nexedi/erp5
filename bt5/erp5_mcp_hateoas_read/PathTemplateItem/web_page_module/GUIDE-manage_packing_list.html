@@ -1,0 +1,63 @@
+&gt; OSOE Tutorial: https://osoe-project.nexedi.com/lesson/user-Howto.Manage.Packing.Lists/view
+
+### Prerequisites
+- A confirmed Sale Order (ERP5's simulation alarm auto-generates a Sale Packing List)
+
+### Steps
+
+1. **Find the Packing List** linked to your Sale Order
+   Use the `jumps` array from erp5_read on the Sale Order to navigate:
+   ```
+   erp5_read(relative_url="sale_order_module/&lt;order_id&gt;")
+   ```
+   Look for `jump_related_sale_packing_list` in `jumps`. Alternatively, search:
+   ```
+   erp5_search(relative_url="sale_packing_list_module",
+       query='title:"Sale Order Title"',
+       select_list=["title", "reference", "simulation_state", "destination_title"])
+   ```
+
+2. **Read the Packing List** to check its state and contents
+   ```
+   erp5_read(relative_url="sale_packing_list_module/&lt;pl_id&gt;")
+   ```
+   Check the `workflows` array for available actions.
+
+3. **Ship the Packing List** (Confirmed &#8594; Shipped)
+   ```
+   erp5_action(relative_url="&lt;packing_list_url&gt;", action_name="start_action")
+   ```
+   This is `start_action` (titled "Ship Packing List").
+   There is also a `set_ready_action` ("Set Packing List Ready") available before shipping.
+
+4. **Deliver the Packing List** (Shipped &#8594; Delivered)
+   ```
+   erp5_action(relative_url="&lt;packing_list_url&gt;", action_name="deliver_action")
+   ```
+   This is `deliver_action` (titled "Deliver Packing List").
+   Note: `stop_action` ("Receive Packing List") is also available at this stage.
+
+### Workflow States
+| State | Action to reach it | Action name |
+|---|---|---|
+| Confirmed | (auto from Sale Order) | &#8212; |
+| Shipped | Ship Packing List | `start_action` |
+| Delivered | Deliver Packing List | `deliver_action` |
+
+### Split and Defer
+If only part of an order can be shipped:
+- The packing list may show a "Split and Defer" option when quantities diverge.
+- This creates a new packing list for the remaining quantities.
+- Check `erp5_read` for divergence messages and available actions.
+
+### Async Document Generation
+After delivering a packing list, ERP5's simulation alarm generates a Sale Invoice
+Transaction. This may take **1-2 minutes**. Use the packing list's `jumps` array
+(`jump_related_sale_invoice`) to find the generated invoice &#8212; re-check if it's not
+immediately available.
+
+### Notes
+- Sale Packing Lists are auto-generated from confirmed Sale Orders by ERP5's simulation alarm.
+- Delivery triggers invoice generation (also async via simulation alarm).
+- Use `erp5_read_deep` to see packing list line quantities.
+- Prints available: `packing_list_print` (Print Packing List), `print` (generic Print).

@@ -1,0 +1,89 @@
+&gt; OSOE Tutorial: https://osoe-project.nexedi.com/lesson/user-Howto.Create.Persons.New/view
+
+### Prerequisites
+- Access to `person_module` (verify with `erp5_discover`)
+
+### Steps
+
+1. **Create the Person document**
+   ```
+   erp5_create(relative_url="person_module", portal_type="Person")
+   ```
+   &#8594; Note the `relative_url` from the response (e.g. `person_module/123`).
+
+2. **Discover all editable fields**
+   ```
+   erp5_read(relative_url="&lt;new_url&gt;", all_editable=True)
+   ```
+   This shows editable fields grouped by view.
+
+3. **Fill in personal details** (main `view`)
+   ```
+   erp5_write(relative_url="&lt;new_url&gt;", field_values={
+       "field_my_first_name": "First",
+       "field_my_last_name": "Last",
+       "field_my_gender": "Male",
+       "field_my_nationality": "france",
+       "field_my_default_email_coordinate_text": "email@example.com",
+       "field_my_career_subordination_title": "Your Organisation",
+       "field_my_career_role_list": "client",
+       "field_my_career_function": "marketing/manager"
+   })
+   ```
+   - `gender` is a ListField &#8212; check valid choices with `erp5_read`.
+   - `nationality` is a ListField &#8212; use country category paths (e.g. `"france"`).
+   - `career_subordination_title` links to an Organisation (RelationStringField).
+     You can set it here or later via the `link_person_organisation` guide.
+   - `career_role_list` is a ParallelListField and `career_function` is a ListField
+     &#8212; check valid choices with `erp5_read`.
+
+4. **Fill in phone/fax** (if editable fields found in phone/fax FormBox views)
+   ```
+   erp5_write(relative_url="&lt;new_url&gt;", field_values={
+       "field_my_default_telephone_coordinate_text": "+33 1 23 45 67 89"
+   })
+   ```
+
+5. **Fill in address** (if editable fields found in address view)
+   ```
+   erp5_write(relative_url="&lt;new_url&gt;", field_values={
+       "field_my_default_address_street_address": "123 Main Street",
+       "field_my_default_address_city": "Paris",
+       "field_my_default_address_zip_code": "75001",
+       "field_my_default_address_region": "europe/western_europe/france"
+   })
+   ```
+
+6. **Fill in Details tab** (optional &#8212; personal details)
+   ```
+   erp5_write(relative_url="&lt;new_url&gt;", field_values={
+       "field_my_marital_status": "married",
+       "field_my_child_count": "2"
+   })
+   ```
+   - `marital_status` is a ListField &#8212; check valid choices with `erp5_read`.
+
+7. **Validate the Person**
+   ```
+   erp5_action(relative_url="&lt;new_url&gt;", action_name="validate_action")
+   ```
+
+### Key Fields Reference
+| Field | Key | Notes |
+|---|---|---|
+| First Name | `field_my_first_name` | |
+| Last Name | `field_my_last_name` | |
+| Gender | `field_my_gender` | ListField |
+| Nationality | `field_my_nationality` | ListField &#8212; country category path |
+| Email | `field_my_default_email_coordinate_text` | FormBox sub-field |
+| Phone | `field_my_default_telephone_coordinate_text` | FormBox sub-field |
+| Organisation | `field_my_career_subordination_title` | RelationStringField &#8212; links to Organisation |
+| Role | `field_my_career_role_list` | ParallelListField &#8212; e.g. `"client"` |
+| Function | `field_my_career_function` | ListField &#8212; e.g. `"marketing/manager"` |
+| Activity | `field_my_career_activity` | ListField &#8212; economic activity |
+| Marital Status | `field_my_marital_status` | ListField (Details tab) |
+| Children | `field_my_child_count` | IntegerField (Details tab) |
+| Street | `field_my_default_address_street_address` | Multi-line |
+| City | `field_my_default_address_city` | |
+| Zip | `field_my_default_address_zip_code` | |
+| Region | `field_my_default_address_region` | Category path |

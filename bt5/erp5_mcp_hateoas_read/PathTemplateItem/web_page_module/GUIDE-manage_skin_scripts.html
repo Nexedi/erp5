@@ -1,0 +1,85 @@
+Use `erp5_skin_read`, `erp5_skin_write`, and `erp5_skin_call` to manage
+Python Scripts in portal_skins directly from MCP &#8212; no ZMI needed.
+
+### Prerequisites
+- Must use the `erp5-mcp-portalmanager` entry point
+- `ERP5_SITE_ROOT` auto-derived from `ERP5_BASE_URL` (or set manually)
+
+### Steps
+
+1. **Create a new Python Script**
+   ```
+   erp5_skin_write(
+     script_id="MyModule_computeTotal",
+     body='return "hello"',
+     title="My Script",
+     params='name=""'
+   )
+   ```
+   &#8594; Creates in `portal_skins/custom` by default. Use `skin_folder` for other folders.
+   &#8594; If the script already exists, it updates it instead.
+
+2. **Read a script's source**
+   ```
+   erp5_skin_read(script_id="MyModule_computeTotal")
+   ```
+   &#8594; Returns title, params, and body as JSON.
+
+3. **Call a script standalone** (context = site root)
+   ```
+   erp5_skin_call(
+     script_id="MyModule_computeTotal",
+     params={"name": "test"}
+   )
+   ```
+   &#8594; Passes parameters as query string. Returns the script's output.
+
+4. **Call a script on an object** (context = that object)
+   ```
+   erp5_skin_call(
+     script_id="MyModule_computeTotal",
+     relative_url="sale_order_module/1"
+   )
+   ```
+   &#8594; The script runs with `context` bound to the Sale Order via Zope acquisition.
+   &#8594; Use this to test scripts that call `context.getTitle()`, `context.getPortalType()`, etc.
+
+5. **Update the script** (iterate on the code)
+   ```
+   erp5_skin_write(
+     script_id="MyModule_computeTotal",
+     body='return context.getTitle() + " - " + name',
+     params='name=""'
+   )
+   ```
+   &#8594; Then call again to test the updated version.
+
+### Typical workflow: write &#8594; call &#8594; read &#8594; fix &#8594; call
+```
+erp5_skin_write(script_id="X", body='...')    # create/update
+erp5_skin_call(script_id="X", relative_url="sale_order_module/1")  # test on object
+erp5_skin_read(script_id="X")                 # verify source
+erp5_skin_write(script_id="X", body='...')    # fix
+erp5_skin_call(script_id="X", relative_url="sale_order_module/1")  # re-test
+```
+
+### Using `print()` in scripts
+Zope Python Scripts capture `print()` output in a special `printed` variable.
+To get the printed output, **`return printed`** at the end of your script:
+```python
+# Script body:
+print(context.getTitle())
+print(context.getPortalType())
+return printed
+```
+&#8594; Output: `"Sale Order Title\nSale Order\n"`
+
+This is useful for debugging or returning multi-line output without `json.dumps`.
+
+### Tips
+- Scripts in `portal_skins/custom` are acquired by all objects &#8212; no need to specify `skin_folder` when calling
+- The `custom` folder has highest priority in the skin layer, so your scripts override others with the same name
+- Parameters are passed as query string GET params &#8212; all values arrive as strings in the script
+- For complex return values, use `import json; return json.dumps(result)` in the script body
+- To delete a script, use the ZMI directly (no MCP tool for deletion yet)
+- Scripts created in `custom` are NOT in any Business Template &#8212; they will be lost if the instance is reset

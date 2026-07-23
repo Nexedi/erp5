@@ -1,0 +1,40 @@
+<h2>Sync Business Templates between the instance and their git working copies</h2>
+
+<p>Every BT here has a canonical git working copy. Two repos matter:
+<code>/srv/slapgrid/slappart49/srv/project/woelfel-dev/woelfel-erp5</code> (branch <code>master</code>,
+upstream <code>klaus/master</code>) holds the woelfel_* BTs;
+<code>/srv/slapgrid/slappart49/srv/project/woelfel-dev/erp5</code> (branch <code>mcp</code>,
+upstream <code>klaus/mcp</code>) holds erp5_mcp* and other framework BTs.</p>
+
+<h3>The four repository tools</h3>
+<ul>
+<li><code>erp5_bt_status(business_template=...)</code> — read-only 3-way comparison: baseline (git HEAD), repository files, installed ERP5. Scope it with <code>path_pattern</code> (e.g. <code>'*supply_line*'</code>) and/or <code>summary_only</code>/<code>max_list</code> — a scoped status on a 1000+-file BT (woelfel_core) answers in seconds what a full sweep gave up on with timeouts. On a full status timing out, work from <code>git status</code> plus a scoped <code>erp5_bt_commit(dry_run)</code>.</li>
+<li><code>erp5_bt_update_from_repository(business_template=...)</code> — repository → ERP5. Refuses both-side conflicts unless <code>force=true</code>; runs a component-validation gate over the .py sources it will apply (broken code never installs).</li>
+<li><code>erp5_bt_export_to_repository(business_template=..., changelog=...)</code> — ERP5 → repository, <b>then commits</b> the whole BT (one changelog, only this BT's paths; unrelated working-copy dirt is never touched). <code>dry_run=true</code> previews. Needs a <b>built</b> BT doc: <code>export()</code> does not build — call <code>bt.build()</code> first (erp5_bt_commit's extractBT does it for you).</li>
+<li><code>erp5_bt_install_from_repository(business_template=...)</code> — only for BTs not yet installed; refuses with <code>already_installed</code> otherwise.</li>
+</ul>
+
+<h3>The preferred developer loop (no inline code payloads)</h3>
+<ol>
+<li>Edit the <code>.py</code>/<code>.xml</code> files in the BT directory with ordinary file tools (read/edit/write, git diff for review).</li>
+<li><code>erp5_bt_update_from_repository</code> installs the files into the instance.</li>
+<li>Test (<code>erp5_live_test</code>, verdict-only output).</li>
+<li>Commit and push with plain git in the working copy.</li>
+</ol>
+
+<h3>Scoping commits in a shared working copy</h3>
+<ul>
+<li><code>erp5_bt_commit(bt_title, path_pattern='*supply_line*', dry_run=true)</code> narrows the commit AND the export to matching paths; a scoped export writes only those files, so other people's uncommitted work is never swept or clobbered. <code>skipped</code> reports what was left out.</li>
+<li>Huge BTs: <code>summary_only=true</code> / <code>max_list=N</code> cap the path lists (nothing is hidden silently — every list carries a count and a "more" marker).</li>
+<li>Commit identites land as <code>Klaus Wölfel <klaus@nexedi.com></code> automatically; push with plain <code>git push</code>.</li>
+</ul>
+
+<h3>Traps</h3>
+<ul>
+<li>An errored script call used to commit the work it had done before the exception — the error was caught inside the tool, so the request committed normally and left a half-applied fix. <code>erp5_skin_call</code> aborts its transaction on error since 2026-09-25 (error ⇒ nothing persisted), but keep writing mutation helpers <b>idempotently</b> (old/new marker pairs, replace-or-skip) and validate before mutating: patch order is arbitrary on this Python 2 instance (dict iteration is hash order), and halfway states may exist from older sessions.</li>
+<li>Never trust a multi-part fix that "mostly succeeded": re-read all target objects afterwards — e.g. a scoped <code>erp5_bt_status(path_pattern=...)</code> for BT-tracked files, or <code>erp5_read</code> on each object.</li>
+<li>Duplicate BT documents with one title (several installs): the tools resolve by <b>highest id</b> — a stale uninstalled copy can shadow the live one; check portal_templates when results look fossilised.</li>
+<li>Template-wide exports DELETE any file in the BT directory that the BT does not export — never keep notes/READMEs inside a BT directory.</li>
+<li><code>template_path_list</code> patterns (e.g. <code>web_page_module/GUIDE-*</code>) match <b>object ids</b>, not references — a document whose id is auto-generated never enters the BT even though its reference matches. Create such objects with an explicit id (<code>newContent(id=...)</code>).</li>
+<li>Editing objects via <code>erp5_write</code> replays every editable form field and can add default properties (e.g. Z SQL Method <code>allow_simple_one_argument_traversal</code>) — expect small export diffs; recreate an object from repo content when byte-exactness matters.</li>
+</ul>

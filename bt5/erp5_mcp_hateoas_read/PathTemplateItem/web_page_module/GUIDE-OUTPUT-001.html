@@ -1,0 +1,36 @@
+<h2>Token and output discipline for dev sessions</h2>
+
+<p>A tool result is re-sent to the model on every following turn, so its cost is
+size × remaining conversation, not size. In a measured session, shell output alone
+was 65% of the whole context bill. Small outputs beat fewer calls.</p>
+
+<h3>Output rules</h3>
+<ul>
+<li>Cap every shell command: <code>git --stat</code>, <code>LIMIT n</code>, <code>| head</code>. Never cat or re-print what is already known.</li>
+<li>Emit verdicts, not payload dumps: after a call, report status/counts and only the lines that changed the decision.</li>
+<li><code>erp5_live_test</code> is verdict-only by default — keep it that way; <code>full_output</code> only when a failure needs reading.</li>
+<li><code>erp5_sql</code>: prefer <code>format="count"</code> or <code>"summary"</code>; <code>"rows"</code> only when the rows are the answer. Row cap is <code>max_rows</code>.</li>
+<li><code>erp5_bt_commit</code> on big BTs: <code>summary_only=true</code> and <code>max_list</code>; scope with <code>path_pattern</code> so the lists only contain your files.</li>
+<li>Queue checks go through <code>erp5_activity_status</code> (a summary), not SQL against message_queue.</li>
+</ul>
+
+<h3>Payload rules (no code through tool arguments)</h3>
+<ul>
+<li>Never inline a payload over ~2 KB. Two safe paths:
+(1) <code>body_file</code> on <code>erp5_component_write</code>/<code>erp5_skin_write</code> — the server reads the local file and returns <code>sha256</code>/<code>length</code> to prove byte-exact deployment;
+(2) edit the BT's repository files and apply with <code>erp5_bt_update_from_repository</code>.</li>
+<li>Verify deploys by hash, never by re-reading the source into the conversation.</li>
+<li>Prefer one composite trusted helper call that returns counts over several round trips returning rows.</li>
+</ul>
+
+<h3>Measure it</h3>
+<p><code>./token_report.py</code> (in woelfel-dev) parses the pi session log and ranks tools by
+weighted context cost (size × remaining turns). Run it before/after a change in habits:
+the bash share is the number to move. Before starting a long session, skim the last one's top offenders.</p>
+
+<h3>When debugging anyway</h3>
+<ul>
+<li>Ask for the tail, not the transcript: <code>erp5_log_tail</code> with <code>grep</code> and a bounded <code>max_entries</code>.</li>
+<li>One probe script that prints a verdict (counts + the 3 decisive lines) instead of a sequence of exploratory calls.</li>
+<li>Clean up probes in the same session; leftover zz_* scripts belong to earlier sessions — leave them unless they break something.</li>
+</ul>

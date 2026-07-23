@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="JSON Form" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>erp5_search_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_search_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>JSON Form</string> </value>
+        </item>
+        <item>
+            <key> <string>response_schema</string> </key>
+            <value> <string>{\n
+  "additionalProperties": true, \n
+  "type": "object", \n
+  "description": "Catalog search results, or the total count when count_only was asked for.", \n
+  "properties": {\n
+    "count": {\n
+      "type": "integer"\n
+    }, \n
+    "total_count": {\n
+      "type": [\n
+        "integer", \n
+        "null"\n
+      ], \n
+      "description": "Total number of matching documents; present only with count_only. Exact, not a heuristic."\n
+    }, \n
+    "has_more": {\n
+      "type": "boolean"\n
+    }, \n
+    "offset": {\n
+      "type": "integer"\n
+    }, \n
+    "results": {\n
+      "items": {\n
+        "type": "object"\n
+      }, \n
+      "type": "array"\n
+    }, \n
+    "next_offset": {\n
+      "type": [\n
+        "integer", \n
+        "null"\n
+      ]\n
+    }, \n
+    "error": {\n
+      "type": "string", \n
+      "description": "Error message; present only on failure."\n
+    }, \n
+    "filters_applied": {\n
+      "type": "object", \n
+      "description": "The column criteria parsed out of \'query\' and actually sent to the catalog, with two bounds on one column combined into a single range criterion. Check it when a result surprises you: it says what was really asked."\n
+    }, \n
+    "warning": {\n
+      "type": "string", \n
+      "description": "A criterion was NOT applied - the query used OR/NOT/parentheses, or one column got a combination that cannot be expressed as a single criterion. Read this before trusting the rows: in that respect the result is unfiltered, not empty."\n
+    }, \n
+    "hint": {\n
+      "type": "string", \n
+      "description": "This search hit a limit of the plain catalog path and the answer may be incomplete or unfiltered - typically a listbox column that only the module\'s own list_method can resolve. Read it before trusting the rows, and follow it: it names the tool to use instead, usually erp5_collect."\n
+    }\n
+  }\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+{\n
+  "additionalProperties": false, \n
+  "required": [], \n
+  "type": "object", \n
+  "properties": {\n
+    "relative_url": {\n
+      "default": null, \n
+      "type": [\n
+        "string", \n
+        "null"\n
+      ], \n
+      "description": "Module id or document path to search inside. Omit it to search the WHOLE PORTAL across modules - the same catalog the UI\'s global search field queries. Scoping to a module is that same catalog restricted to the module\'s contents, so a portal-wide search returns a superset."\n
+    }, \n
+    "sort_on": {\n
+      "default": null, \n
+      "type": [\n
+        "array", \n
+        "null"\n
+      ], \n
+      "description": "Sort order as a [column, direction] pair, e.g. [\\"modification_date\\", \\"descending\\"]. For multi-key sort pass a list of such pairs, e.g. [[\\"modification_date\\", \\"descending\\"], [\\"title\\", \\"ascending\\"]]. direction is \\"ascending\\" or \\"descending\\" (defaults to \\"ascending\\" if omitted)."\n
+    }, \n
+    "select_list": {\n
+      "default": [], \n
+      "type": "array", \n
+      "description": "Columns to return."\n
+    }, \n
+    "limit": {\n
+      "default": 50, \n
+      "type": "integer", \n
+      "description": "Max rows."\n
+    }, \n
+    "offset": {\n
+      "default": 0, \n
+      "type": "integer", \n
+      "description": "Pagination offset."\n
+    }, \n
+    "count_only": {\n
+      "default": false, \n
+      "type": [\n
+        "boolean", \n
+        "integer", \n
+        "string", \n
+        "null"\n
+      ], \n
+      "description": "Return only the total number of matching documents, as \'total_count\', in a single catalog COUNT query -- no rows, no pagination. Use this instead of paging through every result just to count them. Works portal-wide too."\n
+    }, \n
+    "query": {\n
+      "default": null, \n
+      "type": [\n
+        "string", \n
+        "null"\n
+      ], \n
+      "description": "Catalog criteria. \'column:value\' or \'column:\\"value with spaces\\"\' becomes a criterion on that column; terms are ANDed, and a literal AND between them is optional. Naming the SAME column twice is an OR on its values, e.g. \'portal_type:\\"Sale Order\\" portal_type:\\"Organisation\\"\'. Comparisons are understood - \'modification_date:>=2024-06-01 AND modification_date:<2024-07-01\' becomes one range criterion, quoted or not. OR, NOT and parentheses cannot be mapped: the whole query is then dropped and \'warning\' says so. Words with no column are matched as title LIKE %words%, and only when no column term is present. What was really sent is echoed back in \'filters_applied\'."\n
+    }\n
+  }\n
+}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>erp5_search input schema</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,62 @@
+&gt; OSOE Tutorial: https://osoe-project.nexedi.com/lesson/user-Howto.Create.Bank.Account/view
+
+### Prerequisites
+- A validated Organisation (use `create_organisation` guide first)
+- A bank Organisation should also exist (to link via `source_title`)
+
+### Steps
+
+1. **Find the Organisation**
+   ```
+   erp5_search(relative_url="organisation_module",
+       query='title:"Organisation Name"',
+       select_list=["title", "validation_state"])
+   ```
+
+2. **Create a Bank Account sub-object**
+   ```
+   erp5_create(relative_url="organisation_module/&lt;org_id&gt;", portal_type="Bank Account")
+   ```
+   &#8594; Note the Bank Account's `relative_url`.
+
+3. **Read editable fields**
+   ```
+   erp5_read(relative_url="&lt;bank_account_url&gt;", all_editable=True)
+   ```
+
+4. **Fill in bank details**
+   ```
+   erp5_write(relative_url="&lt;bank_account_url&gt;", field_values={
+       "field_my_title": "Main Account",
+       "field_my_source_title": "Bank Organisation Name",
+       "field_my_price_currency": "currency_module/EUR",
+       "field_my_start_date": "2025-01-01",
+       "field_my_bank_code": "12345",
+       "field_my_branch": "67890",
+       "field_my_bank_account_number": "12345678901",
+       "field_my_iban": "FR76 1234 5678 9012 3456 7890 123",
+       "field_my_bic_code": "BNPAFRPP"
+   })
+   ```
+   - `source_title` &#8212; RelationStringField linking to a bank Organisation.
+     The bank organisation must exist in `organisation_module`.
+   - `bank_code`, `branch`, `bank_account_number` &#8212; OSOE tutorial fields for
+     the French bank account structure.
+
+5. **Validate the Bank Account**
+   ```
+   erp5_action(relative_url="&lt;bank_account_url&gt;", action_name="validate_action")
+   ```
+
+### Key Fields Reference
+| Field | Key | Notes |
+|---|---|---|
+| Title | `field_my_title` | Account label |
+| Bank | `field_my_source_title` | RelationStringField &#8212; links to bank Organisation |
+| Currency | `field_my_price_currency` | ListField &#8212; e.g. `currency_module/EUR` |
+| Start Date | `field_my_start_date` | DateTimeField &#8212; account opening date |
+| Bank Code | `field_my_bank_code` | StringField |
+| Branch | `field_my_branch` | StringField |
+| Account Number | `field_my_bank_account_number` | StringField |
+| IBAN | `field_my_iban` | International bank number |
+| BIC/SWIFT | `field_my_bic_code` | Bank identifier code |

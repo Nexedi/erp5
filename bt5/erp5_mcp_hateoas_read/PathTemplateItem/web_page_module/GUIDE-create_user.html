@@ -1,0 +1,65 @@
+&gt; OSOE Tutorial: https://osoe-project.nexedi.com/lesson/user-Howto.Create.New.User/view
+
+### Prerequisites
+- A validated Person document (use `create_person` guide first)
+
+### Steps
+
+1. **Start with a validated Person**
+   If not already created, follow the `create_person` guide first.
+   The Person must be in `validated` state.
+
+2. **Create an Assignment sub-object**
+   ```
+   erp5_create(relative_url="person_module/&lt;person_id&gt;", portal_type="Assignment")
+   ```
+   &#8594; Note the Assignment's `relative_url` (e.g. `person_module/123/1`).
+
+3. **Configure the Assignment**
+   ```
+   erp5_write(relative_url="&lt;assignment_url&gt;", field_values={
+       "field_my_title": "Community Manager",
+       "field_my_group": "my_group",
+       "field_my_function": "af/accounting",
+       "field_my_start_date": "2025-01-01",
+       "field_my_stop_date": "2025-12-31"
+   })
+   ```
+   - `title` &#8212; a role title describing this assignment (e.g. "Community Manager").
+   - `group` &#8212; check available group categories with `erp5_read` on the assignment
+     (look at `my_group.valid_choices`). Common values: `"my_group"`.
+   - `function` &#8212; check available function categories with `erp5_read`
+     (look at `my_function.valid_choices`). Example: `"af/accounting"`.
+
+4. **Open the Assignment**
+   ```
+   erp5_action(relative_url="&lt;assignment_url&gt;", action_name="open_action")
+   ```
+
+5. **Create an ERP5 Login sub-object**
+   ```
+   erp5_create(relative_url="person_module/&lt;person_id&gt;", portal_type="ERP5 Login")
+   ```
+   &#8594; Note the Login's `relative_url`.
+
+6. **Set the login reference (username)**
+   ```
+   erp5_write(relative_url="&lt;login_url&gt;", field_values={
+       "field_my_reference": "john.doe"
+   })
+   ```
+   Note: The password is typically set by the user via the web UI using the
+   "forgot password" link on the login page, which sends a password reset email.
+
+7. **Validate the Login**
+   ```
+   erp5_action(relative_url="&lt;login_url&gt;", action_name="validate_action")
+   ```
+
+### Notes
+- The Assignment defines the user's role/group within the organisation.
+- `title` on the Assignment describes the person's role (e.g. "Community Manager").
+- `start_date` / `stop_date` control when the assignment is active.
+- Multiple assignments can exist for different time periods or roles.
+- The login reference becomes the username for authentication.
+- For initial password setup, the user should use the "forgot password" link on the login page.

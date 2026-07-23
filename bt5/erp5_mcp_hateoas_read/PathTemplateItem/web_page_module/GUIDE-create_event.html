@@ -1,0 +1,53 @@
+&gt; OSOE Tutorial: https://osoe-project.nexedi.com/lesson/user-Howto.Create.Outgoing.Events/view
+
+### Prerequisites
+- Optionally, a Campaign or Support Request to link the event to (via `follow_up`)
+
+### Primary Path: Create Event linked to a Campaign
+
+The OSOE tutorial creates events FROM the campaign context. Set
+`default_follow_up_title` to link the event to its campaign.
+
+### Steps
+
+1. **Create the Event**
+   ```
+   erp5_create(relative_url="event_module", portal_type="Mail Message")
+   ```
+   Other event types: `"Web Message"`, `"Phone Call"`, `"Visit"`, `"Letter"`, `"Note"`, `"Fax Message"`.
+
+2. **Discover editable fields**
+   ```
+   erp5_read(relative_url="&lt;new_url&gt;", all_editable=True)
+   ```
+
+3. **Fill in event details**
+   ```
+   erp5_write(relative_url="&lt;new_url&gt;", field_values={
+       "field_my_title": "Subject of the message",
+       "field_my_text_content": "&lt;p&gt;Body of the message in HTML&lt;/p&gt;",
+       "field_my_source_title": "Sender Name",
+       "field_my_destination_title": "Recipient Name",
+       "field_my_default_follow_up_title": "Campaign or Ticket Title"
+   })
+   ```
+
+### Key Fields Reference
+| Field | Key | Notes |
+|---|---|---|
+| Title/Subject | `field_my_title` | Event subject |
+| Content | `field_my_text_content` | HTML body (GadgetField) |
+| Source (From) | `field_my_source_title` | Sender (relation to Person/Organisation) |
+| Destination (To) | `field_my_destination_title` | Recipient (relation) |
+| Follow Up | `field_my_default_follow_up_title` | Link to Campaign/Support Request (relation) |
+| Event Origin | `field_my_causality_title` | Link to the event being replied to (relation) |
+| Attachments | `field_my_aggregate_document_title_list` | Multi-relation to Documents |
+| Start Date | `field_my_start_date` | Auto-set to creation time |
+
+### Notes
+- Events are the core CRM document &#8212; every interaction is an Event.
+- The `default_follow_up_title` field links events to Campaigns or Support Requests.
+- Portal type determines the communication channel (Mail, Web, Phone, etc.).
+- The field is `default_follow_up_title` (NOT `follow_up_title`).
+- Events created via a campaign's "Create New Event" action in the web UI
+  may start as Planned rather than Draft. Check the state with `erp5_read`.

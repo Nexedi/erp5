@@ -1,0 +1,46 @@
+### Prerequisites
+- Access to `portal_components` (verify with `erp5_discover`)
+
+### Steps
+
+1. **Search for components by type**
+   ```
+   erp5_search(
+     relative_url="portal_components",
+     query="portal_type:&lt;type&gt; AND validation_state:validated",
+     select=["reference", "title", "version"]
+   )
+   ```
+   Where `&lt;type&gt;` is one of: `Document Component`, `Extension Component`,
+   `Test Component`, `Interface Component`, `Mixin Component`, `Tool Component`.
+
+2. **Search by reference** (if you know the module name)
+   ```
+   erp5_search(
+     relative_url="portal_components",
+     query="reference:&lt;module_name&gt;",
+     select=["reference", "title", "portal_type", "validation_state"]
+   )
+   ```
+
+3. **Read the source code**
+   ```
+   erp5_read(relative_url="portal_components/&lt;id&gt;", all_editable=True)
+   ```
+   &#8594; The `text_content` field contains the full source code.
+   &#8594; Also shows `reference`, `version`, `validation_state`.
+
+4. **Edit the source** (for draft components only)
+   ```
+   erp5_write(
+     relative_url="portal_components/&lt;id&gt;",
+     field_values={"text_content": "&lt;new source code&gt;"}
+   )
+   ```
+   &#8594; Only works on components in `draft` state.
+   &#8594; To edit a validated component, first set it to draft via workflow action.
+
+### Tips
+- Component `reference` maps to the Python import path (e.g. `erp5.component.extension.MyExtension`)
+- Use `erp5_read` with `all_editable=True` to see all metadata fields
+- Validated components are read-only &#8212; change workflow state to `draft` before editing

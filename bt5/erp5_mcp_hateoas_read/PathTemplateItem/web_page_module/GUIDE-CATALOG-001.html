@@ -1,0 +1,54 @@
+<h2>Add a MySQL catalog index for related lines (movement-table pattern)</h2>
+
+<p>Use this when listing by a related line is slow through the normal catalog, e.g.
+supply lines of products, transformation lines of a product. You index the lines into a
+dedicated MySQL table that mirrors the movement-table pattern of <code>erp5_movement_table_catalog</code>.</p>
+
+<h3>The 8 files (per index table, e.g. ProductSaleSupplyLines)</h3>
+<ul>
+<li><code>z0_drop_&lt;x&gt;</code> (DROP TABLE IF EXISTS) and <code>z_create_&lt;x&gt;</code> (CREATE TABLE) — method ids registered under <code>sql_clear_catalog</code> so a cleared catalog recreates them.</li>
+<li><code>z_catalog_&lt;x&gt;_list</code> — registered under <code>sql_catalog_object_list</code>, <b>filtered</b> by portal type / condition; body is one DELETE + INSERT so a reindex updates rows in place without duplicates.</li>
+<li><code>z0_uncatalog_&lt;x&gt;</code> — registered under <code>sql_uncatalog_object</code>; single statement <code>DELETE FROM &lt;t&gt; WHERE &lt;dtml-sqltest uid op=eq type=int multiple&gt;</code>.</li>
+<li>Each method also has a <code>.catalog_keys.xml</code> companion (filter / method registration).</li>
+<li>Register all method ids in the BT property <code>template_catalog_method_id_list</code>.</li>
+</ul>
+
+<h3>Where the methods live (anatomy)</h3>
+<ul>
+<li>Z SQL Methods live <b>inside the SQLCatalog, not on the tool</b>: ZODB path <code>portal_catalog/&lt;sql_catalog_id&gt;/&lt;method_id&gt;</code> (e.g. <code>portal_catalog/erp5_mysql_innodb/z_catalog_product_sale_supply_line_list</code>), matching the BT export layout <code>CatalogMethodTemplateItem/portal_catalog/erp5_mysql_innodb/&hellip;</code>.</li>
+<li><code>portal_catalog._getOb(method_id)</code> and restricted <code>getattr(portal_catalog, method_id)</code> return nothing &mdash; an inspection over the tool reports every method as <b>MISSING</b> and costs debugging detours. Restricted skin scripts cannot reach them; use trusted code (<code>erp5_trusted_exec</code>) or, better, <code>erp5_catalog_method_read</code> / <code>erp5_catalog_method_write</code>, which exist exactly for this.</li>
+<li>List candidate ids: <code>portal.portal_catalog.getSQLCatalog().objectIds()</code> from a skin script, or the BT export files under <code>CatalogMethodTemplateItem/</code>.</li>
+</ul>
+
+<h3>Editing an existing method safely</h3>
+<ul>
+<li>Change <code>src</code> <b>and</b> <code>arguments_src</code> together through one <code>manage_edit</code> &mdash; that call re-parses the arguments into <code>_arg</code> and re-compiles the DTML template; editing only one of the two desynchronises the parsed state from the source the BT exports. <code>erp5_catalog_method_write</code> does exactly this (and refuses accidental <code>connection_id</code> changes unless <code>force_connection=true</code>). A failed write leaves the method untouched &mdash; re-read with <code>erp5_catalog_method_read</code> before retrying, and prefer full-source rewrites over pattern edits for multi-line changes.</li>
+<li><code>arguments_src</code> must list <b>accessor names</b> (getDestinationUid, getBasePrice...), never column names. Column names render as
+"instancemethod object has no attribute __getitem__" from DTML.</li>
+<li>Date-range idiom for supply-line validity: the "Valid from" / "Valid until" fields are a paired range &mdash; <code>getStartDateRangeMin</code> / <code>getStartDateRangeMax</code> (cf. <code>SupplyCell_asPredicate</code>), not <code>getStartDate</code>/<code>getStopDate</code>. In <code>arguments_src</code>: those two names; in <code>src</code>:
+<code>&lt;dtml-sqlvar expr="getStartDateRangeMin[loop_item]" type="datetime" optional&gt;</code> / same for Max. <code>optional</code> keeps the column NULL when the line has no bound, and predicate logic must treat the NULL cases explicitly.</li>
+<li>Values resolve per object via getattr, so rows are indexed per line; <code>&lt;dtml-sqlvar expr="getUid[loop_item]"&gt;</code> style loop variables come from the object-list loop.</li>
+<li>Multi-statement separator inside one method: <code>&lt;dtml-var "'\0'"&gt;</code> (NUL character), like all ERP5 catalog methods.</li>
+<li>Render optional values as <code>or 0</code> (uid columns DEFAULT 0) and let dates stay NULL.</li>
+<li>DDL conventions: <code>uid BIGINT UNSIGNED NOT NULL</code> PRIMARY KEY, party/product uid columns <code>BIGINT UNSIGNED DEFAULT 0</code> with KEYs, <code>ENGINE=InnoDB DEFAULT CHARSET=utf8mb4</code>.</li>
+<li>Filter expression like <code>python: context.getPortalType() == 'Sale Supply Line' and context.getResourceValue() is not None and context.getResourceValue().getPortalType() == 'Product'</code> &mdash; when it depends on more than portal_type, leave <code>expression_cache_key</code> EMPTY or it will silently never re-evaluate.</li>
+</ul>
+
+<h3>Migrating a live index (correcting an existing one)</h3>
+<ol>
+<li>Patch the methods first: read with <code>erp5_catalog_method_read</code>, then write <code>src</code> and <code>arguments_src</code> together with <code>erp5_catalog_method_write</code>.</li>
+<li>Create/repair the table now: <code>portal_catalog.upgradeSchema()</code> (trusted code / a component; not from a skin script).</li>
+<li>Backfill: <code>searchAndActivate(portal_type='Sale Supply Line', method_id='immediateReindexObject')</code> &mdash; but this instance has <b>no activity worker</b>, so drain with <code>erp5_activity_drain</code> (use <code>retry_stuck</code> for stuck messages, <code>cancel_stuck</code> for poison ones). A plain <code>immediateReindexObject</code> loop also works in one call for a few hundred objects (329 ran synchronously in a single call during the supply-line session).</li>
+<li>Verify set-based (next section) and confirm the methods are not in drift: <code>erp5_bt_status(path_pattern='*supply_line*')</code>.</li>
+</ol>
+
+<h3>Verify set-based, never row-by-row</h3>
+<ul>
+<li>Expected set: catalog query for the indexed lines (uids).</li>
+<li>Actual set: <code>SELECT GROUP_CONCAT(uid ORDER BY uid) FROM &lt;table&gt;</code> via <code>erp5_sql(format="rows")</code> &mdash; compare as sets. A query may end in its own LIMIT (plain or OFFSET form): the tool only appends its own LIMIT when there is none, and date cells come back as ISO strings.</li>
+<li>Orphans: <code>LEFT JOIN catalog c ON t.uid=c.uid WHERE c.uid IS NULL</code> must return 0.</li>
+<li>Add a live test to woelfel_test (register the component id in <code>template_test_id_list</code>) and run it with <code>erp5_live_test</code>.</li>
+</ul>
+
+<h3>Getting it into the repository</h3>
+<p>Write the method sources as repo files and apply with <code>erp5_bt_update_from_repository</code>, or edit on the instance (<code>erp5_catalog_method_write</code>) and export with <code>erp5_bt_export_to_repository</code> &mdash; see <code>GUIDE-BTSYNC-001</code>. No scaffolding tool is needed: exporting the BT produces all 8 files. Trusted one-shot glue that a restricted skin script cannot run (<code>upgradeSchema()</code>, bulk reindex calls) goes through <code>erp5_trusted_exec</code> &mdash; no per-incident component + External Method bootstrap any more (see <code>GUIDE-TRUSTED-001</code>).</p>

@@ -1,0 +1,110 @@
+&gt; OSOE Tutorial: https://osoe-project.nexedi.com/lesson/user-Howto.Create.Purchase.Transactions/view
+
+### Prerequisites
+- A validated supplier Organisation with a Bank Account
+- Access to `accounting_module`
+- Optionally, a validated Purchase Trade Condition
+
+### Steps
+
+1. **Create the Purchase Invoice Transaction**
+   ```
+   erp5_create(relative_url="accounting_module", portal_type="Purchase Invoice Transaction")
+   ```
+   &#8594; Note the `relative_url`.
+
+2. **Discover editable fields**
+   ```
+   erp5_read(relative_url="&lt;new_url&gt;", all_editable=True)
+   ```
+
+3. **Fill in invoice header**
+   ```
+   erp5_write(relative_url="&lt;new_url&gt;", field_values={
+       "field_my_title": "Purchase from Supplier Name",
+       "field_my_destination_section_title": "Your Organisation",
+       "field_my_source_section_title": "Supplier Name",
+       "field_my_start_date": "2025-01-15",
+       "field_my_stop_date": "2025-02-15",
+       "field_my_reference": "SUP-INV-001",
+       "field_my_specialise_title": "Purchase Trade Condition Name",
+       "field_my_delivery_mode": "del/mode/air",
+       "field_my_price_currency": "currency_module/EUR"
+   })
+   ```
+   - Use the organisation created in Session 1 for `destination_section_title`.
+   - `specialise_title` &#8212; link to a Purchase Trade Condition (RelationStringField).
+   - `delivery_mode` &#8212; shipping mode (ListField). Check valid choices with `erp5_read`.
+   - `price_currency` &#8212; currency (ListField). May be auto-set by trade condition.
+
+4. **Apply Purchase Trade Condition** (if set)
+   After setting `specialise_title`, check if there is an "Apply Purchase Trade
+   Condition" action available:
+   ```
+   erp5_read(relative_url="&lt;new_url&gt;")
+   ```
+   Look in the `actions` or `workflows` for an apply action. This auto-fills
+   currency, payment terms, etc.
+
+5. **Create Invoice Lines**
+   ```
+   erp5_create(relative_url="&lt;invoice_url&gt;", portal_type="Invoice Line")
+   ```
+   ```
+   erp5_write(relative_url="&lt;line_url&gt;", field_values={
+       "field_my_title": "Purchased Item",
+       "field_my_resource_title": "Product Name",
+       "field_my_quantity": "5",
+       "field_my_price": "200.00"
+   })
+   ```
+   Repeat for each purchased item.
+
+6. **Confirm the Invoice**
+   ```
+   erp5_action(relative_url="&lt;invoice_url&gt;", action_name="confirm_action")
+   ```
+
+7. **Journalise the Invoice** (record in accounting journal)
+   ```
+   erp5_action(relative_url="&lt;invoice_url&gt;", action_name="start_action")
+   ```
+   Note: The OSOE tutorial calls this "Journalise". The action name may be
+   `start_action` or another name. Check `erp5_read` for available actions.
+
+8. **Review accounting lines** (verify debit/credit entries)
+   ```
+   erp5_read_deep(relative_url="&lt;invoice_url&gt;")
+   ```
+   Check that accounting lines are correct after journalising.
+
+9. **Create Related Payment** (optional)
+   See the `create_payment` guide. This step is done via the web UI using
+   "Create Related Payment" action on the invoice.
+
+### Key Fields Reference
+| Field | Key | Notes |
+|---|---|---|
+| Title | `field_my_title` | Invoice description |
+| Supplier | `field_my_source_section_title` | Who you're buying from (relation) |
+| Buyer | `field_my_destination_section_title` | Your organisation (relation) |
+| Invoice Date | `field_my_start_date` | Date of the invoice |
+| Payment Date | `field_my_stop_date` | Due date |
+| Reference | `field_my_reference` | Supplier's invoice number |
+| Trade Condition | `field_my_specialise_title` | Purchase Trade Condition (relation) |
+| Delivery Mode | `field_my_delivery_mode` | ListField &#8212; shipping mode |
+| Currency | `field_my_price_currency` | ListField &#8212; e.g. `currency_module/EUR` |
+
+### Workflow (OSOE)
+| Step | Action | Notes |
+|---|---|---|
+| Confirm | `confirm_action` | Accept the invoice |
+| Journalise | `start_action` | Record in accounting journal |
+| Review | &#8212; | Check accounting lines with `erp5_read_deep` |
+| Payment | &#8212; | Create via web UI (see `create_payment` guide) |
+
+### Notes
+- Purchase Invoice Transactions are the mirror of Sale Invoice Transactions.
+- `source_section` = supplier, `destination_section` = your organisation (reversed from sales).
+- Invoice Lines specify what was purchased, with quantity and unit price.
+- **Action names vary by instance.** Always check `erp5_read` for available transitions.
