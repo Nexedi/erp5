@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="JSON Form" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>erp5_dialog_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_dialog_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>JSON Form</string> </value>
+        </item>
+        <item>
+            <key> <string>response_schema</string> </key>
+            <value> <string>{\n
+  "additionalProperties": true, \n
+  "type": "object", \n
+  "description": "Dialog submission result or error.", \n
+  "properties": {\n
+    "status": {\n
+      "type": "string"\n
+    }, \n
+    "relative_url": {\n
+      "type": "string"\n
+    }, \n
+    "status_code": {\n
+      "type": [\n
+        "integer", \n
+        "string", \n
+        "null"\n
+      ]\n
+    }, \n
+    "field_errors": {\n
+      "type": "object"\n
+    }, \n
+    "error": {\n
+      "type": "string", \n
+      "description": "Error message; present only on failure."\n
+    }, \n
+    "action": {\n
+      "type": "string"\n
+    }\n
+  }\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>{\n
+  "additionalProperties": false, \n
+  "required": [\n
+    "relative_url", \n
+    "action_name"\n
+  ], \n
+  "type": "object", \n
+  "properties": {\n
+    "params": {\n
+      "default": null, \n
+      "type": [\n
+        "object", \n
+        "null"\n
+      ], \n
+      "description": "Dialog field values."\n
+    }, \n
+    "relative_url": {\n
+      "type": "string", \n
+      "description": "Document path."\n
+    }, \n
+    "action_name": {\n
+      "type": "string", \n
+      "description": "Dialog action id."\n
+    }\n
+  }\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>erp5_dialog input schema</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

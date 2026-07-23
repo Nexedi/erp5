@@ -1,0 +1,7 @@
+portal_callables/erp5_action**
+portal_callables/erp5_clone**
+portal_callables/erp5_create**
+portal_callables/erp5_delete**
+portal_callables/erp5_dialog**
+portal_callables/erp5_write**
+portal_web_services/erp5_hateoas_mcp_rw**

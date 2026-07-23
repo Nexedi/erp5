@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="JSON Form" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>erp5_write_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_write_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>JSON Form</string> </value>
+        </item>
+        <item>
+            <key> <string>response_schema</string> </key>
+            <value> <string>{\n
+  "additionalProperties": true, \n
+  "type": "object", \n
+  "description": "Write result or validation error.", \n
+  "properties": {\n
+    "status": {\n
+      "type": "string"\n
+    }, \n
+    "relative_url": {\n
+      "type": "string"\n
+    }, \n
+    "status_code": {\n
+      "type": [\n
+        "integer", \n
+        "string"\n
+      ]\n
+    }, \n
+    "field_errors": {\n
+      "type": "object"\n
+    }, \n
+    "missing_fields": {\n
+      "type": "array"\n
+    }, \n
+    "error": {\n
+      "type": "string", \n
+      "description": "Error message; present only on failure."\n
+    }\n
+  }\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+{\n
+  "additionalProperties": false, \n
+  "required": [\n
+    "relative_url"\n
+  ], \n
+  "type": "object", \n
+  "properties": {\n
+    "field_values": {\n
+      "default": {}, \n
+      "type": "object", \n
+      "description": "Map of field_my_xxx -> value."\n
+    }, \n
+    "skip_validation": {\n
+      "default": false, \n
+      "type": [\n
+        "boolean", \n
+        "integer"\n
+      ], \n
+      "description": "Skip the check this tool makes before sending, that every key names a field of the form and that the field is editable. It does NOT switch off ERP5 validation, constraints or workflow guards - those run either way. Use it when you know the form better than the check does; the write itself is unaffected."\n
+    }, \n
+    "form_id": {\n
+      "default": null, \n
+      "type": [\n
+        "string", \n
+        "null"\n
+      ], \n
+      "description": "View/form id (default view)."\n
+    }, \n
+    "relative_url": {\n
+      "type": "string", \n
+      "description": "Document path."\n
+    }\n
+  }\n
+}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>erp5_write input schema</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

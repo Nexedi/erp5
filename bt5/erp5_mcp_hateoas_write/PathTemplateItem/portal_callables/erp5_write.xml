@@ -1,0 +1,679 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="MCP Tool" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+def mcp_ret(o, *a, **k):\n
+  return json.dumps(_mcp_unicode(o), ensure_ascii=False), o\n
+def _mcp_unicode(value):\n
+  # json.dumps(ensure_ascii=False) joins its output chunks on Python 2, so a\n
+  # payload mixing unicode with utf-8 str makes that join decode the bytes as\n
+  # ascii and die on the first umlaut: "\'ascii\' codec can\'t decode byte 0xc3".\n
+  # Anything read from ZODB or through Localizer is such a native str, while\n
+  # everything from getHateoas is unicode, so the mix is the norm on a\n
+  # localised instance and never shows up on an all-ascii one.\n
+  if isinstance(value, str):\n
+    decode = getattr(value, "decode", None)\n
+    if decode is None:\n
+      return value  # Python 3: str is already text\n
+    try:\n
+      return decode("utf-8")\n
+    except Exception:\n
+      return decode("utf-8", "replace")\n
+  if isinstance(value, dict):\n
+    return dict([(_mcp_unicode(k), _mcp_unicode(v)) for k, v in value.items()])\n
+  if isinstance(value, (list, tuple)):\n
+    return [_mcp_unicode(x) for x in value]\n
+  return value\n
+import json\n
+field_values = json.loads(field_values) if isinstance(field_values, str) else field_values\n
+if not field_values:\n
+  return mcp_ret({"error": "field_values is empty"})\n
+portal = context.getPortalObject()\n
+document = portal.restrictedTraverse(relative_url, None)\n
+if document is None:\n
+  return mcp_ret({"error": "not found: %s" % relative_url})\n
+view = str(form_id or "view")\n
+raw = context.ERP5Document_getHateoas(mode="traverse", relative_url=str(relative_url), view=view, restricted=1)\n
+data = json.loads(raw) if (isinstance(raw, str) and raw) else {}\n
+ev = data.get("_embedded", {}).get("_view", {})\n
+sv = skip_validation if isinstance(skip_validation, bool) else (str(skip_validation).lower() in ("1", "true", "yes"))\n
+if not sv:\n
+  missing = []\n
+  non_editable = []\n
+  for key in field_values:\n
+    vk = key[len("field_"):] if key.startswith("field_") else key\n
+    fd = ev.get(vk)\n
+    if not isinstance(fd, dict):\n
+      missing.append(key)\n
+    elif not fd.get("editable") and fd.get("type") != "FormBox":\n
+      non_editable.append(key)\n
+  if missing or non_editable:\n
+    return mcp_ret({"error": "Field validation failed", "missing_fields": missing,\n
+      "non_editable_fields": non_editable,\n
+      "hint": "Read-only/unknown fields (as in the UI). my_xxx -> field_my_xxx. skip_validation=true to bypass."})\n
+_MCP_MONTHS = {"jan": 1, "feb": 2, "mar": 3, "apr": 4, "may": 5, "jun": 6,\n
+  "jul": 7, "aug": 8, "sep": 9, "oct": 10, "nov": 11, "dec": 12}\n
+def parse_date(val):\n
+  if not val or not hasattr(val, "split"):\n
+    return None\n
+  s = val.strip().replace("T", " ")\n
+  parts = [p for p in s.split(" ") if p]\n
+  if not parts:\n
+    return None\n
+  # A DateTimeField\'s HATEOAS default is rendered RFC-822 style, e.g.\n
+  # "Fri, 28 Aug 2026 00:00:00 +0000". Every editable field is replayed\n
+  # through serialize() below, so a default this parser cannot read came back\n
+  # as None and was submitted as empty subfields -- silently clearing a date\n
+  # the caller never mentioned. Drop a leading weekday token and accept a\n
+  # month name so that replay round-trips.\n
+  if parts[0].endswith(",") and not parts[0][:-1].isdigit():\n
+    parts = parts[1:]\n
+  if not parts:\n
+    return None\n
+  datepart = parts[0]\n
+  timepart = parts[1] if len(parts) > 1 else ""\n
+  sep = "-" if "-" in datepart else ("/" if "/" in datepart else None)\n
+  if sep is None:\n
+    # "28 Aug 2026 00:00:00 +0000": day, month name and year are separate tokens.\n
+    if len(parts) >= 3 and datepart.isdigit():\n
+      mon = _MCP_MONTHS.get(parts[1][:3].lower())\n
+      if mon is not None and parts[2].isdigit():\n
+        try:\n
+          y, m, d = int(parts[2]), mon, int(datepart)\n
+        except Exception:\n
+          return None\n
+        h = mi = 0\n
+        tp_src = parts[3] if len(parts) > 3 else ""\n
+        if tp_src and ":" in tp_src:\n
+          tp = tp_src.split(":")\n
+          try:\n
+            h = int(tp[0])\n
+            mi = int(tp[1]) if len(tp) > 1 else 0\n
+          except Exception:\n
+            h = mi = 0\n
+        return (y, m, d, h, mi)\n
+    return None\n
+  dp = datepart.split(sep)\n
+  if len(dp) != 3:\n
+    return None\n
+  try:\n
+    if len(dp[0]) == 4:\n
+      y, m, d = int(dp[0]), int(dp[1]), int(dp[2])\n
+    else:\n
+      d, m, y = int(dp[0]), int(dp[1]), int(dp[2])\n
+    h = mi = 0\n
+    if timepart and ":" in timepart:\n
+      tp = timepart.split(":")\n
+      h = int(tp[0])\n
+      mi = int(tp[1]) if len(tp) > 1 else 0\n
+    return (y, m, d, h, mi)\n
+  except Exception:\n
+    return None\n
+resolved_uids = {}\n
+_fidf0 = ev.get("form_id", {})\n
+_form_id0 = _fidf0.get("default", "") if isinstance(_fidf0, dict) else ""\n
+_form0 = document.restrictedTraverse(str(_form_id0), None) if _form_id0 else None\n
+def resolve_uid(fd, nv, vk):\n
+  cur = fd.get("default", "")\n
+  cur_uids = fd.get("relation_item_uid", [])\n
+  if isinstance(cur, list):\n
+    if nv in cur and cur_uids:\n
+      i = cur.index(nv)\n
+      if i < len(cur_uids):\n
+        return str(cur_uids[i])\n
+  elif nv == cur and cur_uids:\n
+    return str(cur_uids[0])\n
+  pts = fd.get("portal_types", [])\n
+  ci = fd.get("catalog_index", "")\n
+  if not pts or not ci:\n
+    return None\n
+  q = "(%s) AND %s:\\"%s\\"" % (" OR ".join([\'portal_type:"%s"\' % p for p in pts]), ci, nv)\n
+  kw = {"portal_type": pts}\n
+  kw[str(ci)] = nv\n
+  # The uid injected below is taken by RelationStringField as an\n
+  # already-picked value, so its own constrained lookup never runs.\n
+  # Apply the field\'s parameter_list here instead (e.g.\n
+  # validation_state=\'validated\', use_relative_url=\'use/trade/sale\'),\n
+  # otherwise every such constraint is silently bypassed. Fail closed:\n
+  # without the constraints, submit no uid and let ERP5 validate.\n
+  if _form0 is None:\n
+    return None\n
+  try:\n
+    _pl = _form0.get_field(vk).get_value("parameter_list") or ()\n
+  except Exception:\n
+    return None\n
+  for _pk, _pv in _pl:\n
+    kw[str(_pk)] = _pv\n
+  res = context.getPortalObject().portal_catalog(**kw)\n
+  # Exact match only. The catalog_index is not always matched exactly by the\n
+  # catalog (a \'/\' in a reference can tokenise), so a non-matching row can come\n
+  # back first; returning it would attach a silently wrong document. When\n
+  # nothing matches, submit no uid and let ERP5 validate the plain string.\n
+  n = 0\n
+  for b in res:\n
+    n += 1\n
+    if n > 200:\n
+      break\n
+    u = b.getUid()\n
+    if u is None:\n
+      continue\n
+    try:\n
+      v = getattr(b, str(ci), None)\n
+      if v is None:\n
+        v = b.getObject().getProperty(str(ci))\n
+      if v == nv:\n
+        return str(u)\n
+    except Exception:\n
+      pass\n
+  return None\n
+for key, value in field_values.items():\n
+  vk = key[len("field_"):] if key.startswith("field_") else key\n
+  fd = ev.get(vk, {})\n
+  if isinstance(fd, dict) and fd.get("type") in ("RelationStringField", "MultiRelationStringField"):\n
+    u = resolve_uid(fd, str(value), vk)\n
+    if u:\n
+      resolved_uids[key] = u\n
+def render_float(fd, value):\n
+  # Mirror Formulator\'s FloatWidget.format_value. The HATEOAS default of a\n
+  # FloatField is the raw python float, but FloatValidator only understands\n
+  # what the widget rendered, so the number has to be formatted back into the\n
+  # field\'s input_style before it is submitted. Handing the validator a float\n
+  # instead crashes normalizeFullWidthNumber (\'float\' object has no attribute\n
+  # \'decode\'), and handing it an unformatted "1234.5" makes a \'-1.234,5\'\n
+  # styled field read the \'.\' as a thousands separator and store 12345.0 --\n
+  # the value grows by a factor of ten on every submit.\n
+  if value is None or value == "":\n
+    return ""\n
+  try:\n
+    number = float(value)\n
+  except (TypeError, ValueError):\n
+    return value\n
+  input_style = fd.get("input_style") or "-1234.5"\n
+  precision = fd.get("precision")\n
+  if isinstance(precision, str) and precision.strip("-").isdigit():\n
+    precision = int(precision)\n
+  percent = "%" in input_style\n
+  if percent:\n
+    number = number * 100\n
+  if precision not in (None, "") and abs(number) * 10 ** precision < 2 ** 53:\n
+    text = ("%%0.%sf" % precision) % number\n
+  else:\n
+    text = str(number)\n
+  if "e" in text or "E" in text:\n
+    # scientific notation, the widget returns it as is\n
+    return text\n
+  fpart = ""\n
+  if precision != 0:\n
+    if "." not in text:  # inf / nan\n
+      return text\n
+    text, fpart = text.split(".")\n
+  decimal_separator = ""\n
+  decimal_point = "."\n
+  if input_style == "-1 234.5":\n
+    decimal_separator = " "\n
+  elif input_style == "-1 234,5":\n
+    decimal_separator = " "\n
+    decimal_point = ","\n
+  elif input_style == "-1.234,5":\n
+    decimal_separator = "."\n
+    decimal_point = ","\n
+  elif input_style == "-1,234.5":\n
+    decimal_separator = ","\n
+  if decimal_separator:\n
+    if text.startswith("-"):\n
+      sign = "-"\n
+      text = text[1:]\n
+    else:\n
+      sign = ""\n
+    i = len(text) % 3 or 3\n
+    integer = text[:i]\n
+    while i < len(text):\n
+      integer += decimal_separator + text[i:i + 3]\n
+      i += 3\n
+    text = sign + integer\n
+  if precision != 0:\n
+    text += decimal_point\n
+    if precision:\n
+      text += fpart[:precision].ljust(precision, "0")\n
+    else:\n
+      text += fpart\n
+  if percent:\n
+    text += "%"\n
+  return text\n
+blanked_dates = []\n
+def serialize(fk, fd, value, uid):\n
+  ftype = fd.get("type", "")\n
+  default = fd.get("default", "")\n
+  form_key = "field_%s" % fk\n
+  r = {}\n
+  if ftype == "RelationStringField":\n
+    val = value if value is not None else default\n
+    if isinstance(val, list):\n
+      val = val[0] if val else ""\n
+    r[form_key] = val\n
+    rid = fd.get("relation_field_id", "")\n
+    if rid:\n
+      if uid is not None:\n
+        r[rid] = uid\n
+      elif value is None:\n
+        # Field is only being replayed, not edited: keep the current link.\n
+        ex = fd.get("relation_item_uid", [])\n
+        if ex:\n
+          r[rid] = str(ex[0])\n
+      # Explicitly supplied but unresolved (or ""): send no uid, so ERP5\n
+      # validates the string itself instead of silently keeping the old\n
+      # link and reporting success. Whether the link really got made is\n
+      # re-checked after Base_edit below.\n
+  elif ftype == "FloatField":\n
+    r[form_key] = render_float(fd, value if value is not None else default)\n
+  elif ftype == "IntegerField":\n
+    val = value if value is not None else default\n
+    r[form_key] = "" if val is None or val == "" else str(val)\n
+  elif ftype == "CheckBoxField":\n
+    r[form_key] = value if value is not None else default\n
+    r["default_%s:int" % form_key] = "0"\n
+  elif ftype in ("ListField", "RadioField"):\n
+    r[form_key] = value if value is not None else default\n
+    r["default_%s:int" % form_key] = "0"\n
+  elif ftype in ("ParallelListField", "MultiListField"):\n
+    val = value if value is not None else default\n
+    if isinstance(val, str):\n
+      val = [val] if val else []\n
+    elif not isinstance(val, list):\n
+      val = [str(val)] if val else []\n
+    base = "subfield_%s_default" % form_key\n
+    r[base + ":list"] = val\n
+    r["default_" + base + ":int"] = "0"\n
+  elif ftype == "DateTimeField":\n
+    val = value if value is not None else default\n
+    dt = parse_date(val)\n
+    yk = fd.get("subfield_year_key", "")\n
+    mk = fd.get("subfield_month_key", "")\n
+    dk = fd.get("subfield_day_key", "")\n
+    hk = fd.get("subfield_hour_key", "")\n
+    mnk = fd.get("subfield_minute_key", "")\n
+    if dt is not None:\n
+      y, m, d, h, mi = dt\n
+      if yk:\n
+        r[yk] = str(y)\n
+      if mk:\n
+        r[mk] = str(m).zfill(2)\n
+      if dk:\n
+        r[dk] = str(d).zfill(2)\n
+      if hk:\n
+        r[hk] = str(h).zfill(2)\n
+      if mnk:\n
+        r[mnk] = str(mi).zfill(2)\n
+    else:\n
+      if value is None and default not in (None, ""):\n
+        # Replay of a field the caller never mentioned, whose stored value\n
+        # this parser could not read. Emptying the subfields would destroy a\n
+        # date nobody asked to change, so record it and fail the write below\n
+        # rather than lose data and report success.\n
+        blanked_dates.append(fk)\n
+      if yk:\n
+        r[yk] = ""\n
+      if mk:\n
+        r[mk] = ""\n
+      if dk:\n
+        r[dk] = ""\n
+  elif ftype == "FormBox":\n
+    sub_view = fd.get("_embedded", {}).get("_view", {})\n
+    for sk, sfd in sub_view.items():\n
+      if sk.startswith("_") or not isinstance(sfd, dict):\n
+        continue\n
+      sfk = sfd.get("key", sk)\n
+      if isinstance(value, dict) and sk in value:\n
+        r[sfk] = value[sk]\n
+      else:\n
+        r[sfk] = sfd.get("default", "")\n
+  elif ftype == "MatrixBox":\n
+    if isinstance(value, dict):\n
+      for tab in (fd.get("data", []) or []):\n
+        for row in (tab or []):\n
+          if not isinstance(row, (list, tuple)) or len(row) < 2:\n
+            continue\n
+          for cell in row[1:]:\n
+            if not isinstance(cell, dict):\n
+              continue\n
+            fid = cell.get("field_id", "")\n
+            if not fid:\n
+              continue\n
+            short = fid[len("matrixbox_"):] if fid.startswith("matrixbox_") else fid\n
+            if fid in value:\n
+              r[fid] = value[fid]\n
+            elif short in value:\n
+              r[fid] = value[short]\n
+  else:\n
+    r[form_key] = value if value is not None else default\n
+  return r\n
+form_data = {}\n
+skip = ("_links", "_embedded", "_actions", "form_id", "listbox")\n
+for vk, fd in ev.items():\n
+  if vk.startswith("_") or vk in skip or not isinstance(fd, dict):\n
+    continue\n
+  ftype = fd.get("type", "")\n
+  fkk = "field_%s" % vk\n
+  user_value = field_values.get(fkk)\n
+  # Replaying an untouched relation field re-binds it (resolve_uid injects\n
+  # its uid), and on aggregates like a Sale Packing List line that makes\n
+  # ERP5 recompute dependent categories: resubmitting the resource resets\n
+  # the Source Stock Point to the resource default, silently discarding an\n
+  # explicit source change made in the same edit. Base_edit preserves fields\n
+  # the form does not submit, so leave an un-supplied relation field alone.\n
+  if ftype in ("RelationStringField", "MultiRelationStringField") and user_value is None:\n
+    continue\n
+  if fd.get("hidden") == 1:\n
+    form_data[fd.get("key", vk)] = user_value if user_value is not None else fd.get("default", "")\n
+    continue\n
+  if not fd.get("editable") and ftype != "FormBox":\n
+    continue\n
+  form_data.update(serialize(vk, fd, user_value, resolved_uids.get(fkk)))\n
+if blanked_dates:\n
+  blanked_dates.sort()\n
+  return mcp_ret({"error": "Refusing to blank date field(s) that are not being edited",\n
+    "unparseable_date_fields": blanked_dates,\n
+    "hint": "erp5_write replays every editable field of the form. The stored value of these date fields could not be parsed back, and submitting them would clear the date. Pass them explicitly as \'YYYY-MM-DD\' to keep or change them, and report the format so parse_date can learn it.",\n
+    "relative_url": relative_url})\n
+fidf = ev.get("form_id", {})\n
+if isinstance(fidf, dict):\n
+  form_data["form_id"] = fidf.get("default", "")\n
+form_id_value = form_data.get("form_id") or "view"\n
+def marshal(fd_):\n
+  out = {}\n
+  for k, v in fd_.items():\n
+    if k.endswith(":int"):\n
+      try:\n
+        out[k[:-4]] = int(v)\n
+      except Exception:\n
+        out[k[:-4]] = 0\n
+    elif k.endswith(":list"):\n
+      out[k[:-5]] = v if isinstance(v, list) else ([v] if v not in (None, "") else [])\n
+    elif k.endswith(":float"):\n
+      try:\n
+        out[k[:-6]] = float(v)\n
+      except Exception:\n
+        out[k[:-6]] = 0.0\n
+    else:\n
+      out[k] = v\n
+  return out\n
+def _mcp_native(v):\n
+  # REQUEST.form values of a real HTTP submit are native strings: utf-8\n
+  # encoded bytes on Python 2, text on Python 3. JSON decoding always yields\n
+  # text, so on Python 2 it must be encoded -- else the unicode leaks into the\n
+  # stored property (a LinesField then holds a list of unicode) and\n
+  # unrestrictedTraverse iterates over the characters of such a path, which\n
+  # breaks Business Template build. On Python 3 text is already native and\n
+  # must be left untouched.\n
+  # Numbers get the same treatment for the same reason: a submit carries\n
+  # "1.5", never 1.5, and validators that call string methods on the value\n
+  # (normalizeFullWidthNumber does value.decode) raise AttributeError on a\n
+  # float or an int. bool is checked before int because it is a subclass of\n
+  # it -- str(False) would be "False", which BooleanValidator reads as true.\n
+  if isinstance(v, (list, tuple)):\n
+    return [_mcp_native(x) for x in v]\n
+  if isinstance(v, dict):\n
+    return dict([(_mcp_native(k2), _mcp_native(v2)) for k2, v2 in v.items()])\n
+  if isinstance(v, str):\n
+    return v\n
+  if hasattr(v, "encode"):  # Python 2 unicode\n
+    return v.encode("utf-8")\n
+  if v is None:\n
+    return ""\n
+  if isinstance(v, bool):\n
+    return "1" if v else "0"\n
+  if isinstance(v, (int, float)):\n
+    return str(v)\n
+  return v\n
+req = portal.REQUEST\n
+saved = dict(req.form)\n
+saved_other = dict(req.other)\n
+saved_status = req.RESPONSE.getStatus()\n
+status = None\n
+result = None\n
+field_errors = None\n
+try:\n
+  # Several tool calls can share one REQUEST -- a JSON-RPC batch puts a whole\n
+  # list of them into a single HTTP request -- and the form is what Base_edit\n
+  # reads. A key left behind by an earlier call is indistinguishable from one\n
+  # of ours and gets edited into this document: a batch of writes once carried\n
+  # the first tool\'s body and id into every tool that followed. Start from a\n
+  # form that holds nothing of any earlier edit.\n
+  for stale_key in [k for k in req.form.keys()\n
+                    if k == "form_id" or k.startswith("field_")\n
+                    or k.startswith("default_field_")\n
+                    or k.startswith("subfield_field_")]:\n
+    del req.form[stale_key]\n
+  # _mcp_native runs first so that marshal still sees the \':int\'/\':float\'\n
+  # suffixed keys as the strings ZPublisher would have parsed.\n
+  for k, v in marshal(_mcp_native(form_data)).items():\n
+    req.form[k] = v\n
+  result = document.Base_edit(form_id=form_id_value, message_only=True)\n
+  status = req.RESPONSE.getStatus()\n
+  field_errors = req.get("field_errors")\n
+finally:\n
+  req.form.clear()\n
+  req.form.update(saved)\n
+  # Base_edit validates the form into the REQUEST itself, so the validated\n
+  # value of every field outlives this call in req.other -- where REQUEST.get\n
+  # finds it. Restoring the form alone left that half behind, and \'field_errors\'\n
+  # was only the one key we had noticed. Put back exactly what was there.\n
+  for added_key in [k for k in req.other.keys() if k not in saved_other]:\n
+    try:\n
+      del req.other[added_key]\n
+    except Exception:\n
+      pass\n
+  for key, value in saved_other.items():\n
+    if req.other.get(key) is not value:\n
+      req.other[key] = value\n
+  try:\n
+    # Base_edit answers a rejected field by rendering the form, which leaves a\n
+    # 4xx on the shared RESPONSE. Left there it makes every later edit in the\n
+    # same request look like a failure, so put it back the way we found it.\n
+    req.RESPONSE.setStatus(saved_status)\n
+  except Exception:\n
+    pass\n
+# field_errors is Base_edit\'s own verdict. The RESPONSE status is shared\n
+# mutable state and cannot be trusted as the signal.\n
+if field_errors:\n
+  fe = {}\n
+  if field_errors:\n
+    try:\n
+      for k, v in field_errors.items():\n
+        fe[k] = str(getattr(v, "error_text", None) or v)\n
+    except Exception:\n
+      fe = {"raw": str(field_errors)}\n
+  # The numeric HTTP status goes in "status_code", which the output schema\n
+  # types as integer-or-string. "status" is declared a plain string (it carries\n
+  # "success"), so putting the code there fails output validation and the whole\n
+  # call comes back as a JSON-RPC internal error instead of this payload.\n
+  return mcp_ret({"error": "Form validation failed", "status_code": status,\n
+    "field_errors": fe, "relative_url": relative_url})\n
+# Base_edit accepts a bare title for a RelationStringField and stores it as\n
+# plain text without creating the link, so an empty field_errors is not proof\n
+# that an explicitly supplied relation now points at a document. Re-read the\n
+# view and confirm each one actually bound, instead of reporting success over\n
+# a relation that silently went nowhere.\n
+_rel_supplied = {}\n
+for key, value in field_values.items():\n
+  vk = key[len("field_"):] if key.startswith("field_") else key\n
+  fd = ev.get(vk, {})\n
+  if not isinstance(fd, dict):\n
+    continue\n
+  if fd.get("type") not in ("RelationStringField", "MultiRelationStringField"):\n
+    continue\n
+  if isinstance(value, list):\n
+    if not [x for x in value if x not in (None, "")]:\n
+      continue\n
+  elif value in (None, ""):\n
+    # Clearing a relation on purpose: nothing to bind.\n
+    continue\n
+  _rel_supplied[vk] = value\n
+if _rel_supplied:\n
+  raw2 = context.ERP5Document_getHateoas(mode="traverse", relative_url=str(relative_url), view=view, restricted=1)\n
+  data2 = json.loads(raw2) if (isinstance(raw2, str) and raw2) else {}\n
+  ev2 = data2.get("_embedded", {}).get("_view", {})\n
+  unbound = []\n
+  for vk in _rel_supplied:\n
+    fd2 = ev2.get(vk, {})\n
+    uids = fd2.get("relation_item_uid", []) if isinstance(fd2, dict) else []\n
+    if not [u for u in uids if u not in (None, "")]:\n
+      unbound.append(vk)\n
+  if unbound:\n
+    unbound.sort()\n
+    return mcp_ret({"error": "Relation field(s) not bound", "unbound_relations": unbound,\n
+      "requested": dict([(k, _rel_supplied[k]) for k in unbound]),\n
+      "hint": "The title was stored as text but no document was linked: either no row matched it exactly, or the field\'s parameter_list (e.g. validation_state) excluded the match. Check the exact title and that the target satisfies the field\'s constraints.",\n
+      "relative_url": relative_url})\n
+return mcp_ret({"status": "success", "relative_url": relative_url,\n
+  "updated_fields": list(field_values.keys()), "message": str(result)}, ensure_ascii=False)\n
+
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>_count</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_mt_index</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>relative_url, field_values={}, form_id=None, skip_validation=False</string> </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>specification/portal_callables/erp5_write_spec</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Edit field values on an ERP5 document that already exists - including one you created a moment ago with erp5_create.\n
+\n
+    Automatically handles complex field types:\n
+    - Relation fields (e.g. field_my_specialise_title): set by title, UID is auto-resolved\n
+    - Date fields: pass an ISO date string (e.g. \'2024-03-17\'), subfields are auto-expanded\n
+    - Checkbox fields: companion default fields are auto-added\n
+    - List fields: companion default fields are auto-added\n
+\n
+    Pre-validates that fields exist and are editable before submitting (disable with\n
+    skip_validation=true). That check belongs to this tool alone: skipping it does NOT\n
+    skip ERP5\'s own validation, its constraints or its workflow guards, which apply\n
+    either way. Field keys must use the \'field_my_xxx\' format from the form.\n
+\n
+    USE THIS WHEN:\n
+    - You need to update one or more fields on a document that exists.\n
+    - You have just created a document with erp5_create and are filling it in.\n
+    - You\'ve already verified fields are editable via erp5_read.\n
+\n
+    DO NOT USE THIS WHEN:\n
+    - You want to create a new document — use erp5_create instead.\n
+    - You want to change the document\'s workflow state — use erp5_action instead.\n
+\n
+    PREREQUISITE: Call erp5_read first to discover field keys and check editability.\n
+    Field keys in the erp5_read response (e.g. \'my_title\') become \'field_my_title\' in field_values.\n
+    </string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_write</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>MCP Tool</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Edit document fields</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Length" module="BTrees.Length"/>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+</ZopeData>

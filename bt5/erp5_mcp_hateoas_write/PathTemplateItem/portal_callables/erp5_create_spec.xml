@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="JSON Form" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>erp5_create_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_create_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>JSON Form</string> </value>
+        </item>
+        <item>
+            <key> <string>response_schema</string> </key>
+            <value> <string>{\n
+  "additionalProperties": true, \n
+  "type": "object", \n
+  "description": "The created document (relative_url + fields) or an error.", \n
+  "properties": {\n
+    "portal_type": {\n
+      "type": "string"\n
+    }, \n
+    "error": {\n
+      "type": "string", \n
+      "description": "Error message; present only on failure."\n
+    }, \n
+    "relative_url": {\n
+      "type": "string"\n
+    }, \n
+    "title": {\n
+      "type": "string"\n
+    }\n
+  }\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+{\n
+  "additionalProperties": false, \n
+  "required": [\n
+    "relative_url", \n
+    "portal_type"\n
+  ], \n
+  "type": "object", \n
+  "properties": {\n
+    "field_values": {\n
+      "default": {}, \n
+      "type": "object", \n
+      "description": "Initial field values as field_my_xxx -> value (same format as erp5_write); applied after creation. Relation-by-title, ISO dates, checkbox/list companions auto-handled."\n
+    }, \n
+    "portal_type": {\n
+      "type": "string", \n
+      "description": "Portal type."\n
+    }, \n
+    "relative_url": {\n
+      "type": "string", \n
+      "description": "Container path (module)."\n
+    }\n
+  }\n
+}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>erp5_create input schema</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
