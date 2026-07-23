@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="JSON Form" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>erp5_callable_write_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_callable_write_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>JSON Form</string> </value>
+        </item>
+        <item>
+            <key> <string>response_schema</string> </key>
+            <value> <string>{"additionalProperties": true, "type": "object", "description": "Result of creating/patching a portal callable.", "properties": {"status": {"type": "string"}, "body_length": {"type": "integer"}, "replacements_applied": {"type": "integer"}, "portal_type": {"type": "string"}, "body_sha256": {"type": "string", "description": "SHA-256 (utf-8) of the stored body; compare with the local file to prove byte-exact deployment."}, "warning": {"type": "string"}, "params": {"type": "string"}, "spec_updated": {"type": "boolean"}, "error": {"type": "string", "description": "Error message; present only on failure."}, "script_id": {"type": "string"}, "reset_skins_cache": {"type": "boolean"}}}</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+{"additionalProperties": false, "required": ["script_id"], "type": "object", "properties": {"body": {"default": null, "type": ["string", "null"], "description": "Full source for the callable (my_body)."}, "update_signature_from_spec": {"default": 1, "type": ["boolean", "integer"], "description": "Re-derive the tool signature from the spec after the edit."}, "text_content": {"default": null, "type": ["string", "null"], "description": "Alias of body for drop-in similarity with component_write."}, "title": {"default": null, "type": ["string", "null"], "description": "Title."}, "portal_type": {"default": "Python Script", "enum": ["Python Script", "MCP Tool"], "type": "string", "description": "Only usually needed on CREATE; MCP Tool adds a JSON-form spec."}, "allow_overwrite_core": {"default": 0, "type": ["boolean", "integer"], "description": "Allow overwriting framework callables (Base_edit etc.)."}, "replacements": {"default": null, "type": ["array", "string", "null"], "description": "[{old_string,new_string,replace_all}] exact edits to the body; a JSON string is accepted too."}, "params": {"default": null, "type": ["string", "null"], "description": "Parameter signature (Zope _params). For MCP Tool prefer the spec."}, "output_schema": {"default": null, "type": ["object", "string", "null"], "description": "JSON output schema (object, or its JSON text) -> written into the spec\'s response_schema."}, "script_id": {"type": "string", "description": "id in portal_callables, e.g. \'erp5_collect\'."}, "reset_skins_cache": {"default": 1, "type": ["boolean", "integer"], "description": "Refresh the portal_skins cache entry for the callable."}, "input_schema": {"default": null, "type": ["object", "string", "null"], "description": "JSON input schema (object, or its JSON text) -> written into <name>_spec JSON Form text_content."}}}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>erp5_callable_write input schema</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="JSON Form" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>erp5_component_write_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_component_write_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>JSON Form</string> </value>
+        </item>
+        <item>
+            <key> <string>response_schema</string> </key>
+            <value> <string>{"additionalProperties": true, "type": "object", "description": "Result of creating/patching a Component.", "properties": {"status": {"type": "string"}, "reset": {"type": "boolean"}, "component_id": {"type": "string"}, "reference": {"type": "string"}, "replacements_applied": {"type": "integer"}, "length": {"type": "integer", "description": "Length of the stored source in characters."}, "version": {"type": "string"}, "error": {"type": "string", "description": "Error message; present only on failure."}, "sha256": {"type": "string", "description": "SHA-256 (utf-8 bytes) of the stored source; compare with the local file to prove byte-exact deployment."}}}</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>{"additionalProperties": false, "required": ["component_id"], "type": "object", "properties": {"reset": {"default": 1, "type": ["boolean", "integer"], "description": "Reset portal_components after the edit (default true)."}, "replacements": {"default": null, "type": ["array", "null"], "description": "List of {old_string, new_string, replace_all} exact edits applied to the component source; each old_string must match exactly once unless replace_all=true."}, "text_content": {"default": null, "type": ["string", "null"], "description": "Full component source (alternative to body_file/replacements)."}, "version": {"default": "erp5", "type": ["string", "null"], "description": "Component version (default \'erp5\')."}, "reference": {"default": null, "type": ["string", "null"], "description": "Component reference (required to CREATE a new component)."}, "portal_type": {"default": "Test Component", "type": "string", "description": "Component portal_type when creating (e.g. \'Test Component\', \'Document Component\', \'Extension Component\', \'Module Component\')."}, "component_id": {"type": "string", "description": "Component id, e.g. \'test.erp5.testFoo\' or \'document.erp5.Foo\'."}, "body_file": {"default": null, "type": ["string", "null"], "description": "Read the full component source from this server-reachable local path instead of passing text_content; the response sha256/length let you verify byte-exact deployment against the local file."}}}</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>erp5_component_write input schema</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

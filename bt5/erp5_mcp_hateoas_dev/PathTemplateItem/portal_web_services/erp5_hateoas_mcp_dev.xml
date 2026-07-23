@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="MCP Service" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+                <string>Developer</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_session_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_hateoas_mcp_dev</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>MCP Service</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>erp5_hateoas_mcp_dev</string> </value>
+        </item>
+        <item>
+            <key> <string>tool</string> </key>
+            <value>
+              <tuple>
+                <string>Inspect module schema | erp5_inspect</string>
+                <string>Search documents | erp5_search</string>
+                <string>Read document | erp5_read</string>
+                <string>Collect listbox rows | erp5_collect</string>
+                <string>Read document tree | erp5_read_deep</string>
+                <string>Summarize discussion thread | erp5_thread_summary</string>
+                <string>Download file / print | erp5_download</string>
+                <string>Tutorial guides | erp5_guide</string>
+                <string>Create document | erp5_create</string>
+                <string>Edit document fields | erp5_write</string>
+                <string>Trigger workflow transition | erp5_action</string>
+                <string>Submit dialog action | erp5_dialog</string>
+                <string>Clone document | erp5_clone</string>
+                <string>Delete sub-object | erp5_delete</string>
+                <string>List portal_skins folder | erp5_skin_list</string>
+                <string>Read Python Script | erp5_skin_read</string>
+                <string>Write Python Script | erp5_skin_write</string>
+                <string>Call Python Script | erp5_skin_call</string>
+                <string>Run live tests | erp5_live_test</string>
+                <string>Tail event log | erp5_log_tail</string>
+                <string>Create or patch a Component | erp5_component_write</string>
+                <string>Write portal callable | erp5_callable_write</string>
+                <string>Run SQL on the instance database | erp5_sql</string>
+                <string>Activity queue status | erp5_activity_status</string>
+                <string>Drain the activity queue | erp5_activity_drain</string>
+                <string>Compare business template with its git working copy | erp5_bt_status</string>
+                <string>Export business template to its git working copy | erp5_bt_export_to_repository</string>
+                <string>Update installed business template from its git working copy | erp5_bt_update_from_repository</string>
+                <string>Install business template from its git working copy | erp5_bt_install_from_repository</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+</ZopeData>

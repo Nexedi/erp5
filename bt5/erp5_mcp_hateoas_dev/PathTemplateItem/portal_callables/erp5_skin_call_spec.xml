@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="JSON Form" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>erp5_skin_call_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_skin_call_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>JSON Form</string> </value>
+        </item>
+        <item>
+            <key> <string>response_schema</string> </key>
+            <value> <string>{\n
+  "additionalProperties": true, \n
+  "type": "object", \n
+  "description": "Python Script return value.", \n
+  "properties": {\n
+    "output": {\n
+      "type": "string"\n
+    }, \n
+    "script_id": {\n
+      "type": "string"\n
+    }, \n
+    "relative_url": {\n
+      "type": [\n
+        "string", \n
+        "null"\n
+      ]\n
+    }, \n
+    "error": {\n
+      "type": "string", \n
+      "description": "Error message; present only on failure. Includes the real stored Zope traceback when the script failed to compile"\n
+    }, \n
+    "hint": {\n
+      "type": "string", \n
+      "description": "Non-fatal guidance, e.g. the script requires params that were not passed."\n
+    }\n
+  }\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>{\n
+  "additionalProperties": false, \n
+  "required": [\n
+    "script_id"\n
+  ], \n
+  "type": "object", \n
+  "properties": {\n
+    "script_id": {\n
+      "type": "string", \n
+      "description": "Script id."\n
+    }, \n
+    "params": {\n
+      "default": null, \n
+      "type": [\n
+        "object", \n
+        "null"\n
+      ], \n
+      "description": "Params."\n
+    }, \n
+    "relative_url": {\n
+      "default": null, \n
+      "type": [\n
+        "string", \n
+        "null"\n
+      ], \n
+      "description": "Bind context."\n
+    }\n
+  }\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>erp5_skin_call input schema</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

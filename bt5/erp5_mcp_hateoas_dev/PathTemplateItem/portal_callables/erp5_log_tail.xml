@@ -1,0 +1,202 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="MCP Tool" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_Copy_or_Move_Permission</string> </key>
+            <value>
+              <list>
+                <string>Assignor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
+                <string>Associate</string>
+                <string>Member</string>
+                <string>Assignee</string>
+                <string>Manager</string>
+                <string>Auditor</string>
+                <string>Owner</string>
+                <string>Developer</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_count</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>reference</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_mt_index</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>grep=None, max_entries=50</string> </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>specification/portal_callables/erp5_log_tail_spec</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Return the tail of the Zope event log of this ERP5 instance.\n
+\n
+    PREFER THIS OVER print() OR self.fail() WHEN DEBUGGING LIVE TESTS.\n
+    print() output is swallowed by the live-test runner; self.fail() aborts the\n
+    test after the first probe. Logging plus tailing lets you capture many\n
+    checkpoints in a single run while keeping the test green.\n
+\n
+    USE THIS WHEN:\n
+    - You are debugging a live test, a Python Script, a Test Component or any\n
+      other code running inside ERP5 and need to see what it emitted at runtime.\n
+    - You want to inspect ERP5 internals that already log heavily (RuleTool\n
+      simulation expand, builders, SQLCatalog warnings, DeprecationWarnings).\n
+    - You are tracing an indexing or activity error reported by another tool and\n
+      want the matching server-side traceback.\n
+\n
+    HOW TO EMIT A LOG LINE FROM ERP5 PYTHON CODE:\n
+\n
+        from Products.ERP5Type.Log import log\n
+        log(\'my_probe\', \'DEBUG dates=%r\' % dates)\n
+\n
+    log() is available in restricted Python, so it works in portal_skins Python\n
+    Scripts as well as in Components and live-test methods. Pick a distinctive\n
+    category and pass it as \'grep\' to filter your own lines out of the\n
+    surrounding ERP5 chatter.\n
+\n
+    TOKEN-CONSCIOUS USE:\n
+    - erp5_log_tail(grep="my_probe") - a distinctive marker keeps the response\n
+      to your own lines.\n
+    - erp5_log_tail(grep="my_probe", max_entries=10) - cheaper still.\n
+    - erp5_log_tail() - the full recent window; avoid it when a marker exists,\n
+      it pulls a lot of unrelated chatter.\n
+\n
+    The window is bounded by the IntrospectionTool\'s default size, so call this\n
+    right after the operation you want to inspect - older events scroll out.\n
+    </string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_log_tail</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>MCP Tool</string> </value>
+        </item>
+        <item>
+            <key> <string>read_only</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>reference</string> </key>
+            <value> <string>erp5_discover</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+Discover modules & tasks
+
+]]></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Length" module="BTrees.Length"/>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+</ZopeData>

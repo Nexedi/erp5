@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="JSON Form" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>erp5_trusted_exec_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_trusted_exec_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>JSON Form</string> </value>
+        </item>
+        <item>
+            <key> <string>response_schema</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+{"additionalProperties": true, "type": "object", "description": "Result of a one-shot trusted run.", "properties": {"status": {"type": "string"}, "component_created": {"type": "boolean", "description": "True when this call created the component; false when an identical one existed and was reused."}, "kept": {"type": "object", "description": "component_id + external_method_id left in place when keep=true."}, "function": {"type": "string"}, "component_reference": {"type": "string", "description": "Extension Component reference used (MCPTrustedExec_<digest> by default)."}, "cleaned_up": {"type": "array", "description": "[external_method_id, component_id] removed after a default (non-keep) run."}, "error": {"type": "string", "description": "Present on failure; the request transaction is aborted (transaction_aborted=true), so nothing the function did is persisted and no temp artifact is left behind."}, "output": {"description": "Return value of the function; repr when it is not JSON-serialisable."}}}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+{"additionalProperties": false, "required": ["source"], "type": "object", "properties": {"function": {"default": "run", "type": "string", "description": "Module-level function to invoke."}, "kwargs_json": {"default": "{}", "type": "string", "description": "JSON object of keyword arguments for the function."}, "component_reference": {"default": null, "type": ["string", "null"], "description": "Explicit Extension Component reference; default MCPTrustedExec_<sha256[:8] of source>, so identical payloads reuse the same component."}, "keep": {"default": false, "type": ["boolean", "integer"], "description": "Keep the temporary Extension Component and External Method (ids returned in kept) for reuse or inspection. Default: both are deleted after the call."}, "source": {"type": "string", "description": "Full Extension Component module source (docstring, imports, functions). Run ONE function of it. Cleaned up again unless keep=true."}, "args_json": {"default": "[]", "type": "string", "description": "JSON array of positional arguments for the function (they bind to its 2nd+ parameters; self receives the portal)."}}}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>erp5_trusted_exec input/output schema</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

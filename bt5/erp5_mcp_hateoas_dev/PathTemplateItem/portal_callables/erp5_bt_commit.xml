@@ -1,0 +1,183 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="MCP Tool" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_count</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>reference</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_mt_index</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>bt_title, changelog=\'\', dry_run=False, max_list=25, path_list=None, path_pattern=None, push=False, rebase=False, summary_only=False</string> </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>specification/portal_callables/erp5_bt_commit_spec</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Export a business template to its Git working copy and commit it.\n
+\n
+    This is the tool equivalent of the "Git" tab on a Business Template.\n
+\n
+    WHAT IT DOES: builds the template from the live instance, writes it into\n
+    the working copy, then commits the files of that template.\n
+\n
+    USE THIS WHEN:\n
+    - Changes made on the instance should be recorded in git.\n
+    - You want to see what would be committed first (dry_run=True).\n
+    - Earlier commits still have to reach the remote: call with push=True and\n
+      nothing left to commit, and the pending commits are pushed on their own.\n
+\n
+    DO NOT USE THIS WHEN:\n
+    - You have not reviewed what changed. Run with dry_run=True first.\n
+\n
+    SCOPE: every business template here shares one working copy, so the commit\n
+    is restricted to the paths of the named template. Changes belonging to\n
+    other templates are never included.\n
+\n
+    BUT belonging to the template is not the same as being yours: a shared\n
+    working copy carries other people\'s in-flight work, and a template-wide\n
+    commit sweeps it in under your changelog. When dry_run reports paths you\n
+    did not touch, pass path_list to commit only your own -- each entry is a\n
+    whole path as reported in added/modified/removed, or a prefix if it ends\n
+    in \'/\' or \'*\'. What is left behind comes back in "skipped", and a\n
+    path_list that matches nothing is an error rather than a silent no-op.\n
+\n
+    push=False by default: the commit stays local until you ask for a push.\n
+    A push that does not land is reported in "warning", not as success. The\n
+    "remote" block reports the remote and the upstream branch a push would go\n
+    to, with any credentials in the URL redacted -- check it before pushing.\n
+\n
+    Returns JSON with: status (committed / pushed / dry_run / clean / error),\n
+    branch, remote, revision, added, modified, removed, skipped, ahead, and\n
+    pushed when a push was requested.\n
+    </string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_bt_commit</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>MCP Tool</string> </value>
+        </item>
+        <item>
+            <key> <string>read_only</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>reference</string> </key>
+            <value> <string>erp5_skin_delete</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Commit business template to Git</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Length" module="BTrees.Length"/>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+</ZopeData>

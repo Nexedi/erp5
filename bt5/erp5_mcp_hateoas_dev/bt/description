@@ -1,0 +1,1 @@
+ERP5 MCP HATEOAS dev tools (portal_callables, DESTRUCTIVE / arbitrary code exec): skin_list/read/write/call/delete, component_write, live_test, log_tail, bt_commit. Manager-gate in production.

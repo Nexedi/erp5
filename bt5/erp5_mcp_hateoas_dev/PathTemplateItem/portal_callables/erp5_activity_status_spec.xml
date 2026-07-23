@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="JSON Form" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>erp5_activity_status_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_activity_status_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>JSON Form</string> </value>
+        </item>
+        <item>
+            <key> <string>response_schema</string> </key>
+            <value> <string>{"additionalProperties": true, "type": "object", "description": "Activity queue summary without dumping it.", "properties": {"oldest_age_seconds": {"type": ["integer", "null"]}, "messages_truncated": {"type": "boolean"}, "by_method_id": {"type": "object"}, "messages": {"type": "array"}, "by_processing_node": {"type": "object"}, "pending": {"type": "integer"}}}</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>{"additionalProperties": false, "required": [], "type": "object", "properties": {"include_messages": {"default": false, "type": ["boolean", "integer"], "description": "Include the first messages (path, method, node, age)."}, "message_limit": {"default": 20, "type": ["integer", "null"], "description": "How many messages to include at most (1-200)."}}}</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>erp5_activity_status input/output schema</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

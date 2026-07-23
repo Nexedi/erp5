@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="MCP Tool" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>method_id, arguments_src=None, connection_id=None, force_connection=False, replacements=None, replacements_target=\'src\', sql_catalog_id=None, src=None, src_file=None, title=None</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>callable_type/script</string>
+                <string>specification/portal_callables/erp5_catalog_method_write_spec</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Patch a Z SQL Method of the SQL catalog: src and/or arguments_src, applied\n
+together through one manage_edit so the parsed _arg stays in sync (session\n
+issue B9: editing only one of the two desynchronises it).\n
+\n
+Exact-match replacements (must match exactly once unless replace_all=true) are\n
+supported for short single-line edits; multi-line changes are safer as a full\n
+src rewrite (src / src_file) because pattern payloads get mangled by the JSON\n
+transport. After any failed writing sequence, re-read the deployed source\n
+(erp5_catalog_method_read) before retrying pattern edits.\n
+\n
+An accidental connection_id change is refused unless force_connection=true.\n
+A failed manage_edit leaves the method untouched (no half-applied state).\n
+The response echoes the post-write state (src_sha256 / arguments_sha256 let\n
+you verify byte-exact deployment against local files), or status=\'noop\' when\n
+the passed content already matches what is deployed.</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_catalog_method_write</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>MCP Tool</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Write catalog SQL method</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

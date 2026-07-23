@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="JSON Form" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>erp5_skin_write_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_skin_write_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>JSON Form</string> </value>
+        </item>
+        <item>
+            <key> <string>response_schema</string> </key>
+            <value> <string>{"additionalProperties": true, "type": "object", "description": "Result of creating/updating a Python Script.", "properties": {"status": {"type": "string"}, "live_test_output": {"type": "string", "description": "Result of the post-write self-call when it succeeded."}, "skin_folder": {"type": "string"}, "hint": {"type": "string", "description": "Guidance when the script needs params to be called."}, "callable_standalone": {"type": "boolean", "description": "False when the script has required (no-default) params, so a standalone call would fail."}, "length": {"type": "integer", "description": "Length of the stored body in characters."}, "warning": {"type": "string", "description": "Non-fatal warning."}, "params": {"type": "string", "description": "Parameter signature as written."}, "error": {"type": "string", "description": "Error message; present on failure (e.g. body did not compile; exact traceback attached)."}, "live_test_error": {"type": "string", "description": "Error from the post-write self-call when live_test=True but it failed."}, "script_id": {"type": "string"}, "sha256": {"type": "string", "description": "SHA-256 (utf-8 bytes) of the stored body; compare with the local file to prove byte-exact deployment."}, "live_test_runs": {"type": "boolean", "description": "Present when live_test=True: whether the post-write self-call ran."}}}</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>{\n
+  "additionalProperties": false,\n
+  "required": ["script_id"],\n
+  "type": "object",\n
+  "properties": {\n
+    "body": {"default": null, "type": ["string", "null"], "description": "Python body (or pass body_file instead). REQUIRED to update an existing script; a call without it is refused so a call meant as an erp5_skin_call can never silently empty a script (session issue B6). Writing an explicitly empty body (\'\') needs allow_empty=true."},\n
+    "skin_folder": {"default": "custom", "type": "string", "description": "Skin folder."},\n
+    "title": {"default": "", "type": "string", "description": "Title."},\n
+    "allow_overwrite_core": {"default": false, "type": ["boolean", "integer"], "description": "Allow core overwrite."},\n
+    "allow_empty": {"default": false, "type": ["boolean", "integer"], "description": "Only for an explicit wipe together with body=\'\': allow writing an empty body over an existing script."},\n
+    "params": {"default": "", "type": "string", "description": "Parameter signature."},\n
+    "live_test": {"default": false, "type": ["boolean", "integer"], "description": "Write-then-verify: after writing, immediately call the script and attach the result. A live-test failure does not abort the write."},\n
+    "script_id": {"type": "string", "description": "Script id."},\n
+    "body_file": {"default": null, "type": ["string", "null"], "description": "Read the full body from this server-reachable local path instead of passing body; the response sha256/length let you verify byte-exact deployment against the local file."}\n
+  }\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>erp5_skin_write input schema</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="JSON Form" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>erp5_live_test_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_live_test_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>JSON Form</string> </value>
+        </item>
+        <item>
+            <key> <string>response_schema</string> </key>
+            <value> <string>{"additionalProperties": true, "type": "object", "description": "Live test result: verdict-first, output only when asked or failing.", "properties": {"status": {"type": "string"}, "error": {"type": "string"}, "summary": {"type": "string", "description": "The \'Ran N tests in ...\' line."}, "verdict": {"type": "string", "description": "OK or FAILED (...) as reported by unittest."}, "failures": {"type": "string", "description": "FAIL/ERROR sections, present when the run failed and full_output is false."}, "output": {"type": "string", "description": "Raw transcript tail, only when full_output=true."}, "pending_activities": {"type": "integer", "description": "Activity queue depth after the run."}}}</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>{"additionalProperties": false, "required": ["test_list"], "type": "object", "properties": {"run_only": {"default": null, "type": ["string", "null"], "description": "Regex of methods."}, "test_list": {"type": "string", "description": "Test Component refs."}, "full_output": {"default": false, "type": ["boolean", "integer"], "description": "Include the raw transcript (last 12k chars). Default false: return verdict and summary only, with the failing sections when the run fails - an OK run must cost one line, not six kilobytes that get replayed for the rest of the session."}}}</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>erp5_live_test input schema</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

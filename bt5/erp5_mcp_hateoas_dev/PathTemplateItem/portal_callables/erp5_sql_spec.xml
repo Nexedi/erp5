@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="JSON Form" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>erp5_sql_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_sql_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>JSON Form</string> </value>
+        </item>
+        <item>
+            <key> <string>response_schema</string> </key>
+            <value> <string>{"additionalProperties": true, "type": "object", "description": "Query result with hard caps on rows and cell size.", "properties": {"count": {"type": "integer", "description": "Present with format=count."}, "rows": {"type": "array", "description": "Present with format=rows."}, "affected": {"type": ["integer", "null"], "description": "Affected-row count for write statements, when the driver reports it."}, "truncated": {"type": "boolean"}, "connection_id": {"type": "string"}, "row_count": {"type": "integer"}, "error": {"type": "string"}, "first_row": {"type": "array", "description": "Present with format=count."}, "csv": {"type": "string", "description": "Present with format=csv."}, "sample_rows": {"type": "array", "description": "Present with format=summary."}, "columns": {"items": {"type": "string"}, "type": "array"}}}</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>{"additionalProperties": false, "required": ["query"], "type": "object", "properties": {"query": {"type": "string", "description": "Single SQL statement. Reads (SELECT/SHOW/DESCRIBE/EXPLAIN) run freely; anything else must pass allow_write=true."}, "max_rows": {"default": 50, "type": ["integer", "null"], "description": "Row cap (1-500); rows beyond the cap are dropped and \'truncated\' is set."}, "allow_write": {"default": false, "type": ["boolean", "integer"], "description": "Required for non-SELECT statements (INSERT/UPDATE/DELETE/DDL). Writes participate in the request transaction."}, "connection_id": {"default": "erp5_sql_connection", "type": "string", "description": "Site Z SQL connection id (e.g. erp5_sql_connection, erp5_sql_deferred_connection)."}, "format": {"default": "rows", "enum": ["rows", "count", "summary", "csv"], "type": "string", "description": "rows: full data; count: row_count + first row; summary: row_count + up to 3 sample rows; csv: text dump."}}}</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>erp5_sql input/output schema</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

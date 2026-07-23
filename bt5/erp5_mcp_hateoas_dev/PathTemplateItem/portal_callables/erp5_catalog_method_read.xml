@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="MCP Tool" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>method_id, sql_catalog_id=None</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>callable_type/script</string>
+                <string>specification/portal_callables/erp5_catalog_method_read_spec</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+Read a Z SQL Method of the SQL catalog (its src, arguments_src, connection_id, title and filter metadata).\n
+\n
+Catalog methods live at portal_catalog/<sql_catalog_id>/<method_id> (e.g.\n
+portal_catalog/erp5_mysql_innodb/z_catalog_product_sale_supply_line_list) — NOT on\n
+portal_catalog itself: restricted getattr there reports them MISSING. This tool\n
+resolves the right container through the trusted MCPDevHelpers\n
+(catalogMethodInfo), so a catalog session starts with one read instead of a\n
+trusted-code bootstrap.\n
+\n
+Returns: method_id, sql_catalog_id, title, connection_id, src, arguments_src,\n
+filtered, expression, expression_cache_key, filter_portal_types, registrations\n
+(which sql_*_list registrations mention the method), and an editing hint.\n
+Use erp5_catalog_method_write to patch (src and arguments_src travel together\n
+through one manage_edit, which re-parses _arg).
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_catalog_method_read</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>MCP Tool</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Read catalog SQL method</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

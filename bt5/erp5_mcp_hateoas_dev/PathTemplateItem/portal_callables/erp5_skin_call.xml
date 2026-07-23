@@ -1,0 +1,157 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="MCP Tool" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_count</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_mt_index</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>script_id, relative_url=None, params=None</string> </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>specification/portal_callables/erp5_skin_call_spec</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Call/execute a Python Script from portal_skins and return its output.\n
+\n
+    ⚠ DESTRUCTIVE: executes server-side Python on the ERP5 instance with the\n
+    connected user\'s permissions. The script can read, write, or delete any\n
+    document the user has access to. Combined with erp5_skin_write this is\n
+    arbitrary code execution — treat with the same care as a shell tool.\n
+\n
+    The script is called via acquisition — Zope finds it in portal_skins\n
+    and executes it. If relative_url is provided, the script runs with\n
+    `context` bound to that object.\n
+\n
+    USE THIS WHEN:\n
+    - You want to test a Python Script after creating/updating it.\n
+    - You need to run a script on a specific ERP5 object.\n
+    - You want to call any acquired method on an object.\n
+\n
+    Examples:\n
+    - Standalone: script_id="test_mcp_hello" → calls {site_root}/test_mcp_hello\n
+    - On object: script_id="MyScript", relative_url="sale_order_module/1"\n
+      → calls {site_root}/sale_order_module/1/MyScript\n
+\n
+    Failure is informative: a call that raises reports the detail plus the\n
+    script\'s real stored Zope traceback when it failed to compile, along with\n
+    a hint naming required params. A non-string return value is repr\'d.\n
+\n
+    Error ⇒ nothing persisted: on failure the request transaction is aborted\n
+    before the error is returned (transaction_aborted: true) — not even\n
+    mutations applied before the exception are kept. The raised error never\n
+    escapes to the publisher, so this abort is what keeps a half-applied\n
+    mutation from being committed (patch order is arbitrary on this Python 2\n
+    instance — write idempotent helpers anyway).\n
+\n
+    Returns JSON with: script_id, relative_url, output (script\'s return value),\n
+    and (on failure) error with the underlying traceback, transaction_aborted\n
+    (always true on failure), plus an optional hint.\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_skin_call</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>MCP Tool</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Call Python Script</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Length" module="BTrees.Length"/>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+</ZopeData>

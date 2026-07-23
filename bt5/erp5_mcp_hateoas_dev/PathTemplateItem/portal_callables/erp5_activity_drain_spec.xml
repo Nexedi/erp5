@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="JSON Form" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>erp5_activity_drain_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_activity_drain_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>JSON Form</string> </value>
+        </item>
+        <item>
+            <key> <string>response_schema</string> </key>
+            <value> <string>{"additionalProperties": true, "type": "object", "description": "Result of the synchronous drain (the ERP5TypeTestCase.tic() algorithm).", "properties": {"retried": {"type": "array", "description": "Stuck messages re-invoked or cancelled, with the action taken."}, "initial_pending": {"type": "integer"}, "retry_errors": {"type": "array"}, "stuck": {"type": "array"}, "timeout": {"type": "boolean"}, "error": {"type": "string"}, "loops": {"type": "integer"}, "pending": {"type": "integer"}}}</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>{"additionalProperties": false, "required": [], "type": "object", "properties": {"max_seconds": {"default": 240, "type": ["integer", "null"], "description": "Time budget for the drain (5-3600); the drain stops and reports when it is exceeded."}, "retry_stuck": {"default": false, "type": ["boolean", "integer"], "description": "Re-invoke messages stuck in the invoked state (processing_node == -2) through ActivityTool.manageInvoke."}, "cancel_stuck": {"default": false, "type": ["boolean", "integer"], "description": "Cancel messages stuck in the invoked state through ActivityTool.manageCancel - the right answer for messages that can never succeed (e.g. immediateReindexObject queued for a portal_callables PythonScript)."}}}</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>erp5_activity_drain input/output schema</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="JSON Form" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>erp5_catalog_method_write_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_catalog_method_write_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>JSON Form</string> </value>
+        </item>
+        <item>
+            <key> <string>response_schema</string> </key>
+            <value> <string>{"additionalProperties": true, "type": "object", "description": "Post-write state of the Z SQL Method (same shape as erp5_catalog_method_read, plus write details).", "properties": {"status": {"type": "string", "description": "\'written\' or \'noop\' when the passed content already matched what is deployed."}, "src": {"type": "string", "description": "Post-write src."}, "arguments_src": {"type": "string", "description": "Post-write arguments block."}, "method_id": {"type": "string"}, "replacements_applied": {"type": "integer"}, "changed": {"type": "object", "description": "Which of src / arguments_src actually changed."}, "arguments_sha256": {"type": "string"}, "src_sha256": {"type": "string", "description": "SHA-256 of the stored src; compare with the local file to prove byte-exact deployment."}, "sql_catalog_id": {"type": "string"}, "error": {"type": "string", "description": "Present on failure; the method is left untouched (no half-applied state)."}}}</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>{"additionalProperties": false, "required": ["method_id"], "type": "object", "properties": {"src": {"default": null, "type": ["string", "null"], "description": "Full new SQL template source. Preferred over patterns for multi-line changes (full-source transport preserves newlines reliably)."}, "arguments_src": {"default": null, "type": ["string", "null"], "description": "Full new arguments block. Pass it together with src: both travel through one manage_edit, which re-parses _arg. Arguments must be accessor names."}, "replacements": {"default": null, "description": "JSON array of {old_string, new_string, replace_all} exact-match patterns applied to src or arguments_src (replacements_target). Must match exactly once unless replace_all. For short single-line quote-free edits; multi-line patterns get mangled by the JSON transport, prefer a full src rewrite."}, "method_id": {"type": "string", "description": "Z SQL Method id inside the SQL catalog."}, "title": {"default": null, "type": ["string", "null"], "description": "New title."}, "force_connection": {"default": false, "type": ["boolean", "integer"], "description": "Only meaningful with connection_id: allow changing the method\'s database connection."}, "connection_id": {"default": null, "type": ["string", "null"], "description": "New connection_id; refused unless force_connection=true."}, "sql_catalog_id": {"default": null, "type": ["string", "null"], "description": "SQL catalog id, e.g. erp5_mysql_innodb. Default: portal_catalog\'s default SQL catalog."}, "replacements_target": {"default": "src", "type": "string", "description": "Which text the replacements apply to: \'src\' or \'arguments_src\'."}, "src_file": {"default": null, "type": ["string", "null"], "description": "Read the full src from this server-reachable local path instead (like body_file); the response sha256 lets you verify byte-exact deployment."}}}</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>erp5_catalog_method_write input/output schema</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

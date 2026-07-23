@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="MCP Tool" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_count</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_mt_index</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>script_id, allow_empty=False, allow_overwrite_core=False, body=None, body_file=None, live_test=False, params=\'\', skin_folder=\'custom\', title=\'\'</string> </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>specification/portal_callables/erp5_skin_write_spec</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Create or update a Python Script in portal_skins.\n
+\n
+    ⚠ DESTRUCTIVE: deploys server-side code to ERP5. Writing a script with\n
+    the same id as a framework script (e.g. Base_edit) shadows site-wide\n
+    behavior. Overwriting an existing script replaces its body irreversibly.\n
+    A short list of well-known framework script ids is guarded — pass\n
+    allow_overwrite_core=True to bypass.\n
+\n
+    Body guard: updating an EXISTING script requires an explicit body (or\n
+    body_file) — a call with only script_id/skin_folder is refused with\n
+    "body required to update an existing script (use erp5_skin_call to\n
+    execute)" instead of silently emptying the script (session issue B6).\n
+    An explicitly empty body ("") is refused too unless allow_empty=true.\n
+\n
+    Creates the script if it doesn\'t exist, then updates it with the given\n
+    body, params, and title. Uses the Zope Management Interface API.\n
+\n
+    USE THIS WHEN:\n
+    - You need to create a new Python Script in portal_skins (use \'body\').\n
+    - You want to update an existing Python Script\'s code, params, or title.\n
+    - You\'re prototyping ERP5 business logic directly on an instance.\n
+\n
+    Built-in feedback: the response echoes the params actually written, says\n
+    whether the script is callable standalone (callable_standalone is false\n
+    when it has a required/no-default param), and on a body that will not\n
+    compile reports the real Zope compile traceback under \'error\' instead of\n
+    the terse "has errors" message (e.g. a nested \'def\'). Set live_test=True\n
+    to immediately re-invoke the written script (write-then-verify) and get\n
+    its result in live_test_output; a live-test failure does not abort the write.\n
+\n
+    Returns JSON with: status ("created" or "updated"), script_id, skin_folder,\n
+    params, callable_standalone, plus (as applicable) error / hint / warning /\n
+    live_test_runs / live_test_output / live_test_error.\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_skin_write</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>MCP Tool</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Write Python Script</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Length" module="BTrees.Length"/>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+</ZopeData>

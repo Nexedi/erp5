@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="JSON Form" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>erp5_catalog_method_read_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_catalog_method_read_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>JSON Form</string> </value>
+        </item>
+        <item>
+            <key> <string>response_schema</string> </key>
+            <value> <string>{"additionalProperties": true, "type": "object", "description": "Current state of one Z SQL Method.", "properties": {"src": {"type": "string", "description": "The SQL template source (raw, with dtml tags)."}, "arguments_src": {"type": "string", "description": "The arguments block: accessor names, one per line, possibly with types."}, "method_id": {"type": "string"}, "filter_portal_types": {"type": "array", "description": "Legacy portal-type filter list (usually empty)."}, "title": {"type": "string"}, "connection_id": {"type": "string"}, "expression_cache_key": {"type": "array", "description": "Cache keys of the filter (keep EMPTY when the expression depends on more than portal_type)."}, "sql_catalog_id": {"type": "string", "description": "Resolved SQL catalog id."}, "filtered": {"type": "boolean", "description": "Whether the method has a filter."}, "registrations": {"type": "array", "description": "Which sql_*_list registrations of the catalog mention this method (sql_catalog_object_list, sql_uncatalog_object, ...)."}, "expression": {"type": ["string", "null"], "description": "Filter expression (python: ...)."}}}</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>{"additionalProperties": false, "required": ["method_id"], "type": "object", "properties": {"sql_catalog_id": {"default": null, "type": ["string", "null"], "description": "SQL catalog id, e.g. erp5_mysql_innodb. Default: portal_catalog\'s default SQL catalog."}, "method_id": {"type": "string", "description": "Z SQL Method id inside the SQL catalog, e.g. z_catalog_product_sale_supply_line_list."}}}</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>erp5_catalog_method_read input/output schema</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

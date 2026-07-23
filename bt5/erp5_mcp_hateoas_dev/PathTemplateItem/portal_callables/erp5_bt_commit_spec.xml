@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="JSON Form" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>erp5_bt_commit_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_bt_commit_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>JSON Form</string> </value>
+        </item>
+        <item>
+            <key> <string>response_schema</string> </key>
+            <value> <string>{"additionalProperties": true, "type": "object", "description": "What was committed, or why nothing was.", "properties": {"status": {"type": "string"}, "added": {"items": {"type": "string"}, "type": "array"}, "unparsed": {"items": {"type": "string"}, "type": "array"}, "bt_id": {"type": "string"}, "modified": {"items": {"type": "string"}, "type": "array"}, "pushed": {"type": "boolean"}, "skipped": {"items": {"type": "string"}, "type": "array"}, "business_template": {"type": "string"}, "branch": {"type": "string"}, "error": {"type": "string"}, "removed": {"items": {"type": "string"}, "type": "array"}, "warning": {"type": "string"}, "skipped_count": {"type": "integer"}, "conflicted": {"items": {"type": "string"}, "type": "array"}, "revision": {"type": "string"}}}</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+{"additionalProperties": false, "required": ["bt_title"], "type": "object", "properties": {"bt_title": {"type": "string", "description": "Title of the installed business template, e.g. erp5_ui_test."}, "dry_run": {"default": false, "type": ["boolean", "integer"], "description": "Report what would be committed, without committing."}, "changelog": {"default": "", "type": "string", "description": "Commit message. Required unless dry_run is true, or the call only pushes."}, "rebase": {"default": false, "type": ["boolean", "integer", "string"], "description": "Before pushing, fetch the upstream and rebase HEAD onto it. Use when a push is rejected because the remote has moved on. The working copy is shared and usually dirty, so the rebase autostashes; if anything fails it is aborted and the tree is left exactly as it was found, with the failure reported in \'rebase\'."}, "max_list": {"default": 25, "type": ["integer", "null"], "description": "Cap per list in the result; hidden entries are counted in \'<list>_more\', totals in \'<list>_count\'."}, "summary_only": {"default": false, "type": ["boolean", "integer"], "description": "Return only counts, no path lists (for templates where the change list is huge)."}, "push": {"default": false, "type": ["boolean", "integer"], "description": "Push to the remote after committing. With nothing left to commit, pushes the pending commits on their own."}, "path_list": {"default": null, "items": {"type": "string"}, "type": ["array", "string", "null"], "description": "Commit only these paths, as they appear in added/modified/removed (relative to the template\'s own directory). A pattern ending in \'/\' or \'*\' matches everything beneath it. Anything else the template changed is left uncommitted and reported in \'skipped\'. A string is accepted as well as an array -- a JSON array, or entries separated by newlines or commas."}, "path_pattern": {"default": null, "items": {"type": "string"}, "type": ["array", "string", "null"], "description": "Narrow the commit AND the export to these glob patterns (fnmatch style, matched against paths relative to the template\'s own directory; \'*\' spans \'/\', \'?\' matches one character; a pattern ending in \'/\' is a prefix). When set, the export writes only matching paths into the shared working copy instead of rewriting the whole template, so other people\'s uncommitted files are never swept away. Combine with path_list to intersect. Caps dry_run reporting to matching paths too."}}}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>erp5_bt_commit input schema</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

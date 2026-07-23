@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="JSON Form" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>erp5_log_tail_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_log_tail_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>JSON Form</string> </value>
+        </item>
+        <item>
+            <key> <string>response_schema</string> </key>
+            <value> <string>{\n
+  "additionalProperties": true, \n
+  "type": "object", \n
+  "description": "Tail of the Zope event log.", \n
+  "properties": {\n
+    "truncated": {\n
+      "type": "boolean"\n
+    }, \n
+    "line_count": {\n
+      "type": "integer"\n
+    }, \n
+    "dropped_entry_count": {\n
+      "type": "integer"\n
+    }, \n
+    "content": {\n
+      "type": "string"\n
+    }, \n
+    "entry_count": {\n
+      "type": "integer"\n
+    }, \n
+    "error": {\n
+      "type": "string", \n
+      "description": "Error message; present only on failure."\n
+    }, \n
+    "saved_to": {\n
+      "type": "string"\n
+    }\n
+  }\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>{\n
+  "additionalProperties": false, \n
+  "required": [], \n
+  "type": "object", \n
+  "properties": {\n
+    "max_entries": {\n
+      "default": 50, \n
+      "type": "integer", \n
+      "description": "Max entries."\n
+    }, \n
+    "grep": {\n
+      "default": null, \n
+      "type": [\n
+        "string", \n
+        "null"\n
+      ], \n
+      "description": "Substring filter."\n
+    }\n
+  }\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>erp5_log_tail input schema</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
