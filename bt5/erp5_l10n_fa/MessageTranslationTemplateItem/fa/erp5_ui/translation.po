@@ -1,7 +1,7 @@
 msgid ""
 msgstr "Project-Id-Version: ERP5 Localized Interface\n"
-"POT-Creation-Date: 2025-10-16 15:10+UTC\n"
-"PO-Revision-Date: 2025-10-16 15:10+UTC\n"
+"POT-Creation-Date: 2026-07-24 07:07+JST\n"
+"PO-Revision-Date: 2026-07-24 07:07+JST\n"
 "Last-Translator:  <>\n"
 "Language-Team: fa <>\n"
 "MIME-Version: 1.0\n"
@@ -2469,9 +2469,6 @@ msgstr "مرجع مدرک"
 msgid "Document Search"
 msgstr "جستجوی مدرک"
 
-msgid "Document Staging Workflow"
-msgstr "گردش کار نمایش مدرک"
-
 msgid "Document Type"
 msgstr "نوع مدرک"
 
@@ -4884,9 +4881,6 @@ msgstr "(%(count)s) پیشنهاد معلق"
 msgid "Pending Offers [worklist in sale_opportunity_workflow]"
 msgstr "پیشنهاد معلق"
 
-msgid "Pending [state in document_staging_workflow]"
-msgstr "معلق"
-
 msgid "Pending [state in event_workflow]"
 msgstr "معلق"
 
@@ -5199,9 +5193,6 @@ msgstr "حق تقدم"
 msgid "Private"
 msgstr "خصوصی"
 
-msgid "Private [state in document_staging_workflow]"
-msgstr "خصوصی"
-
 msgid "Privilege"
 msgstr "اختیارات"
 
@@ -5413,9 +5404,6 @@ msgid "Provision"
 msgstr "شرط"
 
 msgid "Public"
-msgstr "عمومی"
-
-msgid "Public [state in document_staging_workflow]"
 msgstr "عمومی"
 
 msgid "Public [state in external_document_publication_workflow]"
