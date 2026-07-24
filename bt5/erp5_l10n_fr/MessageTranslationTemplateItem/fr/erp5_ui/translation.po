@@ -1,7 +1,7 @@
 msgid ""
 msgstr "Project-Id-Version: ERP5 Localized Interface\n"
-"POT-Creation-Date: 2025-10-16 15:10+UTC\n"
-"PO-Revision-Date: 2025-10-16 15:10+UTC\n"
+"POT-Creation-Date: 2026-07-24 07:07+JST\n"
+"PO-Revision-Date: 2026-07-24 07:07+JST\n"
 "Last-Translator:  <>\n"
 "Language-Team: fr <>\n"
 "MIME-Version: 1.0\n"
@@ -8889,9 +8889,6 @@ msgstr "Évènements en attente"
 msgid "Pending Offers"
 msgstr "Offres en attente"
 
-msgid "Pending [state in document_staging_workflow]"
-msgstr "En attente"
-
 msgid "Pending [state in event_workflow]"
 msgstr "En attente"
 
@@ -9447,9 +9444,6 @@ msgstr "Priorité"
 msgid "Private"
 msgstr "Privé"
 
-msgid "Private [state in document_staging_workflow]"
-msgstr "Privé"
-
 msgid "Privilege"
 msgstr "Droits"
 
@@ -9680,9 +9674,6 @@ msgstr "Prototypage"
 
 msgid "Public"
 msgstr "Publique"
-
-msgid "Public [state in document_staging_workflow]"
-msgstr "Public"
 
 msgid "Public [state in external_document_publication_workflow]"
 msgstr "Public"
