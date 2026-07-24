@@ -14,9 +14,10 @@
 
 The feed form DiscussionForum_viewLatestPostListAsRSS lives in erp5_discussion,
 but its item <link> is the project-app push_history_stored_state deep-link built
-from Base_getProjectAppBaseUrl (erp5_project). erp5_discussion deliberately does
-NOT depend on erp5_project (its own test asserts the decoupled case), so the
-deep-link is exercised here, where erp5_project is a natural dependency.
+by the erp5_web_project_ui provider DiscussionPost_getAppItemRSSUrl, which
+self-derives the app base from the request (portal.absolute_url()). erp5_discussion
+deliberately does NOT depend on erp5_web_project_ui (its own test asserts the
+decoupled case), so the deep-link is exercised here, where the provider is present.
 """
 
 import unittest
@@ -36,12 +37,8 @@ def getSubnodeContent(node, tag_name, index=0):
     return None
 
 
-# Project-app base URL under test; supplied via the System Preference
-PROJECT_APP_BASE_URL = 'https://project.example.net'
-
-
 class TestWebProjectForumRSS(ERP5TypeTestCase):
-  """Project-app RSS feed deep-link (requires erp5_project)."""
+  """Project-app RSS feed deep-link (requires erp5_web_project_ui)."""
 
   def getTitle(self):
     return "Test Web Project Forum RSS"
@@ -49,27 +46,10 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     return ('erp5_web_project_ui', 'erp5_web_project_ui_test')
 
-  def afterSetUp(self):
-    # Configure the project-app base URL through the System Preference
-    self.preference = self.portal.portal_preferences.newContent(
-      portal_type='System Preference',
-      priority=1,
-      preferred_project_management_app_base_url=PROJECT_APP_BASE_URL)
-    if self.portal.portal_workflow.isTransitionPossible(self.preference, 'enable'):
-      self.preference.enable()
-    self.preference.recursiveReindexObject()
-    self.tic()
-    # Flush the preference RAM cache so in-process reads see the enabled value.
-    self.portal.portal_caches.clearAllCache()
-    # Fail loudly here if the preference did not take effect (empty value would
-    # otherwise surface as confusing failures in every preference-reading test).
-    self.assertEqual(PROJECT_APP_BASE_URL, self.portal.Base_getProjectAppBaseUrl())
-
   def beforeTearDown(self):
     self.abort()
     for module in (self.portal.discussion_thread_module,):
       module.manage_delObjects(list(module.objectIds()))
-    self.portal.portal_preferences.manage_delObjects([self.preference.getId()])
     self.tic()
 
   def _createForumThreadWithPosts(self, n_posts=2):
@@ -99,9 +79,8 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     """Each item <link> is the project-app push_history_stored_state deep-link
     seeding the forum (p.jio_key) and targeting the thread + last_post."""
     forum, thread = self._createForumThreadWithPosts(n_posts=2)
-    # the getter returns exactly the configured System Preference value
-    base = forum.Base_getProjectAppBaseUrl()
-    self.assertEqual(PROJECT_APP_BASE_URL, base)
+    # the item <link> self-derives the app base from the request (portal.absolute_url())
+    base = self.portal.absolute_url()
     post_count = thread.DiscussionThread_getDiscussionPostCount()
     doc = parseString(forum.DiscussionForum_viewLatestPostListAsRSS())
     links = [l for l in
