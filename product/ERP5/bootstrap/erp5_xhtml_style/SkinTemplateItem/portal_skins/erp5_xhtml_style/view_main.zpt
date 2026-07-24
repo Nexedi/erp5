@@ -27,14 +27,16 @@
                tal:define="actions actions/object_view | python: []">
             <div class="actions"
                  tal:condition="python: (not is_web_mode or editable_mode) and len(actions)">
-              <button tal:condition="python: not is_web_mode and form_action"
-                      type="submit" class="save" title="Save"
-                      tal:attributes="name string:${form_action}:method;
-                      onclick string:javascript:clickSaveButton('${form_action}');"
-                      i18n:attributes="title" i18n:domain="ui">
-                <span class="image"></span>
-                <span class="description" i18n:translate="" i18n:domain="ui">Save</span>
-              </button>
+              <tal:block tal:condition="python: not is_web_mode and form_action">
+                <input type="hidden" name="form_action" value="" tal:attributes="value form_action" />
+                <button type="submit" class="save" title="Save"
+                        tal:attributes="name string:${form_action}:method;
+                        onclick string:javascript:clickSaveButton('${form_action}');"
+                        i18n:attributes="title" i18n:domain="ui">
+                  <span class="image"></span>
+                  <span class="description" i18n:translate="" i18n:domain="ui">Save</span>
+                </button>
+              </tal:block>
               <ul>
                 <li tal:repeat="action actions"
                     tal:attributes="class python: action == current_action and 'selected' or 'not_selected'">
