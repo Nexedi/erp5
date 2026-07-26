@@ -149,10 +149,14 @@ class TestWendelinTelecomConfigurator(SecurityTestCase):
     """
     Check that the list of installed Business Templates is correct.
     """
+    template_tool = self.portal.portal_templates
+    catalog_bt5_title = template_tool.getInstalledBusinessTemplate('erp5_catalog').getTitle()
+    full_text_catalog_bt5_title = template_tool.getInstalledBusinessTemplate('erp5_full_text_catalog').getTitle()
 
     expected_business_template_list = [
       'erp5_code_mirror',
-      'erp5_mysql_innodb_catalog',
+      catalog_bt5_title,
+      'erp5_catalog_core',
       'erp5_pdm',
       'erp5_svg_editor',
       'erp5_jquery_plugin_mbmenu',
@@ -165,7 +169,6 @@ class TestWendelinTelecomConfigurator(SecurityTestCase):
       'erp5_web_renderjs_ui',
       'erp5_dms',
       'erp5_jquery',
-      'erp5_ingestion_mysql_innodb_catalog',
       'erp5_ingestion',
       'erp5_forge',
       'erp5_jquery_plugin_elastic',
@@ -186,7 +189,7 @@ class TestWendelinTelecomConfigurator(SecurityTestCase):
       'erp5_trade',
       'erp5_wendelin_category',
       'erp5_accounting',
-      'erp5_full_text_mroonga_catalog',
+      full_text_catalog_bt5_title,
       'erp5_oauth2_resource',
       'erp5_wendelin',
       'erp5_jquery_plugin_jqchart',
