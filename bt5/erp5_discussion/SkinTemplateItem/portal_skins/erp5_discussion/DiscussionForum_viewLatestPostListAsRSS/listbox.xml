@@ -210,7 +210,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>DiscussionForum_getLatestPostList</string> </value>
+            <value> <string>DiscussionForum_getLatestDiscussionPostList</string> </value>
         </item>
       </dictionary>
     </pickle>
