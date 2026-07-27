@@ -113,7 +113,7 @@ class ERP5LoginUserManager(BasePlugin):
       return
     if user_value.getValidationState() == 'deleted':
       return
-    if user_value.getPortalType() in ('Person', ):
+    if user_value.getPortalType() in ('Person', 'Artificial Agent'):
       now = DateTime()
       for assignment in user_value.contentValues(portal_type="Assignment"):
         if assignment.getValidationState() == "open" and (
