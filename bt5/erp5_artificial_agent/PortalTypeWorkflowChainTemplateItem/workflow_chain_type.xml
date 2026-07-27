@@ -1,0 +1,6 @@
+<workflow_chain>
+ <chain>
+  <type>Artificial Agent</type>
+  <workflow>edit_workflow, user_account_workflow, validation_workflow</workflow>
+ </chain>
+</workflow_chain>
