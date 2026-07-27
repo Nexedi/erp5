@@ -94,17 +94,14 @@ class ERP5GroupManager(BasePlugin):
     if principal.getId() == ERP5Security.SUPER_USER:
       return ()
 
-    @UnrestrictedMethod
-    def _getGroupsForPrincipal(user_id, path):
-      user_path_set = {
-        x['path']
-        for x in self.searchUsers(id=user_id, exact_match=True)
-        if 'path' in x
-      }
-      if not user_path_set:
-        return ()
-      user_path, = user_path_set
-      user_value = self.getPortalObject().unrestrictedTraverse(user_path)
+    def _computeSecurityGroupIdSet(user_id, user_value):
+      # Run the standard security pipeline (open Assignments -> security
+      # category values -> security group id strings) for a single user
+      # document, and return the resulting set of security group ids.
+      # Factored out of _getGroupsForPrincipal so the Artificial Agent cap
+      # below can re-run the *exact same* computation for the owning Person;
+      # this is what makes the agent's and the owner's group sets directly
+      # comparable. Behaviour for every non-agent principal is unchanged.
       security_category_dict = {}
       for method_name, base_category_list in self.getPortalSecurityCategoryMapping():
         base_category_list = tuple(base_category_list)
@@ -162,7 +159,76 @@ class ERP5GroupManager(BasePlugin):
               'could not get security groups from %s' % (generator_name, ),
               error=True,
             )
-      return tuple(security_group_list)
+      return set(security_group_list)
+
+    @UnrestrictedMethod
+    def _getGroupsForPrincipal(user_id, path):
+      # Note: arguments are just a cache key. user_id is bijective to
+      # principal, so its presence in the cache key allows us to access
+      # principal.
+      user_path_set = {
+        x['path']
+        for x in self.searchUsers(id=user_id, exact_match=True)
+        if 'path' in x
+      }
+      if not user_path_set:
+        return ()
+      user_path, = user_path_set
+      user_value = self.getPortalObject().unrestrictedTraverse(user_path)
+      security_group_set = _computeSecurityGroupIdSet(user_id, user_value)
+      # === Artificial Agent security group mask (capping enforcement) ======
+      # Invariant (erp5-agent-study/PLAN.md 4.4):
+      #   for every document D and every permission P,
+      #     allowed(agent, D, P)  =>  allowed(owner, D, P).
+      # An Artificial Agent is a technical account owned by exactly one Person
+      # (owner link = the 'subordination' category). It must never obtain more
+      # effective access than that Person. Security group ids are the sole
+      # channel through which Assignments grant local roles (and hence
+      # permissions), so restricting the agent's EFFECTIVE group set to its
+      # intersection with the owner's group set makes the agent's
+      # group-derived principals a subset of the owner's. Because allowed(),
+      # getRolesInContext() and catalog listability are all monotonic in the
+      # principal group set (more groups can only grant more roles, hence more
+      # permissions), the invariant then holds on every surface -- including
+      # workflows whose role->permission map inverts the usual ordering (e.g.
+      # leave_request_workflow, where Assignee, not Assignor, may modify a
+      # draft: see erp5-agent-study/REPORT_ROLE_ORDER_VIOLATIONS.md). Whatever
+      # right the agent would gain from a group, it keeps only if the owner
+      # holds that same group.
+      # Scope: this masks GROUP-derived rights, which is by construction what
+      # the Assignment pipeline produces. User-id-targeted local roles (the
+      # Owner role seeded on agent-created documents, or a Role Information
+      # naming the agent's own user id directly) are outside this layer and are
+      # handled separately (study 4.4 accepted-exceptions register E1/E2).
+      if user_value.getPortalType() == 'Artificial Agent':
+        try:
+          owner_value = user_value.getSubordinationValue()
+          # Fail closed: an agent with no resolvable Person owner gets NOTHING
+          # -- never its own groups. The owner MUST be a Person; a Person never
+          # carries a subordination-to-agent, so the owner computation below
+          # terminates in a single hop. Any other case (missing owner, or an
+          # agent owned by an agent / a cycle) fails closed to an empty set.
+          if owner_value is None or owner_value.getPortalType() != 'Person':
+            return ()
+          owner_user_id = owner_value.getUserId()
+          if not owner_user_id:
+            return ()
+          owner_group_set = _computeSecurityGroupIdSet(owner_user_id, owner_value)
+        except ConflictError:
+          raise
+        except Exception:
+          # Any failure resolving or computing the owner's groups must never
+          # widen the agent's access: fail closed.
+          LOG(
+            'ERP5GroupManager',
+            WARNING,
+            'could not compute owner groups for Artificial Agent %r; '
+            'failing closed (empty group set)' % (user_id, ),
+            error=True,
+          )
+          return ()
+        security_group_set = security_group_set & owner_group_set
+      return tuple(security_group_set)
 
     if not NO_CACHE_MODE:
       _getGroupsForPrincipal = CachingMethod(_getGroupsForPrincipal,
