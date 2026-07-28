@@ -83,9 +83,10 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     base = self.portal.absolute_url()
     post_count = thread.DiscussionThread_getDiscussionPostCount()
     doc = parseString(forum.DiscussionForum_viewLatestPostListAsRSS())
-    links = [l for l in
-             (getSubnodeContent(i, 'link') for i in doc.getElementsByTagName('item'))
-             if l]
+    links = [x for x in
+             (getSubnodeContent(i, 'link')
+              for i in doc.getElementsByTagName('item'))
+             if x]
     self.assertTrue(links, 'feed items must have a project-app <link>')
     for link in links:
       self.assertIn('#!push_history_stored_state', link)

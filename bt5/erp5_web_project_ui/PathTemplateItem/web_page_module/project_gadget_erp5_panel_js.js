@@ -322,10 +322,11 @@
       }
     }, false, false)
 
-    .allowPublicAcquisition("notifyFocus", function notifyFocus() {
+    .allowPublicAcquisition('notifyFocus', function notifyFocus() {
       return;
     })
-      .allowPublicAcquisition("notifyBlur", function notifyBlur() {
+
+    .allowPublicAcquisition('notifyBlur', function notifyBlur() {
       return;
     })
 

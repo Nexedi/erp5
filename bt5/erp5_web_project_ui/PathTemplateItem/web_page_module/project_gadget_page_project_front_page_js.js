@@ -448,8 +448,8 @@
         spinner.classList.add("ui-hidden");
         if (project_list.length === 0) {
           ul_list.appendChild(domsugar('li', {
-            class: 'empty-state-message',
-            text: 'No projects yet.'
+            class: "empty-state-message",
+            text: "No projects yet."
           }));
           return;
         }

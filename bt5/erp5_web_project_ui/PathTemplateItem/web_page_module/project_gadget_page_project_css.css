@@ -178,7 +178,7 @@ div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .ui-hidden {
 }
 
 div[data-gadget-url$="gadget_erp5_page_project_page.html"] button:disabled {
-  background-color:#FFC9A4;
+  background-color: #FFC9A4;
 }
 
 div[data-gadget-url$="gadget_erp5_page_project_page.html"] input[type="submit"] {
