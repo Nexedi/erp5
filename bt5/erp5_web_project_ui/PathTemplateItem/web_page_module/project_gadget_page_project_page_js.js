@@ -45,7 +45,9 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
   }
 
   function getActionListByName(view_list, name) {
-    var result = view_list.filter(d => d.name === name)[0];
+    var result = view_list.filter(function (view) {
+      return view.name === name;
+    })[0];
     return result && result.href;
   }
 
