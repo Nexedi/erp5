@@ -135,11 +135,11 @@ class ImmobilisableItem(Item, Amount):
         portal_type = self.getPortalDeliveryMovementTypeList() + \
                         ('Immobilisation Line', 'Immobilisation Cell')
         sql_dict['portal_type'] = portal_type
-      sql_dict['sort_on'] = [('movement.stop_date','ascending')]
+      sql_dict['sort_on'] = [('stock.date','ascending')]
 
 
       # Handle dates
-      date_key = 'movement.stop_date'
+      date_key = 'stock.date'  # Only used when from_date/to_date are passed
       date_range = ''
       date_query = []
       if from_date is not None:
