@@ -69,6 +69,11 @@ class DeliveryLine(Movement, XMLMatrix, ImmobilisationMovement):
                     , PropertySheet.SortIndex
                     )
 
+  _default_before_edit_order = ('resource',
+                                'resource_value',
+                                'variation_base_category_list',
+                                'variation_category_list')
+
   # Multiple inheritance definition
   updateRelatedContent = XMLMatrix.updateRelatedContent
 
