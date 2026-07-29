@@ -222,7 +222,6 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
   _default_edit_order = Amount._default_edit_order + (
     'stop_date',
     'start_date',
-    'price',
   )
 
   def isPropertyRecorded(self, k): # XXX-JPS method should be moved to GeneratedMovement class
