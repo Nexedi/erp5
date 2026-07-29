@@ -14,21 +14,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_edit</string> </value>
-        </item>
-        <item>
-            <key> <string>action_title</string> </key>
             <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>edit_order</string> </key>
-            <value>
-              <list/>
-            </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -57,15 +43,15 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_text_content</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>my_description</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -77,22 +63,13 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>my_id</string>
-                        <string>my_title</string>
-                        <string>my_reference</string>
-                        <string>my_version</string>
-                        <string>my_after_method_id</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>my_creation_date</string>
-                        <string>my_translated_validation_state_title</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -100,7 +77,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>JSONForm_view</string> </value>
+            <value> <string>JSONForm_viewInputSchema</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -108,15 +85,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>JSONForm_view</string> </value>
+            <value> <string>JSONForm_viewInputSchema</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>ERP5 Form</string> </value>
-        </item>
-        <item>
-            <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -128,19 +101,11 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>JSON Form</string> </value>
+            <value> <string>Input Schema</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
             <value> <int>0</int> </value>
-        </item>
-        <item>
-            <key> <string>update_action</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>update_action_title</string> </key>
-            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
