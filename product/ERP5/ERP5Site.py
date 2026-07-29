@@ -1853,6 +1853,15 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
            self._getPortalConfiguration('portal_entity_type_list')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalActorTypeList')
+  def getPortalActorTypeList(self):
+    """
+    Returns Actor types.
+    """
+    return self._getPortalGroupedTypeList('actor') or\
+           self._getPortalConfiguration('portal_actor_type_list')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalLoginTypeList')
   def getPortalLoginTypeList(self):
     """
