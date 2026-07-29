@@ -154,6 +154,47 @@ return %s""" % (attribute, script_name, fake_return)
     )
 
 
+class TemporaryBaseRedirect(TemporaryPythonScript):
+  """Context manager that replaces ``Base_redirect`` with a lightweight
+  ``TemporaryPythonScript`` called in tests that will not without trigger
+  a real HTTP redirect.
+
+  Usage::
+
+    with TemporaryBaseRedirect(self.portal):
+      result = document.Some_script(...)
+
+  It returns ``(context, message)`` where *context* is the Base_redirect
+  context object and *message* is the ``portal_status_message`` from 
+  *keep_items*.
+  """
+  def __init__(self, portal):
+    super(TemporaryBaseRedirect, self).__init__(
+        portal, 'Base_redirect',
+        'redirect_url=None, keep_items=None, abort_transaction=False, '
+        'status_code=302, **kw',
+        "return context, (keep_items or {}).get('portal_status_message', '')")
+
+class TemporaryBaseRenderForm(TemporaryPythonScript):
+  """Context manager that replaces ``Base_renderForm`` with a lightweight
+  ``TemporaryPythonScript``  called in tests without rendering a real Zope form.
+  Usage::
+
+    with TemporaryBaseRenderForm(self.portal):
+      result = document.Some_script(...)
+
+  It returns ``(form_id, message)`` where *form_id* is the form
+  identifier passed to ``Base_renderForm`` and *message* is either the
+  explicit *message* argument or the ``portal_status_message`` from
+  *keep_items*.
+  """
+  def __init__(self, portal):
+    super(TemporaryBaseRenderForm, self).__init__(
+        portal, 'Base_renderForm',
+        'form_id=None, message=None, keep_items=None, **kw',
+        "return form_id, message or (keep_items or {}).get("
+        "'portal_status_message', '')")
+
 # dummy objects
 class DummyMailHostMixin(object):
   """Dummy Mail Host that doesn't really send messages and keep a copy in
