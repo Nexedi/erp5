@@ -1,0 +1,6 @@
+<workflow_chain>
+ <chain>
+  <type>Delivery Line Edit Test</type>
+  <workflow>delivery_line_edit_test_interaction_workflow</workflow>
+ </chain>
+</workflow_chain>

@@ -779,6 +779,7 @@ class Base(
   # Declarative properties
   property_sheets = ( PropertySheet.Base, )
 
+  _default_before_edit_order = ()
   _default_edit_order = (
     'title',
     'reference',
@@ -1491,12 +1492,19 @@ class Base(
     """
     if not kw:
       return
-    edit_order = edit_order or self._default_edit_order
+    before_edit_order = ()
+    if not edit_order:
+      before_edit_order = self._default_before_edit_order
+      edit_order = [k for k in self._default_edit_order if not k in before_edit_order]
+      all_edit_order = tuple(before_edit_order) + tuple(edit_order)
+    else:
+      all_edit_order = edit_order
     key_list = sorted(kw.keys())
     modified_property_dict = self._v_modified_property_dict = {}
     modified_object_dict = {}
 
-    unordered_key_list = [k for k in key_list if k not in edit_order]
+    before_ordered_key_list = [k for k in before_edit_order if k in key_list]
+    unordered_key_list = [k for k in key_list if k not in all_edit_order]
     ordered_key_list = [k for k in edit_order if k in key_list]
     if restricted:
       # accessors which doesn't use default permissions
@@ -1552,6 +1560,8 @@ class Base(
           self.setId(kw['id'], reindex=reindex_object)
       return not_modified_list
 
+    if before_ordered_key_list:
+      setChangedPropertyList(before_ordered_key_list)
     unmodified_key_list = setChangedPropertyList(unordered_key_list)
     setChangedPropertyList(unmodified_key_list)
     # edit_order MUST be enforced, and done at the complete end
