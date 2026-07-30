@@ -47,7 +47,6 @@ class TestERP5WebWithCRM(ERP5TypeTestCase):
     """
     return ('erp5_base',
             'erp5_ingestion',
-            'erp5_ingestion_mysql_innodb_catalog',
             'erp5_crm',
             'erp5_jquery',
             'erp5_web',

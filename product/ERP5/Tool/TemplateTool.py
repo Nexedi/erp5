@@ -1145,20 +1145,38 @@ class TemplateTool (BaseTool):
                          in_progress_bt5_title_list):
       """find the bt5 by using provider's dependency
       """
-      matched_list = []
+      provider_dependency_dict = {}
       for provider in provider_list:
         try:
-          provider_bt = self.getLastestBTOnRepos(provider)
+          repository, bt_id = self.getLastestBTOnRepos(provider)
         except (BusinessTemplateUnknownError, BusinessTemplateIsMeta):
           continue
-        provider_dep_title_list = [
-          bid.replace('.bt5', '') for _, bid in
-          self.getDependencyList(provider_bt)
-        ]
+        provider_dep_title_list = []
+        for property_dict in self.repository_dict.get(repository, ()):
+          if property_dict['id'] == bt_id:
+            provider_dep_title_list = [
+              self.parseDependencyCouple(dependency.strip())[0]
+              for dependency in property_dict['dependency_list']
+              if dependency.strip()
+            ]
+            break
         if not provider_dep_title_list:
           continue
+        provider_dependency_dict[provider] = provider_dep_title_list
+
+      common_dependency_set = set()
+      if len(provider_dependency_dict) > 1:
+        common_dependency_set = set.intersection(
+          *[set(x) for x in provider_dependency_dict.values()])
+
+      matched_list = []
+      for provider, provider_dep_title_list in provider_dependency_dict.items():
+        discriminating_dep_list = [bt5 for bt5 in provider_dep_title_list
+                                   if bt5 not in common_dependency_set]
+        if not discriminating_dep_list:
+          continue
         if all(bt5 in installed_bt5_title_list or bt5 in in_progress_bt5_title_list
-               for bt5 in provider_dep_title_list):
+               for bt5 in discriminating_dep_list):
           matched_list.append(provider)
       return matched_list
 
@@ -1217,9 +1235,13 @@ class TemplateTool (BaseTool):
             if provider_title:
               for candidate in available_bt5_list:
                 if candidate.title == provider_title:
-                  bt5_set.add(\
-                    self.decodeRepositoryBusinessTemplateUid(
-                        candidate.uid))
+                  provider_bt5 = self.decodeRepositoryBusinessTemplateUid(
+                      candidate.uid)
+                  bt5_set.add(provider_bt5)
+                  for provider_dep_repository, provider_dep_id in \
+                      self.getDependencyList(provider_bt5):
+                    if provider_dep_repository != 'meta':
+                      bt5_set.add((provider_dep_repository, provider_dep_id))
                   break
             else:
               raise BusinessTemplateMissingDependency("Unable to resolve dependencies for %s, options are %s"

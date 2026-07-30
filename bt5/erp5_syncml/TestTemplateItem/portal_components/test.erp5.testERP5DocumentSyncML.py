@@ -114,7 +114,7 @@ class TestERP5DocumentSyncMLMixin(TestERP5SyncMLMixin):
       Return the list of business templates.
     """
     return list(TestERP5SyncMLMixin.getBusinessTemplateList(self)) + \
-        ['erp5_ingestion', 'erp5_ingestion_mysql_innodb_catalog',
+        ['erp5_ingestion',
         'erp5_web', 'erp5_dms']
 
   def afterSetUp(self):

@@ -679,7 +679,6 @@ class TestCRMMailIngestion(BaseTestCRM):
             'erp5_full_text_mroonga_catalog',
             'erp5_base',
             'erp5_ingestion',
-            'erp5_ingestion_mysql_innodb_catalog',
             'erp5_pdm',
             'erp5_crm',
             )
@@ -1091,7 +1090,6 @@ class TestCRMMailSend(BaseTestCRM):
     # So we add DMS and Web.
     return ('erp5_base',
             'erp5_ingestion',
-            'erp5_ingestion_mysql_innodb_catalog',
             'erp5_crm',
             'erp5_web',
             'erp5_dms',

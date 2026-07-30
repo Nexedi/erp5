@@ -38,7 +38,6 @@ class TestRunMyDocsConfiguratorWorkflowMixin(TestLiveConfiguratorWorkflowMixin):
 
   standard_bt5_list = ('erp5_jquery',
                          'erp5_web',
-                         'erp5_ingestion_mysql_innodb_catalog',
                          'erp5_ingestion',
                          'erp5_ui_test_core',
                          'erp5_dms',
