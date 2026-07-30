@@ -94,8 +94,14 @@
             <value> <string>Category</string> </value>
         </item>
         <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>09. Lohn- und Gehaltsverrechnungskonto</string> </value>
+            <value> <string>Lohn- und Gehaltsverrechnungskonto</string> </value>
         </item>
       </dictionary>
     </pickle>
