@@ -3,10 +3,10 @@
   Context: Discussion Forum object.
 """
 
-limit = kw.get("limit", 100)
-size = kw.pop("size", None)
-if size is not None:
-  limit = min(size, limit)
+# both can arrive as strings when passed through the listbox from the URL
+limit = int(kw.get("limit", 100))
+size = int(kw.pop("size", limit))
+limit = min(size, limit)
 
 # Discussion Forum IS a Predicate, so searchResults works directly
 parent_uid_list = [
