@@ -4191,6 +4191,123 @@ class TestTransactions(AccountingTestCase):
 
     self.tic()
 
+  def test_grouping_reference_multi_grouping(self):
+    """Check that grouping generator handle both arrow direction
+    and generate a consistent grouping reference for both source and destination
+    """
+    # first, generate an invoice for the supplier side only
+    # to ensure the id_generator will not create the same values for supplier and client
+    pre_invoice = self._makeOne(
+               title='reset Invoice',
+               destination_section_value=self.organisation_module.client_1,
+               source_section_value=self.organisation_module.supplier,
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           destination_debit=0.3),
+                      dict(source_value=self.account_module.receivable,
+                           destination_credit=0.3,
+                           id='line_01')))
+    self.portal.portal_workflow._jumpToStateFor(pre_invoice, 'stopped')
+    pre_source_payment = self._makeOne(
+               title='reset Invoice Payment for supplier',
+               portal_type='Payment Transaction',
+               source_payment_value=self.section.newContent(
+                                            portal_type='Bank Account'),
+               source_section_value=self.organisation_module.supplier,
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.receivable,
+                           id='line_03',
+                           destination_debit=0.3),
+                      dict(source_value=self.account_module.bank,
+                           destination_credit=0.3,)))
+    self.portal.portal_workflow._jumpToStateFor(pre_source_payment, 'stopped')
+    self.tic()
+    # Ensure we are in the expected state
+    self.assertFalse(pre_invoice.line_01.getGroupingReference())
+    self.assertFalse(pre_source_payment.line_03.getGroupingReference())
+    # So, set the causality relation to help
+    pre_invoice.setCausalityValueList([pre_source_payment])
+    self.tic()
+    grouped = pre_invoice.AccountingTransaction_guessGroupedLines()
+    self.assertEqual(
+      sorted(grouped),
+      sorted([
+        pre_invoice.line_01.getRelativeUrl(),
+        pre_source_payment.line_03.getRelativeUrl(),
+    ]))
+    self.assertEqual(pre_invoice.line_01.getGroupingReference(),
+                     pre_source_payment.line_03.getGroupingReference())
+    self.tic()
+
+    # Generate an invoice handling both source and destination accounts
+    # When grouping it, the grouping reference must be unique and consistent
+    # between the 3 transactions
+    invoice = self._makeOne(
+               title='Invoice',
+               destination_section_value=self.organisation_module.client_1,
+               source_section_value=self.organisation_module.supplier,
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           destination_value=self.account_module.goods_sales,
+                           destination_debit=0.3),
+                      dict(source_value=self.account_module.receivable,
+                           destination_value=self.account_module.payable,
+                           destination_credit=0.3,
+                           id='line_1')))
+    self.portal.portal_workflow._jumpToStateFor(invoice, 'stopped')
+    destination_payment = self._makeOne(
+               title='Invoice Payment for client',
+               portal_type='Payment Transaction',
+               source_payment_value=self.section.newContent(
+                                            portal_type='Bank Account'),
+               source_section_value=self.organisation_module.client_1,
+               destination_section_value=self.organisation_module.supplier,
+               lines=(dict(source_value=self.account_module.payable,
+                           id='line_2',
+                           source_debit=0.3),
+                      dict(source_value=self.account_module.bank,
+                           source_credit=0.3,)))
+    self.portal.portal_workflow._jumpToStateFor(destination_payment, 'stopped')
+    source_payment = self._makeOne(
+               title='Invoice Payment for supplier',
+               portal_type='Payment Transaction',
+               source_payment_value=self.section.newContent(
+                                            portal_type='Bank Account'),
+               source_section_value=self.organisation_module.supplier,
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.receivable,
+                           id='line_3',
+                           destination_debit=0.3),
+                      dict(source_value=self.account_module.bank,
+                           destination_credit=0.3,)))
+    self.portal.portal_workflow._jumpToStateFor(source_payment, 'stopped')
+    self.tic()
+
+    # Ensure we are in the expected state
+    self.assertFalse(invoice.line_1.getGroupingReference())
+    self.assertFalse(destination_payment.line_2.getGroupingReference())
+    self.assertFalse(source_payment.line_3.getGroupingReference())
+
+    # So, set the causality relation to help
+    invoice.setCausalityValueList([source_payment, destination_payment])
+    self.tic()
+    grouped = invoice.AccountingTransaction_guessGroupedLines()
+    self.assertEqual(
+      sorted(grouped),
+      sorted([
+        invoice.line_1.getRelativeUrl(),
+        destination_payment.line_2.getRelativeUrl(),
+        source_payment.line_3.getRelativeUrl(),
+    ]))
+    self.tic()
+
+    self.assertTrue(invoice.line_1.getGroupingReference())
+    self.assertTrue(destination_payment.line_2.getGroupingReference())
+    self.assertTrue(source_payment.line_3.getGroupingReference())
+    self.assertEqual(invoice.line_1.getGroupingReference(),
+                     destination_payment.line_2.getGroupingReference())
+    self.assertEqual(invoice.line_1.getGroupingReference(),
+                     source_payment.line_3.getGroupingReference())
+    self.tic()
+
   def test_grouping_reference_rounding(self):
     """Reproduction of a bug that grouping was not possible because of rounding error
 
