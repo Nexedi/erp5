@@ -377,7 +377,7 @@ class ERP5OAuth2ResourceServerPlugin(BasePlugin):
     if there is any change.
     Returns a true value if the list was actually updated, a false value otherwise.
     """
-    from erp5.component.module.Log import log
+    log = lambda *args, **kw: None  # OAuth2 debug logging silenced locally
     log("__updateAccessTokenSignatureKeyList: start")
     new_access_token_key_set = set()
     for connector_value in self.__iterClientConnectorValue():
@@ -400,7 +400,7 @@ class ERP5OAuth2ResourceServerPlugin(BasePlugin):
     Does NOT apply any non-standard check.
     Does NOT check if the associated session is still valid.
     """
-    from erp5.component.module.Log import log
+    log = lambda *args, **kw: None  # OAuth2 debug logging silenced locally
     log("__checkTokenSignature: START (acces token key list = %s)" % str(self.__access_token_key_list))
     for signature_algorithm, key in self.__access_token_key_list:
       log("__checkTokenSignature: try algo %s (key = %s)..." % (signature_algorithm, key))
@@ -432,7 +432,7 @@ class ERP5OAuth2ResourceServerPlugin(BasePlugin):
     The schema of this dictionary is purely an internal implementation detail
     of this plugin.
     """
-    from erp5.component.module.Log import log
+    log = lambda *args, **kw: None  # OAuth2 debug logging silenced locally
     log("decodeToken/%s: access_token=%s, refresh_token=%s" % (request["ACTUAL_URL"], access_token, refresh_token))
     client_address = str2unicode(request.getClientAddr())
     log("decodeToken/%s: client_address=%s" % (request["ACTUAL_URL"], client_address))
@@ -501,7 +501,7 @@ class ERP5OAuth2ResourceServerPlugin(BasePlugin):
     If present, and scheme is "Bearer", and the token signature passes our
     validation, remove it from request.
     """
-    from erp5.component.module.Log import log
+    log = lambda *args, **kw: None  # OAuth2 debug logging silenced locally
     http_authorisation = request._auth
     if not http_authorisation:
       return
@@ -622,7 +622,7 @@ class ERP5OAuth2ResourceServerPlugin(BasePlugin):
     validated.
     A cookie token is recognised if it is present.
     """
-    from erp5.component.module.Log import log
+    log = lambda *args, **kw: None  # OAuth2 debug logging silenced locally
     reqURI = request['ACTUAL_URL']
     if request.REQUEST_METHOD == "POST":
       log("extractCredentials/%s: start, req = %s" % (reqURI, request))
