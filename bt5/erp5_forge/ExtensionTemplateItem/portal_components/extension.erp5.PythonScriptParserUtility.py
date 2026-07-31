@@ -71,7 +71,7 @@ def findMessageListFromPythonInProduct(function_name_list):
                        'ERP5Form', 'ERP5OOo', 'ERP5Security',
                        'ERP5Type', 'ERP5Wizard',
                        'HBTreeFolder2', 'MailTemplates', 'TimerService',
-                       'ZMySQLDA', 'ZSQLCatalog',
+                       'ZSQLDA', 'ZSQLCatalog',
                        )
   result = []
   def findStaticMessage(file_path):
