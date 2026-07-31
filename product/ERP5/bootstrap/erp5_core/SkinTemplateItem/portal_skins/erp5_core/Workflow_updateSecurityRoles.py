@@ -27,4 +27,8 @@ if object_list:
       '${document_count} documents updated.',
       mapping={'document_count': len(object_list)},
   )
+
+if batch_mode:
+  return object_list
+
 return context.Base_redirect(form_id, keep_items={'portal_status_message': message})
