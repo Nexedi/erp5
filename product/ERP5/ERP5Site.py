@@ -1855,8 +1855,12 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalActorTypeList')
   def getPortalActorTypeList(self):
-    """
-    Returns Actor types.
+    """ The Actor type list encapsulate Person and Workgroup under
+      a common abstraction representing participants capable of
+      performing actions, receiving assignments, and owning 
+      responsibilities. 
+
+      It separates operational roles from legal or business entities.
     """
     return self._getPortalGroupedTypeList('actor') or\
            self._getPortalConfiguration('portal_actor_type_list')
