@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="JSON Form" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>MCP_listPortalTypeForm</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>MCP_listPortalTypeForm</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>JSON Form</string> </value>
+        </item>
+        <item>
+            <key> <string>response_schema</string> </key>
+            <value> <string>{\n
+"type": "object",\n
+"description": "Table data with metadata and rows",\n
+"properties": {\n
+"count": {\n
+"type": "integer",\n
+"description": "Total number of records"\n
+},\n
+"start": {\n
+"type": "integer",\n
+"description": "Starting index of the current page"\n
+},\n
+"end": {\n
+"type": "integer",\n
+"description": "Ending index of the current page"\n
+},\n
+"portal_type": {\n
+"type": "string",\n
+"description": "Portal type identifier"\n
+},\n
+"rows": {\n
+"type": "array",\n
+"description": "List of rows, where each row is a dictionary mapping column names to values",\n
+"items": {\n
+"type": "object",\n
+"description": "A single row of data",\n
+"patternProperties": {\n
+"^.*$": {\n
+"type": ["string", "number", "boolean", "null"],\n
+"description": "Column value"\n
+}\n
+},\n
+"additionalProperties": true\n
+}\n
+}\n
+},\n
+"required": ["count", "start", "end", "portal_type", "rows"],\n
+"additionalProperties": false\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>{\n
+  "additionalProperties": false,\n
+  "required": [\n
+    "portal_type_id"\n
+  ],\n
+  "type": "object",\n
+  "properties": {\n
+    "sort_on": {\n
+      "type": "array",\n
+      "items": {\n
+        "type": "array",\n
+        "minItems": 2,\n
+        "maxItems": 2,\n
+        "items": {\n
+          "type": "string"\n
+        }\n
+      },\n
+      "default": [["uid", "ascending"]],\n
+      "description": "Sort order specification.\\n\\nA list of [column, direction] pairs where column is any filterable column name (as shown in MCP_getPortalTypeSchema) and direction is either \'ascending\' or \'descending\'. Results are sorted by the first pair, then the second for ties, etc.\\n\\nDefault: [[\'uid\', \'ascending\']].\\n\\nExample: [[\'last_name\', \'ascending\'], [\'first_name\', \'ascending\']]"\n
+    },\n
+    "column_list": {\n
+      "items": {\n
+        "type": "string"\n
+      },\n
+      "type": "array",\n
+      "default": [],\n
+      "description": "Specifies which columns to include in the result.\\n\\nProvide a list of column names (using the human-readable titles as shown in MCP_getPortalTypeSchema).\\n\\nIf not provided, default columns are used. Use MCP_getPortalTypeSchema first to discover all available columns and identify which ones are marked as \'default\'.\\n\\nExample: [\'Title\', \'Creation Date\', \'State\']"\n
+    },\n
+    "portal_type_id": {\n
+      "type": "string",\n
+      "description": "The ID/name of the portal type to get data of.\\n\\nUse MCP_listPortalTypes first to see all available portal type IDs and their descriptions.\\n\\nExamples: \'Task Report\', \'Sale Order\', \'Person\'."\n
+    },\n
+    "filters": {\n
+      "additionalProperties": {\n
+        "type": "string"\n
+      },\n
+      "type": "object",\n
+      "default": {},\n
+      "description": "Dictionary of filters to apply, mapping column names (strings) to filter values (strings).\\n\\nUse the human-readable column titles as shown in MCP_getPortalTypeSchema. Only columns marked as \'filterable\': true in the schema can be used. Supports % as wildcard character for partial matching (e.g., \'Smith%\' for names starting with Smith, \'%report%\' for values containing \'report\'). Both keys and values must be strings.\\n\\nExample: {\'State\': \'confirmed\', \'Title\': \'Project%\'}"\n
+    },\n
+    "page": {\n
+      "type": "integer",\n
+      "default": 0,\n
+      "description": "The page index for pagination (0-based). Each page contains at most 100 documents. The first page is 0. If the requested page exceeds the total number of pages (based on total items and page_size), an empty list will be returned. Check the total_count and total_pages in the response to determine valid page ranges."\n
+    }\n
+  }\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>MCP_listPortalTypeForm</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
