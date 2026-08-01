@@ -1,0 +1,1 @@
+This business template contains the backend-agnostic fulltext SQL/catalog methods shared by erp5_full_text_mroonga_catalog and erp5_full_text_sqlite_catalog, installed into the shared erp5_catalog_core catalog.
