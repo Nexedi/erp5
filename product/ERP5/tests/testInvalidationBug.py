@@ -35,7 +35,7 @@ import transaction
 import pkg_resources
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.utils import createZODBPythonScript
+from Products.ERP5Type.tests.utils import createZODBPythonScript, skipUnlessMySQL
 from six.moves import range
 
 ZEO5 = pkg_resources.parse_version(
@@ -55,6 +55,7 @@ class TestInvalidationBug(ERP5TypeTestCase):
   def afterSetUp(self):
     self.login()
 
+  @skipUnlessMySQL
   def testCommitOrder(self):
     """Check order of resources being committed"""
     module = self.portal.organisation_module
