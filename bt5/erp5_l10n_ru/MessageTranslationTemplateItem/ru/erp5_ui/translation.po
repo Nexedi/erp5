@@ -894,22 +894,13 @@ msgstr "Разработчики"
 msgid "Conversion Failed"
 msgstr ""
 
-msgid "Conversion Failed [state in processing_status_workflow]"
-msgstr ""
-
 msgid "Converted"
 msgstr ""
 
 msgid "Converted Inventory Report"
 msgstr "Отчет по Остаткам по Видам Измерения"
 
-msgid "Converted [state in processing_status_workflow]"
-msgstr ""
-
 msgid "Converting"
-msgstr ""
-
-msgid "Converting [state in processing_status_workflow]"
 msgstr ""
 
 msgid "Coordinate Function"
@@ -1454,9 +1445,6 @@ msgstr "Табельный Номер"
 
 msgid "Empty"
 msgstr "Пустой"
-
-msgid "Empty [state in processing_status_workflow]"
-msgstr ""
 
 msgid "Enable Preference"
 msgstr "Активировать Настройки"
@@ -4450,9 +4438,6 @@ msgid "Upload the photo for this person."
 msgstr "Загрузить фотографию для этого физического лица."
 
 msgid "Uploaded"
-msgstr ""
-
-msgid "Uploaded [state in processing_status_workflow]"
 msgstr ""
 
 msgid "Url Registry Tool"
