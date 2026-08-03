@@ -133,9 +133,9 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     self.assertTrue(author_dict['author_title'])
 
   def test_filter_project_actions_promotes_project_view_regardless_of_order(self):
-    """Base_filterProjectActions must replace object_view with the project_view
-    actions even when object_view is iterated AFTER project_view: the dict-order
-    case that blanked the SPA (empty _links.view) before the ordering fix."""
+    """Base_filterProjectActions must expose the project_view actions as
+    object_view even when object_view is iterated AFTER project_view: the
+    dict-order case that blanked the SPA (empty _links.view) before the fix."""
     project_view_action_list = [
       {'id': 'project_view', 'title': 'Discussion Threads'}]
     # OrderedDict forces the previously-crashing order: object_view inserted last.
@@ -146,6 +146,28 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     result = self.portal.Base_filterProjectActions(actions=actions)
     self.assertEqual(project_view_action_list, result['object_view'])
     self.assertEqual(project_view_action_list, result['project_view'])
+
+  def test_filter_project_actions_merges_project_view_named_object_view(self):
+    """object_view actions whose id contains 'project_view' are kept alongside
+    the project_view category actions, not dropped by it - and the merge is the
+    same in both iteration orders."""
+    project_view_action_list = [{'id': 'project_view', 'title': 'View'}]
+    object_view_action_list = [{'id': 'view', 'title': 'Standard'},
+                               {'id': 'project_view_extra', 'title': 'Extra'}]
+    expected_id_list = ['project_view', 'project_view_extra']
+    for category_name_list in (('project_view', 'object_view'),
+                               ('object_view', 'project_view')):
+      actions = OrderedDict()
+      for category_name in category_name_list:
+        actions[category_name] = (project_view_action_list
+                                  if category_name == 'project_view'
+                                  else object_view_action_list)
+      result = self.portal.Base_filterProjectActions(actions=actions)
+      self.assertEqual(
+        expected_id_list,
+        sorted(action['id'] for action in result['object_view']),
+        'wrong object_view for iteration order %r' % (category_name_list,))
+      self.assertEqual(project_view_action_list, result['project_view'])
 
   def test_filter_project_actions_without_project_view_keeps_only_named(self):
     """With no project_view category, object_view keeps only actions whose id
