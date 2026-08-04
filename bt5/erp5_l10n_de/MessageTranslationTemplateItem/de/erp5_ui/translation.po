@@ -1317,9 +1317,6 @@ msgstr "Konvergent"
 msgid "Conversion Failed"
 msgstr ""
 
-msgid "Conversion Failed [state in processing_status_workflow]"
-msgstr ""
-
 msgid "Conversion Format for reports."
 msgstr "Format, in das Berichte konvertiert werden"
 
@@ -1329,17 +1326,11 @@ msgstr "Datei Konvertieren"
 msgid "Converted"
 msgstr "Konvertiert"
 
-msgid "Converted [state in processing_status_workflow]"
-msgstr ""
-
 msgid "Converted to ${mime_type}."
 msgstr "Konvertieren zu ${mime_type}."
 
 msgid "Converting"
 msgstr "Konvertierung läuft"
-
-msgid "Converting [state in processing_status_workflow]"
-msgstr ""
 
 msgid "Copy"
 msgstr "Kopieren"
@@ -2156,9 +2147,6 @@ msgstr "Amtsbezeichnung"
 
 msgid "Empty"
 msgstr "Leer"
-
-msgid "Empty [state in processing_status_workflow]"
-msgstr ""
 
 msgid "Enable"
 msgstr "Aktivieren"
@@ -6718,9 +6706,6 @@ msgid "Upload the photo for this person."
 msgstr "Das Photo für diese Person hochladen"
 
 msgid "Uploaded"
-msgstr ""
-
-msgid "Uploaded [state in processing_status_workflow]"
 msgstr ""
 
 msgid "Url Registry Tool"

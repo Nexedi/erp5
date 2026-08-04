@@ -1123,9 +1123,6 @@ class TestIngestion(IngestionTestCase):
   #    Verify that they are successfully converted
   #    - have ODF data and contain magic word in SearchableText
   #    - or have text data and contain magic word in SearchableText
-  #      TODO:
-  #    - or were not moved in processing_status_workflow if the don't
-  #      implement _convertToBase (e.g. Image)
   #    Verify that you can not upload file of the wrong format.
 
   def test_05_FormatIngestionText(self):

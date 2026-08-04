@@ -1665,9 +1665,6 @@ msgstr "همگرایی"
 msgid "Conversion Failed"
 msgstr ""
 
-msgid "Conversion Failed [state in processing_status_workflow]"
-msgstr ""
-
 msgid "Convert Action"
 msgstr "عمل تبدیل"
 
@@ -1701,13 +1698,7 @@ msgstr "گزارش انبارگردانی تبدیل شده"
 msgid "Converted Quantity"
 msgstr "تعداد تبدیل شده"
 
-msgid "Converted [state in processing_status_workflow]"
-msgstr "تبدیل شده"
-
 msgid "Converting"
-msgstr "در حال تبدیل"
-
-msgid "Converting [state in processing_status_workflow]"
 msgstr "در حال تبدیل"
 
 msgid "Copy"
@@ -2839,9 +2830,6 @@ msgid "Employer Share"
 msgstr "سهم کارفرما"
 
 msgid "Empty"
-msgstr "خالی"
-
-msgid "Empty [state in processing_status_workflow]"
 msgstr "خالی"
 
 msgid "Empty lines deleted."
@@ -8021,9 +8009,6 @@ msgstr "پرونده را آپلود کنید"
 
 msgid "Uploaded"
 msgstr "آپلود شد"
-
-msgid "Uploaded [state in processing_status_workflow]"
-msgstr "تبدیل شد"
 
 msgid "Url Registry Tool"
 msgstr ""

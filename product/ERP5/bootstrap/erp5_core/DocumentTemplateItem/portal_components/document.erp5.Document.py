@@ -710,10 +710,6 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
     """
     getInfoFor = self.getPortalObject().portal_workflow.getInfoFor
     revision = len(getInfoFor(self, 'history', (), 'edit_workflow'))
-    # XXX Also look at processing_status_workflow for compatibility.
-    revision += len([history_item for history_item in\
-                 getInfoFor(self, 'history', (), 'processing_status_workflow')\
-                 if history_item.get('action') == 'edit'])
     return str(revision)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getRevisionList')
