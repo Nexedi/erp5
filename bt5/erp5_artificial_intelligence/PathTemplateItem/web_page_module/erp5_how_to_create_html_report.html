@@ -1,0 +1,111 @@
+# Guide: Writing HTML Content in ERP5 for PDF Export
+
+This guide documents the HTML conventions expected by ERP5's book/PDF export
+feature when turning a Web Page's content into a formatted "book" (cover page,
+header/footer, table of contents, tables/figures/references overview, PDF
+pagination). Write your report's HTML content following these rules, then use
+the export-as-book action available on the Web Page (HTML preview first,
+then PDF for the final output).
+
+Useful export options: include a table of contents, include a
+tables/figures/references overview, embed linked documents or reports (see
+below), and override the cover-page metadata (title, version, reference,
+author, organisation). The cover page itself is auto-generated - never author
+cover-page HTML by hand.
+
+## 1. Headings and Table of Contents
+
+Use plain `<h1>` through `<h6>` - no `id`/`class` needed. The heading's text
+must be a plain text node (no nested `<span>` etc. inside it), since the TOC
+builder reads it literally between `>` and `<`. Nesting (h1 > h2 > h3...) is
+inferred purely from tag depth.
+
+**Every `<h1>` automatically starts a new PDF page** - this is the primary
+chapter-break mechanism, no extra markup required. Do not insert the table of
+contents yourself; it is generated automatically from your headings and
+placed right before your content.
+
+## 2. Images
+
+Reference images by their ERP5-relative path, not an absolute `http(s)://`
+URL or a `data:` URI - non-local images are not validated and will render a
+broken-image warning if they can't be resolved. Always add an explicit
+`alt="..."` attribute: it is the figure's caption text, and **an image with
+no `alt` is silently dropped from the Figures table and gets no figure
+number**.
+
+```html
+<img src="Template.Image.Reference?format=png&display=medium"
+     alt="Caption for this figure" />
+```
+
+## 3. Tables
+
+Add a `<caption>...</caption>` inside the `<table>` (convention: as the last
+child, after `<tbody>`) to have the table numbered ("Table-N - ...") and
+listed in the Tables overview. A table with no `<caption>` still renders
+normally, it just isn't tracked/numbered.
+
+```html
+<table>
+  <thead><tr><th>Column A</th><th>Column B</th></tr></thead>
+  <tbody><tr><td>value 1</td><td>value 2</td></tr></tbody>
+  <caption>Example table description</caption>
+</table>
+```
+
+## 4. Cross-reference citations
+
+Wrap a citation link in square brackets. The link's visible text decides the
+category: `RD` = Referenced Document, `AD` = Applicable Document, anything
+else (e.g. `ERP`) = Abbreviation (the text itself becomes the stored
+abbreviation). The `title` attribute carries up to three `;`-separated fields
+(full title; number/description; version).
+
+```html
+[<a href="document_module/123" title="Full Document Title;DOC-123;v1">RD</a>]
+[<a href="document_module/456" title="Applicable Spec;SPEC-456;v2">AD</a>]
+[<a href="#" title="Enterprise Resource Planning">ERP</a>]
+```
+
+Reusing the same `href` keeps the same reference number. A plain link *not*
+wrapped in brackets (e.g. `<a href="https://google.com">document</a>`) is
+left untouched.
+
+## 5. Embedding other documents or reports
+
+A plain (non-bracketed) link whose href is an internal ERP5 relative path has
+that document's content inlined in place of the link:
+
+```html
+<a href="Template.Test.Book.Embeddable.Document">This content gets embedded</a>
+```
+
+A plain link whose href contains a `report=<MethodName>` query parameter
+calls that report method and inlines its output instead:
+
+```html
+<a href="sale_order_module/123?report=Base_generateCostEffortReport&display_detail=detailed">Cost Effort Report</a>
+```
+
+## 6. Where the references/figures/tables overview appears
+
+Put the literal placeholder `${WebPage_insertTableOfReferences}` wherever you
+want the generated references/applicable-documents/abbreviations/figures/
+tables overview to be inserted. If you omit it, that generated content is
+simply discarded - it is never appended automatically.
+
+```html
+<h1>Introduction</h1>
+<p>${WebPage_insertTableOfReferences}</p>
+```
+
+## 7. Page breaks
+
+- Every `<h1>` forces a new page (see above).
+- Wrap a block in `<section>...</section>` to force a page break right after
+  it (except the very last section).
+- Add `class="custom-force-page-break"` to any element to force a page break
+  before it, independent of heading level.
+- Tables, images and `<pre><code>` blocks are kept on a single page (never
+  split across a page boundary).
