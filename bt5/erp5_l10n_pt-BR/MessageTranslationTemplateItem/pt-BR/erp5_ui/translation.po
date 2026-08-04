@@ -1422,9 +1422,6 @@ msgstr "Conversão"
 msgid "Conversion Failed"
 msgstr ""
 
-msgid "Conversion Failed [state in processing_status_workflow]"
-msgstr ""
-
 msgid "Conversion Format for reports."
 msgstr "Formato de conversão para os relatórios."
 
@@ -1455,16 +1452,10 @@ msgstr "Débito Convertido"
 msgid "Converted Quantity"
 msgstr "Quantidade Convertida"
 
-msgid "Converted [state in processing_status_workflow]"
-msgstr "Convertido"
-
 msgid "Converted quantity"
 msgstr "Quantidade Convertida"
 
 msgid "Converting"
-msgstr "Convertendo"
-
-msgid "Converting [state in processing_status_workflow]"
 msgstr "Convertendo"
 
 msgid "Copy"
@@ -2389,9 +2380,6 @@ msgid "Employer"
 msgstr "Empregador"
 
 msgid "Empty"
-msgstr "Vazio"
-
-msgid "Empty [state in processing_status_workflow]"
 msgstr "Vazio"
 
 msgid "Empty lines deleted."
@@ -6289,9 +6277,6 @@ msgid "Upload file"
 msgstr "Carregar Arquivo"
 
 msgid "Uploaded"
-msgstr "Carregado"
-
-msgid "Uploaded [state in processing_status_workflow]"
 msgstr "Carregado"
 
 msgid "Url Registry Tool"

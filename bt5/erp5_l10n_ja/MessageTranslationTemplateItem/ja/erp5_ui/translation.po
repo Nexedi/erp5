@@ -1404,9 +1404,6 @@ msgstr "収束"
 msgid "Conversion Failed"
 msgstr ""
 
-msgid "Conversion Failed [state in processing_status_workflow]"
-msgstr ""
-
 msgid "Conversion Format for reports."
 msgstr "変換フォーマット"
 
@@ -1419,16 +1416,10 @@ msgstr "外貨換算貸方"
 msgid "Converted Debit"
 msgstr "外貨換算借方"
 
-msgid "Converted [state in processing_status_workflow]"
-msgstr "変換済み"
-
 msgid "Converted quantity"
 msgstr "変換済みの数量"
 
 msgid "Converting"
-msgstr ""
-
-msgid "Converting [state in processing_status_workflow]"
 msgstr ""
 
 msgid "Copy"
@@ -2281,9 +2272,6 @@ msgid "Employee Number"
 msgstr "社員番号"
 
 msgid "Empty"
-msgstr ""
-
-msgid "Empty [state in processing_status_workflow]"
 msgstr ""
 
 msgid "Empty lines deleted."
@@ -5905,9 +5893,6 @@ msgid "Upload Module"
 msgstr "アップロード用モジュール"
 
 msgid "Uploaded"
-msgstr ""
-
-msgid "Uploaded [state in processing_status_workflow]"
 msgstr ""
 
 msgid "Url Registry Tool"
