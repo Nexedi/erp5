@@ -513,6 +513,8 @@ class SafeHTML:
                 if not repaired:
                     # try to repair any broken html with help of lxml
                     encoding = kwargs.get('encoding')
+                    if six.PY2 and isinstance(orig, bytes) and encoding is None:
+                        orig = orig.decode('utf-8', errors='replace')
                     # recover parameter is equal to True by default
                     # in lxml API. I pass the argument to improve readability
                     # of above code.
