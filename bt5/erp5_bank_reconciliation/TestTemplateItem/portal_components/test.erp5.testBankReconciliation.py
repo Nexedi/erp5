@@ -850,6 +850,7 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
     self.assertTrue(bank_reconciliation_value.hasLineContent())
     expected_line_list = [
       { "start_date_day": 5, "stop_date_day": 5, "title": "VIR Free", "credit": 0.0, "debit": 20.0 },
+      { "start_date_day": 5, "stop_date_day": 5, "title": "VIR Sameday", "credit": 0.0, "debit": 50.0 },
       { "start_date_day": 11, "stop_date_day": 13, "title": "VIR INC Client", "credit": 10000.0, "debit": 0.0 },
       { "start_date_day": 18, "stop_date_day": 18, "title": "PRLV SFR", "credit": 0.0, "debit": 30.0 },
       { "start_date_day": 26, "stop_date_day": 26, "title": "VIR Payable", "credit": 0.0, "debit": 7500.0 },
@@ -866,7 +867,7 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
 
     # Assert: `getQuantityRangeMax` is computed automatically
     bank_reconciliation_value.setQuantityRangeMin(1000.0)
-    self.assertEqual(bank_reconciliation_value.getQuantityRangeMax(), 3450.0)
+    self.assertEqual(3400.0, bank_reconciliation_value.getQuantityRangeMax())
 
     bank_reconciliation_value.setSpecialiseValue(business_process_value)
     self.tic()
