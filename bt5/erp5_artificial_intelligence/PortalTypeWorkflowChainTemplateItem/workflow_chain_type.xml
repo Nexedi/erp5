@@ -1,0 +1,18 @@
+<workflow_chain>
+ <chain>
+  <type>Artificial Task</type>
+  <workflow>artificial_task_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Artificial Task Line</type>
+  <workflow>edit_workflow, event_simulation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Artificial Task Report</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Artificial Task Report Line</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+</workflow_chain>
