@@ -1,0 +1,14 @@
+<workflow_chain>
+ <chain>
+  <type>JSON Form</type>
+  <workflow>json_form_mcp_tool_workflow</workflow>
+ </chain>
+ <chain>
+  <type>MCP Service</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>MCP Tool</type>
+  <workflow>edit_workflow, mcp_tool_workflow</workflow>
+ </chain>
+</workflow_chain>
