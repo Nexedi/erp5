@@ -336,6 +336,30 @@ class TestEmbedOfficeJSInERP5JS(ERP5TypeTestCase):
       self.assertIn('prefix + "officejs-erp5-hash"', text_content)
       self.assertIn('prefix + "officejs-erp5"', text_content)
 
+  def test_form_definition_reports_empty_configuration(self):
+    """getFormDefinition tells an unknown action apart from a missing
+    application configuration, so an ungenerated/empty configuration
+    manifest reports itself instead of surfacing as a confusing
+    "Can not find action 'X' for portal type 'Y'"."""
+    text_content = self._getWebPageText(
+      "gadget_officejs_common_util_js",
+      "gadget_officejs_common_util.js",
+      portal_type="Web Script"
+    )
+    self.assertIsNotNone(
+      text_content,
+      "gadget_officejs_common_util_js not found -- test would pass vacuously"
+    )
+    # The broad "any action at all" probe must exist ...
+    self.assertIn("function buildActionInformationQuery()", text_content)
+    self.assertIn("query: buildActionInformationQuery()", text_content)
+    # ... and drive the actionable message ...
+    self.assertIn("Application configuration is empty", text_content)
+    self.assertIn("Create App Configuration ", text_content)
+    # ... while the original per-action message is kept for the case
+    # where the configuration did load but this action is unknown.
+    self.assertIn("Can not find action '", text_content)
+
   def test_erp5js_router_prefixes_router_databases(self):
     """rjs_gadget_erp5_router_js acquires prefix and uses it for the
     selection/navigation_history/document_state databases."""

@@ -91,6 +91,17 @@
     }));
   }
 
+  function buildActionInformationQuery() {
+    // Matches any action, whatever its portal type. Used to tell an
+    // unknown action apart from a configuration that was never loaded.
+    return Query.objectToSearchText(new SimpleQuery({
+      key: "portal_type",
+      operator: "",
+      type: "simple",
+      value: "Action Information"
+    }));
+  }
+
   function getFormInfo(form_definition) {
     var child_gadget_url,
       form_type,
@@ -255,10 +266,26 @@
         })
         .push(function (data) {
           if (data.data.rows.length === 0) {
-            error = new Error("Can not find action '" + action_reference +
-                              "' for portal type '" + portal_type + "'");
-            error.status_code = 400;
-            throw error;
+            // Zero rows is ambiguous: unknown action, or a configuration
+            // that never loaded. Probe for any action to tell them apart.
+            return gadget.jio_allDocs({
+              query: buildActionInformationQuery(),
+              limit: [0, 1]
+            })
+              .push(function (any_action) {
+                if (any_action.data.rows.length === 0) {
+                  error = new Error("Application configuration is empty: " +
+                                    "run 'Create App Configuration " +
+                                    "Manifest' on the application Web " +
+                                    "Section");
+                } else {
+                  error = new Error("Can not find action '" +
+                                    action_reference + "' for portal type '" +
+                                    portal_type + "'");
+                }
+                error.status_code = 400;
+                throw error;
+              });
           }
           return gadget.jio_get(data.data.rows[0].id);
         })
