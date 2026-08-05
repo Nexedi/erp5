@@ -92,8 +92,7 @@
   }
 
   function buildActionInformationQuery() {
-    // Matches any action, whatever its portal type. Used to tell an
-    // unknown action apart from a configuration that was never loaded.
+    // Matches any action, whatever its portal type.
     return Query.objectToSearchText(new SimpleQuery({
       key: "portal_type",
       operator: "",
@@ -266,8 +265,7 @@
         })
         .push(function (data) {
           if (data.data.rows.length === 0) {
-            // Zero rows is ambiguous: unknown action, or a configuration
-            // that never loaded. Probe for any action to tell them apart.
+            // Zero rows: unknown action, or configuration never loaded.
             return gadget.jio_allDocs({
               query: buildActionInformationQuery(),
               limit: [0, 1]

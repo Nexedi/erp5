@@ -336,11 +336,34 @@ class TestEmbedOfficeJSInERP5JS(ERP5TypeTestCase):
       self.assertIn('prefix + "officejs-erp5-hash"', text_content)
       self.assertIn('prefix + "officejs-erp5"', text_content)
 
+  def test_every_launcher_shell_has_app_id_placeholder(self):
+    """Both launcher shells carry the ${app_id} placeholder.
+
+    A shell without it silently drops the mapping_dict value, leaving the
+    launcher with an empty IndexedDB prefix and every app sharing one
+    database."""
+    for doc_id, reference in (
+      ("rjs_gadget_erp5_launcher_html", "erp5_launcher.html"),
+      ("rjs_gadget_erp5_html", "officejs_launcher.html"),
+    ):
+      text_content = self._getWebPageText(doc_id, reference)
+      self.assertIsNotNone(
+        text_content,
+        "%s not found -- test would pass vacuously" % doc_id
+      )
+      self.assertIn(
+        'data-renderjs-configuration="app_id"', text_content,
+        "%s is missing the app_id configuration tag" % doc_id
+      )
+      self.assertIn(
+        "${app_id}", text_content,
+        "%s does not substitute app_id from mapping_dict" % doc_id
+      )
+
   def test_form_definition_reports_empty_configuration(self):
     """getFormDefinition tells an unknown action apart from a missing
-    application configuration, so an ungenerated/empty configuration
-    manifest reports itself instead of surfacing as a confusing
-    "Can not find action 'X' for portal type 'Y'"."""
+    application configuration, so an empty configuration manifest reports
+    itself instead of surfacing as "Can not find action 'X'"."""
     text_content = self._getWebPageText(
       "gadget_officejs_common_util_js",
       "gadget_officejs_common_util.js",
