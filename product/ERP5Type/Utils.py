@@ -1910,6 +1910,23 @@ def guessEncodingFromText(data, content_type='text/html'):
                 ' You must install python-magic'
     raise NotImplementedError(message)
 
+def decodeTextContent(data):
+  # type: (bytes) -> str
+  """
+  Decode data (bytes) into str, trying utf-8 first, then guessing the
+  encoding with `guessEncodingFromText` when decoding fails.
+  """
+  try:
+    text_content = data.decode('utf-8')
+  except UnicodeDecodeError:
+    text_content = data.decode(
+        guessEncodingFromText(data, content_type=content_type) or 'ascii')
+
+  if six.PY2 and isinstance(text_content, six.text_type):
+    text_content = unicode2str(text_content)
+
+  return text_content
+
 _reencodeUrlEscapes_map = {chr(x): chr(x) if chr(x) in
     # safe
     "!'()*-." "0123456789" "_~"
