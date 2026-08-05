@@ -877,11 +877,18 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
     expected_movement_list_before_reconciliation = []
     for line_value in bank_reconciliation_value.objectValues():
       for direction in (1, -1):
+        source_account = "account_module/receivable"
+        if direction == -1:
+          source_account = "account_module/bank"
+        elif line_value.getQuantity() < 0.0:
+          source_account = "account_module/payable"
+
         line_dict = {
           "start_date_day": line_value.getStartDate().day(),
           "stop_date_day": line_value.getStopDate().day(),
           "quantity": direction * line_value.getQuantity(),
           "aggregate": line_value.getRelativeUrl() if direction == -1 else None,
+          "source": source_account,
         }
         expected_movement_list_before_reconciliation.append(line_dict)
 
@@ -891,6 +898,7 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
       "stop_date_day": movement_value.getStopDate().day(),
       "quantity": movement_value.getQuantity(),
       "aggregate": movement_value.getAggregate(),
+      "source": movement_value.getSource(),
     } for movement_value in applied_rule.objectValues()]
 
     # Assert: Simulation Movements matches expected movements
@@ -910,9 +918,18 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
       "stop_date_day": movement_value.getStopDate().day(),
       "quantity": movement_value.getQuantity(),
       "aggregate": movement_value.getAggregate(),
+      "source": movement_value.getSource(),
     } for movement_value in applied_rule.objectValues()]
     # Assert: Simulation Movements matches expected movements
     self.assertCountEqual(expected_movement_list, simulation_movement_list)
+
+    # Set a different account on one of the lines
+    line_value = next(x for x in bank_reconciliation_value.objectValues() if x.getSourceDebit() == 30.0)
+    source_account = "account_module/goods_purchase"
+    line_value.setSourceAccount(source_account)
+    line_dict = next(x for x in expected_movement_list if x["quantity"] == -30.0)
+    line_dict["source"] = "account_module/goods_purchase"
+    self.tic()
 
     transaction_list = bank_reconciliation_value.BankReconciliation_createMissingTransactionList(batch_mode=True)
     self.tic()
@@ -924,6 +941,7 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
       "stop_date_day": movement_value.getStopDate().day(),
       "quantity": movement_value.getQuantity(),
       "aggregate": movement_value.getAggregate(),
+      "source": movement_value.getSource(),
     } for transaction_value in transaction_list for movement_value in transaction_value.objectValues()]
     self.assertCountEqual(expected_movement_list, movement_list)
 
