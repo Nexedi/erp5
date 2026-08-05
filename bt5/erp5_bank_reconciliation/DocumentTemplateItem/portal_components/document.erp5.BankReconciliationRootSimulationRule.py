@@ -87,9 +87,8 @@ class BankReconciliationRootSimulationRule(RuleMixin, MovementCollectionUpdaterM
 class BankReconciliationRuleMovementGenerator(MovementGeneratorMixin):
   def _getUpdatePropertyDict(self, input_movement):
     """
-    Set properties not already available on Bank Reconciliation Line objects.
+    Set properties not already available on Bank Reconciliation Line.
     """
-    # Base properties
     property_dict = {
       'causality': input_movement.getRelativeUrl(),
       'delivery': None,
@@ -106,11 +105,6 @@ class BankReconciliationRuleMovementGenerator(MovementGeneratorMixin):
         'resource': price_currency,
       })
 
-    # Source account from Business Process can be overriden
-    source_account = input_movement.getSourceAccount()
-    if source_account is not None:
-      property_dict["source"] = source_account
-
     return property_dict
 
   def _updateGeneratedMovementList(self, input_movement, generated_movement_list):
@@ -126,6 +120,11 @@ class BankReconciliationRuleMovementGenerator(MovementGeneratorMixin):
       if len(trade_model_path_list) == 1:
         if trade_model_path_list[0].getEfficiency() < 0.0:
           simulation_movement_value.setAggregateValue(input_movement)
+        else:
+          # Source account from Business Process can be overriden on non-bank lines
+          source_account = input_movement.getSourceAccount()
+          if source_account is not None:
+            simulation_movement_value.setSource(source_account)
 
     return generated_movement_list
 
