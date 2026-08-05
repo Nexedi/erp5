@@ -1432,7 +1432,9 @@ def createExpressionContext(object, portal=None):
   if object is None:
     object_url = ''
   else:
-    object_url = object.absolute_url()
+    # strip trailing slash, for Web Section and sub-classes
+    # which override 'absolute_url' to add it
+    object_url = object.absolute_url().rstrip('/')
 
   if folder is None:
     folder_url = ''
