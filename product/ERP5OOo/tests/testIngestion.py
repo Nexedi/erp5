@@ -65,7 +65,7 @@ class IngestionTestCase(ERP5TypeTestCase):
       Return the list of required business templates.
     """
     return ('erp5_core_proxy_field_legacy', 'erp5_base',
-            'erp5_ingestion', 'erp5_ingestion_mysql_innodb_catalog',
+            'erp5_ingestion',
             'erp5_web', 'erp5_crm', 'erp5_dms')
 
   def afterSetUp(self):
@@ -721,7 +721,7 @@ class TestIngestion(IngestionTestCase):
       expectedFailure(self.checkDocumentExportList)(document, 'doc',
                                                    ['writer.html'])
     else:
-      self.assertRaises(AssertionError, self.checkDocumentExportList, 
+      self.assertRaises(AssertionError, self.checkDocumentExportList,
                         document, 'doc', ['writer.html'])
 
   def stepCheckSpreadsheetDocumentExportList(self, sequence=None,
@@ -733,7 +733,7 @@ class TestIngestion(IngestionTestCase):
       expectedFailure(self.checkDocumentExportList)(document, 'xls',
                                    ['calc.html', 'calc.pdf'])
     else:
-      self.assertRaises(AssertionError, self.checkDocumentExportList, 
+      self.assertRaises(AssertionError, self.checkDocumentExportList,
                         document, 'xls', ['calc.html', 'calc.pdf'])
 
   def stepCheckPresentationDocumentExportList(self, sequence=None,
@@ -745,7 +745,7 @@ class TestIngestion(IngestionTestCase):
       expectedFailure(self.checkDocumentExportList)(document,
                                                    'ppt', ['impr.pdf'])
     else:
-      self.assertRaises(AssertionError, self.checkDocumentExportList, 
+      self.assertRaises(AssertionError, self.checkDocumentExportList,
                         document, 'ppt', ['impr.pdf'])
 
   def stepCheckDrawingDocumentExportList(self, sequence=None,
@@ -757,7 +757,7 @@ class TestIngestion(IngestionTestCase):
       expectedFailure(self.checkDocumentExportList)(document,
                                                  'sxd', ['draw.pdf'])
     else:
-      self.assertRaises(AssertionError, self.checkDocumentExportList, 
+      self.assertRaises(AssertionError, self.checkDocumentExportList,
                         document, 'sxd', ['draw.pdf'])
 
 
