@@ -1,7 +1,7 @@
 msgid ""
 msgstr "Project-Id-Version: ERP5 Localized Interface\n"
-"POT-Creation-Date: 2026-07-24 07:07+JST\n"
-"PO-Revision-Date: 2026-07-24 07:07+JST\n"
+"POT-Creation-Date: 2026-08-04 12:08+GMT\n"
+"PO-Revision-Date: 2026-08-04 12:08+GMT\n"
 "Last-Translator:  <>\n"
 "Language-Team: fr <>\n"
 "MIME-Version: 1.0\n"
@@ -728,6 +728,9 @@ msgstr "Ajouter Employé"
 
 msgid "Add Gadgets"
 msgstr "Ajouter des gadgets"
+
+msgid "Add Holiday Acquisition"
+msgstr "Ajouter un congé"
 
 msgid "Add Lines"
 msgstr "Ajouter des lignes"
@@ -3636,6 +3639,12 @@ msgstr "GED"
 msgid "DMS Preferences"
 msgstr "Préférences de la GED"
 
+msgid "DSN Change Block"
+msgstr "Bloc de changement DSN"
+
+msgid "DSN Change Blocks"
+msgstr "Blocs de changement DSN"
+
 msgid "Data Updated."
 msgstr "Données Enregistrées."
 
@@ -4542,6 +4551,9 @@ msgstr "Liste des documents"
 msgid "Document Module"
 msgstr "Module des documents"
 
+msgid "Document Number"
+msgstr "Numéro de document"
+
 msgid "Document Properties"
 msgstr "Propriété du document"
 
@@ -4962,6 +4974,9 @@ msgstr "Montant part salariale"
 msgid "Employee Share Rate"
 msgstr "Taux part salariale"
 
+msgid "Employee count"
+msgstr "Effectif des salariés"
+
 msgid "Employee share rate (%)"
 msgstr "Part Employé (%)"
 
@@ -5015,6 +5030,9 @@ msgstr "Date de fin"
 
 msgid "End of Month"
 msgstr "Fin de mois"
+
+msgid "End of Pay Period"
+msgstr "Date de fin de la période de paie"
 
 msgid "End of current career step"
 msgstr "Fin de carrière"
@@ -5763,6 +5781,9 @@ msgstr "Émettre"
 msgid "Generate Action"
 msgstr "Émettre (action)"
 
+msgid "Generate DSN Report"
+msgstr "Générer le rapport DSN"
+
 msgid "Generate POT File"
 msgstr "Générer un fichier POT"
 
@@ -5975,6 +5996,12 @@ msgstr "Comparaison de l'historique"
 
 msgid "History"
 msgstr "Historique"
+
+msgid "Holiday Acquisition"
+msgstr "Congé"
+
+msgid "Holiday Acquisitions"
+msgstr "Acquisition de congés"
 
 msgid "Home"
 msgstr "Accueil"
@@ -6869,6 +6896,18 @@ msgstr "Apprendre"
 
 msgid "Learn about new ERP5 releases,technical articles, events and more."
 msgstr "Restez au courant des dernières nouveautés, des événements autour d'ERP5 et bien plus."
+
+msgid "Leave Requests"
+msgstr "Demandes de congé"
+
+msgid "Leave Requests to Approve"
+msgstr "Demandes de congé à approuver"
+
+msgid "Leave Requests to Submit"
+msgstr "Demandes de congé à soumettre"
+
+msgid "Leave Requests to Validate"
+msgstr "Demandes de congé à valider"
 
 msgid "Ledger"
 msgstr "Journal"
@@ -12348,20 +12387,11 @@ msgstr "Suspendre le ticket"
 msgid "Suspended"
 msgstr "Suspendu"
 
+msgid "Suspended Expense Validation Requests"
+msgstr "Notes de frais suspendues"
+
 msgid "Suspended Support Requests"
 msgstr "Demande d'assistance suspendues"
-
-msgid "Suspended [state in open_order_workflow]"
-msgstr "Suspendu"
-
-msgid "Suspended [state in project_workflow]"
-msgstr "Suspendu"
-
-msgid "Suspended [state in sale_opportunity_workflow]"
-msgstr ""
-
-msgid "Suspended [state in ticket_workflow]"
-msgstr "Suspendu"
 
 msgid "Symbol"
 msgstr "Symbole"
