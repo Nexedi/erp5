@@ -71,6 +71,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>my_shared_catalog</string>
                         <string>my_template_catalog_method_id_list</string>
                         <string>my_template_catalog_result_table_list</string>
                         <string>my_template_catalog_result_key_list</string>
