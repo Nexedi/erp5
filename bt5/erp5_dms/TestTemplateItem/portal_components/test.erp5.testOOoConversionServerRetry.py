@@ -25,10 +25,46 @@
 #
 ##############################################################################
 
+import contextlib
+import socket
+import threading
+
 from erp5.component.document.Document import ConversionError
 from erp5.component.test.testDms import DocumentUploadTestCase
 
 from Products.ERP5Form.PreferenceTool import Priority
+
+
+@contextlib.contextmanager
+def hanging_server():
+  """Yields a port that accepts a connection and never responds."""
+  stop = threading.Event()
+  srv = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+  srv.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+  srv.bind(("localhost", 0))
+  srv.listen(1)
+  srv.settimeout(0.1)
+
+  def run():
+    with contextlib.closing(srv):
+      while not stop.is_set():
+        try:
+          conn, _ = srv.accept()
+        except socket.timeout:
+          continue
+        with contextlib.closing(conn):
+          stop.wait()
+        return
+
+  thread = threading.Thread(target=run)
+  thread.daemon = True
+  thread.start()
+  try:
+    yield srv.getsockname()[1]
+  finally:
+    stop.set()
+    thread.join(timeout=2)
+
 
 class TestOOoConversionServerRetry(DocumentUploadTestCase):
   def getBusinessTemplateList(self):
@@ -91,15 +127,23 @@ class TestOOoConversionServerRetry(DocumentUploadTestCase):
     self.commit()
 
   def test_03_retry_for_socket_issue(self):
+    port = self.enterContext(hanging_server())
     system_pref = self.getDefaultSystemPreference()
-    server_list = system_pref.getPreferredDocumentConversionServerUrlList()
     system_pref.setPreferredDocumentConversionServerRetry(self.retry_count)
+    saved_server_list = system_pref.getPreferredDocumentConversionServerUrlList()
+    saved_timeout = system_pref.getPreferredOoodocServerTimeout()
+
+    system_pref.setPreferredDocumentConversionServerUrlList(['http://localhost:%s' % port])
     system_pref.setPreferredOoodocServerTimeout(1)
     self.tic()
     filename = 'TEST-en-002.doc'
     file_ = self.makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file_)
 
-    message = document.convert('docx')
-    if 'Socket Error: SSLError' in message:
-      self.assertEqual(message.count('Socket Error: SSLError'), (self.retry_count + 1) * len(server_list))
+    with self.assertRaises(socket.error) as err:
+      document.convert('docx')
+
+    self.assertEqual(str(err.exception).count('timed out'), self.retry_count + 1)
+    system_pref.setPreferredOoodocServerTimeout(saved_timeout)
+    system_pref.setPreferredDocumentConversionServerUrlList(saved_server_list)
+    self.commit()

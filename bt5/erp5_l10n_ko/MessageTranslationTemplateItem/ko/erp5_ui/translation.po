@@ -1452,9 +1452,6 @@ msgstr "변환"
 msgid "Conversion Failed"
 msgstr ""
 
-msgid "Conversion Failed [state in processing_status_workflow]"
-msgstr ""
-
 msgid "Conversion Format for reports."
 msgstr "리포트의 변환 포맷"
 
@@ -1488,17 +1485,11 @@ msgstr "변환된 재고 리포트"
 msgid "Converted Quantity"
 msgstr "변환된 수량"
 
-msgid "Converted [state in processing_status_workflow]"
-msgstr ""
-
 msgid "Converting"
 msgstr ""
 
 msgid "Converting Document"
 msgstr "변환된 문서"
-
-msgid "Converting [state in processing_status_workflow]"
-msgstr ""
 
 msgid "Copy"
 msgstr "복사"
@@ -2420,9 +2411,6 @@ msgstr "비었음"
 
 msgid "Empty Document"
 msgstr "빈 문서"
-
-msgid "Empty [state in processing_status_workflow]"
-msgstr ""
 
 msgid "Empty lines deleted."
 msgstr "삭제된 빈 라인"
@@ -7649,9 +7637,6 @@ msgstr ""
 
 msgid "Uploaded Document"
 msgstr "업로드된 문서"
-
-msgid "Uploaded [state in processing_status_workflow]"
-msgstr ""
 
 msgid "Url Registry Tool"
 msgstr ""
