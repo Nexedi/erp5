@@ -302,14 +302,14 @@ class ColumnMap(object):
       if table_name != catalog_table_name:
         self._addJoinTableForColumn(table_name, column_name, group)
 
-  def build(self, sql_catalog):
+  def build(self, sql_catalog, renderer):
     join_query_to_build_list = []
     catalog_table_name = self.catalog_table_name
     if catalog_table_name is None:
       return
 
     column_table_map = sql_catalog.getColumnMap()
-    table_vote_method_list = [getattr(sql_catalog, x) for x in sql_catalog.sql_catalog_table_vote_scripts]
+    table_vote_method_list = [getattr(sql_catalog, x) for x in sql_catalog.getSqlCatalogTableVoteScriptsList()]
 
     # Generate missing joins from default group (this is required to allow using related keys outside of queries: order_by, sort_on, ...)
     column_set = self.registry.get(DEFAULT_GROUP_ID, [])
@@ -409,7 +409,8 @@ class ColumnMap(object):
       join_query.search_key.buildSQLExpression(sql_catalog=sql_catalog,
                                                column_map=self,
                                                only_group_columns=False,
-                                               group=join_query.group,)
+                                               group=join_query.group,
+                                               renderer=renderer,)
     if MAPPING_TRACE:
       # Key: group
       # Value: 2-tuple
