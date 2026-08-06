@@ -1974,9 +1974,6 @@ msgstr "趋同"
 msgid "Conversion Failed"
 msgstr ""
 
-msgid "Conversion Failed [state in processing_status_workflow]"
-msgstr ""
-
 msgid "Conversion Format for reports."
 msgstr "报告转换格式"
 
@@ -2001,14 +1998,8 @@ msgstr "已转换"
 msgid "Converted Inventory Report"
 msgstr "已转换物料库存报表"
 
-msgid "Converted [state in processing_status_workflow]"
-msgstr ""
-
 msgid "Converting"
 msgstr "转化中"
-
-msgid "Converting [state in processing_status_workflow]"
-msgstr ""
 
 msgid "Copied"
 msgstr "已复制"
@@ -2999,9 +2990,6 @@ msgstr "企业所得税率"
 
 msgid "Empty"
 msgstr "空白"
-
-msgid "Empty [state in processing_status_workflow]"
-msgstr ""
 
 msgid "Enable"
 msgstr "启用"
@@ -8972,9 +8960,6 @@ msgstr "将该人的照片上传"
 
 msgid "Uploaded"
 msgstr "已上传"
-
-msgid "Uploaded [state in processing_status_workflow]"
-msgstr ""
 
 msgid "Url Registry Tool"
 msgstr ""

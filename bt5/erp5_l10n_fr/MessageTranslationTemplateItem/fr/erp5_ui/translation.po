@@ -3117,9 +3117,6 @@ msgstr "Convergent"
 msgid "Conversion Failed"
 msgstr ""
 
-msgid "Conversion Failed [state in processing_status_workflow]"
-msgstr ""
-
 msgid "Conversion Format for reports."
 msgstr "Format de conversion des rapports."
 
@@ -3159,16 +3156,10 @@ msgstr "Rapport d'inventaire converti"
 msgid "Converted Quantity"
 msgstr "Quantité convertie"
 
-msgid "Converted [state in processing_status_workflow]"
-msgstr "Converti"
-
 msgid "Converted quantity"
 msgstr "Quantité convertie"
 
 msgid "Converting"
-msgstr "Conversion en cours"
-
-msgid "Converting [state in processing_status_workflow]"
 msgstr "Conversion en cours"
 
 msgid "Coordinate Function"
@@ -4993,9 +4984,6 @@ msgid "Employer share rate (%)"
 msgstr "Part employeur (%)"
 
 msgid "Empty"
-msgstr "Vide"
-
-msgid "Empty [state in processing_status_workflow]"
 msgstr "Vide"
 
 msgid "Empty lines deleted."
@@ -14116,9 +14104,6 @@ msgid "Upload file"
 msgstr "Transférer un fichier"
 
 msgid "Uploaded"
-msgstr "Chargé"
-
-msgid "Uploaded [state in processing_status_workflow]"
 msgstr "Chargé"
 
 msgid "Urgency Start Date"

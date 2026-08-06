@@ -394,7 +394,7 @@ class TestERP5SyncMLMixin(TestMixin):
     self.tic()
 
   def assertXMLViewIsEqual(self, sub_id, object_pub=None, object_sub=None,
-                           force=False, ignore_processing_status_workflow=False):
+                           force=False):
     """
       Check the equality between two xml objects with gid as id
     """
@@ -424,8 +424,6 @@ class TestERP5SyncMLMixin(TestMixin):
       # XXX: perhaps the tag could be added (insert-after or remove
       # for example) to check more precisely what property to ignore
       # in either the source or destination
-      if ignore_processing_status_workflow:
-        exclude_property_list += ('processing_status_workflow',)
     for update in result:
       select = update.get('select', '')
       new_edit_workflow_entry_xpath = 'xupdate:element/xupdate:attribute'\
