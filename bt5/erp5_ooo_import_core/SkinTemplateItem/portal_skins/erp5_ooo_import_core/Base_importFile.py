@@ -67,7 +67,7 @@ if len(listbox) == 0:
   session[temp_import_file_name] = temp_file
 
   request.set('import_file_line_script', import_file_line_script)
-  return context.Base_viewFileImportMappingDialog(REQUEST=request)
+  return context.Base_renderForm("Base_viewFileImportMappingDialog", REQUEST=request)
 
 else:
   # Second Step
