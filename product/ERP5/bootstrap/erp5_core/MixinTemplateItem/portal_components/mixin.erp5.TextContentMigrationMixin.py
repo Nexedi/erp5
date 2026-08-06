@@ -34,7 +34,7 @@ from Acquisition import aq_base
 from Products.CMFCore.utils import _checkPermission
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Globals import InitializeClass
-from Products.ERP5Type.Utils import guessEncodingFromText, str2bytes, unicode2str
+from Products.ERP5Type.Utils import decodeTextContent, str2bytes, unicode2str
 
 from erp5.component.document.Document import _MARKER
 
@@ -68,15 +68,7 @@ class TextContentMigrationMixin:
     if data is None:
       return None
 
-    try:
-      text_content = data.decode('utf-8')
-    except UnicodeDecodeError:
-      text_content = data.decode(guessEncodingFromText(data))
-
-    if six.PY2 and isinstance(text_content, six.text_type):
-      text_content = unicode2str(text_content)
-
-    return text_content
+    return decodeTextContent(data)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTextContent')
   getTextContent = _getTextContent
