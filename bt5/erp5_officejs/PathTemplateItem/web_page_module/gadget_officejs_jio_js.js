@@ -147,7 +147,11 @@
     return gadget.notifySubmitted({
       message: 'Storage rejected the login: check the connection url',
       status: 'error'
-    });
+    })
+      .push(function () {
+        return gadget.redirect({command: 'display',
+                                options: {page: 'ojs_configurator'}});
+      });
   }
 
   function loginOrReportLoop(gadget, login_url) {
@@ -220,7 +224,13 @@
           if (site) {
             return gadget.redirect({ command: "row", url: site});
           }
-          return gadget.notifySubmitted({message: 'Unauthorized storage access', status: 'error'});
+          // User entered wrong password ?
+          // Notify
+          return gadget.notifySubmitted({message: 'Unauthorized storage access', status: 'error'})
+            .push(function () {
+              return gadget.redirect({command: 'display',
+                                      options: {page: 'ojs_configurator'}});
+            });
         }
         throw error;
       });

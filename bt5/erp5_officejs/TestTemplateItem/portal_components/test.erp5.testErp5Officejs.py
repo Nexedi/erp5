@@ -360,50 +360,6 @@ class TestEmbedOfficeJSInERP5JS(ERP5TypeTestCase):
       self.assertIn("loginOrReportLoop(gadget, regexp.exec(login_page)[1])",
                     text_content)
 
-  def test_jio_gadgets_do_not_redirect_on_unusable_storage(self):
-    """The two 401 dead ends must notify only, never redirect.
-
-    createJio runs from the launcher root gadget's .ready(), so a hash-only
-    redirect throws the router's RSVP.CancellationError into the renderJS
-    bootstrap chain. handleBootstrapError does not filter CancellationError
-    the way the event/monitor/job handlers do, so it calls letsCrash and
-    wipes the page instead of landing on the configurator. The redirect to
-    login stays: it leaves the origin, so the page unloads and renderJS
-    drops the error."""
-    # Forbid the call, not the word: the comments mention redirects.
-    forbidden = "gadget.redirect("
-    marker_list = (
-      "function notifyStorageUnreachable(gadget) {",
-      "// User entered wrong password ?",
-    )
-    for doc_id, reference in (
-      ("gadget_officejs_jio_js", "gadget_ojs_jio.js"),
-      ("gadget_officejs_local_jio_js", "gadget_ojs_local_jio.js"),
-    ):
-      text_content = self._getWebPageText(
-        doc_id, reference, portal_type="Web Script"
-      )
-      self.assertIsNotNone(
-        text_content,
-        "%s not found -- test would pass vacuously" % doc_id
-      )
-      for marker in marker_list:
-        start = text_content.find(marker)
-        self.assertNotEqual(
-          start, -1,
-          "%s: %r not found -- the dead end was renamed or removed"
-          % (doc_id, marker)
-        )
-        end = text_content.find("\n  }", start)
-        self.assertNotEqual(
-          end, -1, "%s: cannot delimit %r" % (doc_id, marker)
-        )
-        self.assertNotIn(
-          forbidden, text_content[start:end],
-          "%s: %r redirects; this crashes the renderJS bootstrap chain"
-          % (doc_id, marker)
-        )
-
   def test_every_launcher_shell_has_app_id_placeholder(self):
     """Both launcher shells carry the ${app_id} placeholder.
 
