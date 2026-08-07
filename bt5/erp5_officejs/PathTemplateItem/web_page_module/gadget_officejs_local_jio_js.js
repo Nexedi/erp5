@@ -1,11 +1,8 @@
 /*global window, window, rJS, jIO, RSVP, UriTemplate, console, URL,
-         Date, navigator */
+         navigator */
 /*jslint indent: 2, maxerr: 10, maxlen: 95 */
-(function (window, rJS, jIO, RSVP, UriTemplate, console, URL, Date, navigator) {
+(function (window, rJS, jIO, RSVP, UriTemplate, console, URL, navigator) {
   "use strict";
-
-  // Window in which a repeated 401 means the login redirect did not stick.
-  var LOGIN_RETRY_INTERVAL = 60000;
 
   function buildPortalTypeQuery(portal_type_string) {
     var types = portal_type_string.split(','),
@@ -135,44 +132,6 @@
       });
   }
 
-  function notifyStorageUnreachable(gadget) {
-    return gadget.notifySubmitted({
-      message: 'Storage rejected the login: check the connection url',
-      status: 'error'
-    })
-      .push(function () {
-        return gadget.redirect({command: 'display',
-                                options: {page: 'ojs_configurator'}});
-      });
-  }
-
-  function loginOrReportLoop(gadget, login_url) {
-    return gadget.getSettingList(['last_login_redirect_date'])
-      .push(function (result_list) {
-        var last_date = parseInt(result_list[0], 10),
-          now = new Date().getTime();
-        // Already sent to login moments ago and still 401: redirecting loops.
-        if (last_date && (now - last_date < LOGIN_RETRY_INTERVAL)) {
-          return gadget.setSetting('last_login_redirect_date', 0)
-            .push(function () {
-              return notifyStorageUnreachable(gadget);
-            });
-        }
-        return gadget.setSetting('last_login_redirect_date', now)
-          .push(function () {
-            return gadget.getUrlFor({command: 'login', absolute_url: true});
-          })
-          .push(function (came_from) {
-            return gadget.redirect({
-              command: 'raw',
-              options: {
-                url: UriTemplate.parse(login_url).expand({came_from: came_from})
-              }
-            });
-          });
-      });
-  }
-
   function redirectToLogin(gadget, error) {
     var regexp,
       site,
@@ -181,7 +140,19 @@
       regexp = /^X-Delegate uri=\"(http[s]?:\/\/[\/\-\[\]{}()*+=:?&.,\\\^$|#\s\w%]+)\"$/;
       login_page = error.target.getResponseHeader('WWW-Authenticate');
       if (regexp.test(login_page)) {
-        return loginOrReportLoop(gadget, regexp.exec(login_page)[1]);
+        return gadget.getUrlFor({
+          command: 'login',
+          absolute_url: true
+        })
+          .push(function (came_from) {
+            return gadget.redirect({
+              command: 'raw',
+              options: {
+                url: UriTemplate.parse(regexp.exec(login_page)[1])
+                  .expand({came_from: came_from})
+              }
+            });
+          });
       }
     }
     if (gadget.state_parameter_dict.jio_storage_name === "DAV") {
@@ -432,4 +403,4 @@
       return wrapJioCall(this, 'repair', arguments);
     });
 
-}(window, rJS, jIO, RSVP, UriTemplate, console, URL, Date, navigator));
+}(window, rJS, jIO, RSVP, UriTemplate, console, URL, navigator));

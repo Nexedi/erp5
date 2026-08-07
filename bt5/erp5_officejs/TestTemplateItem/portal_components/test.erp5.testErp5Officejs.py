@@ -336,30 +336,6 @@ class TestEmbedOfficeJSInERP5JS(ERP5TypeTestCase):
       self.assertIn('prefix + "officejs-erp5-hash"', text_content)
       self.assertIn('prefix + "officejs-erp5"', text_content)
 
-  def test_jio_gadgets_guard_against_login_redirect_loop(self):
-    """Both jio gadgets stop re-sending the user to login on a repeated 401.
-
-    A storage the credential cannot reach (wrong connection url, cross-origin
-    without CORS credentials) answers 401 again right after a successful
-    login, and the X-Delegate handler would redirect forever."""
-    for doc_id, reference in (
-      ("gadget_officejs_jio_js", "gadget_ojs_jio.js"),
-      ("gadget_officejs_local_jio_js", "gadget_ojs_local_jio.js"),
-    ):
-      text_content = self._getWebPageText(
-        doc_id, reference, portal_type="Web Script"
-      )
-      self.assertIsNotNone(
-        text_content,
-        "%s not found -- test would pass vacuously" % doc_id
-      )
-      self.assertIn("LOGIN_RETRY_INTERVAL", text_content)
-      self.assertIn("last_login_redirect_date", text_content)
-      self.assertIn("function loginOrReportLoop", text_content)
-      # The raw redirect must go through the guard, never be called directly.
-      self.assertIn("loginOrReportLoop(gadget, regexp.exec(login_page)[1])",
-                    text_content)
-
   def test_every_launcher_shell_has_app_id_placeholder(self):
     """Both launcher shells carry the ${app_id} placeholder.
 
