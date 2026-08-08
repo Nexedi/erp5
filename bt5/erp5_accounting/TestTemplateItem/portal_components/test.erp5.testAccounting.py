@@ -612,6 +612,22 @@ class TestTransactionValidation(AccountingTestCase):
     accounting_transaction.setStartDate(DateTime("2007/01/01"))
     self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
 
+  def test_createReversalTransactionPreservesEqualStartAndStopDate(self):
+    accounting_transaction = self._makeOne(
+               portal_type='Purchase Invoice Transaction',
+               start_date=DateTime('2007/01/01'),
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           source_credit=210),
+                      dict(source_value=self.account_module.payable,
+                           source_debit=210)))
+    accounting_transaction.setStopDate(accounting_transaction.getStartDate())
+    self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
+    reversal = accounting_transaction.AccountingTransaction_createReversalTransaction(batch=True)
+    self.assertEqual(reversal.getStartDate(), accounting_transaction.getStartDate())
+    self.assertTrue(reversal.hasStopDate())
+    self.portal.portal_workflow.doActionFor(reversal, 'stop_action')
+    self.assertEqual(reversal.getValidationState(), 'stopped')
+
   def test_AccountingTransactionValidationBeforePeriod(self):
     # Check we cannot validate before the period
     accounting_transaction = self._makeOne(
