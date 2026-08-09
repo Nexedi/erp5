@@ -56,7 +56,12 @@ class AccessorHolderType(type):
                        accessor,
                        permission=None):
     accessor_name = accessor.__name__
-    setattr(cls, accessor_name, accessor)
+    if '_pending_accessor_dict' in cls.__dict__:
+      # Accessor holder being generated: collect until _finalize()
+      cls._pending_accessor_dict[accessor_name] = accessor
+    else:
+      # Portal type class
+      setattr(cls, accessor_name, accessor)
     if permission is None:
       return
     # private accessors do not need declarative security
@@ -74,14 +79,45 @@ class AccessorHolderType(type):
                           security=ClassSecurityInfo(),
                           _properties=[])
 
+    # Accessors are added to accessor holders one by one through
+    # registerAccessor(); collect them and create the class in a single
+    # type() call from _finalize() instead of one setattr (class mutation)
+    # per accessor, which exhausts the CPython version tag budget of
+    # classes with many accessors (e.g. BaseAccessorHolder with ~1000
+    # accessors) and disables the type attribute lookup cache for them
+    # and all their subclasses.
+    #
+    # Only accessor holders collect accessors; portal type classes are
+    # created through this __new__ as well but with
+    # meta_class != AccessorHolderType (PortalTypeMetaClass subclass),
+    # so they are not affected and keep using setattr().
+    if meta_class is AccessorHolderType:
+      attribute_dict['_pending_accessor_dict'] = {}
+
     return super(AccessorHolderType, meta_class).__new__(meta_class,
                                                          class_name,
                                                          base_tuple,
                                                          attribute_dict)
 
   def _finalize(cls):
-    cls.security.apply(cls)
-    InitializeClass(cls)
+    if '_pending_accessor_dict' not in cls.__dict__:
+      raise RuntimeError(
+        "%s has already been finalized: registerAccessorHolder() may only "
+        "be called once per accessor holder" % cls.__name__)
+
+    attribute_dict = dict(cls.__dict__)
+    attribute_dict.update(cls._pending_accessor_dict)
+    attribute_dict.pop('_pending_accessor_dict', None)
+    # __dict__/__weakref__ are recreated by type()
+    for name in ('__dict__', '__weakref__'):
+      attribute_dict.pop(name, None)
+
+    new_cls = type.__new__(AccessorHolderType, cls.__name__,
+                           cls.__bases__, attribute_dict)
+    new_cls.security.apply(new_cls)
+    InitializeClass(new_cls)
+    delattr(cls, '_pending_accessor_dict')
+    return new_cls
 
 class AccessorHolderModuleType(ModuleType):
   def registerAccessorHolder(self, accessor_holder):
@@ -91,10 +127,14 @@ class AccessorHolderModuleType(ModuleType):
     # Set the module of the given accessor holder properly
     accessor_holder.__module__ = self.__name__
 
-    # Finalize the class as no accessors is added from now on
-    accessor_holder._finalize()
+    # Finalize the class as no accessors is added from now on. This
+    # materializes the class from the collected accessors, so the returned
+    # class is the one that must be used from now on.
+    accessor_holder = accessor_holder._finalize()
 
     self.__setattr__(accessor_holder.__name__, accessor_holder)
+
+    return accessor_holder
 
   def clear(self):
     """
@@ -204,14 +244,15 @@ def _generateBaseAccessorHolder(portal):
   # Create providesIFoo() getters of ZODB/FS Interface classes
   def provides(class_id):
     accessor_name = 'provides' + class_id
-    setattr(accessor_holder, accessor_name, lambda self: self.provides(class_id))
+    accessor = lambda self: self.provides(class_id)
+    accessor.__name__ = accessor_name
+    accessor_holder.registerAccessor(accessor)
     accessor_holder.security.declarePublic(accessor_name)
   for class_id in set(portal.portal_types.getInterfaceTypeList() +
                       migrated_interface_list):
     provides(class_id)
 
-  erp5.accessor_holder.registerAccessorHolder(accessor_holder)
-  return accessor_holder
+  return erp5.accessor_holder.registerAccessorHolder(accessor_holder)
 
 related_accessor_definition_dict = {
   # List getter
@@ -402,7 +443,8 @@ def getAccessorHolderList(site, portal_type_name, property_sheet_value_list):
       accessor_holder_class = property_sheet.createAccessorHolder(
         expression_context, site)
 
-      accessor_holder_module.registerAccessorHolder(accessor_holder_class)
+      accessor_holder_class = accessor_holder_module.registerAccessorHolder(
+        accessor_holder_class)
       accessor_holder_list.append(accessor_holder_class)
 
       # LOG("ERP5Type.dynamic", INFO,

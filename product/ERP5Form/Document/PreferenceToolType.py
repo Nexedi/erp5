@@ -81,9 +81,8 @@ def _generatePreferenceToolAccessorHolder(portal_type_name,
         method = PreferenceMethod(attribute_name, prop.get('default'))
         preference_tool_accessor_holder.registerAccessor(method, read_permission)
 
-  accessor_holder_module.registerAccessorHolder(preference_tool_accessor_holder)
-
-  return preference_tool_accessor_holder
+  return accessor_holder_module.registerAccessorHolder(
+    preference_tool_accessor_holder)
 
 class PreferenceToolType(PreferenceType):
   """
