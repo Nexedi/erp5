@@ -375,19 +375,25 @@
         }
 
         if (tool_call && client_tool) {
-          var client_tool_result = runClientToolCall(tool_call),
-            next_client_message_list = message_list.concat([{
-              role: "tool",
-              tool_call_id: tool_call.id,
-              name: tool_call.function.name,
-              content: client_tool_result.content
-            }]);
-          showToolCallResult(tool_call.function.name, client_tool_result.content);
-          return loop_call(
-            loop_count + 1,
-            next_client_message_list,
-            pending_tool_call_list.slice(1)
-          );
+          queue_loop
+            .push(function () {
+              return runClientToolCall(tool_call);
+          })
+           .push(function (client_tool_result) {
+             var next_client_message_list = message_list.concat([{
+               role: "tool",
+               tool_call_id: tool_call.id,
+               name: tool_call.function.name,
+               content: client_tool_result.content
+             }]);
+            showToolCallResult(tool_call.function.name, client_tool_result.content);
+            return loop_call(
+              loop_count + 1,
+              next_client_message_list,
+              pending_tool_call_list.slice(1)
+            );
+          });
+          return;
         }
 
         if (tool_call) {
