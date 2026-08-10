@@ -53,3 +53,24 @@ hr#post_item {
   visibility: hidden;
   margin: 0;
 }
+#post_list li.post-tool {
+  float: none;
+  clear: both;
+  max-width: 100%;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.8em;
+  line-height: 1.4;
+  border-left: 3px solid #0E81C2;
+  border-radius: 4px;
+}
+#post_list li.post-tool .post-tool-entry {
+  padding: 0.35em 0;
+  border-bottom: 1px dashed #444444;
+}
+#post_list li.post-tool .post-tool-entry:last-child {
+  border-bottom: none;
+}
+#post_list li.post-tool strong {
+  color: #4ec9b0;
+  font-weight: 600;
+}

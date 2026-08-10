@@ -37,6 +37,24 @@
     ];
   }
 
+  function getToolCallDiv(tool_message) {
+    return domsugar("div", { "class": "post-tool-entry" }, [
+      domsugar("strong", ["Tool: " + tool_message.name]),
+      domsugar("br"),
+      tool_message.content
+    ]);
+  }
+
+  function getToolCallLiList(tool_message_list) {
+    if (!tool_message_list.length) {
+      return [];
+    }
+    return [
+      domsugar("li", { "class": "post-tool" }, tool_message_list.map(getToolCallDiv)),
+      domsugar("hr")
+    ];
+  }
+
   rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -124,7 +142,9 @@
               var post_list = post_list_and_translation_list[0].map(formatPost),
                 translationAttachment = post_list_and_translation_list[1][1];
               return post_list.map(function (post) {
-                return getPostDomList(post, translationAttachment);
+                var tool_message_list = JSON.parse(post.report_text_content_list || "[]");
+                return getToolCallLiList(tool_message_list)
+                  .concat(getPostDomList(post, translationAttachment));
               });
           })
           .push(function (dom_list) {
@@ -277,6 +297,7 @@
     .declareJob('processTask', function (max_loop_count) {
       var gadget = this,
         queue_loop = new RSVP.Queue(),
+        tool_li = null,
         tool_definition_list = gadget.tool_list.map(function (tool) {
           return { type: "function", "function": tool.definition };
         }).concat(gadget.remote_tool_definition_list);
@@ -319,12 +340,12 @@
 
       function showToolCallResult(name, content) {
         var post_list_element = gadget.element.querySelector("#post_list");
-        post_list_element.appendChild(domsugar("li", { "class": "post-tool" }, [
-          domsugar("strong", ["Tool: " + name]),
-          domsugar("br"),
-          domsugar("div", { text: content })
-        ]));
-        post_list_element.appendChild(domsugar("hr"));
+        if (!tool_li) {
+          tool_li = domsugar("li", { "class": "post-tool" });
+          post_list_element.appendChild(tool_li);
+          post_list_element.appendChild(domsugar("hr"));
+        }
+        tool_li.appendChild(getToolCallDiv({ name: name, content: content }));
       }
 
       function loop_call(loop_count, message_list, pending_tool_call_list) {
