@@ -78,6 +78,10 @@
                           <string>relative_url</string>
                           <string>URL</string>
                         </tuple>
+                        <tuple>
+                          <string>shared_erp5_catalog_id</string>
+                          <string>Shared Catalog</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
