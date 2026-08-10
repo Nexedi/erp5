@@ -217,7 +217,8 @@
                 url = gadget.options.request_options.post_url,
                 comment_text = content.comment,
                 skill_list = window.ChatSkills.matchSkillList(comment_text),
-                form_data_json = {};
+                form_data_json = {},
+                post;
               skill_list.forEach(function (skill) {
                 comment_text = skill.instructions + "\n\n" + comment_text;
               });
@@ -225,7 +226,19 @@
               form_data_json.file = "";
               choose_file_html_element.value = "";
 
+              post = {
+                date: new Date().toISOString(),
+                text: comment_text,
+                response: false
+              };
+
               return new RSVP.Queue()
+                .push(function () {
+                  return RSVP.all([
+                    gadget.notifySubmitted({message: 'processing', status: "success"}),
+                    gadget.appendPost(post)
+                  ]);
+                })
                 .push(function () {
                   if (file_blob) {
                     return jIO.util.readBlobAsDataURL(file_blob);
@@ -244,29 +257,14 @@
                     form_data_json
                   );
                 })
-                .push(function (evt) {
-                  return jIO.util.readBlobAsText(evt.target.response);
-                })
-                .push(function (text_evt) {
-                  return JSON.parse(text_evt.target.result).post;
-                });
-            })
-            .push(function (post) {
-              return new RSVP.Queue()
-                .push(function () {
-                  return gadget.notifySubmitted({message: 'processing', status: "success"});
-                })
                 .push(function () {
                   return RSVP.all([
-                    gadget.appendPost(post),
                     gadget.changeState({
                       render_editor: true
-                    })
+                    }),
+                    gadget.processTask(20)
                   ]);
-                })
-                .push(function () {
-                  return gadget.processTask(20);
-              });
+                });
             }, function (e) {
                return RSVP.all([
                  gadget.changeState({allow_submit: true}),

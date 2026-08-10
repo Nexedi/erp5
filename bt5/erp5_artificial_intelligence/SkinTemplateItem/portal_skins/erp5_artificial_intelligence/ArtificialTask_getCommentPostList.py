@@ -1,3 +1,4 @@
+import json
 artifical_task = context
 comment_list = []
 for line in artifical_task.objectValues(
@@ -5,10 +6,15 @@ for line in artifical_task.objectValues(
   sort_on=[('creation_date', 'ascending')],
   simulation_state = ('stopped', 'delivered')
  ):
+  report_line = line.getFollowUpRelatedValue(portal_type='Artificial Task Report Line')
+  report_text_content_list = json.loads(report_line.getTextContent())
+  report_text_content_list = [x for x in report_text_content_list if x['role'] == 'tool']
+
   comment_list.append((dict(
-      date=line.getCreationDate().ISO8601(),
-      text=line.getTextContent(),
-      response = True if line.getSimulationState() == 'delivered' else False
+    date=line.getCreationDate().ISO8601(),
+    text=line.getTextContent(),
+    report_text_content_list = json.dumps(report_text_content_list),
+    response = True if line.getSimulationState() == 'delivered' else False
   )))
 
 return comment_list
