@@ -64,30 +64,81 @@
         sandbox: "public"
       })
       .push(function () {
-        return gadget.changeState(options);
+        return gadget.getTranslationList([
+            "Comments:",
+            "Post Comment"
+          ]);
+        })
+      .push(function (translation_list) {
+        var element = gadget.element.querySelector('input[type="submit"]');
+        gadget.element.querySelector("[data-i18n='Comments:']").innerText = translation_list[0];
+        gadget.element.querySelector("[data-i18n='Post Comment']").innerText = "\u00A0" + translation_list[1];
+        gadget.element.querySelector("[data-i18n='[value]Post Comment']").value = translation_list[1];
+        element.removeAttribute('disabled');
+        element.classList.remove('ui-disabled');
+        return gadget.changeState({
+          'render_editor': true,
+          'allow_submit': true,
+          'render_comment': true
+        });
       });
     })
     .allowPublicAcquisition('notifySubmit', function notifySubmit(e) {
       return this.submitPostComment(e);
     })
-    .onStateChange(function () {
-      var gadget = this;
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.getTranslationList([
-            "Comments:",
-            "Post Comment"
-          ]);
-        })
-        .push(function (translation_list) {
-            var element = gadget.element.querySelector('input[type="submit"]');
-            gadget.element.querySelector("[data-i18n='Comments:']").innerText = translation_list[0];
-            gadget.element.querySelector("[data-i18n='Post Comment']").innerText = "\u00A0" + translation_list[1];
-            gadget.element.querySelector("[data-i18n='[value]Post Comment']").value = translation_list[1];
-            element.removeAttribute('disabled');
-            element.classList.remove('ui-disabled');
-            return gadget.renderCommentList();
+    .onStateChange(function (modification_dict) {
+      var gadget = this,
+        queue = new RSVP.Queue();
+      if (modification_dict.hasOwnProperty("allow_submit")) {
+        var submitButton = gadget.element.querySelector("input[type=submit]");
+        if (modification_dict.allow_submit) {
+          submitButton.disabled = false;
+          submitButton.classList.remove("ui-disabled");
+        } else {
+          submitButton.disabled = true;
+          submitButton.classList.add("ui-disabled");
+        }
+      }
+      if (modification_dict.hasOwnProperty("render_editor") && modification_dict.render_editor) {
+        queue
+          .push(function () {
+            return gadget.getDeclaredGadget("editor");
+          })
+          .push(function (editor) {
+            return editor.render(gadget.options.editor_options.options);
           });
+      }
+      if (modification_dict.hasOwnProperty("render_comment") && modification_dict.render_comment) {
+        queue
+          .push(function () {
+            return RSVP.all([
+              gadget.jio_getAttachment(
+                gadget.options.request_options.document_id,
+                gadget.options.request_options.get_url
+              ),
+              gadget.getTranslationList(["Attachment:"])
+            ]);
+          })
+          .push(
+            function (post_list_and_translation_list) {
+              var post_list = post_list_and_translation_list[0].map(formatPost),
+                translationAttachment = post_list_and_translation_list[1][1];
+              return post_list.map(function (post) {
+                return getPostDomList(post, translationAttachment);
+              });
+          })
+          .push(function (dom_list) {
+            var all_dom_list = [], post_list_element, i;
+            for (i = 0; i < dom_list.length; i += 1) {
+              all_dom_list = all_dom_list.concat(dom_list[i]);
+            }
+            post_list_element = gadget.element.querySelector("#post_list");
+            domsugar(post_list_element, all_dom_list);
+            return gadget.declarePostHtmlViewerList(
+              post_list_element.querySelectorAll('[data-gadget-html-viewer-value]')
+            );
+         });
+       }
     })
     .declareMethod('declarePostHtmlViewerList', function (element_list) {
       var gadget = this,
@@ -106,7 +157,7 @@
       }
       return RSVP.all(call_list);
     })
-    .declareMethod('getMessageListFromDom', function () {
+    .declareMethod('getMessageList', function () {
       var gadget = this,
         li_list = gadget.element.querySelectorAll(
           "#post_list li.post-question, #post_list li.post-answer"
@@ -123,43 +174,6 @@
         });
       }
       return message_list;
-    })
-    .declareMethod('renderCommentList', function () {
-      var gadget = this;
-      return gadget.getDeclaredGadget("editor")
-        .push(function (editor) {
-          return editor.render(gadget.options.editor_options.options);
-        })
-        .push(function () {
-          return RSVP.all([
-            gadget.jio_getAttachment(
-              gadget.options.request_options.document_id,
-              gadget.options.request_options.get_url
-            ),
-            gadget.getTranslationList(["Attachment:"])
-          ]);
-        })
-        .push(
-          function (post_list_and_translation_list) {
-            var post_list = post_list_and_translation_list[0].map(formatPost),
-              translationAttachment = post_list_and_translation_list[1][1];
-            return post_list.map(function (post) {
-              return getPostDomList(post, translationAttachment);
-            });
-        })
-        .push(function (dom_list) {
-          var all_dom_list = [], post_list_element, i;
-          for (i = 0; i < dom_list.length; i += 1) {
-            all_dom_list = all_dom_list.concat(dom_list[i]);
-          }
-          post_list_element = gadget.element.querySelector("#post_list");
-          domsugar(post_list_element, all_dom_list);
-
-          // make gadget html viewer for each post
-          return gadget.declarePostHtmlViewerList(
-            post_list_element.querySelectorAll('[data-gadget-html-viewer-value]')
-          );
-        });
     })
     .declareMethod('appendPost', function (post) {
       var gadget = this,
@@ -187,18 +201,15 @@
                   return gadget.notifySubmitted({message: translated_message});
                 })
           }
-
-          submitButton = gadget.element.querySelector("input[type=submit]");
-          submitButton.disabled = true;
-          submitButton.classList.add("ui-disabled");
-
-          function enableSubmitButton() {
-            submitButton.disabled = false;
-            submitButton.classList.remove("ui-disabled");
-          }
-          queue = gadget.translate("Posting comment").
-            push(function (message_posting_comment) {
-              return gadget.notifySubmitted({message: message_posting_comment})
+          queue = gadget.translate("Posting comment")
+            .push(function (message_posting_comment) {
+              return RSVP.all([
+                gadget.notifySubmitted({message: message_posting_comment}),
+                gadget.changeState({
+                  allow_submit: false,
+                  render_editor: false
+                })
+              ]);
             })
             .push(function () {
               var choose_file_html_element = gadget.element.querySelector('#attachment'),
@@ -244,14 +255,23 @@
               return new RSVP.Queue()
                 .push(function () {
                   return gadget.notifySubmitted({message: 'processing', status: "success"});
-                }).push(function () {
-                  return gadget.appendPost(post);
-                }).push(function () {
+                })
+                .push(function () {
+                  return RSVP.all([
+                    gadget.appendPost(post),
+                    gadget.changeState({
+                      render_editor: true
+                    })
+                  ]);
+                })
+                .push(function () {
                   return gadget.processTask(20);
               });
             }, function (e) {
-              enableSubmitButton();
-              return gadget.notifySubmitted({message: "Error:" + e, status: "error"});
+               return RSVP.all([
+                 gadget.changeState({allow_submit: true}),
+                 gadget.notifySubmitted({message: "Error:" + e, status: "error"})
+               ]);
             });
           return queue;
         });
@@ -391,15 +411,20 @@
             }
 
             return gadget.notifySubmitted({message: 'end', status: "success"})
-                .push(function () {
-                  return gadget.appendPost(result.post);
+              .push(function () {
+                return gadget.appendPost(result.post);
+              })
+              .push(function () {
+                return gadget.changeState({
+                  allow_submit: true
+                });
               });
           });
       }
 
       queue_loop
         .push(function () {
-          return gadget.getMessageListFromDom();
+          return gadget.getMessageList();
         })
         .push(function (message_list) {
           return loop_call(0, message_list);
