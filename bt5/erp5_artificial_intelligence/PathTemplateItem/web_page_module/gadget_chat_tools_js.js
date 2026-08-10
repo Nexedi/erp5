@@ -1,15 +1,26 @@
-/*global window */
+/*global window, document */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window) {
+(function (window, document) {
   "use strict";
 
 
 
-  var CANVAS_NOTE = "Canvas origin (0,0) is top-left, x grows right, y grows down.";
+  var CANVAS_NOTE = "Canvas origin (0,0) is top-left, x grows right, y grows down.",
+    CANVAS_ID = "drawing-canvas";
 
-  function createToolList(canvas) {
-    var ctx = canvas.getContext("2d");
+  function getCanvasContext(element) {
+    var canvas = element.querySelector("#" + CANVAS_ID);
+    if (!canvas) {
+      canvas = document.createElement("canvas");
+      canvas.id = CANVAS_ID;
+      canvas.width = 500;
+      canvas.height = 400;
+      element.appendChild(canvas);
+    }
+    return canvas.getContext("2d");
+  }
 
+  function createToolList(element) {
     return [
       {
         definition: {
@@ -18,7 +29,8 @@
           parameters: { type: "object", properties: {} }
         },
         execute: function () {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          var ctx = getCanvasContext(element);
+          ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
           return { cleared: true };
         }
       },
@@ -40,7 +52,8 @@
           }
         },
         execute: function (args) {
-          var color = args.color || "black",
+          var ctx = getCanvasContext(element),
+            color = args.color || "black",
             fill = args.fill !== false;
           if (fill) {
             ctx.fillStyle = color;
@@ -69,7 +82,8 @@
           }
         },
         execute: function (args) {
-          var color = args.color || "black",
+          var ctx = getCanvasContext(element),
+            color = args.color || "black",
             fill = args.fill !== false;
           ctx.beginPath();
           ctx.arc(args.x, args.y, args.radius, 0, Math.PI * 2);
@@ -101,7 +115,8 @@
           }
         },
         execute: function (args) {
-          var color = args.color || "black",
+          var ctx = getCanvasContext(element),
+            color = args.color || "black",
             lineWidth = args.lineWidth || 1;
           ctx.beginPath();
           ctx.moveTo(args.x1, args.y1);
@@ -138,7 +153,8 @@
           }
         },
         execute: function (args) {
-          var color = args.color || "black",
+          var ctx = getCanvasContext(element),
+            color = args.color || "black",
             fill = args.fill !== false,
             points = args.points,
             i;
@@ -178,7 +194,8 @@
           }
         },
         execute: function (args) {
-          var color = args.color || "black",
+          var ctx = getCanvasContext(element),
+            color = args.color || "black",
             fontSize = args.fontSize || 16;
           ctx.fillStyle = color;
           ctx.font = fontSize + "px sans-serif";
@@ -190,4 +207,4 @@
   }
 
   window.ChatTools = { createToolList: createToolList };
-}(window));
+}(window, document));

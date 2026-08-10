@@ -52,9 +52,7 @@
     .declareMethod('render', function (options) {
       var gadget = this;
       gadget.options = options;
-      gadget.tool_list = window.ChatTools.createToolList(
-        gadget.element.querySelector("#drawing-canvas")
-      );
+      gadget.tool_list = window.ChatTools.createToolList(gadget.element);
       gadget.remote_tool_definition_list = (options.tool_list || []).map(
         function (tool) {
           return typeof tool === "string" ? JSON.parse(tool) : tool;
@@ -102,25 +100,22 @@
       return RSVP.all(call_list);
     })
     .declareMethod('getMessageListFromDom', function () {
-      var gadget = this;
-      return gadget.getElement()
-        .push(function (element) {
-          var li_list = element.querySelectorAll(
-              "#post_list li.post-question, #post_list li.post-answer"
-            ),
-            message_list = [],
-            i, li, content_element;
-          for (i = 0; i < li_list.length; i += 1) {
-            li = li_list[i];
-            content_element = li.querySelector('[data-gadget-html-viewer-value]');
-            message_list.push({
-              role: li.classList.contains("post-answer") ? "assistant" : "user",
-              content: content_element ?
-                content_element.getAttribute('data-gadget-html-viewer-value') : ""
-            });
-          }
-          return message_list;
+      var gadget = this,
+        li_list = gadget.element.querySelectorAll(
+          "#post_list li.post-question, #post_list li.post-answer"
+        ),
+        message_list = [],
+        i, li, content_element;
+      for (i = 0; i < li_list.length; i += 1) {
+        li = li_list[i];
+        content_element = li.querySelector('[data-gadget-html-viewer-value]');
+        message_list.push({
+          role: li.classList.contains("post-answer") ? "assistant" : "user",
+          content: content_element ?
+            content_element.getAttribute('data-gadget-html-viewer-value') : ""
         });
+      }
+      return message_list;
     })
     .declareMethod('renderCommentList', function () {
       var gadget = this;
@@ -146,34 +141,28 @@
             });
         })
         .push(function (dom_list) {
-          return gadget.getElement()
-            .push(function (element) {
-              var all_dom_list = [], post_list_element, i;
-              for (i = 0; i < dom_list.length; i += 1) {
-                all_dom_list = all_dom_list.concat(dom_list[i]);
-              }
-              post_list_element = element.querySelector("#post_list");
-              domsugar(post_list_element, all_dom_list);
+          var all_dom_list = [], post_list_element, i;
+          for (i = 0; i < dom_list.length; i += 1) {
+            all_dom_list = all_dom_list.concat(dom_list[i]);
+          }
+          post_list_element = gadget.element.querySelector("#post_list");
+          domsugar(post_list_element, all_dom_list);
 
-              // make gadget html viewer for each post
-              return gadget.declarePostHtmlViewerList(
-                post_list_element.querySelectorAll('[data-gadget-html-viewer-value]')
-              );
-            });
+          // make gadget html viewer for each post
+          return gadget.declarePostHtmlViewerList(
+            post_list_element.querySelectorAll('[data-gadget-html-viewer-value]')
+          );
         });
     })
     .declareMethod('appendPost', function (post) {
-      var gadget = this;
-      return gadget.getElement()
-        .push(function (element) {
-          var post_list_element = element.querySelector("#post_list"),
-            dom_list = getPostDomList(formatPost(post));
-          post_list_element.appendChild(dom_list[0]);
-          post_list_element.appendChild(dom_list[1]);
-          return gadget.declarePostHtmlViewerList(
-            dom_list[0].querySelectorAll('[data-gadget-html-viewer-value]')
-          );
-        });
+      var gadget = this,
+        post_list_element = gadget.element.querySelector("#post_list"),
+        dom_list = getPostDomList(formatPost(post));
+      post_list_element.appendChild(dom_list[0]);
+      post_list_element.appendChild(dom_list[1]);
+      return gadget.declarePostHtmlViewerList(
+        dom_list[0].querySelectorAll('[data-gadget-html-viewer-value]')
+      );
     })
     .declareJob('submitPostComment', function () {
       var gadget = this,
@@ -304,16 +293,13 @@
       }
 
       function showToolCallResult(name, content) {
-        return gadget.getElement()
-          .push(function (element) {
-            var post_list_element = element.querySelector("#post_list");
-            post_list_element.appendChild(domsugar("li", { "class": "post-tool" }, [
-              domsugar("strong", ["Tool: " + name]),
-              domsugar("br"),
-              domsugar("div", { text: content })
-            ]));
-            post_list_element.appendChild(domsugar("hr"));
-          });
+        var post_list_element = gadget.element.querySelector("#post_list");
+        post_list_element.appendChild(domsugar("li", { "class": "post-tool" }, [
+          domsugar("strong", ["Tool: " + name]),
+          domsugar("br"),
+          domsugar("div", { text: content })
+        ]));
+        post_list_element.appendChild(domsugar("hr"));
       }
 
       function loop_call(loop_count, message_list, pending_tool_call_list) {
@@ -335,18 +321,12 @@
               name: tool_call.function.name,
               content: client_tool_result.content
             }]);
-          queue_loop
-            .push(function () {
-              return showToolCallResult(tool_call.function.name, client_tool_result.content);
-            })
-            .push(function () {
-              return loop_call(
-                loop_count + 1,
-                next_client_message_list,
-                pending_tool_call_list.slice(1)
-              );
-            });
-          return;
+          showToolCallResult(tool_call.function.name, client_tool_result.content);
+          return loop_call(
+            loop_count + 1,
+            next_client_message_list,
+            pending_tool_call_list.slice(1)
+          );
         }
 
         if (tool_call) {
@@ -382,14 +362,12 @@
                 content: result.content
               }]);
               next_pending_tool_call_list = pending_tool_call_list.slice(1);
-              return showToolCallResult(tool_call.function.name, result.content)
-                .push(function () {
-                  return loop_call(
-                    loop_count + 1,
-                    next_message_list,
-                    next_pending_tool_call_list
-                  );
-                });
+              showToolCallResult(tool_call.function.name, result.content);
+              return loop_call(
+                loop_count + 1,
+                next_message_list,
+                next_pending_tool_call_list
+              );
             }
             if (result.tool_calls && result.tool_calls.length) {
               next_message_list = message_list.concat([{
