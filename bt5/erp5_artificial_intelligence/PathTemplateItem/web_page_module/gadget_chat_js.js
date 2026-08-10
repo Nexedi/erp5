@@ -45,13 +45,21 @@
     ]);
   }
 
+  function getToolCallSummaryText(count) {
+    return "Tool calls (" + count + ")";
+  }
+
   function getToolCallLiList(tool_message_list) {
     if (!tool_message_list.length) {
       return [];
     }
     return [
-      domsugar("li", { "class": "post-tool" }, tool_message_list.map(getToolCallDiv)),
-      domsugar("hr")
+      domsugar("li", { "class": "post-tool" }, [
+        domsugar("details", {}, [
+          domsugar("summary", [getToolCallSummaryText(tool_message_list.length)])
+        ].concat(tool_message_list.map(getToolCallDiv)))
+      ])
+      //domsugar("hr")
     ];
   }
 
@@ -298,6 +306,9 @@
       var gadget = this,
         queue_loop = new RSVP.Queue(),
         tool_li = null,
+        tool_details = null,
+        tool_summary = null,
+        tool_count = 0,
         tool_definition_list = gadget.tool_list.map(function (tool) {
           return { type: "function", "function": tool.definition };
         }).concat(gadget.remote_tool_definition_list);
@@ -341,11 +352,15 @@
       function showToolCallResult(name, content) {
         var post_list_element = gadget.element.querySelector("#post_list");
         if (!tool_li) {
-          tool_li = domsugar("li", { "class": "post-tool" });
+          tool_summary = domsugar("summary", [getToolCallSummaryText(0)]);
+          tool_details = domsugar("details", {}, [tool_summary]);
+          tool_li = domsugar("li", { "class": "post-tool" }, [tool_details]);
           post_list_element.appendChild(tool_li);
           post_list_element.appendChild(domsugar("hr"));
         }
-        tool_li.appendChild(getToolCallDiv({ name: name, content: content }));
+        tool_count += 1;
+        tool_summary.textContent = getToolCallSummaryText(tool_count);
+        tool_details.appendChild(getToolCallDiv({ name: name, content: content }));
       }
 
       function loop_call(loop_count, message_list, pending_tool_call_list) {

@@ -74,3 +74,10 @@ hr#post_item {
   color: #4ec9b0;
   font-weight: 600;
 }
+#post_list li.post-tool summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+#post_list li.post-tool details[open] summary {
+  margin-bottom: 0.35em;
+}
