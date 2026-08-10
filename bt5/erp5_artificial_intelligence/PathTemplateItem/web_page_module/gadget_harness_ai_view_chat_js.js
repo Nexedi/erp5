@@ -89,12 +89,15 @@
                 'process_url': gadget.hateoas_url + gadget.options.jio_key + "/ArtificialTask_processingTask"
               },
               'editor_options' : {
-                value: "",
-                key: "comment",
-                portal_type: "Artificial Task Line",
-                editable: true,
-                editor: preferred_editor,
-                maximize: true
+                editor: 'gadget_editor.html',
+                options: {
+                  value: "",
+                  key: "comment",
+                  portal_type: "Artificial Task Line",
+                  editable: true,
+                  editor: preferred_editor,
+                  maximize: true
+                }
               }
             })]);
 

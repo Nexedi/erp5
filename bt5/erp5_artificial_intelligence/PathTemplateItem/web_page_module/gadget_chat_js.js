@@ -58,7 +58,14 @@
           return typeof tool === "string" ? JSON.parse(tool) : tool;
         }
       );
-      return gadget.changeState(options);
+      return gadget.declareGadget(options.editor_options.editor,  {
+        element: gadget.element.querySelector('.chat-editor'),
+        scope: "editor",
+        sandbox: "public"
+      })
+      .push(function () {
+        return gadget.changeState(options);
+      });
     })
     .allowPublicAcquisition('notifySubmit', function notifySubmit(e) {
       return this.submitPostComment(e);
@@ -121,7 +128,7 @@
       var gadget = this;
       return gadget.getDeclaredGadget("editor")
         .push(function (editor) {
-          return editor.render(gadget.options.editor_options);
+          return editor.render(gadget.options.editor_options.options);
         })
         .push(function () {
           return RSVP.all([
