@@ -1,0 +1,55 @@
+hr#post_item {
+  border-color: #0E81C2;
+}
+
+#comment-title {
+  margin-top: 20px;
+}
+
+#comment {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.comments-header {
+  background-color:#0E81C2;
+  color:white;
+  margin:1em 0;
+  padding:0.5em;
+}
+
+
+.chat-hidden-field {
+  display:none;
+}
+
+#post_list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+}
+#post_list li {
+  display: block;
+  max-width: 70%;
+  margin: 0.25em 0;
+  padding: 0.5em;
+  border-radius: 8px;
+  clear: both;
+  box-sizing: border-box;
+}
+#post_list li.post-answer {
+  float: left;
+  text-align: left;
+  background: #eeeeee;
+}
+#post_list li.post-question {
+  float: right;
+  text-align: right;
+  background: #d7ebff;
+}
+#post_list hr#post_item {
+  clear: both;
+  visibility: hidden;
+  margin: 0;
+}
