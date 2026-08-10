@@ -356,7 +356,7 @@
           tool_details = domsugar("details", {}, [tool_summary]);
           tool_li = domsugar("li", { "class": "post-tool" }, [tool_details]);
           post_list_element.appendChild(tool_li);
-          post_list_element.appendChild(domsugar("hr"));
+          //post_list_element.appendChild(domsugar("hr"));
         }
         tool_count += 1;
         tool_summary.textContent = getToolCallSummaryText(tool_count);
