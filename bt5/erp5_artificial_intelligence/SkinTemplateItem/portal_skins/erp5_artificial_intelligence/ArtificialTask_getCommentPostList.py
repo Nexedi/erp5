@@ -7,8 +7,11 @@ for line in artifical_task.objectValues(
   simulation_state = ('stopped', 'delivered')
  ):
   report_line = line.getFollowUpRelatedValue(portal_type='Artificial Task Report Line')
-  report_text_content_list = json.loads(report_line.getTextContent())
-  report_text_content_list = [x for x in report_text_content_list if x['role'] == 'tool']
+  if report_line:
+    report_text_content_list = json.loads(report_line.getTextContent())
+    report_text_content_list = [x for x in report_text_content_list if x.get('role', '') == 'tool']
+  else:
+    report_text_content_list = []
 
   comment_list.append((dict(
     date=line.getCreationDate().ISO8601(),
