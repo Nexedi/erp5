@@ -1393,6 +1393,13 @@ class TestDocument(TestDocumentMixin):
     # document can be saved in ZODB
     self.tic()
 
+  def test_PDF_temp_object_content_information(self):
+    document = self.portal.newContent(
+      temp_object=True,
+      portal_type='PDF',
+      data=self.makeFileUpload('REF-en-001.pdf').read())
+    self.assertEqual('1', document.getContentInformation()['Pages'])
+
   def test_upload_bad_pdf_file(self):
     """ Test that pypdf2 handle wrong formatted PDF """
     pdf = self.portal.document_module.newContent(
