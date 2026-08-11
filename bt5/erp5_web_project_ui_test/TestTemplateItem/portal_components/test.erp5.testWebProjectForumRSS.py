@@ -144,7 +144,8 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     actions['object_view'] = [{'id': 'view', 'title': 'View'},
                               {'id': 'view_rss', 'title': 'RSS'}]
     result = self.portal.Base_filterProjectActions(actions=actions)
-    self.assertEqual(project_view_action_list, result['object_view'])
+    self.assertEqual([{'id': 'view', 'title': 'Discussion Threads'}],
+                     result['object_view'])
     self.assertEqual(project_view_action_list, result['project_view'])
 
   def test_filter_project_actions_merges_project_view_named_object_view(self):
@@ -154,7 +155,7 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     project_view_action_list = [{'id': 'project_view', 'title': 'View'}]
     object_view_action_list = [{'id': 'view', 'title': 'Standard'},
                                {'id': 'project_view_extra', 'title': 'Extra'}]
-    expected_id_list = ['project_view', 'project_view_extra']
+    expected_id_list = ['project_view_extra', 'view']
     for category_name_list in (('project_view', 'object_view'),
                                ('object_view', 'project_view')):
       actions = OrderedDict()
@@ -168,6 +169,57 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
         sorted(action['id'] for action in result['object_view']),
         'wrong object_view for iteration order %r' % (category_name_list,))
       self.assertEqual(project_view_action_list, result['project_view'])
+
+  def test_filter_project_actions_renames_project_view_to_view(self):
+    """The app default view action must reach the client as 'view': the panel
+    highlights on name === 'view' and Base_redirect hardcodes that form id. The
+    standard ERP5 'view' action must not survive next to it."""
+    actions = {'project_view': [{'id': 'project_view', 'title': 'Threads'}],
+               'object_view': [{'id': 'view', 'title': 'Standard'},
+                               {'id': 'view_rss', 'title': 'RSS'}]}
+    result = self.portal.Base_filterProjectActions(actions=actions)
+    self.assertEqual([{'id': 'view', 'title': 'Threads'}],
+                     result['object_view'])
+
+  def test_filter_project_actions_rename_does_not_mutate_source_action(self):
+    """The rename must work on a copy: the same action dicts are shared with the
+    project_view category, and mutating them would rename it there too."""
+    project_view_action = {'id': 'project_view', 'title': 'Threads'}
+    actions = {'project_view': [project_view_action]}
+    result = self.portal.Base_filterProjectActions(actions=actions)
+    self.assertEqual('view', result['object_view'][0]['id'])
+    self.assertEqual('project_view', project_view_action['id'])
+    self.assertEqual([project_view_action], result['project_view'])
+
+  def test_filter_project_actions_rename_keeps_project_view_editor(self):
+    """Only the exact id project_view is renamed: project_view_editor is
+    resolved by name from _links.view by the project page gadget."""
+    actions = {'project_view': [{'id': 'project_view'},
+                                {'id': 'project_view_editor'}]}
+    result = self.portal.Base_filterProjectActions(actions=actions)
+    self.assertEqual(['view', 'project_view_editor'],
+                     [action['id'] for action in result['object_view']])
+
+  def test_filter_project_actions_rename_deduplicates_object_view(self):
+    """Two project_view actions merged from both categories collapse into one
+    'view'. Base_filterDuplicateActions must not be relied on for this: it only
+    runs when hasDuplicateActions fires and is cached per (portal_type, user)."""
+    actions = OrderedDict()
+    actions['object_view'] = [{'id': 'project_view', 'title': 'From object'},
+                              {'id': 'view'}]
+    actions['project_view'] = [{'id': 'project_view', 'title': 'From project'}]
+    result = self.portal.Base_filterProjectActions(actions=actions)
+    self.assertEqual([{'id': 'view', 'title': 'From object'}],
+                     result['object_view'])
+
+  def test_project_management_default_view_action_reference_is_view(self):
+    """Half of the fix lives in the site configuration: the client sends this
+    value as _view= on every jio_getAttachment(id, 'view'), so it must match the
+    renamed action id or no form is embedded."""
+    self.assertEqual(
+      'view',
+      self.portal.web_site_module.project_management.getLayoutProperty(
+        'configuration_default_view_action_reference'))
 
   def test_filter_project_actions_without_project_view_falls_back_to_view(self):
     """A portal type contributing no project_view action (Person is one) must
