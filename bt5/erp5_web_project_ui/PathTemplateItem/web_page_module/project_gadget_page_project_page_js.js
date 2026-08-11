@@ -271,10 +271,7 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
             modification_dict.jio_key + '&view=Project_viewMilestoneList',
             activity_view = result_list[0] +
             '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
-            modification_dict.jio_key + '&view=Project_viewActivityList',
-            forum_view = result_list[0] +
-            '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
-            modification_dict.forum_jio_key;
+            modification_dict.jio_key + '&view=Project_viewActivityList';
           web_page_info = result_list[2];
           if (web_page_info) {
             editor = result_list[1];
@@ -338,7 +335,7 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
           }
           if (modification_dict.forum_jio_key) {
             url_parameter_list.push(getUrlParameterDict(modification_dict.forum_jio_key,
-                                                        forum_view,
+                                                        'view',
                                                         [["modification_date", "descending"]]));
           }
           return gadget.getUrlForList(url_parameter_list);
