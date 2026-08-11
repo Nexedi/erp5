@@ -248,6 +248,7 @@
                 file_blob = choose_file_html_element.files[0],
                 url = gadget.options.request_options.post_url,
                 comment_text = content.comment,
+                // XXXXXX seems bad to do locally
                 skill_list = window.ChatSkills.matchSkillList(comment_text).concat(
                   window.ChatSkills.matchSkillListFrom(comment_text, gadget.remote_skill_list)
                 ),
