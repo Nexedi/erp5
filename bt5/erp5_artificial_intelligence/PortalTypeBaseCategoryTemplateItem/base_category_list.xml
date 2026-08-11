@@ -1,0 +1,11 @@
+<base_category_list>
+ <portal_type id="Artificial Task">
+  <item>connector</item>
+ </portal_type>
+ <portal_type id="Artificial Task Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Artificial Task Report Module">
+  <item>business_application</item>
+ </portal_type>
+</base_category_list>
