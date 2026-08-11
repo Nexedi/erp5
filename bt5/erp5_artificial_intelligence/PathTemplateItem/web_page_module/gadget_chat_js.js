@@ -103,7 +103,6 @@
       .push(function (translation_list) {
         var element = gadget.element.querySelector('input[type="submit"]');
         gadget.element.querySelector("[data-i18n='Comments:']").innerText = translation_list[0];
-        gadget.element.querySelector("[data-i18n='Post Comment']").innerText = "\u00A0" + translation_list[1];
         gadget.element.querySelector("[data-i18n='[value]Post Comment']").value = translation_list[1];
         element.removeAttribute('disabled');
         element.classList.remove('ui-disabled');
