@@ -39,7 +39,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts86452773.4923844</string> </value>
+            <value> <string>ts86455401.051776</string> </value>
         </item>
         <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
@@ -65,7 +65,7 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>fa3f25f3175d13f3efc62377b1ee908a</string> </value>
+            <value> <string>110f28ee61eafe0f33c2535fa26ff530</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -77,7 +77,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>993</int> </value>
+            <value> <int>2135</int> </value>
         </item>
       </dictionary>
     </pickle>

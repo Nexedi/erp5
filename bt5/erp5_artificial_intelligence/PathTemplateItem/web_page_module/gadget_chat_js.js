@@ -10,17 +10,6 @@
     return post;
   }
 
-  function escapeHtml(text) {
-    return String(text)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;");
-  }
-
-  function preformat(text) {
-    return "<pre>" + escapeHtml(text) + "</pre>";
-  }
-
   function getPostDomList(post, translationAttachment) {
     var dom_list = [
       domsugar("strong", [post.user]),
@@ -32,7 +21,7 @@
       ),
       domsugar("br"),
       domsugar("div", {
-        'data-gadget-html-viewer-value': preformat(post.text)
+        'data-gadget-html-viewer-value': post.text
       })
     ];
     if (post.attachment_link) {

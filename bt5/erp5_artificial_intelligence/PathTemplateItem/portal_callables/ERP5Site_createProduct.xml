@@ -63,7 +63,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>reference=None, title=None, **kw</string> </value>
+            <value> <string>reference=None, title=None, dry_run=True, **kw</string> </value>
         </item>
         <item>
             <key> <string>categories</string> </key>
@@ -90,6 +90,10 @@
         "reference": {\n
           "type": "string",\n
           "description": "Optional unique reference/code identifying the product. Used to look up an existing one if provided."\n
+        },\n
+        "dry_run": {\n
+          "type": "boolean",\n
+          "description": "If true (default), do not create anything if it doesn\'t exist yet: just return a preview/summary. Set to false to actually create the product."\n
         }\n
       },\n
       "required": [\n

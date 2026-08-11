@@ -10,10 +10,20 @@ else:
 
 if product is not None:
   return json.dumps({
+    'dry_run': dry_run,
     'created': False,
     'relative_url': product.getRelativeUrl(),
     'title': product.getTitle(),
     'reference': product.getReference(),
+  })
+
+if dry_run:
+  return json.dumps({
+    'dry_run': True,
+    'created': False,
+    'title': title,
+    'reference': reference,
+    'message': 'Preview only, nothing was created. Call again with dry_run=false to actually create the product.',
   })
 
 product = portal.product_module.newContent(
@@ -24,6 +34,7 @@ product = portal.product_module.newContent(
 product.validate()
 
 return json.dumps({
+  'dry_run': False,
   'created': True,
   'relative_url': product.getRelativeUrl(),
   'title': product.getTitle(),

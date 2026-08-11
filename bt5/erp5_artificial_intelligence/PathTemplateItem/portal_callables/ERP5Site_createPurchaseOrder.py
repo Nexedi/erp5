@@ -1,9 +1,24 @@
 import json
 portal = context.getPortalObject()
 
-supplier = portal.restrictedTraverse(supplier_id)
+try:
+  supplier = portal.restrictedTraverse(supplier_id)
+except (KeyError, AttributeError):
+  supplier = None
+
 currency_value = portal.portal_catalog.getResultValue(
   portal_type='Currency', reference=currency)
+
+if supplier is None or currency_value is None:
+  return json.dumps({
+    'dry_run': dry_run,
+    'created': False,
+    'error': (
+      'Could not resolve supplier_id=%r or currency=%r: they do not exist '
+      'yet. This is expected if this is still a preview; do not call any '
+      'tool with dry_run=false because of this error.' % (supplier_id, currency)
+    ),
+  })
 
 if dry_run:
   return json.dumps({
