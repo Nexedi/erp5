@@ -1,0 +1,7 @@
+{
+  "name": "create_purchase_order",
+  "triggers": [
+    "purchase order"
+  ],
+  "instructions": "Skill: create_purchase_order\nUse this whenever the user asks to create a purchase order (e.g. \"create a purchase order for <organisation>, for <product>, quantity <n>\").\n1. Call create_organisation with the supplier's name as title to get or create it; use the returned relative_url as supplier_id.\n2. Call create_currency with the requested currency reference (default to \"EUR\" if none is specified) to get or create it.\n3. For each product mentioned, call create_product with its name as title to get or create it; if quantity or price is missing, ask the user before proceeding.\n4. Call create_purchase_order with supplier_id, currency, and one line per product (description, quantity, price if known). Leave dry_run at its default (true) first and show the user the resulting preview; only call it again with dry_run=false once the user confirms.\n"
+}

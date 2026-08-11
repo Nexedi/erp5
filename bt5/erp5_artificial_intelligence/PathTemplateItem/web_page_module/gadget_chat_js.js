@@ -84,6 +84,11 @@
           return typeof tool === "string" ? JSON.parse(tool) : tool;
         }
       );
+      gadget.remote_skill_list = (options.skill_list || []).map(
+        function (skill) {
+          return typeof skill === "string" ? JSON.parse(skill) : skill;
+        }
+      );
       return gadget.declareGadget(options.editor_options.editor,  {
         element: gadget.element.querySelector('.chat-editor'),
         scope: "editor",
@@ -244,7 +249,9 @@
                 file_blob = choose_file_html_element.files[0],
                 url = gadget.options.request_options.post_url,
                 comment_text = content.comment,
-                skill_list = window.ChatSkills.matchSkillList(comment_text),
+                skill_list = window.ChatSkills.matchSkillList(comment_text).concat(
+                  window.ChatSkills.matchSkillListFrom(comment_text, gadget.remote_skill_list)
+                ),
                 form_data_json = {},
                 post;
               skill_list.forEach(function (skill) {

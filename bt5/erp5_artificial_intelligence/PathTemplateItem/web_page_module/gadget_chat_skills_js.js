@@ -27,17 +27,22 @@
     }
   ];
 
-  function matchSkillList(text) {
+  function matchSkillListFrom(text, skill_list) {
     var lower = String(text).toLowerCase();
-    return SKILL_LIST.filter(function (skill) {
+    return skill_list.filter(function (skill) {
       return skill.triggers.some(function (trigger) {
         return lower.indexOf(trigger.toLowerCase()) !== -1;
       });
     });
   }
 
+  function matchSkillList(text) {
+    return matchSkillListFrom(text, SKILL_LIST);
+  }
+
   window.ChatSkills = {
     SKILL_LIST: SKILL_LIST,
-    matchSkillList: matchSkillList
+    matchSkillList: matchSkillList,
+    matchSkillListFrom: matchSkillListFrom
   };
 }(window));

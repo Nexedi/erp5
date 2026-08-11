@@ -78,10 +78,16 @@
           return RSVP.all([
             erp5_form.render(form_options),
             chat.render({
-              'tool_list': form_options.erp5_document._embedded._view.your_tool_list.default.map(
-                function (tool_description) {
-                  return JSON.parse(tool_description);
-                }),
+              'tool_list': rendered_form.your_tool_list ?
+                rendered_form.your_tool_list.default.map(
+                  function (tool_description) {
+                    return JSON.parse(tool_description);
+                  }) : [],
+              'skill_list': rendered_form.your_skill_list ?
+                rendered_form.your_skill_list.default.map(
+                  function (skill_description) {
+                    return JSON.parse(skill_description);
+                  }) : [],
               'request_options': {
                 'document_id': gadget.options.jio_key,
                 'post_url': gadget.hateoas_url + gadget.options.jio_key + "/ArtificialTask_createCommentLine",
