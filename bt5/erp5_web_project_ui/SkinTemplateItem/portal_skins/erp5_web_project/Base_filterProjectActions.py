@@ -19,7 +19,20 @@ for action_category_name, action_list in actions.items():
     filtered_actions[action_category_name] = [action for action in action_list if action['id'] not in ['jump_to_portal_type']]
   else:
     filtered_actions[action_category_name] = action_list
-# A portal type contributing no project_view action keeps the standard view action
-if not filtered_actions.get('object_view') and standard_view_action_list:
+if filtered_actions.get('object_view'):
+  renamed_action_list = []
+  renamed_action_id_set = set()
+  for action in filtered_actions['object_view']:
+    if action['id'] == 'project_view':
+      # Rename the webapp default view action to 'view', to be compatible with the
+      # Base_redirect calls hardcoding the 'view' action and with the panel highlight
+      action = action.copy()
+      action['id'] = 'view'
+    if action['id'] not in renamed_action_id_set:
+      renamed_action_id_set.add(action['id'])
+      renamed_action_list.append(action)
+  filtered_actions['object_view'] = renamed_action_list
+elif standard_view_action_list:
+  # A portal type contributing no project_view action keeps the standard view action
   filtered_actions['object_view'] = standard_view_action_list
 return filtered_actions
