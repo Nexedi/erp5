@@ -31,7 +31,7 @@ hr#post_item {
 }
 #post_list li {
   display: block;
-  max-width: 70%;
+  /* max-width: 70%; */
   margin: 0.25em 0;
   padding: 0.5em;
   border-radius: 8px;
@@ -39,14 +39,14 @@ hr#post_item {
   box-sizing: border-box;
 }
 #post_list li.post-answer {
-  float: left;
+  /* float: left; */
   text-align: left;
-  background: #eeeeee;
+  /* background: #eeeeee; */
 }
 #post_list li.post-question {
   float: right;
   text-align: right;
-  background: #d7ebff;
+  /* background: #d7ebff; */
 }
 #post_list hr#post_item {
   clear: both;

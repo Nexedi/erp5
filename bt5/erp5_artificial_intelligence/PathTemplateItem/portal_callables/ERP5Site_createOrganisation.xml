@@ -78,7 +78,7 @@
             <value> <string>{\n
   "type": "function",\n
   "function": {\n
-    "name": "create_organisation",\n
+    "name": "ERP5Site_createOrganisation",\n
     "description": "Get or create an Organisation (e.g. a supplier or client). Returns the existing one if an Organisation with the same reference (or title, if no reference given) already exists; otherwise creates and validates a new one.",\n
     "parameters": {\n
       "type": "object",\n

@@ -10,6 +10,17 @@
     return post;
   }
 
+  function escapeHtml(text) {
+    return String(text)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+  }
+
+  function preformat(text) {
+    return "<pre>" + escapeHtml(text) + "</pre>";
+  }
+
   function getPostDomList(post, translationAttachment) {
     var dom_list = [
       domsugar("strong", [post.user]),
@@ -21,7 +32,7 @@
       ),
       domsugar("br"),
       domsugar("div", {
-        'data-gadget-html-viewer-value': post.text
+        'data-gadget-html-viewer-value': preformat(post.text)
       })
     ];
     if (post.attachment_link) {
@@ -253,9 +264,6 @@
                 ),
                 form_data_json = {},
                 post;
-              skill_list.forEach(function (skill) {
-                comment_text = skill.instructions + "\n\n" + comment_text;
-              });
               form_data_json.data = comment_text || "";
               form_data_json.file = "";
               choose_file_html_element.value = "";
@@ -296,7 +304,7 @@
                     gadget.changeState({
                       render_editor: true
                     }),
-                    gadget.processTask(20)
+                    gadget.processTask(20, skill_list)
                   ]);
                 });
             }, function (e) {
@@ -308,7 +316,7 @@
           return queue;
         });
     })
-    .declareJob('processTask', function (max_loop_count) {
+    .declareJob('processTask', function (max_loop_count, skill_list) {
       var gadget = this,
         queue_loop = new RSVP.Queue(),
         tool_li = null,
@@ -473,7 +481,10 @@
           return gadget.getMessageList();
         })
         .push(function (message_list) {
-          return loop_call(0, message_list);
+          var skill_message_list = (skill_list || []).map(function (skill) {
+            return { role: "system", content: skill.instructions };
+          });
+          return loop_call(0, skill_message_list.concat(message_list));
         });
       return queue_loop;
     })

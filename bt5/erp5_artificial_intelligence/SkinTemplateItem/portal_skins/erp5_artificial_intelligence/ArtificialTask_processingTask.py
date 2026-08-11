@@ -20,6 +20,8 @@ if tool_call:
     arguments = json.loads(raw_arguments) or {}
   except ValueError:
     arguments = {}
+  context.log('call ********* %s' % function)
+  context.log('argument ******* %s' % arguments)
   result = getattr(portal.portal_callables, function)(**arguments)
 
   return json.dumps({
