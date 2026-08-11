@@ -169,10 +169,36 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
         'wrong object_view for iteration order %r' % (category_name_list,))
       self.assertEqual(project_view_action_list, result['project_view'])
 
-  def test_filter_project_actions_without_project_view_keeps_only_named(self):
-    """With no project_view category, object_view keeps only actions whose id
-    contains 'project_view' (none here, so it is emptied, not left populated)."""
-    actions = {'object_view': [{'id': 'view'}, {'id': 'view_rss'}]}
+  def test_filter_project_actions_without_project_view_falls_back_to_view(self):
+    """A portal type contributing no project_view action (Person is one) must
+    keep the standard 'view' action: an empty object_view leaves _links.view
+    unset and the form gadget crashes on ensureArray(_links.view)[0].href."""
+    standard_view_action = {'id': 'view'}
+    actions = {'object_view': [standard_view_action, {'id': 'view_rss'}]}
+    result = self.portal.Base_filterProjectActions(actions=actions)
+    self.assertEqual([standard_view_action], result['object_view'])
+
+  def test_filter_project_actions_fallback_ignores_empty_project_view(self):
+    """The fallback keys off the merged object_view being empty, not off the
+    project_view category being absent, so an empty project_view still falls
+    back - and it is order-insensitive like the merge itself."""
+    standard_view_action = {'id': 'view'}
+    for category_name_list in (('project_view', 'object_view'),
+                               ('object_view', 'project_view')):
+      actions = OrderedDict()
+      for category_name in category_name_list:
+        actions[category_name] = ([]
+                                  if category_name == 'project_view'
+                                  else [standard_view_action])
+      result = self.portal.Base_filterProjectActions(actions=actions)
+      self.assertEqual(
+        [standard_view_action], result['object_view'],
+        'wrong object_view for iteration order %r' % (category_name_list,))
+
+  def test_filter_project_actions_fallback_needs_a_standard_view_action(self):
+    """The fallback only restores the action whose id is exactly 'view'; with
+    no such action object_view stays empty, as before this fix."""
+    actions = {'object_view': [{'id': 'view_rss'}, {'id': 'view_history'}]}
     result = self.portal.Base_filterProjectActions(actions=actions)
     self.assertEqual([], result['object_view'])
 
