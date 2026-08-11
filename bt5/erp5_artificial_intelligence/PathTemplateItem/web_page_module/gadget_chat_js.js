@@ -183,7 +183,7 @@
             sandbox: "public"
           })
             .push(function (g) {
-              return g.render({ value: g.element.getAttribute("data-gadget-html-viewer-value") });
+              return g.render({ value: "<pre>" + g.element.getAttribute("data-gadget-html-viewer-value") + "</pre>"});
             })
         );
       }
