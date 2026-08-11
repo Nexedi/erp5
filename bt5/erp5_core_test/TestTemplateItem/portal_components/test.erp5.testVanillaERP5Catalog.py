@@ -49,13 +49,13 @@ class TestVanillaERP5Catalog(ERP5TypeTestCase, LogInterceptor):
   username = 'seb'
   new_erp5_sql_connection = 'erp5_sql_connection2'
   new_erp5_deferred_sql_connection = 'erp5_sql_deferred_connection2'
-  original_catalog_id = 'erp5_mysql_innodb'
   new_catalog_id = 'erp5_mysql_innodb2'
 
   def afterSetUp(self):
     portal = self.portal
     portal.acl_users._doAddUser(self.username, '', ['Manager'], [])
     self.loginByUserName(self.username)
+    self.original_catalog_id = portal.portal_catalog.getSQLCatalog().getId()
     self.tic()
 
   def beforeTearDown(self):
@@ -142,7 +142,10 @@ class TestVanillaERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     module = portal.organisation_module
     organisation = module.newContent(portal_type='Organisation', title="GreatTitle2")
     self.tic()
-    addSQLConnection = portal.manage_addProduct['ZMySQLDA'].manage_addZMySQLConnection
+    if  self.portal.isMySQLCatalogStorage():
+      addSQLConnection = portal.manage_addProduct['ZSQLDA'].manage_addZMySQLConnection
+    else:
+      addSQLConnection = portal.manage_addProduct['ZSQLDA'].manage_addZSQLiteConnection
     # Create new connectors
     addSQLConnection(self.new_erp5_sql_connection, '', new_connection_string)
     portal[self.new_erp5_sql_connection].manage_open_connection()
@@ -159,6 +162,14 @@ class TestVanillaERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       )[0]['new_id'],
       new_id=self.new_catalog_id,
     )
+    # The new default catalog must own a separate shared catalog: hot reindexing
+    # re-points the destination shared catalog's connections in place and refuses
+    # to run when source and destination share the same one.
+    source_shared_catalog = portal_catalog[self.original_catalog_id]._getSharedCatalog()
+    new_shared_catalog_id = portal_catalog.manage_pasteObjects(
+      portal_catalog.manage_copyObjects(ids=(source_shared_catalog.getId(),)),
+    )[0]['new_id']
+    portal_catalog[self.new_catalog_id].shared_erp5_catalog_id = new_shared_catalog_id
     source_sql_connection_id_list = [original_connection_id, self.new_erp5_deferred_sql_connection]
     destination_sql_connection_id_list = [self.new_erp5_sql_connection, new_deferred_connection_id]
     portal_catalog.manage_hotReindexAll(
