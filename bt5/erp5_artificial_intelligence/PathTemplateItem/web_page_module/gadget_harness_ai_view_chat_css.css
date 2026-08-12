@@ -81,3 +81,11 @@ hr#post_item {
 #post_list li.post-tool details[open] summary {
   margin-bottom: 0.35em;
 }
+
+
+#post_list li pre {
+  background-color: rgba(230, 230, 230, 0.65);
+  display: block;
+  white-space: pre-wrap;
+  font-family: "Courier New", Courier, monospace;
+}

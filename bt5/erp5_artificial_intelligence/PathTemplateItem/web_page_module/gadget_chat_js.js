@@ -36,9 +36,9 @@
         [post.date_relative]
       ),
       domsugar("br"),
-      domsugar("div", {
-        'data-gadget-html-viewer-value': post.text
-      })
+      domsugar("div", [
+        domsugar("pre", [post.text])
+      ])
     ];
     if (post.attachment_link) {
       dom_list.push(domsugar("br"));
@@ -182,30 +182,8 @@
             }
             post_list_element = gadget.element.querySelector("#post_list");
             domsugar(post_list_element, all_dom_list);
-            return gadget.declarePostHtmlViewerList(
-              post_list_element.querySelectorAll('[data-gadget-html-viewer-value]')
-            );
          });
        }
-    })
-    .declareMethod('declarePostHtmlViewerList', function (element_list) {
-      var gadget = this,
-        call_list = [], i;
-      for (i = 0; i < element_list.length; i += 1) {
-        call_list.push(
-          gadget.declareGadget("gadget_html_viewer.html", {
-            element: element_list[i],
-            scope: "html_viewer",
-            sandbox: "public"
-          })
-            .push(function (g) {
-              // here we have two value copy
-              // one in data-gadget-html-viewer-value attribute, one in html
-              return g.render({ value: "<pre>" + g.element.getAttribute("data-gadget-html-viewer-value") + "</pre>"});
-            })
-        );
-      }
-      return RSVP.all(call_list);
     })
     .declareMethod('getMessageList', function () {
       var gadget = this,
@@ -216,11 +194,10 @@
         i, li, content_element;
       for (i = 0; i < li_list.length; i += 1) {
         li = li_list[i];
-        content_element = li.querySelector('[data-gadget-html-viewer-value]');
+        content_element = li.querySelector('pre');
         message_list.push({
           role: li.classList.contains("post-answer") ? "assistant" : "user",
-          content: content_element ?
-            content_element.getAttribute('data-gadget-html-viewer-value') : ""
+          content: content_element ? content_element.textContent : ""
         });
       }
       return message_list;
@@ -231,9 +208,6 @@
         dom_list = getPostDomList(formatPost(post));
       post_list_element.appendChild(dom_list[0]);
       post_list_element.appendChild(dom_list[1]);
-      return gadget.declarePostHtmlViewerList(
-        dom_list[0].querySelectorAll('[data-gadget-html-viewer-value]')
-      );
     })
     .declareMethod('compactMessageList', function (message_list) {
       var gadget = this,
@@ -437,15 +411,20 @@
 
       function createStreamingPostElement() {
         var post_list_element = gadget.element.querySelector("#post_list"),
-          content_div = domsugar("div", [""]),
-          li = domsugar("li", { "class": "post-answer post-streaming" }, [content_div]);
+          dom_list = getPostDomList(formatPost({
+            date: new Date().toISOString(),
+            text: "",
+            response: true
+          })),
+          li = dom_list[0];
+        li.classList.add("post-streaming");
         post_list_element.appendChild(li);
-        return { li: li, content_div: content_div };
+        post_list_element.appendChild(dom_list[1]);
+        return { li: li, content_pre: li.querySelector("pre") };
       }
 
-      function streamLlmCall(stream_message_list, stream_tool_definition_list) {
+      function streamLlmCall(stream_message_list, stream_tool_definition_list, streaming_element) {
         var form_data = new FormData(),
-          streaming_element = null,
           decoder = new TextDecoder("utf-8"),
           buffer = "";
         form_data.append("message_list", JSON.stringify(stream_message_list));
@@ -454,11 +433,7 @@
         function handleLine(line) {
           var chunk = JSON.parse(line);
           if (chunk.type === "delta") {
-            if (!streaming_element) {
-              streaming_element = createStreamingPostElement();
-            }
-            console.log(chunk.content)
-            streaming_element.content_div.textContent += chunk.content;
+            streaming_element.content_pre.textContent += chunk.content;
             return null;
           }
           return chunk;
@@ -505,16 +480,8 @@
             }
             return readNext(response.body.getReader());
           })
-          .then(function (final_chunk) {
-            if (streaming_element) {
-              streaming_element.li.remove();
-            }
-            return final_chunk;
-          })
           .catch(function (error) {
-            if (streaming_element) {
-              streaming_element.li.remove();
-            }
+            streaming_element.li.remove();
             throw error;
           });
       }
@@ -524,7 +491,8 @@
             pending_tool_call_list && pending_tool_call_list.length
           ),
           tool_call = has_tool_call ? pending_tool_call_list[0] : null,
-          client_tool = tool_call ? findClientTool(tool_call.function.name) : null;
+          client_tool = tool_call ? findClientTool(tool_call.function.name) : null,
+          streaming_element;
         if (loop_count >= max_loop_count) {
           throw new Error("processTask: too many iterations");
         }
@@ -587,7 +555,8 @@
           })
           .push(function (compacted_message_list) {
             message_list = compacted_message_list;
-            return streamLlmCall(message_list, tool_definition_list);
+            streaming_element = createStreamingPostElement();
+            return streamLlmCall(message_list, tool_definition_list, streaming_element);
           })
           .push(function (stream_result) {
             return gadget.jio_putAttachment(
@@ -605,6 +574,7 @@
           .push(function (text_evt) {
             var result = JSON.parse(text_evt.target.result);
             if (result.tool_calls && result.tool_calls.length) {
+              streaming_element.li.remove();
               return loop_call(
                 loop_count + 1,
                 message_list.concat([{
@@ -616,10 +586,8 @@
               );
             }
 
+            streaming_element.li.classList.remove("post-streaming");
             return gadget.notifySubmitted({message: 'end', status: "success"})
-              .push(function () {
-                return gadget.appendPost(result.post);
-              })
               .push(function () {
                 return gadget.changeState({
                   allow_submit: true
