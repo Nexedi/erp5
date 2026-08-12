@@ -1,7 +1,10 @@
-/*global window, rJS, RSVP, calculatePageTitle, FormData, URI, jIO, domsugar */
+/*global window, rJS, RSVP, FormData, URI, jIO, domsugar */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, calculatePageTitle) {
+(function (window, rJS, RSVP) {
   "use strict";
+
+  var COMPACT_THRESHOLD = 50,
+    KEEP_RECENT = 20;
 
   function formatPost(post) {
     var date = new Date(post.date);
@@ -219,6 +222,38 @@
         dom_list[0].querySelectorAll('[data-gadget-html-viewer-value]')
       );
     })
+    .declareMethod('compactMessageList', function (message_list) {
+      var gadget = this,
+        old_message_list,
+        recent_message_list;
+      if (message_list.length < COMPACT_THRESHOLD) {
+        return message_list;
+      }
+      old_message_list = message_list.slice(0, -KEEP_RECENT);
+      recent_message_list = message_list.slice(-KEEP_RECENT);
+      return gadget.jio_putAttachment(
+        gadget.options.request_options.document_id,
+        gadget.options.request_options.process_url,
+        { compact_message_list: JSON.stringify(old_message_list) }
+      )
+        .push(function (evt) {
+          return jIO.util.readBlobAsText(evt.target.response);
+        })
+        .push(function (text_evt) {
+          var result = JSON.parse(text_evt.target.result);
+          if (!result.content) {
+            throw new Error("compactMessageList: empty summary");
+          }
+          // is it ok to change role
+          return [{
+            role: "user",
+            content: "[context summary]\n" + result.content
+          }].concat(recent_message_list);
+        })
+        .push(undefined, function () {
+          return message_list;
+        });
+    })
     .declareJob('submitPostComment', function () {
       var gadget = this,
         submitButton = null,
@@ -406,20 +441,31 @@
           request_json = {
             tool_call: JSON.stringify(tool_call)
           };
-        } else {
-          request_json = {
-            message_list: JSON.stringify(message_list),
-            tool_definition_list: JSON.stringify(tool_definition_list)
-          };
-        }
-        queue_loop
-          .push(function () {
+          queue_loop.push(function () {
             return gadget.jio_putAttachment(
               gadget.options.request_options.document_id,
               gadget.options.request_options.process_url,
               request_json
             );
-          })
+          });
+        } else {
+          queue_loop
+            .push(function () {
+              return gadget.compactMessageList(message_list);
+            })
+            .push(function (compacted_message_list) {
+              message_list = compacted_message_list;
+              return gadget.jio_putAttachment(
+                gadget.options.request_options.document_id,
+                gadget.options.request_options.process_url,
+                {
+                  message_list: JSON.stringify(message_list),
+                  tool_definition_list: JSON.stringify(tool_definition_list)
+                }
+              );
+            });
+        }
+        queue_loop
           .push(function (evt) {
             return jIO.util.readBlobAsText(evt.target.response);
           })
@@ -483,4 +529,4 @@
     .onEvent('submit', function () {
       return this.submitPostComment();
     });
-}(window, rJS, RSVP, calculatePageTitle));
+}(window, rJS, RSVP));

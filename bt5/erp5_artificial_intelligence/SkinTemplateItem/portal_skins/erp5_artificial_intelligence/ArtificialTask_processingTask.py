@@ -13,6 +13,9 @@ if message_list and isinstance(message_list, str):
   message_list = json.loads(message_list)
 message_list = message_list or []
 
+if compact_message_list and isinstance(compact_message_list, str):
+  compact_message_list = json.loads(compact_message_list)
+
 if tool_call:
   function = tool_call["function"]["name"]
   raw_arguments = tool_call["function"].get("arguments") or "{}"
@@ -26,6 +29,35 @@ if tool_call:
 
   return json.dumps({
     "content": result if isinstance(result, str) else json.dumps(result),
+  })
+
+elif compact_message_list:
+
+  conn = artifical_task.getConnectorValue()
+  model = artifical_task.getModel()
+
+  conversation_text = "\n".join([
+    "%s: %s" % (
+      m.get("role"),
+      m.get("content") if isinstance(m.get("content"), str) else json.dumps(m.get("content"))
+    )
+    for m in compact_message_list
+  ])
+
+  summary_response = conn.getResponseWithUsage(
+    messages=[
+      {
+        "role": "system",
+        "content": "Summarize the following conversation into a concise context "
+                   "summary. Preserve key decisions, work already done, and open tasks.",
+      },
+      {"role": "user", "content": conversation_text},
+    ],
+    model=model,
+    tools=[])
+
+  return json.dumps({
+    "content": summary_response["content"],
   })
 
 else:
