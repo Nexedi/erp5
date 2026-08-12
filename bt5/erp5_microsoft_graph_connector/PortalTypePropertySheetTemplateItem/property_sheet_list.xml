@@ -1,0 +1,6 @@
+<property_sheet_list>
+ <portal_type id="Graph Connector">
+  <item>GraphConnector</item>
+  <item>Reference</item>
+ </portal_type>
+</property_sheet_list>
