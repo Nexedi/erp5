@@ -4,7 +4,20 @@
   "use strict";
 
   var COMPACT_THRESHOLD = 50,
-    KEEP_RECENT = 20;
+    KEEP_RECENT = 20,
+    MAX_TOOL_OUTPUT_LINES = 200;
+
+  function truncateToolOutput(content) {
+    var text = typeof content === "string" ? content : JSON.stringify(content),
+      lines = text.split("\n"),
+      kept;
+    if (lines.length <= MAX_TOOL_OUTPUT_LINES) {
+      return text;
+    }
+    kept = lines.slice(-MAX_TOOL_OUTPUT_LINES).join("\n");
+    return "[output truncated: showing last " + MAX_TOOL_OUTPUT_LINES + " of " +
+      lines.length + " lines - full output is visible in the tool call panel]\n" + kept;
+  }
 
   function formatPost(post) {
     var date = new Date(post.date);
@@ -224,13 +237,32 @@
     })
     .declareMethod('compactMessageList', function (message_list) {
       var gadget = this,
+        leading_system_count = 0,
+        cut_index,
+        leading_system_message_list,
         old_message_list,
         recent_message_list;
       if (message_list.length < COMPACT_THRESHOLD) {
         return message_list;
       }
-      old_message_list = message_list.slice(0, -KEEP_RECENT);
-      recent_message_list = message_list.slice(-KEEP_RECENT);
+      while (leading_system_count < message_list.length &&
+          message_list[leading_system_count].role === "system") {
+        leading_system_count += 1;
+      }
+
+      cut_index = Math.max(message_list.length - KEEP_RECENT, leading_system_count);
+      while (cut_index > leading_system_count &&
+          message_list[cut_index].role === "tool") {
+        cut_index -= 1;
+      }
+      leading_system_message_list = message_list.slice(0, leading_system_count);
+      old_message_list = message_list.slice(leading_system_count, cut_index);
+      recent_message_list = message_list.slice(cut_index);
+
+      if (!old_message_list.length) {
+        return message_list;
+      }
+
       return gadget.jio_putAttachment(
         gadget.options.request_options.document_id,
         gadget.options.request_options.process_url,
@@ -244,11 +276,10 @@
           if (!result.content) {
             throw new Error("compactMessageList: empty summary");
           }
-          // is it ok to change role
-          return [{
+          return leading_system_message_list.concat([{
             role: "user",
             content: "[context summary]\n" + result.content
-          }].concat(recent_message_list);
+          }], recent_message_list);
         })
         .push(undefined, function () {
           return message_list;
@@ -425,7 +456,7 @@
                role: "tool",
                tool_call_id: tool_call.id,
                name: tool_call.function.name,
-               content: client_tool_result.content
+               content: truncateToolOutput(client_tool_result.content)
              }]);
             showToolCallResult(tool_call.function.name, client_tool_result.content);
             return loop_call(
@@ -478,7 +509,7 @@
                 role: "tool",
                 tool_call_id: tool_call.id,
                 name: tool_call.function.name,
-                content: result.content
+                content: truncateToolOutput(result.content)
               }]);
               next_pending_tool_call_list = pending_tool_call_list.slice(1);
               showToolCallResult(tool_call.function.name, result.content);
