@@ -1,4 +1,4 @@
-/*global window, rJS, RSVP, FormData, URI, jIO, domsugar */
+/*global window, rJS, RSVP, FormData, URI, jIO, domsugar, fetch, TextDecoder */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 (function (window, rJS, RSVP) {
   "use strict";
@@ -435,13 +435,96 @@
         tool_details.appendChild(getToolCallDiv({ name: name, content: content }));
       }
 
+      function createStreamingPostElement() {
+        var post_list_element = gadget.element.querySelector("#post_list"),
+          content_div = domsugar("div", [""]),
+          li = domsugar("li", { "class": "post-answer post-streaming" }, [content_div]);
+        post_list_element.appendChild(li);
+        return { li: li, content_div: content_div };
+      }
+
+      function streamLlmCall(stream_message_list, stream_tool_definition_list) {
+        var form_data = new FormData(),
+          streaming_element = null,
+          decoder = new TextDecoder("utf-8"),
+          buffer = "";
+        form_data.append("message_list", JSON.stringify(stream_message_list));
+        form_data.append("tool_definition_list", JSON.stringify(stream_tool_definition_list));
+
+        function handleLine(line) {
+          var chunk = JSON.parse(line);
+          if (chunk.type === "delta") {
+            if (!streaming_element) {
+              streaming_element = createStreamingPostElement();
+            }
+            console.log(chunk.content)
+            streaming_element.content_div.textContent += chunk.content;
+            return null;
+          }
+          return chunk;
+        }
+
+        function readNext(reader) {
+          return reader.read().then(function (step) {
+            var lines, i, line, final_chunk;
+            if (step.done) {
+              line = buffer.trim();
+              buffer = "";
+              if (line) {
+                final_chunk = handleLine(line);
+                if (final_chunk) {
+                  return final_chunk;
+                }
+              }
+              throw new Error("processTask: LLM stream ended without a final chunk");
+            }
+            buffer += decoder.decode(step.value, { stream: true });
+            lines = buffer.split("\n");
+            buffer = lines.pop();
+            for (i = 0; i < lines.length; i += 1) {
+              line = lines[i].trim();
+              if (line) {
+                final_chunk = handleLine(line);
+                if (final_chunk) {
+                  return final_chunk;
+                }
+              }
+            }
+            return readNext(reader);
+          });
+        }
+
+        return fetch(gadget.options.request_options.process_url, {
+          method: "POST",
+          credentials: "same-origin",
+          body: form_data
+        })
+          .then(function (response) {
+            if (!response.ok) {
+              throw new Error("processTask: LLM call failed with status " + response.status);
+            }
+            return readNext(response.body.getReader());
+          })
+          .then(function (final_chunk) {
+            if (streaming_element) {
+              streaming_element.li.remove();
+            }
+            return final_chunk;
+          })
+          .catch(function (error) {
+            if (streaming_element) {
+              streaming_element.li.remove();
+            }
+            throw error;
+          });
+      }
+
       function loop_call(loop_count, message_list, pending_tool_call_list) {
         var has_tool_call = Boolean(
             pending_tool_call_list && pending_tool_call_list.length
           ),
           tool_call = has_tool_call ? pending_tool_call_list[0] : null,
-          client_tool = tool_call ? findClientTool(tool_call.function.name) : null,
-          request_json;
+          client_tool = tool_call ? findClientTool(tool_call.function.name) : null;
         if (loop_count >= max_loop_count) {
           throw new Error("processTask: too many iterations");
         }
@@ -469,67 +552,67 @@
         }
 
         if (tool_call) {
-          request_json = {
-            tool_call: JSON.stringify(tool_call)
-          };
-          queue_loop.push(function () {
-            return gadget.jio_putAttachment(
-              gadget.options.request_options.document_id,
-              gadget.options.request_options.process_url,
-              request_json
-            );
-          });
-        } else {
           queue_loop
             .push(function () {
-              return gadget.compactMessageList(message_list);
-            })
-            .push(function (compacted_message_list) {
-              message_list = compacted_message_list;
               return gadget.jio_putAttachment(
                 gadget.options.request_options.document_id,
                 gadget.options.request_options.process_url,
-                {
-                  message_list: JSON.stringify(message_list),
-                  tool_definition_list: JSON.stringify(tool_definition_list)
-                }
+                { tool_call: JSON.stringify(tool_call) }
               );
-            });
-        }
-        queue_loop
-          .push(function (evt) {
-            return jIO.util.readBlobAsText(evt.target.response);
-          })
-          .push(function (text_evt) {
-            var result = JSON.parse(text_evt.target.result),
-              next_message_list,
-              next_pending_tool_call_list;
-            if (has_tool_call) {
-              next_message_list = message_list.concat([{
-                role: "tool",
-                tool_call_id: tool_call.id,
-                name: tool_call.function.name,
-                content: truncateToolOutput(result.content)
-              }]);
-              next_pending_tool_call_list = pending_tool_call_list.slice(1);
+            })
+            .push(function (evt) {
+              return jIO.util.readBlobAsText(evt.target.response);
+            })
+            .push(function (text_evt) {
+              var result = JSON.parse(text_evt.target.result),
+                next_message_list = message_list.concat([{
+                  role: "tool",
+                  tool_call_id: tool_call.id,
+                  name: tool_call.function.name,
+                  content: truncateToolOutput(result.content)
+                }]);
               showToolCallResult(tool_call.function.name, result.content);
               return loop_call(
                 loop_count + 1,
                 next_message_list,
-                next_pending_tool_call_list
+                pending_tool_call_list.slice(1)
               );
-            }
+            });
+          return;
+        }
+
+        queue_loop
+          .push(function () {
+            return gadget.compactMessageList(message_list);
+          })
+          .push(function (compacted_message_list) {
+            message_list = compacted_message_list;
+            return streamLlmCall(message_list, tool_definition_list);
+          })
+          .push(function (stream_result) {
+            return gadget.jio_putAttachment(
+              gadget.options.request_options.document_id,
+              gadget.options.request_options.process_url,
+              {
+                message_list: JSON.stringify(message_list),
+                finalize_result: JSON.stringify(stream_result)
+              }
+            );
+          })
+          .push(function (evt) {
+            return jIO.util.readBlobAsText(evt.target.response);
+          })
+          .push(function (text_evt) {
+            var result = JSON.parse(text_evt.target.result);
             if (result.tool_calls && result.tool_calls.length) {
-              next_message_list = message_list.concat([{
-                role: "assistant",
-                content: result.content,
-                tool_calls: result.tool_calls
-              }]);
-              next_pending_tool_call_list = result.tool_calls;
               return loop_call(
                 loop_count + 1,
-                next_message_list,
-                next_pending_tool_call_list
+                message_list.concat([{
+                  role: "assistant",
+                  content: result.content,
+                  tool_calls: result.tool_calls
+                }]),
+                result.tool_calls
               );
             }
 

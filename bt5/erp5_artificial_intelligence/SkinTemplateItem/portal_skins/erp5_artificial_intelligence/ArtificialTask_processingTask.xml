@@ -46,7 +46,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>message_list = None, tool_call = None, tool_definition_list = None, compact_message_list=None,  **kw</string> </value>
+            <value> <string>message_list = None, tool_call = None, tool_definition_list = None, compact_message_list=None, finalize_result=None,  **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

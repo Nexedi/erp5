@@ -2,6 +2,8 @@ import json
 artifical_task = context
 portal = artifical_task.getPortalObject()
 
+RESPONSE = context.REQUEST.RESPONSE
+
 if tool_call and isinstance(tool_call, str):
   tool_call = json.loads(tool_call)
 
@@ -15,6 +17,9 @@ message_list = message_list or []
 
 if compact_message_list and isinstance(compact_message_list, str):
   compact_message_list = json.loads(compact_message_list)
+
+if finalize_result and isinstance(finalize_result, str):
+  finalize_result = json.loads(finalize_result)
 
 if tool_call:
   function = tool_call["function"]["name"]
@@ -60,16 +65,10 @@ elif compact_message_list:
     "content": summary_response["content"],
   })
 
-else:
-  conn = artifical_task.getConnectorValue()
-  model = artifical_task.getModel()
-
-  response = conn.getResponseWithUsage(
-    messages= message_list, model=model,
-    tools=tool_definition_list)
-
+elif finalize_result:
+  response = finalize_result
   content = response["content"]
-  tool_calls = response["tool_calls"]
+  tool_calls = response.get("tool_calls") or []
 
   if not tool_calls:
     line = artifical_task.newContent(
@@ -102,3 +101,11 @@ else:
       "content": content,
       "tool_calls": tool_calls,
     })
+
+else:
+  conn = artifical_task.getConnectorValue()
+  model = artifical_task.getModel()
+  RESPONSE.setHeader('Content-Type', 'text/plain; charset=utf-8')
+  RESPONSE.setBody(conn.getResponseStreamIterator(
+    messages=message_list, model=model, tools=tool_definition_list))
+  return ''
