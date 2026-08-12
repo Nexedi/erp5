@@ -4,6 +4,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.XMLObject import XMLObject
 
+
 class OpenaiConnector(XMLObject):
   meta_type = "ERP5 Openai Connector"
   portal_type = "Openai Connector"
@@ -15,19 +16,9 @@ class OpenaiConnector(XMLObject):
     url = self.getUrlString() or "https://api.openai.com/v1"
     return url.rstrip("/")
 
-  def _buildMessages(self, prompt, attachment_data, attachment_filename,
-                     attachment_media_type, message):
+  def _buildMessages(self, prompt, message):
     if message:
       return [{"role": "user", "content": message}]
-    if attachment_data is not None:
-      return [
-        {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user",   "content": prompt},
-        {"role": "user",
-         "content": [{"type": "file",
-                      "file": {"filename": attachment_filename or "document.pdf",
-                               "file_data": attachment_data}}]},
-      ]
     return [{"role": "user", "content": prompt}]
 
   security.declarePublic("getModelList")
@@ -36,7 +27,7 @@ class OpenaiConnector(XMLObject):
     api_key = self.getPassword()
     base_url = self._getBaseUrl()
     headers = {"Authorization": "Bearer %s" % api_key}
-    resp = requests.get(base_url + "/models", headers=headers, timeout=30)
+    resp = requests.get(base_url + "/models", headers=headers, timeout=self.getTimeout(180))
     resp.raise_for_status()
     data = resp.json()
     return [m.get("id") for m in data.get("data", [])]
@@ -45,10 +36,12 @@ class OpenaiConnector(XMLObject):
   def getResponseWithUsage(self, prompt=None, attachment_data=None, attachment_filename=None,
                   attachment_media_type="application/pdf", model="gpt-4o", message=None,
                   response_format=None, messages=None, tools=None, tool_choice=None,
-                  cert=None, verify=None, timeout=180):
+                  cert=None, verify=None, timeout=None):
     # Call an OpenAI-compatible Chat Completions endpoint; return
     # {content, tool_calls, model, usage}. When messages (a list) is given it is
     # used verbatim. tools/tool_choice/response_format are forwarded as-is.
+    if timeout is None:
+      timeout = self.getTimeout(180)
     api_key = self.getPassword()
     base_url = self._getBaseUrl()
     auth_headers = {"Authorization": "Bearer %s" % api_key}
@@ -68,13 +61,14 @@ class OpenaiConnector(XMLObject):
           base_url + "/files", headers=auth_headers,
           files={"file": (fname, attachment_data, attachment_media_type)},
           data={"purpose": "user_data"}, timeout=timeout, **request_kw)
-        upload_resp.raise_for_status()
+        if upload_resp.status_code >= 400:
+          raise ValueError("LLM %s error: %s" % (upload_resp.status_code, upload_resp.text[:1000]))
         file_id = upload_resp.json()["id"]
         chat_messages = [{"role": "user",
           "content": [{"type": "text", "text": prompt},
                       {"type": "file", "file": {"file_id": file_id}}]}]
       else:
-        chat_messages = self._buildMessages(prompt, None, None, None, message)
+        chat_messages = self._buildMessages(prompt, message)
 
       chat_headers = dict(auth_headers)
       chat_headers["Content-Type"] = "application/json"
@@ -106,18 +100,6 @@ class OpenaiConnector(XMLObject):
     finally:
       if file_id is not None:
         try:
-          requests.delete(base_url + "/files/" + file_id, headers=auth_headers, timeout=30, **request_kw)
+          requests.delete(base_url + "/files/" + file_id, headers=auth_headers, timeout=self.getTimeout(180), **request_kw)
         except Exception:
           pass
-
-  security.declarePublic("getResponse")
-  def getResponse(self, prompt, attachment_data=None, attachment_filename=None,
-                  attachment_media_type="application/pdf", model="gpt-4o"):
-    res = self.getResponseWithUsage(prompt=prompt, attachment_data=attachment_data,
-            attachment_filename=attachment_filename,
-            attachment_media_type=attachment_media_type, model=model)
-    return res["content"]
-
-  security.declarePublic("getMarkerXYZ")
-  def getMarkerXYZ(self):
-    return "marker-v1"
