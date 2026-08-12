@@ -183,6 +183,8 @@
             sandbox: "public"
           })
             .push(function (g) {
+              // here we have two value copy
+              // one in data-gadget-html-viewer-value attribute, one in html
               return g.render({ value: "<pre>" + g.element.getAttribute("data-gadget-html-viewer-value") + "</pre>"});
             })
         );
