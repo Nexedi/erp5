@@ -1,0 +1,8 @@
+<allowed_content_type_list>
+ <portal_type id="Web Chart">
+  <item>Embedded File</item>
+ </portal_type>
+ <portal_type id="Web Page Module">
+  <item>Web Chart</item>
+ </portal_type>
+</allowed_content_type_list>
