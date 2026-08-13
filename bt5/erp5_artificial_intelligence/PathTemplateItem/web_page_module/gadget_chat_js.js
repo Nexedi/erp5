@@ -1,4 +1,4 @@
-/*global window, rJS, RSVP, FormData, URI, jIO, domsugar, fetch, TextDecoder */
+/*global window, rJS, RSVP, FormData, URI, jIO, domsugar, fetch, TextDecoder, AbortController */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 (function (window, rJS, RSVP) {
   "use strict";
@@ -77,6 +77,67 @@
       ])
       //domsugar("hr")
     ];
+  }
+
+  function fetchStream(url, options, onDelta) {
+    var controller = new AbortController();
+    return new RSVP.Promise(function (resolve, reject) {
+      var decoder = new TextDecoder("utf-8"),
+        buffer = "",
+        final_chunk = null;
+
+      function handleLine(line) {
+        var chunk = JSON.parse(line);
+        if (chunk.type === "delta") {
+          onDelta(chunk.content);
+        } else {
+          final_chunk = chunk;
+        }
+      }
+
+      function readNext(reader) {
+        reader.read().then(function (step) {
+          var lines, i, line;
+          if (step.done) {
+            line = buffer.trim();
+            buffer = "";
+            if (line) {
+              handleLine(line);
+            }
+            if (final_chunk) {
+              return resolve(final_chunk);
+            }
+            return reject(new Error("processTask: LLM stream ended without a final chunk"));
+          }
+          buffer += decoder.decode(step.value, { stream: true });
+          lines = buffer.split("\n");
+          buffer = lines.pop();
+          for (i = 0; i < lines.length; i += 1) {
+            line = lines[i].trim();
+            if (line) {
+              handleLine(line);
+            }
+          }
+          return readNext(reader);
+        }, reject);
+      }
+
+      fetch(url, {
+        method: options.method,
+        credentials: options.credentials,
+        body: options.body,
+        signal: controller.signal
+      })
+        .then(function (response) {
+          if (!response.ok) {
+            throw new Error("processTask: LLM call failed with status " + response.status);
+          }
+          return readNext(response.body.getReader());
+        })
+        .catch(reject);
+    }, function () {
+      controller.abort();
+    });
   }
 
   rJS(window)
@@ -490,73 +551,18 @@
             return gadget.compactMessageList(message_list);
           })
           .push(function (compacted_message_list) {
-            var form_data = new FormData(),
-              decoder = new TextDecoder("utf-8"),
-              read_loop = new RSVP.Queue(),
-              buffer = "";
+            var form_data = new FormData();
             message_list = compacted_message_list;
             streaming_element = createStreamingPostElement();
             form_data.append("message_list", JSON.stringify(message_list));
             form_data.append("tool_definition_list", JSON.stringify(tool_definition_list));
-
-            function handleLine(line) {
-              var chunk = JSON.parse(line);
-              if (chunk.type === "delta") {
-                streaming_element.content_pre.textContent += chunk.content;
-                return null;
+            return fetchStream(
+              gadget.options.request_options.process_url,
+              { method: "POST", credentials: "same-origin", body: form_data },
+              function (delta_content) {
+                streaming_element.content_pre.textContent += delta_content;
               }
-              return chunk;
-            }
-
-            function readNext(reader) {
-              read_loop
-                .push(function () {
-                  return reader.read();
-                }).
-                push(function (step) {
-                  var lines, i, line, final_chunk;
-                  if (step.done) {
-                    line = buffer.trim();
-                    buffer = "";
-                    if (line) {
-                      final_chunk = handleLine(line);
-                      if (final_chunk) {
-                        return final_chunk;
-                      }
-                    }
-                    throw new Error("processTask: LLM stream ended without a final chunk");
-                  }
-                  buffer += decoder.decode(step.value, { stream: true });
-                  lines = buffer.split("\n");
-                  buffer = lines.pop();
-                  for (i = 0; i < lines.length; i += 1) {
-                    line = lines[i].trim();
-                    if (line) {
-                      final_chunk = handleLine(line);
-                      if (final_chunk) {
-                        return final_chunk;
-                      }
-                    }
-                  }
-                  return readNext(reader);
-                });
-            }
-
-            read_loop
-              .push(function () {
-                return fetch(gadget.options.request_options.process_url, {
-                  method: "POST",
-                  credentials: "same-origin",
-                  body: form_data
-                });
-              })
-              .push(function (response) {
-                if (!response.ok) {
-                  throw new Error("processTask: LLM call failed with status " + response.status);
-                }
-                return readNext(response.body.getReader());
-              });
-            return read_loop;
+            );
           })
           .push(function (stream_result) {
             return gadget.jio_putAttachment(
