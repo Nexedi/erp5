@@ -29,8 +29,6 @@ from hashlib import md5
 from warnings import warn
 from DateTime import DateTime
 import mock
-import Products.ZMySQLDA.DA
-from Products.ZMySQLDA.DA import Connection as ZMySQLDA_Connection
 from zope.globalrequest import getRequest
 from zope.globalrequest import setRequest
 import six
@@ -1004,8 +1002,17 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase, functional.F
       self.addCleanup(file_upload.close)
       return file_upload
 
+def _getZSQLDAConnectionClass():
+  if os.environ.get('erp5_catalog_storage',
+                    'erp5_mysql_innodb_catalog') == 'erp5_mysql_innodb_catalog':
+    from Products.ZSQLDA.MySQL import Connection
+  else:
+    from Products.ZSQLDA.SQLite import Connection
+  return Connection
+
+
 class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
-    __original_ZMySQLDA_connect = None
+    __original_ZSQLDA_connect = None
 
     def getPortalName(self):
       """
@@ -1077,11 +1084,12 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       from Products.CMFActivity.ActivityRuntimeEnvironment import BaseMessage
       self.__connector_set = set()
       onConnect = self.__onConnect
-      self.__original_ZMySQLDA_connect = original_ZMySQLDA_connect = ZMySQLDA_Connection.connect
+      ZSQLDA_Connection = _getZSQLDAConnectionClass()
+      self.__original_ZSQLDA_connect = original_ZSQLDA_connect = ZSQLDA_Connection.connect
       def connect(self, *args, **kw):
         onConnect(self)
-        return original_ZMySQLDA_connect(self, *args, **kw)
-      ZMySQLDA_Connection.connect = connect
+        return original_ZSQLDA_connect(self, *args, **kw)
+      ZSQLDA_Connection.connect = connect
       # Activities in unit tests shall never fail.
       # Let's be a litte tolerant for the moment.
       BaseMessage.max_retry = property(lambda self:
@@ -1466,11 +1474,12 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
                                   % count)
               break
       PortalTestCase.tearDown(self)
-      if self.__original_ZMySQLDA_connect is not None:
-        ZMySQLDA_Connection.connect = self.__original_ZMySQLDA_connect
+      if self.__original_ZSQLDA_connect is not None:
+        ZSQLDA_Connection = _getZSQLDAConnectionClass()
+        ZSQLDA_Connection.connect = self.__original_ZSQLDA_connect
         for connector in self.__connector_set:
           connector.__dict__.pop('_v_database_connection', None)
-        database_connection_pool = Products.ZMySQLDA.DA.database_connection_pool
+        from Products.ZSQLDA.DA import database_connection_pool
         for value in six.itervalues(database_connection_pool):
           value.clear()
         database_connection_pool.clear()
