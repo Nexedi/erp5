@@ -146,7 +146,7 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     result = self.portal.Base_filterProjectActions(actions=actions)
     self.assertEqual([{'id': 'view', 'title': 'Discussion Threads'}],
                      result['object_view'])
-    self.assertEqual(project_view_action_list, result['project_view'])
+    self.assertNotIn('project_view', result)
 
   def test_filter_project_actions_merges_project_view_named_object_view(self):
     """object_view actions whose id contains 'project_view' are kept alongside
@@ -168,7 +168,7 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
         expected_id_list,
         sorted(action['id'] for action in result['object_view']),
         'wrong object_view for iteration order %r' % (category_name_list,))
-      self.assertEqual(project_view_action_list, result['project_view'])
+      self.assertNotIn('project_view', result)
 
   def test_filter_project_actions_renames_project_view_to_view(self):
     """The app default view action must reach the client as 'view': the panel
@@ -182,14 +182,14 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
                      result['object_view'])
 
   def test_filter_project_actions_rename_does_not_mutate_source_action(self):
-    """The rename must work on a copy: the same action dicts are shared with the
-    project_view category, and mutating them would rename it there too."""
+    """The rename must work on a copy: the action dicts belong to the caller
+    (listFilteredActionsFor), so renaming them in place would be a side effect
+    on the input rather than on the filtered result."""
     project_view_action = {'id': 'project_view', 'title': 'Threads'}
     actions = {'project_view': [project_view_action]}
     result = self.portal.Base_filterProjectActions(actions=actions)
     self.assertEqual('view', result['object_view'][0]['id'])
     self.assertEqual('project_view', project_view_action['id'])
-    self.assertEqual([project_view_action], result['project_view'])
 
   def test_filter_project_actions_rename_keeps_project_view_editor(self):
     """Only the exact id project_view is renamed: project_view_editor is
