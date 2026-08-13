@@ -349,9 +349,10 @@ except ImportError: # < v3.4
         # the only way to let importer continues searching for filesystem
         # module...
         import erp5.component
-        import_lock_held = global_import_lock.held()
-        if import_lock_held:
+        import_lock_level = 0
+        while global_import_lock.held():
           global_import_lock.release()
+          import_lock_level += 1
         aq_method_lock.acquire()
         try:
           if erp5.component.filesystem_import_dict is None:
@@ -361,9 +362,7 @@ except ImportError: # < v3.4
             return None
         finally:
           aq_method_lock.release()
-          # Internal release of import lock at the end of import machinery will
-          # fail if the hook is not acquired
-          if import_lock_held:
+          for _ in range(import_lock_level):
             global_import_lock.acquire()
 
       return spec.loader
@@ -755,9 +754,10 @@ else: # not USE_COMPONENT_PEP_451_LOADER
       Make sure that loading module is thread-safe using aq_method_lock to make
       sure that modules do not disappear because of an ongoing reset
       """
-      import_lock_held = global_import_lock.held()
-      if import_lock_held:
+      import_lock_level = 0
+      while global_import_lock.held():
         global_import_lock.release()
+        import_lock_level += 1
 
       aq_method_lock.acquire()
       try:
@@ -765,9 +765,7 @@ else: # not USE_COMPONENT_PEP_451_LOADER
       finally:
         aq_method_lock.release()
 
-        # Internal release of import lock at the end of import machinery will
-        # fail if the hook is not acquired
-        if import_lock_held:
+        for _ in range(import_lock_level):
           global_import_lock.acquire()
 
     # Hack for SourceFileLoader()
