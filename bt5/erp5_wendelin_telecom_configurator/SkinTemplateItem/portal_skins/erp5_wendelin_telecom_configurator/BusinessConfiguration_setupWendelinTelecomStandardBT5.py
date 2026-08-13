@@ -2,7 +2,6 @@ configuration_save = context.restrictedTraverse(configuration_save_url)
 
 bt5_installation_list = (
   'erp5_full_text_mroonga_catalog',
-  'erp5_ingestion_mysql_innodb_catalog',
   'erp5_code_mirror',
   'erp5_forge',
   'erp5_wendelin',
@@ -11,7 +10,7 @@ bt5_installation_list = (
   'erp5_wendelin_telecom_security'
 )
 
-bt5_update_catalog = ('erp5_ingestion_mysql_innodb_catalog', 'erp5_wendelin',)
+bt5_update_catalog = ('erp5_wendelin',)
 
 for name in bt5_installation_list:
   configuration_save.addConfigurationItem(
