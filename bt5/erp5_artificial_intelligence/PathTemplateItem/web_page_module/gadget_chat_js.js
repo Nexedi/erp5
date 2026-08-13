@@ -423,69 +423,6 @@
         return { li: li, content_pre: li.querySelector("pre") };
       }
 
-      function streamLlmCall(stream_message_list, stream_tool_definition_list, streaming_element) {
-        var form_data = new FormData(),
-          decoder = new TextDecoder("utf-8"),
-          buffer = "";
-        form_data.append("message_list", JSON.stringify(stream_message_list));
-        form_data.append("tool_definition_list", JSON.stringify(stream_tool_definition_list));
-
-        function handleLine(line) {
-          var chunk = JSON.parse(line);
-          if (chunk.type === "delta") {
-            streaming_element.content_pre.textContent += chunk.content;
-            return null;
-          }
-          return chunk;
-        }
-
-        function readNext(reader) {
-          return reader.read().then(function (step) {
-            var lines, i, line, final_chunk;
-            if (step.done) {
-              line = buffer.trim();
-              buffer = "";
-              if (line) {
-                final_chunk = handleLine(line);
-                if (final_chunk) {
-                  return final_chunk;
-                }
-              }
-              throw new Error("processTask: LLM stream ended without a final chunk");
-            }
-            buffer += decoder.decode(step.value, { stream: true });
-            lines = buffer.split("\n");
-            buffer = lines.pop();
-            for (i = 0; i < lines.length; i += 1) {
-              line = lines[i].trim();
-              if (line) {
-                final_chunk = handleLine(line);
-                if (final_chunk) {
-                  return final_chunk;
-                }
-              }
-            }
-            return readNext(reader);
-          });
-        }
-
-        return fetch(gadget.options.request_options.process_url, {
-          method: "POST",
-          credentials: "same-origin",
-          body: form_data
-        })
-          .then(function (response) {
-            if (!response.ok) {
-              throw new Error("processTask: LLM call failed with status " + response.status);
-            }
-            return readNext(response.body.getReader());
-          })
-          .catch(function (error) {
-            streaming_element.li.remove();
-            throw error;
-          });
-      }
-
       function loop_call(loop_count, message_list, pending_tool_call_list) {
         var has_tool_call = Boolean(
             pending_tool_call_list && pending_tool_call_list.length
@@ -497,55 +434,54 @@
           throw new Error("processTask: too many iterations");
         }
 
-        if (tool_call && client_tool) {
-          queue_loop
-            .push(function () {
-              return runClientToolCall(tool_call);
-          })
-           .push(function (client_tool_result) {
-             var next_client_message_list = message_list.concat([{
-               role: "tool",
-               tool_call_id: tool_call.id,
-               name: tool_call.function.name,
-               content: truncateToolOutput(client_tool_result.content)
-             }]);
-            showToolCallResult(tool_call.function.name, client_tool_result.content);
-            return loop_call(
-              loop_count + 1,
-              next_client_message_list,
-              pending_tool_call_list.slice(1)
-            );
-          });
-          return;
-        }
-
         if (tool_call) {
-          queue_loop
-            .push(function () {
-              return gadget.jio_putAttachment(
-                gadget.options.request_options.document_id,
-                gadget.options.request_options.process_url,
-                { tool_call: JSON.stringify(tool_call) }
-              );
+          if (client_tool) {
+            queue_loop
+              .push(function () {
+                return runClientToolCall(tool_call);
             })
-            .push(function (evt) {
-              return jIO.util.readBlobAsText(evt.target.response);
-            })
-            .push(function (text_evt) {
-              var result = JSON.parse(text_evt.target.result),
-                next_message_list = message_list.concat([{
-                  role: "tool",
-                  tool_call_id: tool_call.id,
-                  name: tool_call.function.name,
-                  content: truncateToolOutput(result.content)
-                }]);
-              showToolCallResult(tool_call.function.name, result.content);
+             .push(function (client_tool_result) {
+               var next_client_message_list = message_list.concat([{
+                 role: "tool",
+                 tool_call_id: tool_call.id,
+                 name: tool_call.function.name,
+                 content: truncateToolOutput(client_tool_result.content)
+               }]);
+              showToolCallResult(tool_call.function.name, client_tool_result.content);
               return loop_call(
                 loop_count + 1,
-                next_message_list,
+                next_client_message_list,
                 pending_tool_call_list.slice(1)
               );
             });
+          } else {
+            queue_loop
+              .push(function () {
+                return gadget.jio_putAttachment(
+                  gadget.options.request_options.document_id,
+                  gadget.options.request_options.process_url,
+                  { tool_call: JSON.stringify(tool_call) }
+                );
+              })
+              .push(function (evt) {
+                return jIO.util.readBlobAsText(evt.target.response);
+              })
+              .push(function (text_evt) {
+                var result = JSON.parse(text_evt.target.result),
+                  next_message_list = message_list.concat([{
+                    role: "tool",
+                    tool_call_id: tool_call.id,
+                    name: tool_call.function.name,
+                    content: truncateToolOutput(result.content)
+                  }]);
+                showToolCallResult(tool_call.function.name, result.content);
+                return loop_call(
+                  loop_count + 1,
+                  next_message_list,
+                  pending_tool_call_list.slice(1)
+                );
+              });
+          }
           return;
         }
 
@@ -554,9 +490,73 @@
             return gadget.compactMessageList(message_list);
           })
           .push(function (compacted_message_list) {
+            var form_data = new FormData(),
+              decoder = new TextDecoder("utf-8"),
+              read_loop = new RSVP.Queue(),
+              buffer = "";
             message_list = compacted_message_list;
             streaming_element = createStreamingPostElement();
-            return streamLlmCall(message_list, tool_definition_list, streaming_element);
+            form_data.append("message_list", JSON.stringify(message_list));
+            form_data.append("tool_definition_list", JSON.stringify(tool_definition_list));
+
+            function handleLine(line) {
+              var chunk = JSON.parse(line);
+              if (chunk.type === "delta") {
+                streaming_element.content_pre.textContent += chunk.content;
+                return null;
+              }
+              return chunk;
+            }
+
+            function readNext(reader) {
+              read_loop
+                .push(function () {
+                  return reader.read();
+                }).
+                push(function (step) {
+                  var lines, i, line, final_chunk;
+                  if (step.done) {
+                    line = buffer.trim();
+                    buffer = "";
+                    if (line) {
+                      final_chunk = handleLine(line);
+                      if (final_chunk) {
+                        return final_chunk;
+                      }
+                    }
+                    throw new Error("processTask: LLM stream ended without a final chunk");
+                  }
+                  buffer += decoder.decode(step.value, { stream: true });
+                  lines = buffer.split("\n");
+                  buffer = lines.pop();
+                  for (i = 0; i < lines.length; i += 1) {
+                    line = lines[i].trim();
+                    if (line) {
+                      final_chunk = handleLine(line);
+                      if (final_chunk) {
+                        return final_chunk;
+                      }
+                    }
+                  }
+                  return readNext(reader);
+                });
+            }
+
+            read_loop
+              .push(function () {
+                return fetch(gadget.options.request_options.process_url, {
+                  method: "POST",
+                  credentials: "same-origin",
+                  body: form_data
+                });
+              })
+              .push(function (response) {
+                if (!response.ok) {
+                  throw new Error("processTask: LLM call failed with status " + response.status);
+                }
+                return readNext(response.body.getReader());
+              });
+            return read_loop;
           })
           .push(function (stream_result) {
             return gadget.jio_putAttachment(
