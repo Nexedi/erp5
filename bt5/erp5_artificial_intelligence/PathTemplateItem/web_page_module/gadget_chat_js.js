@@ -189,19 +189,7 @@
   }
 
 
-  function createStreamingPostElement(element) {
-    var post_list_element = element.querySelector("#post_list"),
-      dom_list = getPostDomList(formatPost({
-        date: new Date().toISOString(),
-        text: "",
-        response: true
-      })),
-      li = dom_list[0];
-    li.classList.add("post-streaming");
-    post_list_element.appendChild(li);
-    post_list_element.appendChild(dom_list[1]);
-    return { li: li, content_pre: li.querySelector("pre") };
-  }
+
 
   rJS(window)
     /////////////////////////////////////////////////////////////////
@@ -479,6 +467,7 @@
         tool_details = null,
         tool_summary = null,
         tool_count = 0,
+        post_list = gadget.element.querySelector("#post_list"),
         tool_definition_list = gadget.tool_list.map(function (tool) {
           return { type: "function", "function": tool.definition };
         }).concat(gadget.remote_tool_definition_list);
@@ -501,7 +490,7 @@
             tool_summary = domsugar("summary", [getToolCallSummaryText(0)]);
             tool_details = domsugar("details", {}, [tool_summary]);
             tool_li = domsugar("li", { "class": "post-tool" }, [tool_details]);
-            gadget.element.querySelector("#post_list").appendChild(tool_li);
+            post_list.appendChild(tool_li);
           }
           if (client_tool) {
             queue_loop
@@ -562,16 +551,24 @@
             return gadget.compactMessageList(message_list);
           })
           .push(function (compacted_message_list) {
-            var form_data = new FormData();
+            var form_data = new FormData(),
+              content_pre;
             message_list = compacted_message_list;
-            streaming_element = createStreamingPostElement(gadget.element);
+            streaming_element = getPostDomList(formatPost({
+              date: new Date().toISOString(),
+              text: "",
+              response: true
+            }))
+            post_list.appendChild(streaming_element[0]);
+            post_list.appendChild(streaming_element[1]);
+            content_pre = streaming_element[0].querySelector("pre");
             form_data.append("message_list", JSON.stringify(message_list));
             form_data.append("tool_definition_list", JSON.stringify(tool_definition_list));
             return fetchStream(
               gadget.options.request_options.process_url,
               { method: "POST", credentials: "same-origin", body: form_data },
               function (delta_content) {
-                streaming_element.content_pre.textContent += delta_content;
+                content_pre.textContent += delta_content;
               }
             );
           })
@@ -591,6 +588,7 @@
           .push(function (text_evt) {
             var result = JSON.parse(text_evt.target.result);
             if (result.tool_calls && result.tool_calls.length) {
+              //xxxxx
               streaming_element.li.remove();
               return loop_call(
                 loop_count + 1,
@@ -603,7 +601,6 @@
               );
             }
 
-            streaming_element.li.classList.remove("post-streaming");
             return gadget.notifySubmitted({message: 'end', status: "success"})
               .push(function () {
                 return gadget.changeState({
