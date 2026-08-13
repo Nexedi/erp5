@@ -140,6 +140,69 @@
     });
   }
 
+  function findClientTool(name, tool_list) {
+    var i;
+    for (i = 0; i < tool_list.length; i += 1) {
+      if (tool_list[i].definition.name === name) {
+        return tool_list[i];
+      }
+    }
+    return null;
+  }
+
+  function runClientToolCall(tool_call, tool_list) {
+    var tool = findClientTool(tool_call.function.name, tool_list),
+      args = {},
+      result;
+    try {
+      args = tool_call.function.arguments ?
+        JSON.parse(tool_call.function.arguments) : {};
+    } catch (ignore) {
+      args = {};
+    }
+    if (!tool) {
+      result = "Error: no such client tool \"" + tool_call.function.name + "\"";
+      return {
+        tool_call_id: tool_call.id,
+        name: tool_call.function.name,
+        content: typeof result === "string" ? result : JSON.stringify(result)
+      };
+    }
+    return new RSVP.Queue()
+      .push(function () {
+        return tool.execute(args);
+      })
+      .push(function (result) {
+        return {
+          tool_call_id: tool_call.id,
+          name: tool_call.function.name,
+          content: typeof result === "string" ? result : JSON.stringify(result)
+        };
+      }, function (e) {
+      result = "Error running tool \"" + tool_call.function.name + "\": " + e.message;
+      return {
+        tool_call_id: tool_call.id,
+        name: tool_call.function.name,
+        content: typeof result === "string" ? result : JSON.stringify(result)
+      };
+    });
+  }
+
+
+  function createStreamingPostElement(element) {
+    var post_list_element = element.querySelector("#post_list"),
+      dom_list = getPostDomList(formatPost({
+        date: new Date().toISOString(),
+        text: "",
+        response: true
+      })),
+      li = dom_list[0];
+    li.classList.add("post-streaming");
+    post_list_element.appendChild(li);
+    post_list_element.appendChild(dom_list[1]);
+    return { li: li, content_pre: li.querySelector("pre") };
+  }
+
   rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -420,93 +483,30 @@
           return { type: "function", "function": tool.definition };
         }).concat(gadget.remote_tool_definition_list);
 
-      function findClientTool(name) {
-        var i;
-        for (i = 0; i < gadget.tool_list.length; i += 1) {
-          if (gadget.tool_list[i].definition.name === name) {
-            return gadget.tool_list[i];
-          }
-        }
-        return null;
-      }
 
-      function runClientToolCall(tool_call) {
-        var tool = findClientTool(tool_call.function.name),
-          args = {},
-          result;
-        try {
-          args = tool_call.function.arguments ?
-            JSON.parse(tool_call.function.arguments) : {};
-        } catch (ignore) {
-          args = {};
-        }
-        if (!tool) {
-          result = "Error: no such client tool \"" + tool_call.function.name + "\"";
-        }
-        return new RSVP.Queue()
-          .push(function () {
-            return tool.execute(args);
-          })
-          .push(function (result) {
-            return {
-              tool_call_id: tool_call.id,
-              name: tool_call.function.name,
-              content: typeof result === "string" ? result : JSON.stringify(result)
-            };
-          }, function (e) {
-             result = "Error running tool \"" + tool_call.function.name + "\": " + e.message;
-             return {
-               tool_call_id: tool_call.id,
-               name: tool_call.function.name,
-               content: typeof result === "string" ? result : JSON.stringify(result)
-            };
-        });
-      }
-
-      function showToolCallResult(name, content) {
-        var post_list_element = gadget.element.querySelector("#post_list");
-        if (!tool_li) {
-          tool_summary = domsugar("summary", [getToolCallSummaryText(0)]);
-          tool_details = domsugar("details", {}, [tool_summary]);
-          tool_li = domsugar("li", { "class": "post-tool" }, [tool_details]);
-          post_list_element.appendChild(tool_li);
-          //post_list_element.appendChild(domsugar("hr"));
-        }
-        tool_count += 1;
-        tool_summary.textContent = getToolCallSummaryText(tool_count);
-        tool_details.appendChild(getToolCallDiv({ name: name, content: content }));
-      }
-
-      function createStreamingPostElement() {
-        var post_list_element = gadget.element.querySelector("#post_list"),
-          dom_list = getPostDomList(formatPost({
-            date: new Date().toISOString(),
-            text: "",
-            response: true
-          })),
-          li = dom_list[0];
-        li.classList.add("post-streaming");
-        post_list_element.appendChild(li);
-        post_list_element.appendChild(dom_list[1]);
-        return { li: li, content_pre: li.querySelector("pre") };
-      }
 
       function loop_call(loop_count, message_list, pending_tool_call_list) {
         var has_tool_call = Boolean(
             pending_tool_call_list && pending_tool_call_list.length
           ),
           tool_call = has_tool_call ? pending_tool_call_list[0] : null,
-          client_tool = tool_call ? findClientTool(tool_call.function.name) : null,
+          client_tool = tool_call ? findClientTool(tool_call.function.name, gadget.tool_list) : null,
           streaming_element;
         if (loop_count >= max_loop_count) {
           throw new Error("processTask: too many iterations");
         }
 
         if (tool_call) {
+          if (!tool_li) {
+            tool_summary = domsugar("summary", [getToolCallSummaryText(0)]);
+            tool_details = domsugar("details", {}, [tool_summary]);
+            tool_li = domsugar("li", { "class": "post-tool" }, [tool_details]);
+            gadget.element.querySelector("#post_list").appendChild(tool_li);
+          }
           if (client_tool) {
             queue_loop
               .push(function () {
-                return runClientToolCall(tool_call);
+                return runClientToolCall(tool_call, gadget.tool_list);
             })
              .push(function (client_tool_result) {
                var next_client_message_list = message_list.concat([{
@@ -515,7 +515,9 @@
                  name: tool_call.function.name,
                  content: truncateToolOutput(client_tool_result.content)
                }]);
-              showToolCallResult(tool_call.function.name, client_tool_result.content);
+              tool_count += 1;
+              tool_summary.textContent = getToolCallSummaryText(tool_count);
+              tool_details.appendChild(getToolCallDiv({ name: tool_call.function.name, content: client_tool_result.content }));
               return loop_call(
                 loop_count + 1,
                 next_client_message_list,
@@ -542,7 +544,9 @@
                     name: tool_call.function.name,
                     content: truncateToolOutput(result.content)
                   }]);
-                showToolCallResult(tool_call.function.name, result.content);
+                tool_count += 1;
+                tool_summary.textContent = getToolCallSummaryText(tool_count);
+                tool_details.appendChild(getToolCallDiv({ name: tool_call.function.name, content: result.content }));
                 return loop_call(
                   loop_count + 1,
                   next_message_list,
@@ -560,7 +564,7 @@
           .push(function (compacted_message_list) {
             var form_data = new FormData();
             message_list = compacted_message_list;
-            streaming_element = createStreamingPostElement();
+            streaming_element = createStreamingPostElement(gadget.element);
             form_data.append("message_list", JSON.stringify(message_list));
             form_data.append("tool_definition_list", JSON.stringify(tool_definition_list));
             return fetchStream(
