@@ -442,18 +442,25 @@
         }
         if (!tool) {
           result = "Error: no such client tool \"" + tool_call.function.name + "\"";
-        } else {
-          try {
-            result = tool.execute(args);
-          } catch (e) {
-            result = "Error running tool \"" + tool_call.function.name + "\": " + e.message;
-          }
         }
-        return {
-          tool_call_id: tool_call.id,
-          name: tool_call.function.name,
-          content: typeof result === "string" ? result : JSON.stringify(result)
-        };
+        return new RSVP.Queue()
+          .push(function () {
+            return tool.execute(args);
+          })
+          .push(function (result) {
+            return {
+              tool_call_id: tool_call.id,
+              name: tool_call.function.name,
+              content: typeof result === "string" ? result : JSON.stringify(result)
+            };
+          }, function (e) {
+             result = "Error running tool \"" + tool_call.function.name + "\": " + e.message;
+             return {
+               tool_call_id: tool_call.id,
+               name: tool_call.function.name,
+               content: typeof result === "string" ? result : JSON.stringify(result)
+            };
+        });
       }
 
       function showToolCallResult(name, content) {
