@@ -97,7 +97,6 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_title</string>
                         <string>your_preferred_editor</string>
                         <string>your_tool_list</string>
                         <string>your_skill_list</string>

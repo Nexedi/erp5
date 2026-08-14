@@ -223,15 +223,11 @@
         sandbox: "public"
       })
       .push(function () {
-        return gadget.getTranslationList([
-            "Comments:",
-            "Post Comment"
-          ]);
+        return gadget.getTranslationList(["Post Comment"]);
         })
       .push(function (translation_list) {
         var element = gadget.element.querySelector('input[type="submit"]');
-        gadget.element.querySelector("[data-i18n='Comments:']").innerText = translation_list[0];
-        gadget.element.querySelector("[data-i18n='[value]Post Comment']").value = translation_list[1];
+        gadget.element.querySelector("[data-i18n='[value]Post Comment']").value = translation_list[0];
         element.removeAttribute('disabled');
         element.classList.remove('ui-disabled');
         return gadget.changeState({
