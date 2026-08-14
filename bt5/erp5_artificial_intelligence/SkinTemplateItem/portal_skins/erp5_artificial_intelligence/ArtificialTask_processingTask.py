@@ -1,8 +1,11 @@
 import json
-artifical_task = context
-portal = artifical_task.getPortalObject()
+artificial_task = context
+portal = artificial_task.getPortalObject()
 
 RESPONSE = context.REQUEST.RESPONSE
+
+conn = artificial_task.getConnectorValue()
+model = artificial_task.getModel()
 
 if tool_call and isinstance(tool_call, str):
   tool_call = json.loads(tool_call)
@@ -37,10 +40,6 @@ if tool_call:
   })
 
 elif compact_message_list:
-
-  conn = artifical_task.getConnectorValue()
-  model = artifical_task.getModel()
-
   conversation_text = "\n".join([
     "%s: %s" % (
       m.get("role"),
@@ -71,20 +70,20 @@ elif finalize_result:
   tool_calls = response.get("tool_calls") or []
 
   if not tool_calls:
-    line = artifical_task.newContent(
+    line = artificial_task.newContent(
       portal_type='Artificial Task Line',
       text_content = content
     )
-    artificial_task_report = artifical_task.getFollowUpRelatedValue(portal_type='Artificial Task Report')
+    artificial_task_report = artificial_task.getFollowUpRelatedValue(portal_type='Artificial Task Report')
     artificial_task_report.newContent(
       portal_type='Artificial Task Report Line',
       text_content = json.dumps(message_list + [response], indent=2),
       follow_up_value = line
     )
     line.deliver()
-    if artifical_task.getSimulationState() != 'processing':
-      artifical_task.start()
-    artifical_task.respond()
+    if artificial_task.getSimulationState() != 'processing':
+      artificial_task.start()
+    artificial_task.respond()
 
     return json.dumps({
       "post": {
@@ -95,16 +94,31 @@ elif finalize_result:
     })
 
   else:
-    if artifical_task.getSimulationState() != 'processing':
-      artifical_task.start()
+    if artificial_task.getSimulationState() != 'processing':
+      artificial_task.start()
     return json.dumps({
       "content": content,
       "tool_calls": tool_calls,
     })
 
 else:
-  conn = artifical_task.getConnectorValue()
-  model = artifical_task.getModel()
+  if not artificial_task.getDescription():
+    response = conn.getResponseWithUsage(
+      messages=[
+        {
+          "role": "system",
+          "content": "Reply with only a short chat title (3 to 6 words, no quotes, "
+          "no trailing punctuation) summarizing the user's request below."
+        }
+      ] + message_list,
+      model=model,
+      tools=[])
+    title = (response.get("content") or "").strip().strip('"').strip("'").strip()
+    if title:
+      artificial_task.edit(
+        title = title[:80],
+        desription = title)
+
   RESPONSE.setHeader('Content-Type', 'text/plain; charset=utf-8')
   RESPONSE.setBody(conn.getResponseStreamIterator(
     messages=message_list, model=model, tools=tool_definition_list))
