@@ -59,7 +59,7 @@
         view = options.view,
         jump_view = options.jump_view,
         visible = options.visible,
-        extra_menu_list = options.extra_menu_list || [],
+        action_list = [],
         context = this;
 
       if (visible === undefined) {
@@ -68,26 +68,28 @@
 
       return context.jio_getAttachment(jio_key, 'links')
         .push(function (result) {
-          var action_list = result._links.action_object_jio_action || [],
-            url_mapping = mergeGlobalActionWithRawActionList(
+          var url_mapping = mergeGlobalActionWithRawActionList(
               jio_key, view, jump_view, result._links,
               ["action_object_jio_action"],
               {"action_object_jio_action": "display_dialog_with_history"}
             ),
-            j;
-          for (j = 0; j < action_list.length; j += 1) {
-            if (action_list[j].name === 'new') {
-              return context.getUrlFor(
-                url_mapping.action_object_jio_action[j].url_kw
-              )
-                .push(function (new_task_url) {
-                  extra_menu_list.push({
-                    href: new_task_url,
-                    title: action_list[j].title
-                  });
-                });
+            index;
+          action_list = result._links.action_object_jio_action || [];
+
+          for (index = 0; index < action_list.length; index += 1) {
+            if (action_list[index].name === 'new') {
+              break;
             }
           }
+          return context.getUrlFor(
+            url_mapping.action_object_jio_action[index].url_kw
+          )
+            .push(function (new_task_url) {
+              action_list = [{
+                href: new_task_url,
+                title: action_list[index].title
+              }];
+            });
         })
         .push(function () {
           return context.getUrlParameter('editable');
@@ -99,8 +101,8 @@
             jio_key: jio_key,
             view: view,
             jump_view: jump_view,
-            editable: false,
-            extra_menu_list: JSON.stringify(extra_menu_list)
+            editable: editable,
+            action_list: JSON.stringify(action_list)
           });
         });
     })
@@ -108,6 +110,7 @@
       var i,
         gadget = this,
         dl_fragment,
+        action_list,
         queue = new RSVP.Queue();
 
       if (modification_dict.hasOwnProperty("visible")) {
@@ -150,11 +153,17 @@
                     view: "view"
                   }
                 },
+                {command: 'display', options: {page: "history"}},
+                //{command: 'display_stored_state', options: {page: "search"}},
+                {command: 'display', options: {page: "my_account"}},
                 {command: 'display', options: {page: "logout"}}
               ]),
               translation_list: gadget.getTranslationList([
                 'Home',
-                'Artificial Task',
+                'Artificial Task Module',
+                'History',
+                //'Search',
+                'My Account',
                 'Logout'
               ])
             });
@@ -163,13 +172,15 @@
             var element_list = [],
               icon_and_key_list = [
                 'home', null,
-                'life-ring', null,
+                'puzzle-piece', 'm',
+                'tasks', 'w',
+                'history', 'h',
+                'search', 's',
                 'sliders', null,
                 'power-off', 'o'
               ];
 
             for (i = 0; i < result_dict.url_list.length; i += 1) {
-              // <li><a href="URL" class="ui-btn-icon-left ui-icon-ICON" data-i18n="TITLE" accesskey="KEY"></a></li>
               element_list.push(domsugar('li', [
                 domsugar('a', {
                   href: result_dict.url_list[i],
@@ -186,30 +197,25 @@
 
       if ((this.state.global === true) &&
           (modification_dict.hasOwnProperty("editable") ||
-          modification_dict.hasOwnProperty("extra_menu_list"))) {
+          modification_dict.hasOwnProperty("action_list"))) {
 
         dl_fragment = document.createDocumentFragment();
         gadget.element.querySelector("dl").textContent = '';
-        if (gadget.state.hasOwnProperty("extra_menu_list") &&
-            gadget.state.extra_menu_list) {
-          queue
-            .push(function () {
-              return gadget.getTranslationList(['Global']);
-            })
-            .push(function (translation_list) {
-              var extra_menu_list = JSON.parse(gadget.state.extra_menu_list),
-                href_list = [];
-              for (i = 0; i < extra_menu_list.length; i += 1) {
-                href_list.push(extra_menu_list[i].href);
-                extra_menu_list[i] = {
-                  "class_name": extra_menu_list[i].active ? "active" : "",
-                  "title": extra_menu_list[i].title
-                };
-              }
-              appendDt(dl_fragment, translation_list[0], 'globe',
-                       extra_menu_list, href_list, 0);
+        queue
+          .push(function () {
+            var parameter_list = [];
+            action_list = JSON.parse(gadget.state.action_list);
+            return RSVP.hash({
+              translation_dict: gadget.getTranslationDict([
+                'Actions'
+              ])
             });
-        }
+          })
+          .push(function (result_dict) {
+            appendDt(dl_fragment, result_dict.translation_dict.Actions, 'cogs',
+                     action_list, action_list.map(x => x.href), 0);
+
+          });
       }
       queue
         .push(function () {

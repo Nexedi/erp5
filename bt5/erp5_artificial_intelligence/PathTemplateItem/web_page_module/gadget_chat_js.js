@@ -78,7 +78,7 @@
       //domsugar("hr")
     ];
   }
-
+  //XXX is it correct ?
   function fetchStream(url, options, onDelta) {
     var controller = new AbortController();
     return new RSVP.Promise(function (resolve, reject) {
