@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts86719933.5188098</string> </value>
+            <value> <string>ts86719870.5890274</string> </value>
         </item>
         <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
@@ -67,15 +67,15 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>d610ec0f6e35079263a8e2b708844e7a</string> </value>
+            <value> <string>6c11b0cc8a0324c084d403e393f588f7</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
+            <value> <string>application/javascript</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_chat.html</string> </value>
+            <value> <string>marked.umd.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -85,15 +85,13 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_chat_html</string> </value>
+            <value> <string>marked_umd_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
-        </item>
-        <item>
-            <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -103,15 +101,13 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1123</int> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>Gadget Chat</string> </value>
+            <value> <int>43820</int> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>001</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -187,7 +183,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1786016912.171028</float>
+                              <float>1786719876.94854</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -236,7 +232,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1034.63462.43846.44612</string> </value>
+                      <value> <string>1034.63560.12228.23842</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -252,7 +248,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1786719933.52288</float>
+                              <float>1786719870.594782</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

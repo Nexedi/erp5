@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, FormData, URI, jIO, domsugar, fetch, TextDecoder, AbortController */
+/*global window, rJS, RSVP, FormData, URI, jIO, domsugar, fetch, TextDecoder, AbortController, marked */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP) {
+(function (window, rJS, RSVP, marked) {
   "use strict";
 
   var COMPACT_THRESHOLD = 50,
@@ -26,137 +26,11 @@
     return post;
   }
 
-  function escapeHtml(text) {
-    return String(text)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#39;");
-  }
-
-  function renderMarkdownInline(text) {
-    var placeholder_list = [],
-      out;
-
-    function stash(html) {
-      placeholder_list.push(html);
-      return "\u0000" + (placeholder_list.length - 1) + "\u0000";
-    }
-
-    out = escapeHtml(text);
-    out = out.replace(/`([^`]+)`/g, function (m, code) {
-      return stash("<code>" + code + "</code>");
-    });
-    out = out.replace(
-      /\[([^\]]+)\]\((https?:\/\/[^\s)]+|mailto:[^\s)]+)\)/g,
-      function (m, label, url) {
-        return stash('<a href="' + url + '" target="_blank" rel="noopener noreferrer">' + label + "</a>");
-      }
-    );
-    out = out.replace(/\*\*([^*]+)\*\*|__([^_]+)__/g, function (m, a, b) {
-      return "<strong>" + (a || b) + "</strong>";
-    });
-    out = out.replace(/\*([^*]+)\*|_([^_]+)_/g, function (m, a, b) {
-      return "<em>" + (a || b) + "</em>";
-    });
-    out = out.replace(/\u0000(\d+)\u0000/g, function (m, i) {
-      return placeholder_list[Number(i)];
-    });
-    return out;
-  }
-
-  function renderMarkdown(text) {
-    var lines = String(text).replace(/\r\n?/g, "\n").split("\n"),
-      html_list = [],
-      list_type = null,
-      list_item_list = [],
-      i = 0;
-
-    function closeList() {
-      if (list_type) {
-        html_list.push("<" + list_type + ">" + list_item_list.join("") + "</" + list_type + ">");
-        list_type = null;
-        list_item_list = [];
-      }
-    }
-
-    while (i < lines.length) {
-      var line = lines[i],
-        fence_match = line.match(/^```(\S*)\s*$/),
-        heading_match = line.match(/^(#{1,6})\s+(.*)$/),
-        unordered_match = line.match(/^[-*+]\s+(.*)$/),
-        ordered_match = line.match(/^\d+[.)]\s+(.*)$/),
-        quote_match = line.match(/^>\s?(.*)$/),
-        code_line_list,
-        quote_line_list,
-        para_line_list;
-
-      if (fence_match) {
-        closeList();
-        code_line_list = [];
-        i += 1;
-        while (i < lines.length && !/^```\s*$/.test(lines[i])) {
-          code_line_list.push(lines[i]);
-          i += 1;
-        }
-        i += 1;
-        html_list.push("<pre><code>" + escapeHtml(code_line_list.join("\n")) + "</code></pre>");
-      } else if (heading_match) {
-        closeList();
-        html_list.push(
-          "<h" + heading_match[1].length + ">" +
-            renderMarkdownInline(heading_match[2]) +
-            "</h" + heading_match[1].length + ">"
-        );
-        i += 1;
-      } else if (unordered_match) {
-        if (list_type && list_type !== "ul") { closeList(); }
-        list_type = "ul";
-        list_item_list.push("<li>" + renderMarkdownInline(unordered_match[1]) + "</li>");
-        i += 1;
-      } else if (ordered_match) {
-        if (list_type && list_type !== "ol") { closeList(); }
-        list_type = "ol";
-        list_item_list.push("<li>" + renderMarkdownInline(ordered_match[1]) + "</li>");
-        i += 1;
-      } else if (quote_match) {
-        closeList();
-        quote_line_list = [quote_match[1]];
-        i += 1;
-        while (i < lines.length && /^>\s?/.test(lines[i])) {
-          quote_line_list.push(lines[i].replace(/^>\s?/, ""));
-          i += 1;
-        }
-        html_list.push(
-          "<blockquote><p>" + quote_line_list.map(renderMarkdownInline).join("<br>") + "</p></blockquote>"
-        );
-      } else if (!line.trim()) {
-        closeList();
-        i += 1;
-      } else {
-        closeList();
-        para_line_list = [];
-        while (
-          i < lines.length && lines[i].trim() &&
-            !/^```/.test(lines[i]) && !/^#{1,6}\s+/.test(lines[i]) &&
-            !/^[-*+]\s+/.test(lines[i]) && !/^\d+[.)]\s+/.test(lines[i]) &&
-            !/^>\s?/.test(lines[i])
-        ) {
-          para_line_list.push(lines[i]);
-          i += 1;
-        }
-        html_list.push("<p>" + para_line_list.map(renderMarkdownInline).join("<br>") + "</p>");
-      }
-    }
-    closeList();
-    return html_list.join("\n");
-  }
 
   function getPostDomList(post, translationAttachment) {
     var content_element = post.response ?
         domsugar("div", [
-          domsugar("div", { "class": "post-markdown", html: renderMarkdown(post.text) }),
+          domsugar("div", { "class": "post-markdown", html: marked.parse(post.text) }),
           domsugar("pre", { "class": "chat-hidden-field" }, [post.text])
         ]) :
         domsugar("div", [domsugar("pre", [post.text])]),
@@ -701,7 +575,7 @@
                 }
                 // seems a bad idea, bad performance
                 raw_text += delta_content;
-                content_element.innerHTML = renderMarkdown(raw_text);
+                content_element.innerHTML = marked.parse(raw_text);
               }
             );
           })
@@ -759,4 +633,4 @@
     .onEvent('submit', function () {
       return this.submitPostComment();
     });
-}(window, rJS, RSVP));
+}(window, rJS, RSVP, marked));
