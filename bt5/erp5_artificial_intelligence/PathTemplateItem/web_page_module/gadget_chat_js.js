@@ -134,7 +134,7 @@
           }
           return readNext(response.body.getReader());
         })
-        .catch(reject);
+        .then(null, reject);
     }, function () {
       controller.abort();
     });
@@ -479,8 +479,7 @@
             pending_tool_call_list && pending_tool_call_list.length
           ),
           tool_call = has_tool_call ? pending_tool_call_list[0] : null,
-          client_tool = tool_call ? findClientTool(tool_call.function.name, gadget.tool_list) : null,
-          streaming_element;
+          client_tool = tool_call ? findClientTool(tool_call.function.name, gadget.tool_list) : null;
         if (loop_count >= max_loop_count) {
           throw new Error("processTask: too many iterations");
         }
@@ -552,22 +551,26 @@
           })
           .push(function (compacted_message_list) {
             var form_data = new FormData(),
+              streaming_element,
               content_pre;
             message_list = compacted_message_list;
-            streaming_element = getPostDomList(formatPost({
-              date: new Date().toISOString(),
-              text: "",
-              response: true
-            }))
-            post_list.appendChild(streaming_element[0]);
-            post_list.appendChild(streaming_element[1]);
-            content_pre = streaming_element[0].querySelector("pre");
+
             form_data.append("message_list", JSON.stringify(message_list));
             form_data.append("tool_definition_list", JSON.stringify(tool_definition_list));
             return fetchStream(
               gadget.options.request_options.process_url,
               { method: "POST", credentials: "same-origin", body: form_data },
               function (delta_content) {
+                if (!content_pre) {
+                  streaming_element = getPostDomList(formatPost({
+                    date: new Date().toISOString(),
+                    text: "",
+                    response: true
+                  }))
+                  post_list.appendChild(streaming_element[0]);
+                  post_list.appendChild(streaming_element[1]);
+                  content_pre = streaming_element[0].querySelector("pre");
+                }
                 content_pre.textContent += delta_content;
               }
             );
@@ -588,8 +591,6 @@
           .push(function (text_evt) {
             var result = JSON.parse(text_evt.target.result);
             if (result.tool_calls && result.tool_calls.length) {
-              //xxxxx
-              streaming_element.li.remove();
               return loop_call(
                 loop_count + 1,
                 message_list.concat([{
