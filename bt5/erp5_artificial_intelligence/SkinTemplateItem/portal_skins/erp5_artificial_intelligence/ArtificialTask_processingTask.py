@@ -117,7 +117,7 @@ else:
     if title:
       artificial_task.edit(
         title = title[:80],
-        desription = title)
+        description = title)
 
   RESPONSE.setHeader('Content-Type', 'text/plain; charset=utf-8')
   RESPONSE.setBody(conn.getResponseStreamIterator(
