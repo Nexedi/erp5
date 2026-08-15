@@ -140,6 +140,9 @@ class WendelinConfiguratorMixin(SecurityTestCase):
       'erp5_wendelin_configurator'
     ]
   def getCommonBusinessTemplateList(self):
+    template_tool = self.portal.portal_templates
+    catalog_bt5_title = template_tool.getInstalledBusinessTemplate('erp5_catalog').getTitle()
+    full_text_catalog_bt5_title = template_tool.getInstalledBusinessTemplate('erp5_full_text_catalog').getTitle()
     return [
       'erp5_code_mirror',
       'erp5_mysql_innodb_catalog',
@@ -159,7 +162,6 @@ class WendelinConfiguratorMixin(SecurityTestCase):
       'erp5_web_renderjs_ui',
       'erp5_dms',
       'erp5_jquery',
-      'erp5_ingestion_mysql_innodb_catalog',
       'erp5_ingestion',
       'erp5_forge',
       'erp5_jquery_plugin_elastic',
@@ -183,7 +185,7 @@ class WendelinConfiguratorMixin(SecurityTestCase):
       'erp5_wendelin_configurator',
       'erp5_accounting',
       'erp5_wendelin_development',
-      'erp5_full_text_mroonga_catalog',
+      full_text_catalog_bt5_title,
       'erp5_oauth2_resource',
       'erp5_wendelin',
       'erp5_jquery_plugin_jqchart',
