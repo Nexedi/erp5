@@ -354,8 +354,6 @@ except ImportError: # < v3.4
           global_import_lock.release()
         aq_method_lock.acquire()
         try:
-          if erp5.component.filesystem_import_dict is None:
-            erp5.component.createFilesystemImportDict()
           if (erp5.component.filesystem_import_dict is None or
               fullname not in erp5.component.filesystem_import_dict):
             return None
@@ -497,8 +495,6 @@ if USE_COMPONENT_PEP_451_LOADER:
       # (erp5.component.PACKAGE.VERSION_version.REFERENCE)
       if spec.component_reference is None:
         import erp5.component
-        if erp5.component.filesystem_import_dict is None:
-          erp5.component.createFilesystemImportDict()
         try:
           real_unversioned_fullname = erp5.component.filesystem_import_dict[spec.name]
         except (TypeError, KeyError):
