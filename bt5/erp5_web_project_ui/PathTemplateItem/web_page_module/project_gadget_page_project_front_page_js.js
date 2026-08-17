@@ -382,7 +382,7 @@
             getUrlParameterDict(project_list[i].id, 'view')
           );
           milestone_url_list.push(
-            getUrlParameterDict('milestone_module',
+            getUrlParameterDict(project_list[i].id,
                                 milestone_view,
                                 [["stop_date", "ascending"]],
                                 null,
