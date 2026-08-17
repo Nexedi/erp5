@@ -227,6 +227,15 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
       self.assertIn(action_id, action_dict)
       self.assertEqual('project_view', action_dict[action_id])
 
+  def test_quick_overview_gadget_field_default_is_not_empty(self):
+    """Project_viewQuickOverview holds a single GadgetField, and in non-editable
+    mode isNonEmptyNonEditableField drops every field with an empty default -
+    which renders the whole project page blank. The non-empty default is the
+    workaround (same as DiscussionThread_viewPostList/my_posts), so guard it."""
+    field = self.portal.portal_skins.erp5_web_project \
+                .Project_viewQuickOverview.my_info_gadget_field
+    self.assertNotEqual('', field.get_value('default'))
+
   def test_project_management_default_view_action_reference_is_view(self):
     """Half of the fix lives in the site configuration: the client sends this
     value as _view= on every jio_getAttachment(id, 'view'), so it must match the
