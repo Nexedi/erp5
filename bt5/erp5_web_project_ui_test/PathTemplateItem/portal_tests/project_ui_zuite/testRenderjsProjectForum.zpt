@@ -273,6 +273,13 @@
   <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_erp5_header.html']//a[@data-i18n='Discussion Thread: Thread 1']</td>
   <td></td>
 </tr>
+<!-- The thread was reached from a listbox row, ie without any view parameter,
+     so the panel must highlight the default view entry -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_erp5_project_panel.html']//dd[@class='document-listview']//a[text()='Discussion Posts' and @class='active']</td>
+  <td></td>
+</tr>
 <tr>
   <td>assertElementPresent</td>
   <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_thread_reader.html']//ol//li//p[text()='Post 1']</td>
