@@ -500,7 +500,7 @@
                 return runClientToolCall(tool_call, gadget.tool_list);
             })
              .push(function (client_tool_result) {
-               var result_content = 'args:' + tool_call.function.arguments + '\n' + 'result:' + client_tool_result.content,
+               var result_content = 'args:' + (tool_call.function.arguments ? tool_call.function.arguments: '') + '\n' + 'result:' + client_tool_result.content,
                  next_client_message_list = message_list.concat([{
                  role: "tool",
                  tool_call_id: tool_call.id,
@@ -531,8 +531,8 @@
                 return jIO.util.readBlobAsText(evt.target.response);
               })
               .push(function (text_evt) {
-                var result_content = 'args:' + tool_call.function.arguments + '\n' + 'result:' + result.content,
-                  result = JSON.parse(text_evt.target.result),
+                var result = JSON.parse(text_evt.target.result),
+                  result_content = 'args:' + (tool_call.function.arguments  ? tool_call.function.arguments: '') + '\n' + 'result:' + result.content,
                   next_message_list = message_list.concat([{
                     role: "tool",
                     tool_call_id: tool_call.id,
