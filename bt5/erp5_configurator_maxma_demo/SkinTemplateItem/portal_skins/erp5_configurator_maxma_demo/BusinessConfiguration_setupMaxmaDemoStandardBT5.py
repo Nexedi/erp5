@@ -4,7 +4,6 @@ bt5_installation_list = ('erp5_simulation',
                          'erp5_dhtml_style',
                          'erp5_jquery',
                          'erp5_jquery_ui',
-                         'erp5_ingestion_mysql_innodb_catalog',
                          'erp5_ingestion',
                          'erp5_web',
                          'erp5_dms',
@@ -30,7 +29,7 @@ bt5_installation_list = ('erp5_simulation',
                          'erp5_l10n_pt-BR',
                         )
 
-bt5_update_catalog = ('erp5_ingestion_mysql_innodb_catalog', )
+bt5_update_catalog = ()
 
 for name in bt5_installation_list:
   configuration_save.addConfigurationItem("Standard BT5 Configurator Item",
