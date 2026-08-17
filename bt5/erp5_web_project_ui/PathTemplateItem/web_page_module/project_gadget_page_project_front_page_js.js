@@ -529,7 +529,6 @@
           gadget.detachRenderProjectDocumentInfo();
           gadget.detachRenderOutdatedDocumentInfo();
           gadget.detachRenderTestResultInfo();
-          gadget.detachRenderProjectForumLink();
         });
     })
 
@@ -567,42 +566,6 @@
                                 TEST_RESULT_PORTAL_TYPE,
                                 parseInt(project_test_status_dict[project_id].all_tests, RADIX),
                                 parseInt(project_test_status_dict[project_id].failures, RADIX));
-            }
-          }
-        });
-    })
-
-    .declareJob("detachRenderProjectForumLink", function () {
-      return;
-      var gadget = this,
-        i,
-        forum_link_html,
-        forum_link_list,
-        link_query = getComplexQuery({"portal_type" : "Link",
-                                      "validation_state" : "reachable",
-                                      "relative_url" : "project_module/%/forum_link"},
-                                     "AND");
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.jio_allDocs({
-            query: Query.objectToSearchText(link_query),
-            limit: QUERY_LIMIT,
-            select_list: ['url_string'],
-            sort_on: [["modification_date", "descending"]]
-          });
-        })
-        .push(function (result) {
-          forum_link_list = result.data.rows;
-          for (i = 0; i < forum_link_list.length; i += 1) {
-            forum_link_html = document.querySelector(
-              getProjectHtlmElementId(getProjectId(forum_link_list[i].id),
-                                      FORUM_LINK_TYPE,
-                                      FORUM_LINK_ID_SUFFIX, true)
-            );
-            if (forum_link_html) {
-              forum_link_html.href = forum_link_list[i].value.url_string;
-              forum_link_html.innerHTML = "Project Forum";
-              forum_link_html.classList.remove("ui-hidden");
             }
           }
         });
