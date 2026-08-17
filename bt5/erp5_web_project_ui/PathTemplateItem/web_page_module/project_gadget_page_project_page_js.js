@@ -285,7 +285,7 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
                            "value": web_page_info.content});
           }
           url_parameter_list = [
-            getUrlParameterDict('milestone_module',
+            getUrlParameterDict(modification_dict.jio_key,
                                 milestone_view,
                                 [["stop_date", "ascending"]],
                                 null,
