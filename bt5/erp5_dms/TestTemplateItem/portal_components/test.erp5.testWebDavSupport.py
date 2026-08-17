@@ -57,7 +57,6 @@ class TestWebDavSupport(ERP5TypeTestCase):
     """
     return ('erp5_base',
             'erp5_ingestion',
-            'erp5_ingestion_mysql_innodb_catalog',
             'erp5_web',
             'erp5_dms',
             )
