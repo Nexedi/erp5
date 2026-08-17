@@ -51,6 +51,14 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
     return result && result.href;
   }
 
+  function getRequiredActionUrl(view_list, name) {
+    var href = getActionListByName(view_list, name);
+    if (href === undefined) {
+      throw new Error("Missing project view action: " + name);
+    }
+    return href;
+  }
+
   function createMultipleSimpleOrQuery(key, value_list) {
     var i,
       query_list = [];
@@ -253,7 +261,7 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
       return new RSVP.Queue()
         .push(function () {
           promise_list = [
-            gadget.getSetting("hateoas_url")
+            gadget.jio_getAttachment(modification_dict.jio_key, "links")
           ];
           if (modification_dict.publication_section) {
             promise_list.push(gadget.getDeclaredGadget("editor"));
@@ -263,18 +271,13 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
           return RSVP.all(promise_list);
         })
         .push(function (result_list) {
-          var document_view = result_list[0] +
-            '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
-            modification_dict.jio_key + '&view=Project_viewDocumentList',
-            milestone_view = result_list[0] +
-            '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
-            modification_dict.jio_key + '&view=Project_viewMilestoneList',
-            activity_view = result_list[0] +
-            '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
-            modification_dict.jio_key + '&view=Project_viewActivityList',
-            forum_view = result_list[0] +
-            '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
-            modification_dict.forum_jio_key;
+          var view_list = ensureArray(result_list[0]._links.view),
+            document_view = getRequiredActionUrl(view_list,
+                                                 'project_view_document_list'),
+            milestone_view = getRequiredActionUrl(view_list,
+                                                  'project_view_milestone_list'),
+            activity_view = getRequiredActionUrl(view_list,
+                                                 'project_view_activity_list');
           web_page_info = result_list[2];
           if (web_page_info) {
             editor = result_list[1];
@@ -338,7 +341,7 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
           }
           if (modification_dict.forum_jio_key) {
             url_parameter_list.push(getUrlParameterDict(modification_dict.forum_jio_key,
-                                                        forum_view,
+                                                        'view',
                                                         [["modification_date", "descending"]]));
           }
           return gadget.getUrlForList(url_parameter_list);
