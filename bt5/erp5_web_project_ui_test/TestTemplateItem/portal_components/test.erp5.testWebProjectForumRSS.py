@@ -212,6 +212,21 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     self.assertEqual([{'id': 'view', 'title': 'From object'}],
                      result['object_view'])
 
+  def test_project_extra_view_actions_are_registered(self):
+    """The project page resolves its milestone / document / activity views by
+    name from _links.view instead of building hateoas URLs by hand, so these
+    actions must exist on the Project portal type, in the project_view category
+    (the filter script merges it into object_view) and with ids that survive the
+    project_view -> view rename."""
+    action_dict = dict(
+      (action.getReference(), action.getActionType())
+      for action in self.portal.portal_types.Project.getActionInformationList())
+    for action_id in ('project_view_milestone_list',
+                      'project_view_document_list',
+                      'project_view_activity_list'):
+      self.assertIn(action_id, action_dict)
+      self.assertEqual('project_view', action_dict[action_id])
+
   def test_project_management_default_view_action_reference_is_view(self):
     """Half of the fix lives in the site configuration: the client sends this
     value as _view= on every jio_getAttachment(id, 'view'), so it must match the

@@ -149,6 +149,13 @@
   <td>Discussion Threads</td>
   <td></td>
 </tr>
+<!-- The project page forum link asks for the default view, so no intermediate
+     links request and redirect happen, and the panel entry is highlighted -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_erp5_project_panel.html']//dd[@class='document-listview']//a[text()='Discussion Threads' and @class='active']</td>
+  <td></td>
+</tr>
 <tr>
   <td>assertElementPresent</td>
   <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_erp5_project_panel.html']//a[text()='New Thread' and contains(@href, '#!display_dialog_with_history')]</td>

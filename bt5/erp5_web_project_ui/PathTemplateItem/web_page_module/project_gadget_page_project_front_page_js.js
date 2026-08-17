@@ -296,8 +296,7 @@
       bug_url_list = [],
       test_result_url_list = [],
       supervisor_url_list = [],
-      milestone_view,
-      project_view;
+      milestone_view;
 
     function createProjectHtmlElement(project_id, project_title,
                                       project_url, supervisor, supervisor_url) {
@@ -379,13 +378,8 @@
           milestone_view = hateoas_url +
             '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
             project_list[i].id + '&view=Project_viewMilestoneList';
-          project_view = hateoas_url +
-            '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
-            project_list[i].id +
-            '&view=Project_viewQuickOverview';
           url_parameter_list.push(
-            getUrlParameterDict(project_list[i].id,
-                                project_view)
+            getUrlParameterDict(project_list[i].id, 'view')
           );
           milestone_url_list.push(
             getUrlParameterDict('milestone_module',
