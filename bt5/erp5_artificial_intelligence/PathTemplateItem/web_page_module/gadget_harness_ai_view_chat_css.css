@@ -71,9 +71,7 @@ hr#post_item {
   line-height: 1.6;
 }
 
-/* ChatGPT hides the "who said this" label - the side/bubble already
-   communicates it - so drop the author name, keep the timestamp as a
-   small caption placed under the message instead of above it. */
+
 #post_list li.post-question > strong,
 #post_list li.post-answer > strong,
 #post_list li.post-question > br,
@@ -181,6 +179,7 @@ hr#post_item {
   padding: 0.85rem 1rem 0.5rem;
   background: var(--chat-surface);
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+  height: 25em;
 }
 
 #file_upload_div {

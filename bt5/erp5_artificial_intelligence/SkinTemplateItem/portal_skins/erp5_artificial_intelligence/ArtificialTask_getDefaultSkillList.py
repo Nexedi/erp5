@@ -1,1 +1,1 @@
-return ['skill_create_purchase_order']
+return [] #['skill_create_purchase_order']

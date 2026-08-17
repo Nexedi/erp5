@@ -88,6 +88,7 @@
                   function (skill_description) {
                     return JSON.parse(skill_description);
                   }) : [],
+              'hateoas_url': gadget.hateoas_url,
               'request_options': {
                 'document_id': gadget.options.jio_key,
                 'post_url': gadget.hateoas_url + gadget.options.jio_key + "/ArtificialTask_createCommentLine",

@@ -211,7 +211,7 @@
     .declareMethod('render', function (options) {
       var gadget = this;
       gadget.options = options;
-      gadget.tool_list = window.ChatTools.createToolList(gadget.element);
+      gadget.tool_list = window.ChatTools.createToolList(gadget.element, options.hateoas_url);
       gadget.remote_tool_definition_list = (options.tool_list || []).map(
         function (tool) {
           return typeof tool === "string" ? JSON.parse(tool) : tool;
@@ -449,7 +449,7 @@
                     gadget.changeState({
                       render_editor: true
                     }),
-                    gadget.processTask(20, skill_list)
+                    gadget.processTask(200, skill_list)
                   ]);
                 });
             }, function (e) {
@@ -494,20 +494,22 @@
             post_list.appendChild(tool_li);
           }
           if (client_tool) {
+            console.log('***************************** call browser tool cool');
             queue_loop
               .push(function () {
                 return runClientToolCall(tool_call, gadget.tool_list);
             })
              .push(function (client_tool_result) {
-               var next_client_message_list = message_list.concat([{
+               var result_content = 'args:' + tool_call.function.arguments + '\n' + 'result:' + client_tool_result.content,
+                 next_client_message_list = message_list.concat([{
                  role: "tool",
                  tool_call_id: tool_call.id,
                  name: tool_call.function.name,
-                 content: truncateToolOutput(client_tool_result.content)
+                 content: truncateToolOutput(result_content)
                }]);
               tool_count += 1;
               tool_summary.textContent = getToolCallSummaryText(tool_count);
-              tool_details.appendChild(getToolCallDiv({ name: tool_call.function.name, content: client_tool_result.content }));
+              tool_details.appendChild(getToolCallDiv({ name: tool_call.function.name, content: result_content}));
               return loop_call(
                 loop_count + 1,
                 next_client_message_list,
@@ -515,6 +517,8 @@
               );
             });
           } else {
+            console.log('xxxxxxxxxxxxxxxxxxxxx call server tool cool');
+
             queue_loop
               .push(function () {
                 return gadget.jio_putAttachment(
@@ -527,16 +531,17 @@
                 return jIO.util.readBlobAsText(evt.target.response);
               })
               .push(function (text_evt) {
-                var result = JSON.parse(text_evt.target.result),
+                var result_content = 'args:' + tool_call.function.arguments + '\n' + 'result:' + result.content,
+                  result = JSON.parse(text_evt.target.result),
                   next_message_list = message_list.concat([{
                     role: "tool",
                     tool_call_id: tool_call.id,
                     name: tool_call.function.name,
-                    content: truncateToolOutput(result.content)
+                    content: truncateToolOutput(result_content)
                   }]);
                 tool_count += 1;
                 tool_summary.textContent = getToolCallSummaryText(tool_count);
-                tool_details.appendChild(getToolCallDiv({ name: tool_call.function.name, content: result.content }));
+                tool_details.appendChild(getToolCallDiv({ name: tool_call.function.name, content: result_content }));
                 return loop_call(
                   loop_count + 1,
                   next_message_list,
@@ -549,6 +554,7 @@
 
         queue_loop
           .push(function () {
+            console.log('************************** call with llm');
             return gadget.compactMessageList(message_list);
           })
           .push(function (compacted_message_list) {
@@ -608,7 +614,7 @@
                 result.tool_calls
               );
             }
-
+            console.log('no more tool call');
             return gadget.notifySubmitted({message: 'end', status: "success"})
               .push(function () {
                 return gadget.changeState({
