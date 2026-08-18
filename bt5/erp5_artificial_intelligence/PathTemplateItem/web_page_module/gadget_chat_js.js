@@ -292,6 +292,7 @@
             domsugar(post_list_element, all_dom_list);
          });
        }
+      return queue;
     })
     .declareMethod('getMessageList', function () {
       var gadget = this,

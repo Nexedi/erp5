@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts85938365.6102486</string> </value>
+            <value> <string>ts87065499.3215652</string> </value>
         </item>
         <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
@@ -73,7 +73,7 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>bac60297d9ef3e4af66fc9edce87c3d1</string> </value>
+            <value> <string>bf84e20ae4b2734ef69f70d7770d4e1d</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -109,7 +109,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>460</int> </value>
+            <value> <int>1048</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -242,7 +242,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1034.50531.41511.26726</string> </value>
+                      <value> <string>1035.3770.52505.16486</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -258,7 +258,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1785938365.614478</float>
+                              <float>1787065499.325644</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
