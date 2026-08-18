@@ -162,7 +162,7 @@ class CoverageReport(unittest.TestCase):
               hostname,
               auth.__class__.__name__,
             )
-            time.sleep(60 if resp.status_code == 404 else 5)
+            time.sleep(5 if resp.status_code == 404 else 1)
             if datetime.datetime.now() > deadline:
               raise TimeoutError("Timeout downloading %s" % to_download)
     return downloaded_coverage_path_set
