@@ -4,6 +4,9 @@
   <item>Image</item>
   <item>Role Definition</item>
  </portal_type>
+ <portal_type id="Web Campaign Module">
+  <item>Web Campaign</item>
+ </portal_type>
  <portal_type id="Web Page">
   <item>Embedded File</item>
  </portal_type>
