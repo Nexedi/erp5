@@ -36,12 +36,13 @@
         domsugar("div", [domsugar("pre", [post.text])]),
       dom_list = [
       domsugar("strong", [post.user]),
+      /*
       domsugar("time", {
         datetime: post.date,
         title: post.date_formatted
       },
         [post.date_relative]
-      ),
+      ),*/
       domsugar("br"),
       content_element
     ];
@@ -197,12 +198,7 @@
 
 
   rJS(window)
-    /////////////////////////////////////////////////////////////////
-    // Acquired methods
-    /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("translate", "translate")
-    .declareAcquiredMethod("translateHtml", "translateHtml")
-    .declareAcquiredMethod("getTranslationList", "getTranslationList")
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
     .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
@@ -228,15 +224,12 @@
         sandbox: "public"
       })
       .push(function () {
-        return gadget.getTranslationList(["Post Comment"]);
+        return gadget.translate("Post Comment");
         })
-      .push(function (translation_list) {
-        var element = gadget.element.querySelector('input[type="submit"]');
-        gadget.element.querySelector("[data-i18n='[value]Post Comment']").value = translation_list[0];
-        element.removeAttribute('disabled');
-        element.classList.remove('ui-disabled');
+      .push(function (translation) {
+        gadget.element.querySelector("[data-i18n='[value]Post Comment']").value = translation;
         return gadget.changeState({
-          'render_editor': true,
+          'editor_state': 'initialise',
           'allow_submit': true,
           'render_comment': true
         });
@@ -258,14 +251,16 @@
           submitButton.classList.add("ui-disabled");
         }
       }
-      if (modification_dict.hasOwnProperty("render_editor") && modification_dict.render_editor) {
-        queue
-          .push(function () {
-            return gadget.getDeclaredGadget("editor");
-          })
-          .push(function (editor) {
-            return editor.render(gadget.options.editor_options.options);
-          });
+      if (modification_dict.hasOwnProperty("editor_state")) {
+        if (modification_dict.editor_state == 'initialise') {
+          queue
+            .push(function () {
+              return gadget.getDeclaredGadget("editor");
+            })
+            .push(function (editor) {
+              return editor.render(gadget.options.editor_options.options);
+            });
+        }
       }
       if (modification_dict.hasOwnProperty("render_comment") && modification_dict.render_comment) {
         queue
@@ -275,13 +270,13 @@
                 gadget.options.request_options.document_id,
                 gadget.options.request_options.get_url
               ),
-              gadget.getTranslationList(["Attachment:"])
+              gadget.translate("Attachment:")
             ]);
           })
           .push(
-            function (post_list_and_translation_list) {
-              var post_list = post_list_and_translation_list[0].map(formatPost),
-                translationAttachment = post_list_and_translation_list[1][1];
+            function (post_list_and_translation) {
+              var post_list = post_list_and_translation[0].map(formatPost),
+                translationAttachment = post_list_and_translation[1][1];
               return post_list.map(function (post) {
                 var tool_message_list = JSON.parse(post.report_text_content_list || "[]");
                 return getToolCallLiList(tool_message_list)
@@ -364,7 +359,7 @@
             throw new Error("compactMessageList: empty summary");
           }
           return leading_system_message_list.concat([{
-            role: "user",
+            role: "user", //XXXXX this change all message role to user
             content: "[context summary]\n" + result.content
           }], recent_message_list);
         })
@@ -374,7 +369,6 @@
     })
     .declareJob('submitPostComment', function () {
       var gadget = this,
-        submitButton = null,
         queue = null;
 
       return gadget.getDeclaredGadget("editor")
@@ -394,7 +388,7 @@
                 gadget.notifySubmitted({message: message_posting_comment}),
                 gadget.changeState({
                   allow_submit: false,
-                  render_editor: false
+                  editor_state: 'posting'
                 })
               ]);
             })
@@ -447,14 +441,17 @@
                 .push(function () {
                   return RSVP.all([
                     gadget.changeState({
-                      render_editor: true
+                      editor_state: 'initialise'
                     }),
                     gadget.processTask(200, skill_list)
                   ]);
                 });
             }, function (e) {
                return RSVP.all([
-                 gadget.changeState({allow_submit: true}),
+                 gadget.changeState({
+                   allow_submit: true,
+                   editor_state: 'initialise'
+                 }),
                  gadget.notifySubmitted({message: "Error:" + e, status: "error"})
                ]);
             });
@@ -469,6 +466,8 @@
         tool_summary = null,
         tool_count = 0,
         post_list = gadget.element.querySelector("#post_list"),
+        streaming_element,
+        content_element,
         tool_definition_list = gadget.tool_list.map(function (tool) {
           return { type: "function", "function": tool.definition };
         }).concat(gadget.remote_tool_definition_list);
@@ -480,8 +479,7 @@
             pending_tool_call_list && pending_tool_call_list.length
           ),
           tool_call = has_tool_call ? pending_tool_call_list[0] : null,
-          client_tool = tool_call ? findClientTool(tool_call.function.name, gadget.tool_list) : null,
-          streaming_element;
+          client_tool = tool_call ? findClientTool(tool_call.function.name, gadget.tool_list) : null;
         if (loop_count >= max_loop_count) {
           throw new Error("processTask: too many iterations");
         }
@@ -554,14 +552,9 @@
 
         queue_loop
           .push(function () {
-            console.log('************************** call with llm');
-            return gadget.compactMessageList(message_list);
-          })
-          .push(function (compacted_message_list) {
             var form_data = new FormData(),
-              content_element,
               raw_text = "";
-            message_list = compacted_message_list;
+            console.log('************************** call with llm');
 
             form_data.append("message_list", JSON.stringify(message_list));
             form_data.append("tool_definition_list", JSON.stringify(tool_definition_list));
@@ -581,52 +574,52 @@
                 }
                 // seems a bad idea, bad performance
                 raw_text += delta_content;
-                content_element.innerHTML = marked.parse(raw_text);
+                content_element.innerHTML = marked.parse(streaming_element[0].querySelector('pre').innerHTML + raw_text);
               }
             );
           })
           .push(function (stream_result) {
             if (streaming_element) {
-              streaming_element[0].querySelector('pre').innerHTML = stream_result? stream_result.content: '';
+              streaming_element[0].querySelector('pre').innerHTML += stream_result? stream_result.content: '';
             }
+            if (stream_result.tool_calls && stream_result.tool_calls.length) {
+              return loop_call(
+                loop_count + 1,
+                message_list.concat([{
+                  role: "assistant",
+                  content: stream_result.content,
+                  tool_calls: stream_result.tool_calls
+                }]),
+                stream_result.tool_calls
+              );
+            }
+            stream_result['content'] = streaming_element[0].querySelector('pre').innerHTML;
             return gadget.jio_putAttachment(
               gadget.options.request_options.document_id,
               gadget.options.request_options.process_url,
               {
                 message_list: JSON.stringify(message_list),
                 finalize_result: JSON.stringify(stream_result)
-              }
-            );
-          })
-          .push(function (evt) {
-            return jIO.util.readBlobAsText(evt.target.response);
-          })
-          .push(function (text_evt) {
-            var result = JSON.parse(text_evt.target.result);
-            if (result.tool_calls && result.tool_calls.length) {
-              return loop_call(
-                loop_count + 1,
-                message_list.concat([{
-                  role: "assistant",
-                  content: result.content,
-                  tool_calls: result.tool_calls
-                }]),
-                result.tool_calls
-              );
-            }
-            console.log('no more tool call');
-            return gadget.notifySubmitted({message: 'end', status: "success"})
-              .push(function () {
-                return gadget.changeState({
-                  allow_submit: true
-                });
-              });
+              })
+              .push(function (evt) {
+                console.log('no more tool call');
+                return gadget.notifySubmitted({message: 'end', status: "success"})
+                  .push(function () {
+                    return gadget.changeState({
+                      allow_submit: true,
+                      editor_state: 'initialise'
+                    });
+                  });
+               });
           });
       }
 
       queue_loop
         .push(function () {
           return gadget.getMessageList();
+        })
+        .push(function (message_list) {
+          return gadget.compactMessageList(message_list);
         })
         .push(function (message_list) {
           var skill_message_list = (skill_list || []).map(function (skill) {
