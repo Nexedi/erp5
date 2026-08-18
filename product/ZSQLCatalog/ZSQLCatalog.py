@@ -371,6 +371,7 @@ class ZCatalog(Folder, Persistent, Implicit):
         for object in folder.objectValues():
           self.changeSQLConnectionIds(object,sql_connection_id_dict)
 
+
   def _exchangeDatabases(self, source_sql_catalog_id, destination_sql_catalog_id,
                         skin_selection_dict, sql_connection_id_dict):
     """
@@ -473,9 +474,18 @@ class ZCatalog(Folder, Persistent, Implicit):
               destination_sql_connection_id
 
     destination_sql_catalog = getattr(self,destination_sql_catalog_id)
+    source_sql_catalog = getattr(self,source_sql_catalog_id)
     if update_destination_sql_catalog:
+      source_shared_sql_catalog = source_sql_catalog._getSharedCatalog()
+      destination_shared_sql_catalog = destination_sql_catalog._getSharedCatalog()
+      if destination_shared_sql_catalog and (source_shared_sql_catalog == destination_shared_sql_catalog):
+        raise CatalogError("Hot reindexing cannot be done with the same shared catalog"
+                         " while update_destination_sql_catalog is set to true.")
+
       self.changeSQLConnectionIds(destination_sql_catalog,
                                   sql_connection_id_dict)
+      self.changeSQLConnectionIds(destination_shared_sql_catalog, sql_connection_id_dict)
+
 
     # First of all, make sure that all root objects have uids.
     # XXX This is a workaround for tools (such as portal_simulation).
