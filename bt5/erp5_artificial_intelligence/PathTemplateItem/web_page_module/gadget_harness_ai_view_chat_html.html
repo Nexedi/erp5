@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+
+    <!-- renderjs -->
+    <script src="rsvp.js"></script>
+    <script src="renderjs.js"></script>
+
+    <!-- custom script -->
+    <script src="domsugar.js"></script>
+    <script src="jiodev.js"></script>
+    <link rel="stylesheet" type="text/css" href="gadget_harness_ai_chat.css">
+    <script src="gadget_erp5_pt_form_view_chat.js"></script>
+
+  </head>
+  <body>
+    <!-- XXX this is a form replacement -->
+    <div class="ui-body-c">
+      <div data-gadget-url="gadget_erp5_form.html"
+              data-gadget-scope="erp5_form"
+              data-gadget-sandbox="public">
+      </div>
+
+      <div data-gadget-url="gadget_chat.html"
+              data-gadget-scope="gadget_chat"
+              data-gadget-sandbox="public">
+      </div>
+    </div>
+  </body>
+</html>
