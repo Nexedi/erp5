@@ -333,7 +333,7 @@
         </item>
         <item>
             <key> <string>configuration_application_title</string> </key>
-            <value> <string>ERP5</string> </value>
+            <value> <string>PROJECT management</string> </value>
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
@@ -341,7 +341,7 @@
         </item>
         <item>
             <key> <string>configuration_default_view_action_reference</string> </key>
-            <value> <string>project_view</string> </value>
+            <value> <string>view</string> </value>
         </item>
         <item>
             <key> <string>configuration_frontpage_gadget_url</string> </key>
