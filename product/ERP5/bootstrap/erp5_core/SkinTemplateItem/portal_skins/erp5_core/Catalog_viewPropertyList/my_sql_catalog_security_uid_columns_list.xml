@@ -10,6 +10,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>default</string>
                 <string>height</string>
                 <string>title</string>
                 <string>whitespace_preserve</string>
@@ -52,6 +53,12 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>default</string> </key>
+                    <value>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -66,6 +73,12 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
                 <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_lines_field</string> </value>
@@ -92,6 +105,19 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: here.getSqlCatalogSecurityUidColumnsList(include_shared=False)</string> </value>
         </item>
       </dictionary>
     </pickle>

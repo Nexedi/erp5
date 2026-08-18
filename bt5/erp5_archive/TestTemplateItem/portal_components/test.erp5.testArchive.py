@@ -169,7 +169,7 @@ class TestArchive(InventoryAPITestCase):
     self.checkRelativeUrlInSQLPathList(path_list, connection_id=self.original_connection_id)
 
     # Create new connectors for destination
-    addSQLConnection = portal.manage_addProduct['ZMySQLDA'] \
+    addSQLConnection = portal.manage_addProduct['ZSQLDA'] \
       .manage_addZMySQLConnection
     self.new_connection_id = 'erp5_sql_connection1'
     db1, db2 = getExtraSqlConnectionStringList()[:2]
@@ -201,12 +201,25 @@ class TestArchive(InventoryAPITestCase):
     new_catalog_id = 'erp5_mysql_innodb_2'
     portal_catalog.manage_renameObject(id=new_id,new_id=new_catalog_id)
 
+    # The destination and archive catalogs must each own a separate shared
+    # catalog: archiving re-points the shared catalog's connections in place and
+    # refuses to run when source and destination/archive share the same one.
+    source_shared_catalog = portal_catalog[self.original_catalog_id]._getSharedCatalog()
+    new_shared_catalog_id = portal_catalog.manage_pasteObjects(
+      portal_catalog.manage_copyObjects(ids=(source_shared_catalog.getId(),)),
+    )[0]['new_id']
+    portal_catalog[new_catalog_id].shared_erp5_catalog_id = new_shared_catalog_id
+
     # Create new catalog for archive
     self.archive_catalog_id = self.original_catalog_id + '_archive'
     cp_data = portal_catalog.manage_copyObjects(ids=('erp5_mysql_innodb',))
     archive_id = portal_catalog.manage_pasteObjects(cp_data)[0]['new_id']
     archive_catalog_id = 'erp5_mysql_innodb_archive'
     portal_catalog.manage_renameObject(id=archive_id,new_id=archive_catalog_id)
+    archive_shared_catalog_id = portal_catalog.manage_pasteObjects(
+      portal_catalog.manage_copyObjects(ids=(source_shared_catalog.getId(),)),
+    )[0]['new_id']
+    portal_catalog[archive_catalog_id].shared_erp5_catalog_id = archive_shared_catalog_id
 
     # Create an archive
     archive = portal_archive.newContent(portal_type="Archive",

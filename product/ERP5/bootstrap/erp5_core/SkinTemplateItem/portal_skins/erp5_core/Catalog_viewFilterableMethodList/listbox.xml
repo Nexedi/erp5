@@ -12,6 +12,7 @@
               <list>
                 <string>columns</string>
                 <string>count_method</string>
+                <string>default_params</string>
                 <string>editable_columns</string>
                 <string>lines</string>
                 <string>list_method</string>
@@ -130,6 +131,17 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>default_params</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>checked_permission</string>
+                          <string>View</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
                       <list>
@@ -205,7 +217,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>Catalog_getFilterableMethodList</string> </value>
+            <value> <string>Catalog_getLocalFilterableMethodList</string> </value>
         </item>
       </dictionary>
     </pickle>
