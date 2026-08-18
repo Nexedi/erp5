@@ -1,12 +1,10 @@
-maileva_connector_list = context.portal_catalog(
+from zExceptions import Unauthorized
+if REQUEST is not None:
+  raise Unauthorized
+maileva_connector = context.portal_catalog.getResultValue(
   portal_type='Maileva SOAP Connector',
-  validation_state='validated',
-  limit=2)
-
-# Ensure there is no duplication.
-if not len(maileva_connector_list):
-  raise ValueError('Maileva soap connector is not defined')
-elif len(maileva_connector_list) != 1:
-  raise ValueError('More them one Maileva soap connector was found!')
-
-return maileva_connector_list[0]
+  reference=reference,
+  validation_state='validated')
+if not maileva_connector:
+  raise ValueError('Maileav soap connector is not defined')
+return maileva_connector.getRelativeUrl()
