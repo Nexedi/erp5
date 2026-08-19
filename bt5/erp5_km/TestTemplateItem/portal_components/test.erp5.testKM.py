@@ -47,7 +47,7 @@ class TestKMMixIn(TestDocumentMixin):
   business_template_list = ['erp5_core_proxy_field_legacy',
                             'erp5_full_text_mroonga_catalog','erp5_base',
                             'erp5_jquery', 'erp5_jquery_ui', 'erp5_knowledge_pad',
-                            'erp5_ingestion_mysql_innodb_catalog', 'erp5_ingestion',
+                            'erp5_ingestion',
                             'erp5_web', 'erp5_dms',
                             'erp5_pdm', 'erp5_simulation',
                             'erp5_trade', 'erp5_project', 'erp5_crm',
@@ -884,7 +884,7 @@ class TestKMSearch(TestKMMixIn):
       portal_templates = portal.portal_templates
       website = self.portal.web_site_module.km_test_web_site
       base_url = "http://www.erp5.org/dists/snapshot/bt5"
-      portal.manage_addProduct['ZMySQLDA'].manage_addZMySQLConnection(
+      portal.manage_addProduct['ZSQLDA'].manage_addZMySQLConnection(
                                             id=connection_id ,
                                             title="Sphinx",
                                             connection_string="dummy@127.0.0.1:9306")

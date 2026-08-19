@@ -64,7 +64,6 @@ class TestBusinessTemplateTwoFileExport(ERP5TypeTestCase):
                             'erp5_full_text_mroonga_catalog',
                             'erp5_base',
                             'erp5_core',
-                            'erp5_ingestion_mysql_innodb_catalog',
                             'erp5_ingestion',
                             'erp5_xhtml_style',
                             'erp5_web',
