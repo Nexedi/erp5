@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Style" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts87134280.5087183</string> </value>
+            <value> <string>ts87134119.9508502</string> </value>
         </item>
         <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
@@ -73,15 +73,17 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>e54ac85df77d233c296d0335a9d017fa</string> </value>
+            <value> <string>dad5df857409cc2833bfe8774d5d1e3f</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_harness_ai_homepage.html</string> </value>
+            <value> <string>gadget_erp5_page_harness_ai_homepage.css</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -91,7 +93,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_harness_ai_homepage_html</string> </value>
+            <value> <string>gadget_harness_ai_homepage_css</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -99,7 +101,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Style</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -109,11 +111,11 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>773</int> </value>
+            <value> <int>320</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Harness AI Homepage</string> </value>
+            <value> <string>Gadget harness ai homepage css</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -193,7 +195,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1785937056.676204</float>
+                              <float>1787134070.943898</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -242,7 +244,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1035.4929.65076.28040</string> </value>
+                      <value> <string>1035.4928.62078.14728</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -258,7 +260,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1787134280.513007</float>
+                              <float>1787134270.383276</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

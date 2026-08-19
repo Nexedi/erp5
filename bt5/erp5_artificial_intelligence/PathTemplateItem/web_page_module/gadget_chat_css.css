@@ -11,7 +11,9 @@ hr#post_item {
   margin-bottom: 20px;
 }
 
-
+.chat-hidden-field {
+  display: none;
+}
 
 /* ---- Chat page frame ---------------------------------------------------- */
 
@@ -177,7 +179,14 @@ hr#post_item {
   padding: 0.85rem 1rem 0.5rem;
   background: var(--chat-surface);
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
-  height: 25em;
+  height: 15em;
+}
+
+
+
+
+.chat-editor iframe {
+  height: 15em;
 }
 
 #file_upload_div {
@@ -212,6 +221,7 @@ hr#post_item {
   font-weight: 600;
   padding: 0.5em 1.4em;
   cursor: pointer;
+  margin-top: 0px;
   transition: background-color 0.15s ease, opacity 0.15s ease;
 }
 
