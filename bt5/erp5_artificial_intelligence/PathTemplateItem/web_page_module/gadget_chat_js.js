@@ -27,7 +27,7 @@
   }
 
 
-  function getPostDomList(post, translationAttachment) {
+  function getPostDom(post, translationAttachment) {
     var content_element = post.response ?
         domsugar("div", [
           domsugar("div", { "class": "post-markdown", html: marked.parse(post.text) }),
@@ -35,28 +35,15 @@
         ]) :
         domsugar("div", [domsugar("pre", [post.text])]),
       dom_list = [
-      domsugar("strong", [post.user]),
-      /*
-      domsugar("time", {
-        datetime: post.date,
-        title: post.date_formatted
-      },
-        [post.date_relative]
-      ),*/
-      domsugar("br"),
       content_element
     ];
     if (post.attachment_link) {
-      dom_list.push(domsugar("br"));
       dom_list.push(domsugar("strong", [translationAttachment]));
       dom_list.push(domsugar("a", { href: post.attachment_link }, [post.attachment_name]));
     }
-    return [
-      domsugar("li", {
-        "class": post.response ? "post-answer" : "post-question"
-      }, dom_list),
-      domsugar("hr", { id: "post_item" })
-    ];
+    return domsugar("li", {
+      "class": post.response ? "post-answer" : "post-question"
+    }, dom_list);
   }
 
   function getToolCallDiv(tool_message) {
@@ -71,18 +58,15 @@
     return "Tool calls (" + count + ")";
   }
 
-  function getToolCallLiList(tool_message_list) {
+  function getToolCallDom(tool_message_list) {
     if (!tool_message_list.length) {
-      return [];
+      return;
     }
-    return [
-      domsugar("li", { "class": "post-tool" }, [
-        domsugar("details", {}, [
-          domsugar("summary", [getToolCallSummaryText(tool_message_list.length)])
-        ].concat(tool_message_list.map(getToolCallDiv)))
-      ])
-      //domsugar("hr")
-    ];
+    return domsugar("li", { "class": "post-tool" }, [
+      domsugar("details", {}, [
+        domsugar("summary", [getToolCallSummaryText(tool_message_list.length)])
+      ].concat(tool_message_list.map(getToolCallDiv)))
+    ]);
   }
   //XXX is it correct ?
   function fetchStream(url, options, onDelta) {
@@ -279,9 +263,13 @@
               var post_list = post_list_and_translation[0].map(formatPost),
                 translationAttachment = post_list_and_translation[1][1];
               return post_list.map(function (post) {
-                var tool_message_list = JSON.parse(post.report_text_content_list || "[]");
-                return getToolCallLiList(tool_message_list)
-                  .concat(getPostDomList(post, translationAttachment));
+                var tool_call_dom = getToolCallDom(JSON.parse(post.report_text_content_list || "[]")),
+                  post_dom;
+                post_dom = getPostDom(post, translationAttachment);
+                if (tool_call_dom) {
+                  post_dom.appendChild(tool_call_dom);
+                }
+                return post_dom;
               });
           })
           .push(function (dom_list) {
@@ -321,9 +309,8 @@
     .declareMethod('appendPost', function (post) {
       var gadget = this,
         post_list_element = gadget.element.querySelector("#post_list"),
-        dom_list = getPostDomList(formatPost(post));
-      post_list_element.appendChild(dom_list[0]);
-      post_list_element.appendChild(dom_list[1]);
+        dom = getPostDom(formatPost(post));
+      post_list_element.appendChild(dom);
     })
     .declareMethod('compactMessageList', function (message_list) {
       var gadget = this,
@@ -499,7 +486,15 @@
             tool_summary = domsugar("summary", [getToolCallSummaryText(0)]);
             tool_details = domsugar("details", {}, [tool_summary]);
             tool_li = domsugar("li", { "class": "post-tool" }, [tool_details]);
-            post_list.appendChild(tool_li);
+            if (!streaming_element) {
+              streaming_element = getPostDom(formatPost({
+                date: new Date().toISOString(),
+                text: "",
+                response: true
+              }));
+              post_list.appendChild(streaming_element);
+            }
+            streaming_element.appendChild(tool_li);
           }
           if (client_tool) {
             console.log('***************************** call browser tool cool');
@@ -572,25 +567,24 @@
               gadget.options.request_options.process_url,
               { method: "POST", credentials: "same-origin", body: form_data },
               function (delta_content) {
-                if (!content_element) {
-                  streaming_element = getPostDomList(formatPost({
+                if (!streaming_element) {
+                  streaming_element = getPostDom(formatPost({
                     date: new Date().toISOString(),
                     text: "",
                     response: true
                   }));
-                  post_list.appendChild(streaming_element[0]);
-                  post_list.appendChild(streaming_element[1]);
-                  content_element = streaming_element[0].querySelector(".post-markdown");
+                  post_list.appendChild(streaming_element);
                 }
                 // seems a bad idea, bad performance
+                content_element = streaming_element.querySelector(".post-markdown");
                 raw_text += delta_content;
-                content_element.innerHTML = marked.parse(streaming_element[0].querySelector('pre').innerHTML + raw_text);
+                content_element.innerHTML = marked.parse(streaming_element.querySelector('pre').innerHTML + raw_text);
               }
             );
           })
           .push(function (stream_result) {
             if (streaming_element) {
-              streaming_element[0].querySelector('pre').innerHTML += stream_result? stream_result.content: '';
+              streaming_element.querySelector('pre').innerHTML += stream_result? stream_result.content: '';
             }
             if (stream_result.tool_calls && stream_result.tool_calls.length) {
               return loop_call(
@@ -603,7 +597,7 @@
                 stream_result.tool_calls
               );
             }
-            stream_result['content'] = streaming_element[0].querySelector('pre').innerHTML;
+            stream_result['content'] = streaming_element.querySelector('pre').innerHTML;
             return gadget.jio_putAttachment(
               gadget.options.request_options.document_id,
               gadget.options.request_options.process_url,
