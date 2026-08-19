@@ -113,7 +113,7 @@
 </tr>
 <tr>
  <td>assertElementPresent</td>
- <td>//a[text()='Milestones' and contains(@href, '#!push_history') and contains(@href, 'n.jio_key=milestone_module')]</td>
+ <td>//a[text()='Milestones' and contains(@href, '#!push_history') and contains(@href, 'n.jio_key=project_module')]</td>
  <td></td>
 </tr>
 <tr>
