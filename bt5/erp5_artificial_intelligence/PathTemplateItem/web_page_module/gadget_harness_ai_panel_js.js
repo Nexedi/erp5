@@ -5,29 +5,6 @@
            mergeGlobalActionWithRawActionList) {
   "use strict";
 
-
-
-  function appendDt(fragment, dt_title, dt_icon,
-                    action_list, href_list, index) {
-    var element_list = [
-      domsugar('dt', {
-        text: dt_title,
-        'class': 'ui-btn-icon-left ui-icon-' + dt_icon
-      })
-    ],
-      i;
-    for (i = 0; i < action_list.length; i += 1) {
-      element_list.push(domsugar('dd', {'class': 'document-listview'}, [
-        domsugar('a', {
-          href: href_list[index + i],
-          text: action_list[i].title,
-          'class': action_list[i].class_name || null
-        })
-      ]));
-    }
-    fragment.appendChild(domsugar(null, element_list));
-  }
-
   rJS(window)
     .setState({
       visible: false
@@ -65,35 +42,7 @@
       if (visible === undefined) {
         visible = context.state.visible;
       }
-
-      return context.jio_getAttachment(jio_key, 'links')
-        .push(function (result) {
-          var url_mapping = mergeGlobalActionWithRawActionList(
-              jio_key, view, jump_view, result._links,
-              ["action_object_jio_action"],
-              {"action_object_jio_action": "display_dialog_with_history"}
-            ),
-            index;
-          action_list = result._links.action_object_jio_action || [];
-
-          for (index = 0; index < action_list.length; index += 1) {
-            if (action_list[index].name === 'new') {
-              break;
-            }
-          }
-          return context.getUrlFor(
-            url_mapping.action_object_jio_action[index].url_kw
-          )
-            .push(function (new_task_url) {
-              action_list = [{
-                href: new_task_url,
-                title: action_list[index].title
-              }];
-            });
-        })
-        .push(function () {
-          return context.getUrlParameter('editable');
-        })
+      return context.getUrlParameter('editable')
         .push(function (editable) {
           return context.changeState({
             visible: visible,
@@ -101,16 +50,13 @@
             jio_key: jio_key,
             view: view,
             jump_view: jump_view,
-            editable: editable,
-            action_list: JSON.stringify(action_list)
+            editable: editable
           });
         });
     })
     .onStateChange(function onStateChange(modification_dict) {
       var i,
         gadget = this,
-        dl_fragment,
-        action_list,
         queue = new RSVP.Queue();
 
       if (modification_dict.hasOwnProperty("visible")) {
@@ -159,7 +105,7 @@
                 {command: 'display', options: {page: "logout"}}
               ]),
               translation_list: gadget.getTranslationList([
-                'Home',
+                'New Artificial Task',
                 'Artificial Task Module',
                 'History',
                 //'Search',
@@ -195,34 +141,6 @@
           });
       }
 
-      if ((this.state.global === true) &&
-          (modification_dict.hasOwnProperty("editable") ||
-          modification_dict.hasOwnProperty("action_list"))) {
-
-        dl_fragment = document.createDocumentFragment();
-        gadget.element.querySelector("dl").textContent = '';
-        queue
-          .push(function () {
-            var parameter_list = [];
-            action_list = JSON.parse(gadget.state.action_list);
-            return RSVP.hash({
-              translation_dict: gadget.getTranslationDict([
-                'Actions'
-              ])
-            });
-          })
-          .push(function (result_dict) {
-            appendDt(dl_fragment, result_dict.translation_dict.Actions, 'cogs',
-                     action_list, action_list.map(x => x.href), 0);
-
-          });
-      }
-      queue
-        .push(function () {
-          if (dl_fragment) {
-            domsugar(gadget.element.querySelector("dl"), [dl_fragment]);
-          }
-        });
       return queue;
     })
 

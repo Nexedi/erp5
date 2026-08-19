@@ -231,7 +231,8 @@
         return gadget.changeState({
           'editor_state': 'initialise',
           'allow_submit': true,
-          'render_comment': true
+          'render_comment': true ? gadget.options.request_options.get_url : false,
+          'chat_state': gadget.options.chat_state
         });
       });
     })
@@ -292,6 +293,12 @@
             domsugar(post_list_element, all_dom_list);
          });
        }
+      if (modification_dict.hasOwnProperty("chat_state") && modification_dict.chat_state == 'not_yet_responded') {
+        queue
+          .push(function () {
+            return gadget.processTask(200);
+        });
+      }
       return queue;
     })
     .declareMethod('getMessageList', function () {
@@ -383,25 +390,15 @@
                   return gadget.notifySubmitted({message: translated_message});
                 })
           }
-          queue = gadget.translate("Posting comment")
-            .push(function (message_posting_comment) {
-              return RSVP.all([
-                gadget.notifySubmitted({message: message_posting_comment}),
-                gadget.changeState({
-                  allow_submit: false,
-                  editor_state: 'posting'
-                })
-              ]);
+          queue = gadget.changeState({
+            allow_submit: false,
+            editor_state: 'posting'
             })
             .push(function () {
               var choose_file_html_element = gadget.element.querySelector('#attachment'),
                 file_blob = choose_file_html_element.files[0],
                 url = gadget.options.request_options.post_url,
                 comment_text = content.comment,
-                // XXXXXX seems bad to do locally
-                skill_list = window.ChatSkills.matchSkillList(comment_text).concat(
-                  window.ChatSkills.matchSkillListFrom(comment_text, gadget.remote_skill_list)
-                ),
                 form_data_json = {},
                 post;
               form_data_json.data = comment_text || "";
@@ -416,10 +413,7 @@
 
               return new RSVP.Queue()
                 .push(function () {
-                  return RSVP.all([
-                    gadget.notifySubmitted({message: 'processing', status: "success"}),
-                    gadget.appendPost(post)
-                  ]);
+                  return gadget.appendPost(post);
                 })
                 .push(function () {
                   if (file_blob) {
@@ -439,12 +433,27 @@
                     form_data_json
                   );
                 })
-                .push(function () {
+                .push(function (evt) {
+                  var location = evt.target.getResponseHeader("X-Location"),
+                    uri,
+                    redirect_jio_key;
+                  if (location) {
+                    uri = new URI(location);
+                    redirect_jio_key = uri.segment(2);
+                  }
+                  if (redirect_jio_key && (gadget.options.request_options.document_id != redirect_jio_key)) {
+                    return gadget.redirect({
+                      command: 'display',
+                      options: {
+                        "jio_key": redirect_jio_key
+                      }
+                    });
+                  }
                   return RSVP.all([
                     gadget.changeState({
-                      editor_state: 'initialise'
-                    }),
-                    gadget.processTask(200, skill_list)
+                      editor_state: 'initialise',
+                      chat_state: 'not_yet_responded'
+                    })
                   ]);
                 });
             }, function (e) {
@@ -608,6 +617,7 @@
                   .push(function () {
                     return gadget.changeState({
                       allow_submit: true,
+                      chat_state: 'responded',
                       editor_state: 'initialise'
                     });
                   });
@@ -617,15 +627,23 @@
 
       queue_loop
         .push(function () {
+          return gadget.notifySubmitted({message: 'processing', status: "success"});
+        })
+        .push(function () {
           return gadget.getMessageList();
         })
         .push(function (message_list) {
           return gadget.compactMessageList(message_list);
         })
         .push(function (message_list) {
-          var skill_message_list = (skill_list || []).map(function (skill) {
-            return { role: "system", content: skill.instructions };
-          });
+          // XXXXXX seems bad to do locally
+          var last_comment = message_list[message_list.length - 1].content,
+            skill_list = window.ChatSkills.matchSkillList(last_comment).concat(
+              window.ChatSkills.matchSkillListFrom(last_comment, gadget.remote_skill_list)
+            ),
+            skill_message_list = (skill_list || []).map(function (skill) {
+              return { role: "system", content: skill.instructions };
+            });
           return loop_call(0, skill_message_list.concat(message_list));
         });
       return queue_loop;

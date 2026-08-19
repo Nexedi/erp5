@@ -1,1 +1,1 @@
-return context.getPortalObject().portal_web_services['1']
+return context.getPortalObject().portal_web_services['2']

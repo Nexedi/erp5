@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts86953504.3474154</string> </value>
+            <value> <string>ts87130919.5111012</string> </value>
         </item>
         <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
@@ -73,7 +73,7 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>1fc147bfeaf12ebdd93125f686d3549f</string> </value>
+            <value> <string>cb954e0fe983bb1b8c5d7b8c3fa3d78d</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -83,7 +83,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_harness_ai_chat.css</string> </value>
+            <value> <string>gadget_chat.css</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -93,7 +93,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_harness_ai_chat_css</string> </value>
+            <value> <string>gadget_chat_css</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -111,11 +111,11 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4884</int> </value>
+            <value> <int>4845</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Artificial Task Chat view CSS</string> </value>
+            <value> <string>Gadget Chat  CSS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -244,7 +244,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1035.3784.1881.13755</string> </value>
+                      <value> <string>1035.4868.54061.26350</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -260,7 +260,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1787065481.332508</float>
+                              <float>1787130919.517008</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

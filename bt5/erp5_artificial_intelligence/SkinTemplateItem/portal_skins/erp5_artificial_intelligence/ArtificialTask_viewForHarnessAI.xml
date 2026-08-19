@@ -97,9 +97,9 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>your_preferred_editor</string>
                         <string>your_tool_list</string>
                         <string>your_skill_list</string>
+                        <string>my_simulation_state</string>
                       </list>
                     </value>
                 </item>
