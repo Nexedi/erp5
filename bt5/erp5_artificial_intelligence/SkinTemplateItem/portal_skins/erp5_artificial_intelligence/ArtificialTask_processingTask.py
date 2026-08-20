@@ -80,6 +80,12 @@ elif finalize_result:
       text_content = content
     )
     artificial_task_report = artificial_task.getFollowUpRelatedValue(portal_type='Artificial Task Report')
+    if not artificial_task_report:
+      artificial_task_report = portal.artificial_task_report_module.newContent(portal_type='Artificial Task Report')
+      artificial_task_report.edit(
+        follow_up_value = artificial_task
+      )
+
     artificial_task_report.newContent(
       portal_type='Artificial Task Report Line',
       text_content = json.dumps(message_list + [response], indent=2),

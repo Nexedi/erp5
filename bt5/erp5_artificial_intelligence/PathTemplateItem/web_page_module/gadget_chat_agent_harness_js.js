@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, FormData, URI, jIO, domsugar, fetch, TextDecoder, AbortController, marked */
+/*global window, rJS, RSVP, FormData, jIO, fetch, TextDecoder, AbortController */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, marked) {
+(function (window, rJS, RSVP) {
   "use strict";
 
   var COMPACT_THRESHOLD = 50,
@@ -19,55 +19,6 @@
       lines.length + " lines - full output is visible in the tool call panel]\n" + kept;
   }
 
-  function formatPost(post) {
-    var date = new Date(post.date);
-    post.date_formatted = date.toLocaleString();
-    post.date_relative = date.toLocaleString();
-    return post;
-  }
-
-
-  function getPostDom(post, translationAttachment) {
-    var content_element = post.response ?
-        domsugar("div", [
-          domsugar("div", { "class": "post-markdown", html: marked.parse(post.text) }),
-          domsugar("pre", { "class": "chat-hidden-field" }, [post.text])
-        ]) :
-        domsugar("div", [domsugar("pre", [post.text])]),
-      dom_list = [
-      content_element
-    ];
-    if (post.attachment_link) {
-      dom_list.push(domsugar("strong", [translationAttachment]));
-      dom_list.push(domsugar("a", { href: post.attachment_link }, [post.attachment_name]));
-    }
-    return domsugar("li", {
-      "class": post.response ? "post-answer" : "post-question"
-    }, dom_list);
-  }
-
-  function getToolCallDiv(tool_message) {
-    return domsugar("div", { "class": "post-tool-entry" }, [
-      domsugar("strong", ["Tool: " + tool_message.name]),
-      domsugar("br"),
-      tool_message.content
-    ]);
-  }
-
-  function getToolCallSummaryText(count) {
-    return "Tool calls (" + count + ")";
-  }
-
-  function getToolCallDom(tool_message_list) {
-    if (!tool_message_list.length) {
-      return;
-    }
-    return domsugar("li", { "class": "post-tool" }, [
-      domsugar("details", {}, [
-        domsugar("summary", [getToolCallSummaryText(tool_message_list.length)])
-      ].concat(tool_message_list.map(getToolCallDiv)))
-    ]);
-  }
   //XXX is it correct ?
   function fetchStream(url, options, onDelta) {
     var controller = new AbortController();
@@ -178,15 +129,9 @@
     });
   }
 
-
-
-
   rJS(window)
-    .declareAcquiredMethod("translate", "translate")
-    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
     .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
-    .declareAcquiredMethod("redirect", "redirect")
 
     .declareMethod('render', function (options) {
       var gadget = this;
@@ -202,115 +147,21 @@
           return typeof skill === "string" ? JSON.parse(skill) : skill;
         }
       );
-      return gadget.declareGadget(options.editor_options.editor,  {
-        element: gadget.element.querySelector('.chat-editor'),
-        scope: "editor",
-        sandbox: "public"
-      })
-      .push(function () {
-        return gadget.translate("Post Comment");
+      return gadget.getDeclaredGadget("gadget_chat_ui")
+        .push(function (gadget_chat_ui) {
+          return gadget_chat_ui.render(options);
         })
-      .push(function (translation) {
-        gadget.element.querySelector("[data-i18n='[value]Post Comment']").value = translation;
-        return gadget.changeState({
-          'editor_state': 'initialise',
-          'allow_submit': true,
-          'render_comment': true ? gadget.options.request_options.get_url : false,
-          'chat_state': gadget.options.chat_state
-        });
-      });
-    })
-    .allowPublicAcquisition('notifySubmit', function notifySubmit(e) {
-      return this.submitPostComment(e);
-    })
-    .onStateChange(function (modification_dict) {
-      var gadget = this,
-        queue = new RSVP.Queue();
-      if (modification_dict.hasOwnProperty("allow_submit")) {
-        var submitButton = gadget.element.querySelector("input[type=submit]");
-        if (modification_dict.allow_submit) {
-          submitButton.disabled = false;
-          submitButton.classList.remove("ui-disabled");
-        } else {
-          submitButton.disabled = true;
-          submitButton.classList.add("ui-disabled");
-        }
-      }
-      if (modification_dict.hasOwnProperty("editor_state")) {
-        if (modification_dict.editor_state == 'initialise') {
-          queue
-            .push(function () {
-              return gadget.getDeclaredGadget("editor");
-            })
-            .push(function (editor) {
-              return editor.render(gadget.options.editor_options.options);
-            });
-        }
-      }
-      if (modification_dict.hasOwnProperty("render_comment") && modification_dict.render_comment) {
-        queue
-          .push(function () {
-            return RSVP.all([
-              gadget.jio_getAttachment(
-                gadget.options.request_options.document_id,
-                gadget.options.request_options.get_url
-              ),
-              gadget.translate("Attachment:")
-            ]);
-          })
-          .push(
-            function (post_list_and_translation) {
-              var post_list = post_list_and_translation[0].map(formatPost),
-                translationAttachment = post_list_and_translation[1][1];
-              return post_list.map(function (post) {
-                var tool_call_dom = getToolCallDom(JSON.parse(post.report_text_content_list || "[]")),
-                  post_dom;
-                post_dom = getPostDom(post, translationAttachment);
-                if (tool_call_dom) {
-                  post_dom.appendChild(tool_call_dom);
-                }
-                return post_dom;
-              });
-          })
-          .push(function (dom_list) {
-            var all_dom_list = [], post_list_element, i;
-            for (i = 0; i < dom_list.length; i += 1) {
-              all_dom_list = all_dom_list.concat(dom_list[i]);
-            }
-            post_list_element = gadget.element.querySelector("#post_list");
-            domsugar(post_list_element, all_dom_list);
-         });
-       }
-      if (modification_dict.hasOwnProperty("chat_state") && modification_dict.chat_state == 'not_yet_responded') {
-        queue
-          .push(function () {
+        .push(function () {
+          gadget.element.setAttribute('data-chat-state', options.chat_state);
+          if (options.chat_state === 'not_yet_responded') {
             return gadget.processTask(200);
+          }
         });
-      }
-      return queue;
     })
-    .declareMethod('getMessageList', function () {
-      var gadget = this,
-        li_list = gadget.element.querySelectorAll(
-          "#post_list li.post-question, #post_list li.post-answer"
-        ),
-        message_list = [],
-        i, li, content_element;
-      for (i = 0; i < li_list.length; i += 1) {
-        li = li_list[i];
-        content_element = li.querySelector('pre.chat-hidden-field') || li.querySelector('pre');
-        message_list.push({
-          role: li.classList.contains("post-answer") ? "assistant" : "user",
-          content: content_element ? content_element.textContent : ""
-        });
-      }
-      return message_list;
-    })
-    .declareMethod('appendPost', function (post) {
-      var gadget = this,
-        post_list_element = gadget.element.querySelector("#post_list"),
-        dom = getPostDom(formatPost(post));
-      post_list_element.appendChild(dom);
+    .allowPublicAcquisition('notifyCommentPosted', function () {
+      var gadget = this;
+      gadget.element.setAttribute('data-chat-state', 'not_yet_responded');
+      return gadget.processTask(200);
     })
     .declareMethod('compactMessageList', function (message_list) {
       var gadget = this,
@@ -362,114 +213,14 @@
           return message_list;
         });
     })
-    .declareJob('submitPostComment', function () {
+    .declareJob('processTask', function (max_loop_count) {
       var gadget = this,
-        queue = null;
-
-      return gadget.getDeclaredGadget("editor")
-        .push(function (e) {
-          return e.getContent();
-        })
-        .push(function (content) {
-          if (content.comment === '') {
-            return gadget.translate("Post content can not be empty!")
-                .push(function (translated_message) {
-                  return gadget.notifySubmitted({message: translated_message});
-                })
-          }
-          queue = gadget.changeState({
-            allow_submit: false,
-            editor_state: 'posting'
-            })
-            .push(function () {
-              var choose_file_html_element = gadget.element.querySelector('#attachment'),
-                file_blob = choose_file_html_element.files[0],
-                url = gadget.options.request_options.post_url,
-                comment_text = content.comment,
-                form_data_json = {},
-                post;
-              form_data_json.data = comment_text || "";
-              form_data_json.file = "";
-              choose_file_html_element.value = "";
-
-              post = {
-                date: new Date().toISOString(),
-                text: comment_text,
-                response: false
-              };
-
-              return new RSVP.Queue()
-                .push(function () {
-                  return gadget.appendPost(post);
-                })
-                .push(function () {
-                  if (file_blob) {
-                    return jIO.util.readBlobAsDataURL(file_blob);
-                  }
-                })
-                .push(function (data_url_evt) {
-                  if (data_url_evt) {
-                    form_data_json.file = {
-                      url: data_url_evt.target.result,
-                      file_name: file_blob.name
-                    };
-                  }
-                  return gadget.jio_putAttachment(
-                    gadget.options.request_options.document_id,
-                    url,
-                    form_data_json
-                  );
-                })
-                .push(function (evt) {
-                  var location = evt.target.getResponseHeader("X-Location"),
-                    uri,
-                    redirect_jio_key;
-                  if (location) {
-                    uri = new URI(location);
-                    redirect_jio_key = uri.segment(2);
-                  }
-                  if (redirect_jio_key && (gadget.options.request_options.document_id != redirect_jio_key)) {
-                    return gadget.redirect({
-                      command: 'display',
-                      options: {
-                        "jio_key": redirect_jio_key
-                      }
-                    });
-                  }
-                  return RSVP.all([
-                    gadget.changeState({
-                      editor_state: 'initialise',
-                      chat_state: 'not_yet_responded'
-                    })
-                  ]);
-                });
-            }, function (e) {
-               return RSVP.all([
-                 gadget.changeState({
-                   allow_submit: true,
-                   editor_state: 'initialise'
-                 }),
-                 gadget.notifySubmitted({message: "Error:" + e, status: "error"})
-               ]);
-            });
-          return queue;
-        });
-    })
-    .declareJob('processTask', function (max_loop_count, skill_list) {
-      var gadget = this,
+        gadget_chat_ui,
         queue_loop = new RSVP.Queue(),
-        tool_li = null,
-        tool_details = null,
-        tool_summary = null,
-        tool_count = 0,
-        post_list = gadget.element.querySelector("#post_list"),
-        streaming_element,
-        content_element,
         tool_definition_list = gadget.tool_list.map(function (tool) {
           return { type: "function", "function": tool.definition };
-        }).concat(gadget.remote_tool_definition_list);
-
-
+        }).concat(gadget.remote_tool_definition_list),
+        running_tool_message_list = [];
 
       function loop_call(loop_count, message_list, pending_tool_call_list) {
         var has_tool_call = Boolean(
@@ -480,48 +231,33 @@
         if (loop_count >= max_loop_count) {
           throw new Error("processTask: too many iterations");
         }
-
         if (tool_call) {
-          if (!tool_li) {
-            tool_summary = domsugar("summary", [getToolCallSummaryText(0)]);
-            tool_details = domsugar("details", {}, [tool_summary]);
-            tool_li = domsugar("li", { "class": "post-tool" }, [tool_details]);
-            if (!streaming_element) {
-              streaming_element = getPostDom(formatPost({
-                date: new Date().toISOString(),
-                text: "",
-                response: true
-              }));
-              post_list.appendChild(streaming_element);
-            }
-            streaming_element.appendChild(tool_li);
-          }
+          gadget.element.setAttribute('data-chat-state', 'tool-running');
           if (client_tool) {
-            console.log('***************************** call browser tool cool');
             queue_loop
               .push(function () {
                 return runClientToolCall(tool_call, gadget.tool_list);
             })
              .push(function (client_tool_result) {
                var result_content = 'args:' + (tool_call.function.arguments ? tool_call.function.arguments: '') + '\n' + 'result:' + client_tool_result.content,
-                 next_client_message_list = message_list.concat([{
-                 role: "tool",
-                 tool_call_id: tool_call.id,
-                 name: tool_call.function.name,
-                 content: truncateToolOutput(result_content)
-               }]);
-              tool_count += 1;
-              tool_summary.textContent = getToolCallSummaryText(tool_count);
-              tool_details.appendChild(getToolCallDiv({ name: tool_call.function.name, content: result_content}));
-              return loop_call(
-                loop_count + 1,
-                next_client_message_list,
-                pending_tool_call_list.slice(1)
-              );
+                 tool_message = {
+                   role: "tool",
+                   tool_call_id: tool_call.id,
+                   name: tool_call.function.name,
+                   content: truncateToolOutput(result_content)
+                 },
+                 next_client_message_list = message_list.concat([tool_message]);
+              running_tool_message_list = running_tool_message_list.concat([tool_message]);
+              return gadget_chat_ui.showToolCallList(running_tool_message_list)
+                .push(function () {
+                  return loop_call(
+                    loop_count + 1,
+                    next_client_message_list,
+                    pending_tool_call_list.slice(1)
+                  );
+                });
             });
           } else {
-            console.log('xxxxxxxxxxxxxxxxxxxxx call server tool cool');
-
             queue_loop
               .push(function () {
                 return gadget.jio_putAttachment(
@@ -536,95 +272,90 @@
               .push(function (text_evt) {
                 var result = JSON.parse(text_evt.target.result),
                   result_content = 'args:' + (tool_call.function.arguments  ? tool_call.function.arguments: '') + '\n' + 'result:' + result.content,
-                  next_message_list = message_list.concat([{
+                  tool_message = {
                     role: "tool",
                     tool_call_id: tool_call.id,
                     name: tool_call.function.name,
                     content: truncateToolOutput(result_content)
-                  }]);
-                tool_count += 1;
-                tool_summary.textContent = getToolCallSummaryText(tool_count);
-                tool_details.appendChild(getToolCallDiv({ name: tool_call.function.name, content: result_content }));
-                return loop_call(
-                  loop_count + 1,
-                  next_message_list,
-                  pending_tool_call_list.slice(1)
-                );
+                  },
+                  next_message_list = message_list.concat([tool_message]);
+                running_tool_message_list = running_tool_message_list.concat([tool_message]);
+                return gadget_chat_ui.showToolCallList(running_tool_message_list)
+                  .push(function () {
+                    return loop_call(
+                      loop_count + 1,
+                      next_message_list,
+                      pending_tool_call_list.slice(1)
+                    );
+                  });
               });
           }
           return;
         }
-
+        gadget.element.setAttribute('data-chat-state', 'processing');
         queue_loop
           .push(function () {
-            var form_data = new FormData(),
-              raw_text = "";
-            console.log('************************** call with llm');
-
+            var form_data = new FormData();
             form_data.append("message_list", JSON.stringify(message_list));
             form_data.append("tool_definition_list", JSON.stringify(tool_definition_list));
             return fetchStream(
               gadget.options.request_options.process_url,
               { method: "POST", credentials: "same-origin", body: form_data },
               function (delta_content) {
-                if (!streaming_element) {
-                  streaming_element = getPostDom(formatPost({
-                    date: new Date().toISOString(),
-                    text: "",
-                    response: true
-                  }));
-                  post_list.appendChild(streaming_element);
-                }
-                // seems a bad idea, bad performance
-                content_element = streaming_element.querySelector(".post-markdown");
-                raw_text += delta_content;
-                content_element.innerHTML = marked.parse(streaming_element.querySelector('pre').innerHTML + raw_text);
+                return gadget_chat_ui.appendStreamingDelta(delta_content);
               }
             );
           })
           .push(function (stream_result) {
-            if (streaming_element) {
-              streaming_element.querySelector('pre').innerHTML += stream_result? stream_result.content: '';
-            }
-            if (stream_result.tool_calls && stream_result.tool_calls.length) {
-              return loop_call(
-                loop_count + 1,
-                message_list.concat([{
-                  role: "assistant",
-                  content: stream_result.content,
-                  tool_calls: stream_result.tool_calls
-                }]),
-                stream_result.tool_calls
-              );
-            }
-            stream_result['content'] = streaming_element.querySelector('pre').innerHTML;
-            return gadget.jio_putAttachment(
-              gadget.options.request_options.document_id,
-              gadget.options.request_options.process_url,
-              {
-                message_list: JSON.stringify(message_list),
-                finalize_result: JSON.stringify(stream_result)
-              })
-              .push(function (evt) {
-                console.log('no more tool call');
-                return gadget.notifySubmitted({message: 'Completed', status: "success"})
+            return gadget_chat_ui.finalizeStreamingContent(stream_result ? stream_result.content : '')
+              .push(function () {
+                if (stream_result.tool_calls && stream_result.tool_calls.length) {
+                  return loop_call(
+                    loop_count + 1,
+                    message_list.concat([{
+                      role: "assistant",
+                      content: stream_result.content,
+                      tool_calls: stream_result.tool_calls
+                    }]),
+                    stream_result.tool_calls
+                  );
+                }
+                return gadget_chat_ui.getStreamingRawText()
+                  .push(function (raw_text) {
+                    stream_result.content = raw_text;
+                    return gadget.jio_putAttachment(
+                      gadget.options.request_options.document_id,
+                      gadget.options.request_options.process_url,
+                      {
+                        message_list: JSON.stringify(message_list),
+                        finalize_result: JSON.stringify(stream_result)
+                      }
+                    );
+                  })
                   .push(function () {
-                    return gadget.changeState({
-                      allow_submit: true,
-                      chat_state: 'responded',
-                      editor_state: 'initialise'
-                    });
+                    return gadget.notifySubmitted({message: 'Completed', status: "success"});
+                  })
+                  .push(function () {
+                    gadget.element.setAttribute('data-chat-state', 'responded');
+                    return RSVP.all([
+                      gadget_chat_ui.clearStreamingPreview(),
+                      gadget_chat_ui.setAllowSubmit(true),
+                      gadget_chat_ui.resetEditor()
+                    ]);
                   });
-               });
+              });
           });
       }
-
       queue_loop
         .push(function () {
           return gadget.notifySubmitted({message: 'Processing', status: "success"});
         })
         .push(function () {
-          return gadget.getMessageList();
+          return gadget.getDeclaredGadget("gadget_chat_ui");
+        })
+        .push(function (result) {
+          gadget_chat_ui = result;
+          return gadget_chat_ui.getMessageList();
         })
         .push(function (message_list) {
           return gadget.compactMessageList(message_list);
@@ -638,11 +369,8 @@
             skill_message_list = (skill_list || []).map(function (skill) {
               return { role: "system", content: skill.instructions };
             });
-          return loop_call(0, skill_message_list.concat(message_list));
+          loop_call(0, skill_message_list.concat(message_list));
         });
       return queue_loop;
-    })
-    .onEvent('submit', function () {
-      return this.submitPostComment();
     });
-}(window, rJS, RSVP, marked));
+}(window, rJS, RSVP));

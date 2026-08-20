@@ -31,8 +31,6 @@
       return gadget.getDeclaredGadget("gadget_chat")
         .push(function (chat) {
           return chat.render({
-              'tool_list': [],
-              'skill_list': [],
               'hateoas_url': gadget.hateoas_url,
               'request_options': {
                 'document_id': gadget.options.jio_key,

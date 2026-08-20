@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts87249484.6882813</string> </value>
+            <value> <string>ts87253841.5092576</string> </value>
         </item>
         <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
@@ -67,15 +67,17 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>428669a7a402022b9f1f9abe7cca140e</string> </value>
+            <value> <string>77ccd758925cd5ef3bfce9ec30d6e969</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_chat_agent_harness.html</string> </value>
+            <value> <string>gadget_harness_ai_chat.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -85,7 +87,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_chat_agent_harness_html</string> </value>
+            <value> <string>gadget_harness_ai_chat_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -93,7 +95,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -103,11 +105,11 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>697</int> </value>
+            <value> <int>3403</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Chat Agent Harness</string> </value>
+            <value> <string>Gadget Harness AI Chat JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -187,7 +189,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1786016912.171028</float>
+                              <float>1787251605.84222</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -236,7 +238,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1035.6826.25280.43776</string> </value>
+                      <value> <string>1035.6914.23260.1689</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -252,7 +254,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1787249484.694458</float>
+                              <float>1787253841.516446</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

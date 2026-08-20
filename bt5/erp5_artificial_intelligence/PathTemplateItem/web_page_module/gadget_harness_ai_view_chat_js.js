@@ -44,23 +44,15 @@
         .push(function (chat_gadget) {
           var rendered_form = gadget.state.erp5_document._embedded._view;
           return chat_gadget.render({
-            'tool_list': rendered_form.your_tool_list ?
-              rendered_form.your_tool_list.default.map(
-                function (tool_description) {
-                  return JSON.parse(tool_description);
-                }) : [],
-            'skill_list': rendered_form.your_skill_list ?
-              rendered_form.your_skill_list.default.map(
-                function (skill_description) {
-                  return JSON.parse(skill_description);
-                }) : [],
-            'chat_state': rendered_form.my_simulation_state.default === 'planned'? 'not_yet_responded' : 'responded',
+            'chat_state': rendered_form.my_simulation_state.default === 'responded' ? 'responded' : 'pending',
             'hateoas_url': gadget.hateoas_url,
             'request_options': {
               'document_id': gadget.options.jio_key,
               'post_url': gadget.hateoas_url + gadget.options.jio_key + "/ArtificialTask_createCommentLine",
               'get_url': gadget.hateoas_url + gadget.options.jio_key + "/ArtificialTask_getCommentPostListAsJson",
-              'process_url': gadget.hateoas_url + gadget.options.jio_key + "/ArtificialTask_processingTask"
+              'process_url': gadget.hateoas_url + gadget.options.jio_key + "/ArtificialTask_startHarnessAgent",
+              'status_url':  gadget.hateoas_url + gadget.options.jio_key + "/ArtificialTask_getStatus"
+              //'process_url': gadget.hateoas_url + gadget.options.jio_key + "/ArtificialTask_processingTask"
             },
             'editor_options' : {
               editor: 'gadget_editor.html',
