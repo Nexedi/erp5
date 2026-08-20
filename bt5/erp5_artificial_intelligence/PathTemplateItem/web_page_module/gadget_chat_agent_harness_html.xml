@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts87211984.3618722</string> </value>
+            <value> <string>ts87217259.141747</string> </value>
         </item>
         <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
@@ -67,7 +67,7 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>de22308092e198e7dd82239c07870f30</string> </value>
+            <value> <string>32f804b0157c032cc9f3a0bad8c9e44b</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -75,7 +75,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_chat_agent.html</string> </value>
+            <value> <string>gadget_chat_agent_harness.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -85,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_chat_agent_html</string> </value>
+            <value> <string>gadget_chat_agent_harness_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -103,11 +103,11 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1202</int> </value>
+            <value> <int>1218</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Chat Agent</string> </value>
+            <value> <string>Gadget Chat Agent Harness</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -236,7 +236,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1035.6226.5850.33075</string> </value>
+                      <value> <string>1035.6313.42982.1501</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -252,7 +252,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1787211984.366158</float>
+                              <float>1787217259.147763</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
