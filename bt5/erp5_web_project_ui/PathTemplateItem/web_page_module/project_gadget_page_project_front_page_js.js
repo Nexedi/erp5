@@ -19,22 +19,11 @@
     TEST_RESULT_PORTAL_TYPE = "Test Result",
     QUERY_LIMIT = 100000,
     SUPERVISOR_FIELD_TITLE = "Supervisor",
-    //XXX hardcoded limit dates (3 months for milestones, 3 weeks for documents)
-    //define dates in System Preference Project tab?
-    //date ISO string format: "yyyy-mm-ddThh:mm:ss.mmmm"
-    //JIO query date format:  "yyyy-mm-dd hh:mm:ss"
-    MILESTONE_LIMIT_DATE = new Date(new Date().setDate(new Date().getDate() - 90))
-      .toISOString().substring(0, new Date().toISOString().length - 5).replace("T", " "),
-    DOCUMENT_LIMIT_DATE = new Date(new Date().setDate(new Date().getDate() - 21))
-      .toISOString().substring(0, new Date().toISOString().length - 5).replace("T", " "),
     PORTAL_TITLE_DICT = {"Task": "Tasks",
                          "Test Result" : "Test Results",
                          "Bug" : "Bugs",
                          "Project Milestone" : "Milestones",
-                         "Task Report": "Task Reports"},
-    PORTAL_TYPE_LIST = ["Task", "Bug", "Task Report"],
-    VALID_STATE_LIST = ["planned", "auto_planned", "ordered", "confirmed",
-                        "ready", "stopped", "started", "submitted", "validated"];
+                         "Task Report": "Task Reports"};
 
   function createMultipleSimpleOrQuery(key, value_list) {
     var i,
@@ -128,7 +117,7 @@
     }
   }
 
-  function renderProjectDocumentLines(gadget, limit_date) {
+  function renderProjectDocumentLines(gadget, configuration, limit_date) {
     var i,
       query_list = [],
       document_list = [],
@@ -139,8 +128,10 @@
       type: "simple",
       value: "validated"
     }));
-    query_list.push(createMultipleSimpleOrQuery('portal_type', PORTAL_TYPE_LIST));
-    query_list.push(createMultipleSimpleOrQuery('simulation_state', VALID_STATE_LIST));
+    query_list.push(createMultipleSimpleOrQuery('portal_type',
+                                                configuration.portal_type_list));
+    query_list.push(createMultipleSimpleOrQuery('simulation_state',
+                                                configuration.simulation_state_list));
     if (limit_date) {
       query_list.push(new SimpleQuery({
         key: "modification_date",
@@ -209,6 +200,20 @@
                             limit_date ? 0 : milestone_list[i].value["count(*)"],
                             limit_date ? milestone_list[i].value["count(*)"] : 0);
         }
+      });
+  }
+
+  function getConfiguration() {
+    return new RSVP.Queue()
+      .push(function () {
+        return jIO.util.ajax({
+          type: "GET",
+          url: new URL('./ERP5Site_getProjectFrontPageConfiguration',
+                       window.location.href)
+        });
+      })
+      .push(function (result) {
+        return JSON.parse(result.target.response);
       });
   }
 
@@ -296,8 +301,7 @@
       bug_url_list = [],
       test_result_url_list = [],
       supervisor_url_list = [],
-      milestone_view,
-      project_view;
+      milestone_view;
 
     function createProjectHtmlElement(project_id, project_title,
                                       project_url, supervisor, supervisor_url) {
@@ -379,16 +383,11 @@
           milestone_view = hateoas_url +
             '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
             project_list[i].id + '&view=Project_viewMilestoneList';
-          project_view = hateoas_url +
-            '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
-            project_list[i].id +
-            '&view=Project_viewQuickOverview';
           url_parameter_list.push(
-            getUrlParameterDict(project_list[i].id,
-                                project_view)
+            getUrlParameterDict(project_list[i].id, 'view')
           );
           milestone_url_list.push(
-            getUrlParameterDict('milestone_module',
+            getUrlParameterDict(project_list[i].id,
                                 milestone_view,
                                 [["stop_date", "ascending"]],
                                 null,
@@ -505,9 +504,13 @@
 
     .declareMethod('render', function (options) {
       var gadget = this;
-      return getProjectList(gadget)
-        .push(function (project_list) {
-          options.project_list = project_list;
+      return new RSVP.Queue()
+        .push(function () {
+          return RSVP.all([getProjectList(gadget), getConfiguration()]);
+        })
+        .push(function (result_list) {
+          options.project_list = result_list[0];
+          options.configuration = result_list[1];
           return gadget.changeState(options);
         });
     })
@@ -529,7 +532,6 @@
           gadget.detachRenderProjectDocumentInfo();
           gadget.detachRenderOutdatedDocumentInfo();
           gadget.detachRenderTestResultInfo();
-          gadget.detachRenderProjectForumLink();
         });
     })
 
@@ -538,15 +540,17 @@
     })
 
     .declareJob("detachRenderOutdatedMilestoneInfo", function () {
-      return renderMilestoneLineList(this, MILESTONE_LIMIT_DATE);
+      return renderMilestoneLineList(this,
+                                     this.state.configuration.milestone_limit_date);
     })
 
     .declareJob("detachRenderProjectDocumentInfo", function () {
-      return renderProjectDocumentLines(this);
+      return renderProjectDocumentLines(this, this.state.configuration);
     })
 
     .declareJob("detachRenderOutdatedDocumentInfo", function () {
-      return renderProjectDocumentLines(this, DOCUMENT_LIMIT_DATE);
+      return renderProjectDocumentLines(this, this.state.configuration,
+                                        this.state.configuration.document_limit_date);
     })
 
     .declareJob("detachRenderTestResultInfo", function () {
@@ -567,42 +571,6 @@
                                 TEST_RESULT_PORTAL_TYPE,
                                 parseInt(project_test_status_dict[project_id].all_tests, RADIX),
                                 parseInt(project_test_status_dict[project_id].failures, RADIX));
-            }
-          }
-        });
-    })
-
-    .declareJob("detachRenderProjectForumLink", function () {
-      return;
-      var gadget = this,
-        i,
-        forum_link_html,
-        forum_link_list,
-        link_query = getComplexQuery({"portal_type" : "Link",
-                                      "validation_state" : "reachable",
-                                      "relative_url" : "project_module/%/forum_link"},
-                                     "AND");
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.jio_allDocs({
-            query: Query.objectToSearchText(link_query),
-            limit: QUERY_LIMIT,
-            select_list: ['url_string'],
-            sort_on: [["modification_date", "descending"]]
-          });
-        })
-        .push(function (result) {
-          forum_link_list = result.data.rows;
-          for (i = 0; i < forum_link_list.length; i += 1) {
-            forum_link_html = document.querySelector(
-              getProjectHtlmElementId(getProjectId(forum_link_list[i].id),
-                                      FORUM_LINK_TYPE,
-                                      FORUM_LINK_ID_SUFFIX, true)
-            );
-            if (forum_link_html) {
-              forum_link_html.href = forum_link_list[i].value.url_string;
-              forum_link_html.innerHTML = "Project Forum";
-              forum_link_html.classList.remove("ui-hidden");
             }
           }
         });

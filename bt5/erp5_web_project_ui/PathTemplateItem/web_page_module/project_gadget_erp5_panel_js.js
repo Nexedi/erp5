@@ -159,7 +159,7 @@
           .push(function () {
             return RSVP.all([
               context.getUrlForList([
-                {command: 'display'},
+                {command: 'display', options: {page: "project_front_page"}},
                 {command: 'display_stored_state', options: {jio_key: "project_module"}},
                 {command: 'display_stored_state', options: {jio_key: "task_module"}},
                 {command: 'display_stored_state', options: {jio_key: "task_report_module"}},
