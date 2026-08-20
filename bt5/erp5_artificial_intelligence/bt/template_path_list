@@ -1,0 +1,6 @@
+portal_callables/ERP5Site_getCurrentTime
+web_page_module/gadget_chat_*
+web_page_module/gadget_harness_ai*
+web_page_module/marked_umd_js
+web_site_module/harness_ai
+web_site_module/harness_ai/**
