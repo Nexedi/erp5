@@ -14,16 +14,23 @@
     NAME_SPAN = "name",
     FORUM_LINK_ID_SUFFIX = "forum",
     FORUM_LINK_TYPE = "link",
-    OUTDATED_LABEL = " out of date",
-    FAILED_LABEL = " failed",
+    OUTDATED_LABEL = "out of date",
+    FAILED_LABEL = "failed",
     TEST_RESULT_PORTAL_TYPE = "Test Result",
     QUERY_LIMIT = 100000,
     SUPERVISOR_FIELD_TITLE = "Supervisor",
+    PROJECT_PAGE_LABEL = "Project Page",
+    EMPTY_LIST_LABEL = "No projects yet.",
+    PAGE_TITLE = "Project Management",
     PORTAL_TITLE_DICT = {"Task": "Tasks",
                          "Test Result" : "Test Results",
                          "Bug" : "Bugs",
                          "Project Milestone" : "Milestones",
-                         "Task Report": "Task Reports"};
+                         "Task Report": "Task Reports"},
+    TRANSLATABLE_STRING_LIST = ["Tasks", "Test Results", "Bugs", "Milestones",
+                                "Task Reports", SUPERVISOR_FIELD_TITLE,
+                                PROJECT_PAGE_LABEL, EMPTY_LIST_LABEL,
+                                OUTDATED_LABEL, FAILED_LABEL, PAGE_TITLE];
 
   function createMultipleSimpleOrQuery(key, value_list) {
     var i,
@@ -203,6 +210,21 @@
       });
   }
 
+  function getTranslationDict(gadget) {
+    return new RSVP.Queue()
+      .push(function () {
+        return gadget.getTranslationList(TRANSLATABLE_STRING_LIST);
+      })
+      .push(function (translation_list) {
+        var i,
+          translation_dict = {};
+        for (i = 0; i < TRANSLATABLE_STRING_LIST.length; i += 1) {
+          translation_dict[TRANSLATABLE_STRING_LIST[i]] = translation_list[i];
+        }
+        return translation_dict;
+      });
+  }
+
   function getConfiguration() {
     return new RSVP.Queue()
       .push(function () {
@@ -286,7 +308,7 @@
     }));
   }
 
-  function renderProjectList(gadget, project_list) {
+  function renderProjectList(gadget, project_list, translation_dict) {
     var i,
       project_html,
       left_div_html,
@@ -311,11 +333,12 @@
         project_link = domsugar('a', {
           href: project_url,
           id: project_title + "-project_page_link"
-        }, ["(Project Page)"]),
+        }, ["(" + translation_dict[PROJECT_PAGE_LABEL] + ")"]),
         title_div = domsugar('div', { class: "project-title" },
                              [project_title_span, project_link]),
         left_info_div = domsugar('div', { class: "project-left" }),
-        supervisor_field_label = domsugar('label', {}, [SUPERVISOR_FIELD_TITLE]),
+        supervisor_field_label = domsugar('label', {},
+                                          [translation_dict[SUPERVISOR_FIELD_TITLE]]),
         supervisor_value_link = domsugar('a', {
           href: supervisor_url
         }, [supervisor]),
@@ -363,7 +386,8 @@
         open_bracket_span = domsugar('span', {}, ["("]),
         close_bracket_span = domsugar('span', {}, [")"]),
         outdated_label_span = domsugar('span', {}, [
-          (portal_type === TEST_RESULT_PORTAL_TYPE) ? FAILED_LABEL : OUTDATED_LABEL
+          " " + translation_dict[(portal_type === TEST_RESULT_PORTAL_TYPE) ?
+                                 FAILED_LABEL : OUTDATED_LABEL]
         ]),
         number_span = domsugar('span', {
           id: getProjectHtlmElementId(project_id, portal_type, NUMBER_SPAN),
@@ -448,7 +472,7 @@
         if (project_list.length === 0) {
           ul_list.appendChild(domsugar('li', {
             class: "empty-state-message",
-            text: "No projects yet."
+            text: translation_dict[EMPTY_LIST_LABEL]
           }));
           return;
         }
@@ -477,13 +501,15 @@
                   return result_dict.test_result_url_list[i];
                 }
               })(type);
-              left_line_html = createProjectLineHtmlElement(project_list[i].id, type,
-                                                            line_url,
-                                                            ((PORTAL_TITLE_DICT
-                                                              .hasOwnProperty(type)) ?
-                                                             PORTAL_TITLE_DICT[type] :
-                                                             type),
-                                                            0, 0, NONE_STATUS);
+              left_line_html = createProjectLineHtmlElement(
+                project_list[i].id,
+                type,
+                line_url,
+                translation_dict[PORTAL_TITLE_DICT[type]],
+                0,
+                0,
+                NONE_STATUS
+              );
               left_div_html.appendChild(left_line_html);
             }
           }
@@ -501,16 +527,19 @@
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
     .declareAcquiredMethod("getSetting", "getSetting")
+    .declareAcquiredMethod("getTranslationList", "getTranslationList")
 
     .declareMethod('render', function (options) {
       var gadget = this;
       return new RSVP.Queue()
         .push(function () {
-          return RSVP.all([getProjectList(gadget), getConfiguration()]);
+          return RSVP.all([getProjectList(gadget), getConfiguration(),
+                           getTranslationDict(gadget)]);
         })
         .push(function (result_list) {
           options.project_list = result_list[0];
           options.configuration = result_list[1];
+          options.translation_dict = result_list[2];
           return gadget.changeState(options);
         });
     })
@@ -518,13 +547,14 @@
     .onStateChange(function () {
       var gadget = this;
       return gadget.updateHeader({
-        page_title: 'Project Management'
+        page_title: gadget.state.translation_dict[PAGE_TITLE]
       });
     })
 
     .declareService(function () {
       var gadget = this;
-      return renderProjectList(gadget, gadget.state.project_list)
+      return renderProjectList(gadget, gadget.state.project_list,
+                               gadget.state.translation_dict)
         .push(function () {
           //run the rest of queries and render async
           gadget.detachRenderMilestoneInfo();
