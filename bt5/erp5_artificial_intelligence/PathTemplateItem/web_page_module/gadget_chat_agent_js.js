@@ -607,7 +607,7 @@
               })
               .push(function (evt) {
                 console.log('no more tool call');
-                return gadget.notifySubmitted({message: 'end', status: "success"})
+                return gadget.notifySubmitted({message: 'Completed', status: "success"})
                   .push(function () {
                     return gadget.changeState({
                       allow_submit: true,
@@ -621,7 +621,7 @@
 
       queue_loop
         .push(function () {
-          return gadget.notifySubmitted({message: 'processing', status: "success"});
+          return gadget.notifySubmitted({message: 'Processing', status: "success"});
         })
         .push(function () {
           return gadget.getMessageList();
