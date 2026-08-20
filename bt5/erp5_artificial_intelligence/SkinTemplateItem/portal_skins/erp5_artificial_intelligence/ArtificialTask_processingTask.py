@@ -24,6 +24,11 @@ if compact_message_list and isinstance(compact_message_list, str):
 if finalize_result and isinstance(finalize_result, str):
   finalize_result = json.loads(finalize_result)
 
+simulation_state = artificial_task.getSimulationState()
+
+if simulation_state == 'draft':
+  artificial_task.plan()
+
 if tool_call:
   function = tool_call["function"]["name"]
   raw_arguments = tool_call["function"].get("arguments") or "{}"
@@ -81,7 +86,7 @@ elif finalize_result:
       follow_up_value = line
     )
     line.deliver()
-    if artificial_task.getSimulationState() != 'processing':
+    if simulation_state != 'processing':
       artificial_task.start()
     artificial_task.respond()
 
@@ -94,7 +99,7 @@ elif finalize_result:
     })
 
   else:
-    if artificial_task.getSimulationState() != 'processing':
+    if simulation_state != 'processing':
       artificial_task.start()
     return json.dumps({
       "content": content,

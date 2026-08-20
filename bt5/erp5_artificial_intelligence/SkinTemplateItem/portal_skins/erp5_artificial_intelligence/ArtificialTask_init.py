@@ -20,6 +20,3 @@ artificial_task.edit(
 task_report.edit(
   follow_up_value = artificial_task
 )
-
-
-artificial_task.plan()
