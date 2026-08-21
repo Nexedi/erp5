@@ -273,24 +273,15 @@ body.cke_editable a {
   text-decoration: none;
 }
 
-.rss-link a:not(.edit-field) {
-  padding: 6pt 10pt 6pt 28pt;
-  background-color: #FFF;
-  color: #111;
+div[data-gadget-url$="gadget_project_rss_link.html"] button {
+  color: #212529;
+  padding: 3pt;
+  border: 1px solid rgba(0, 0, 0, 0.14);
   border-radius: 0.325em;
-  border: 1px solid;
-  text-align: center;
   display: inline-block;
-  text-decoration: none;
-  position: relative;
+  margin-top: 6pt;
 }
 
-.rss-link a:not(.edit-field)::before {
-  font-family: FontAwesome;
-  content: "\f09e";
-  position: absolute;
-  left: 10pt;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #f26522;
+div[data-gadget-url$="gadget_project_rss_link.html"] button:before {
+  padding-right: 4pt;
 }
