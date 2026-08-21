@@ -62,7 +62,6 @@
           .push(function (result) {
             queue_loop
               .push(function () {
-                console.log(result);
                 return gadget_chat_ui.showMessage(result);
               });
             if (result.done) {

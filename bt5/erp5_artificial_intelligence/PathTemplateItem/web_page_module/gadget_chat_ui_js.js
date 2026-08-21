@@ -13,14 +13,13 @@
   function getPostDom(post, translationAttachment) {
     var content_element = post.response ?
         domsugar("div", [
-          domsugar("div", { "class": "post-markdown", html: marked.parse(post.text) }),
-          domsugar("pre", { "class": "chat-hidden-field" }, [post.text])
-
-        ]) :
+        domsugar("div", { "class": "post-markdown", html: marked.parse(post.text) }),
+        domsugar("pre", { "class": "chat-hidden-field" }, [post.text])
+      ]) :
         domsugar("div", [domsugar("pre", [post.text])]),
-      dom_list = [
-      content_element
-    ];
+        dom_list = [
+        content_element
+      ];
     if (post.attachment_link) {
       dom_list.push(domsugar("strong", [translationAttachment]));
       dom_list.push(domsugar("a", { href: post.attachment_link }, [post.attachment_name]));
@@ -79,7 +78,7 @@
       })
       .push(function () {
         return gadget.translate("Post Comment");
-        })
+      })
       .push(function (translation) {
         gadget.element.querySelector("[data-i18n='[value]Post Comment']").value = translation;
         return gadget.changeState({
@@ -140,7 +139,7 @@
                 }
                 return post_dom;
               });
-          })
+            })
           .push(function (dom_list) {
             var all_dom_list = [], post_list_element, i;
             for (i = 0; i < dom_list.length; i += 1) {
@@ -148,8 +147,8 @@
             }
             post_list_element = gadget.element.querySelector("#post_list");
             domsugar(post_list_element, all_dom_list);
-         });
-       }
+          });
+      }
       return queue;
     })
     .declareMethod('appendPost', function (post) {
@@ -187,7 +186,7 @@
         editor_state: 'initialise'
       });
     })
-    .declareMethod('showMessage', function(message) {
+    .declareMethod('showMessage', function (message) {
       var gadget = this,
         post_tool,
         tool_call_element,
@@ -212,7 +211,7 @@
         tool_call_element = getToolCallDom(message.tool_message_list);
         post_tool  = gadget.new_message_element.querySelector('.post-tool');
         if (post_tool) {
-          gadget.new_message_element.removeChild(post_tool)
+          gadget.new_message_element.removeChild(post_tool);
         }
         gadget.new_message_element.appendChild(tool_call_element);
       }
@@ -228,14 +227,14 @@
         .push(function (content) {
           if (content.comment === '') {
             return gadget.translate("Post content can not be empty!")
-                .push(function (translated_message) {
-                  return gadget.notifySubmitted({message: translated_message});
-                })
+              .push(function (translated_message) {
+                return gadget.notifySubmitted({message: translated_message});
+              });
           }
           queue = gadget.changeState({
             allow_submit: false,
             editor_state: 'posting'
-            })
+          })
             .push(function () {
               var choose_file_html_element = gadget.element.querySelector('#attachment'),
                 file_blob = choose_file_html_element.files[0],
@@ -301,14 +300,14 @@
                     });
                 });
             }, function (e) {
-               return RSVP.all([
-                 gadget.changeState({
-                   allow_submit: true,
-                   editor_state: 'initialise'
-                 }),
-                 gadget.notifySubmitted({message: "Error:" + e, status: "error"})
-               ]);
-            });
+                return RSVP.all([
+                  gadget.changeState({
+                    allow_submit: true,
+                    editor_state: 'initialise'
+                  }),
+                  gadget.notifySubmitted({message: "Error:" + e, status: "error"})
+                ]);
+              });
           return queue;
         });
     })
