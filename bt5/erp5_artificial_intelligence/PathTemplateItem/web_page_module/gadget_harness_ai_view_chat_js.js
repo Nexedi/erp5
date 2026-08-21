@@ -44,7 +44,7 @@
         .push(function (chat_gadget) {
           var rendered_form = gadget.state.erp5_document._embedded._view;
           return chat_gadget.render({
-            'chat_state': rendered_form.my_simulation_state.default === 'responded' ? 'responded' : 'pending',
+            'chat_state': rendered_form.my_simulation_state['default'],
             'hateoas_url': gadget.hateoas_url,
             'request_options': {
               'document_id': gadget.options.jio_key,
@@ -88,5 +88,5 @@
             page_title: all_result[4]
           });
         });
-    })
+    });
 }(window, rJS, RSVP, calculatePageTitle));

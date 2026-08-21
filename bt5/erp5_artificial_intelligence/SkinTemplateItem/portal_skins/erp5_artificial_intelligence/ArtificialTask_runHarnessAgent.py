@@ -18,6 +18,7 @@ def finalize(report_line, message_list, response):
     follow_up_value=line
   )
   line.deliver()
+  report_line.deliver()
   artificial_task.respond()
 
 
@@ -25,7 +26,6 @@ if not artificial_task_report_line_relative_url:
   simulation_state = artificial_task.getSimulationState()
   if simulation_state == 'draft':
     artificial_task.plan()
-    simulation_state = 'planned'
   if simulation_state != 'processing':
     artificial_task.start()
 
@@ -64,8 +64,6 @@ else:
 
 
 if loop_count >= MAX_LOOP_COUNT:
-  # Safety cap: without this, a misbehaving tool/LLM would requeue itself
-  # via activities indefinitely, with no ceiling on API calls/cost.
   finalize(artificial_task_report_line, message_list, {
     "content": "Sorry, I could not finish this task within the allowed number of steps."
   })
@@ -84,9 +82,6 @@ elif pending_tool_call_list:
     result = getattr(portal.portal_callables, function)(**arguments)
     result_content = result if isinstance(result, str) else json.dumps(result)
   except Exception as tool_error:
-    # A failing tool becomes an error message the LLM can see and react to,
-    # rather than an unhandled exception that fails this whole activity step
-    # (which would otherwise leave the task stuck in "processing" forever).
     result_content = "Error running tool \"%s\": %s" % (function, str(tool_error))
 
   message_list.append({
@@ -107,13 +102,21 @@ elif pending_tool_call_list:
   )
 
 else:
+  # The beginning to call llm
   tool_list = artificial_task.getToolList()
+  skill_list = artificial_task.getSkillList()
   tool_definition_list = [
     json.loads(getattr(portal.portal_callables, x).getDescription()) for x in tool_list
   ]
+  system_level_message_list = [
+    {
+      'role': "system",
+      'content': portal.web_page_module[skill].getTextContent()
+    } for skill in skill_list]
+
   try:
     response = artificial_task.ArtificialTask_runStreamingLLMStep(
-      artificial_task_report_line_relative_url, message_list, tool_definition_list)
+      artificial_task_report_line_relative_url, system_level_message_list + message_list, tool_definition_list)
   except Exception as llm_error:
     finalize(artificial_task_report_line, message_list, {
       "content": "Sorry, something went wrong while processing this request: %s" % str(llm_error)

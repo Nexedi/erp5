@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ArtificialTask_harnessAgent</string> </value>
+            <value> <string>ArtificialTask_runHarnessAgent</string> </value>
         </item>
       </dictionary>
     </pickle>

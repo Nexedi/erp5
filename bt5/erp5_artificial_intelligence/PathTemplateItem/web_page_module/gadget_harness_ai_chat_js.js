@@ -18,15 +18,23 @@
           return gadget_chat_ui.render(options);
         })
         .push(function () {
-          gadget.element.setAttribute('data-chat-state', options.chat_state);
-          if (options.chat_state === 'pending') {
+          if (options.chat_state == 'planned') {
+            return gadget.jio_putAttachment(
+              gadget.options.request_options.document_id,
+              gadget.options.request_options.process_url,
+              {}
+            )
+            .push(function () {
+              return gadget.pollTask();
+            });
+          }
+          if (options.chat_state === 'processing') {
             return gadget.pollTask();
           }
         });
     })
     .allowPublicAcquisition('notifyCommentPosted', function () {
       var gadget = this;
-      gadget.element.setAttribute('data-chat-state', 'pending');
       return gadget.jio_putAttachment(
         gadget.options.request_options.document_id,
         gadget.options.request_options.process_url,
@@ -39,56 +47,33 @@
     .declareJob('pollTask', function () {
       var gadget = this,
         gadget_chat_ui = gadget.gadget_chat_ui,
-        queue_loop = new RSVP.Queue();
-
+        queue_loop = gadget_chat_ui.blockEditor();
       function check() {
         queue_loop
+          .push(function () {
+            return RSVP.delay(POLL_INTERVAL);
+          })
           .push(function () {
             return gadget.jio_getAttachment(
               gadget.options.request_options.document_id,
               gadget.options.request_options.status_url
             );
           })
-          .push(function (status) {
-            gadget.element.setAttribute('data-chat-state', status.simulation_state);
-            return new RSVP.Queue()
+          .push(function (result) {
+            queue_loop
               .push(function () {
-                if (status.tool_message_list && status.tool_message_list.length) {
-                  return gadget_chat_ui.showToolCallList(status.tool_message_list);
-                }
-              })
-              .push(function () {
-                if (status.streaming_content) {
-                  return gadget_chat_ui.showStreamingContent(status.streaming_content);
-                }
-              })
-              .push(function () {
-                if (status.responded) {
-                  return gadget_chat_ui.clearPostList()
-                    .push(function () {
-                      return gadget_chat_ui.clearStreamingPreview();
-                    })
-                    .push(function () {
-                      return gadget_chat_ui.setAllowSubmit(true);
-                    })
-                    .push(function () {
-                      return gadget_chat_ui.resetEditor();
-                    })
-                    .push(function () {
-                      return gadget_chat_ui.refreshHistory();
-                    })
-                    .push(function () {
-                      gadget.element.setAttribute('data-chat-state', 'responded');
-                    });
-                }
-                queue_loop
-                  .push(function () {
-                    return RSVP.delay(2000);
-                  })
-                  .push(function () {
-                    return check();
-                  });
+                console.log(result);
+                return gadget_chat_ui.showMessage(result);
               });
+            if (result.done) {
+              queue_loop
+                .push(function () {
+                  return gadget_chat_ui.resetEditor();
+                });
+            } else {
+              queue_loop
+                .push(check);
+            }
           });
       }
       check();

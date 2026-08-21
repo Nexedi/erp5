@@ -13,6 +13,6 @@
  </chain>
  <chain>
   <type>Artificial Task Report Line</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>edit_workflow, event_simulation_workflow</workflow>
  </chain>
 </workflow_chain>

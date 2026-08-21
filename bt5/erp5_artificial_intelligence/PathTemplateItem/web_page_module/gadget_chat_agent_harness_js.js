@@ -152,7 +152,6 @@
           return gadget_chat_ui.render(options);
         })
         .push(function () {
-          gadget.element.setAttribute('data-chat-state', options.chat_state);
           if (options.chat_state === 'not_yet_responded') {
             return gadget.processTask(200);
           }
@@ -160,7 +159,6 @@
     })
     .allowPublicAcquisition('notifyCommentPosted', function () {
       var gadget = this;
-      gadget.element.setAttribute('data-chat-state', 'not_yet_responded');
       return gadget.processTask(200);
     })
     .declareMethod('compactMessageList', function (message_list) {
@@ -232,7 +230,6 @@
           throw new Error("processTask: too many iterations");
         }
         if (tool_call) {
-          gadget.element.setAttribute('data-chat-state', 'tool-running');
           if (client_tool) {
             queue_loop
               .push(function () {
@@ -292,7 +289,6 @@
           }
           return;
         }
-        gadget.element.setAttribute('data-chat-state', 'processing');
         queue_loop
           .push(function () {
             var form_data = new FormData();
@@ -336,7 +332,6 @@
                     return gadget.notifySubmitted({message: 'Completed', status: "success"});
                   })
                   .push(function () {
-                    gadget.element.setAttribute('data-chat-state', 'responded');
                     return RSVP.all([
                       gadget_chat_ui.clearStreamingPreview(),
                       gadget_chat_ui.setAllowSubmit(true),

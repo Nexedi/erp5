@@ -15,6 +15,7 @@
         domsugar("div", [
           domsugar("div", { "class": "post-markdown", html: marked.parse(post.text) }),
           domsugar("pre", { "class": "chat-hidden-field" }, [post.text])
+
         ]) :
         domsugar("div", [domsugar("pre", [post.text])]),
       dom_list = [
@@ -143,19 +144,6 @@
        }
       return queue;
     })
-
-    .declareMethod('setAllowSubmit', function (allow) {
-      return this.changeState({ allow_submit: allow });
-    })
-    .declareMethod('resetEditor', function () {
-      return this.changeState({ editor_state: 'initialise' });
-    })
-    .declareMethod('refreshHistory', function () {
-      return this.changeState({ render_comment: true });
-    })
-    .declareMethod('clearPostList', function () {
-      this.element.querySelector("#post_list").innerHTML = "";
-    })
     .declareMethod('appendPost', function (post) {
       var gadget = this,
         post_list_element = gadget.element.querySelector("#post_list"),
@@ -179,83 +167,41 @@
       }
       return message_list;
     })
-
-    // ---- Streaming preview: two flavors -----------------------------------
-    // showStreamingContent(text) - erp5/poll harness: the server already
-    // accumulates the answer, each poll just supplies the current full text.
-    // appendStreamingDelta(delta)/finalizeStreamingContent(full_content) -
-    // browser harness: the client accumulates token-by-token itself.
-    .declareMethod('showStreamingContent', function (text) {
-      var gadget = this;
-      if (!gadget.streaming_element) {
-        gadget.streaming_element = getPostDom(formatPost({
-          date: new Date().toISOString(),
-          text: "",
-          response: true
-        }));
-        gadget.element.querySelector("#post_list").appendChild(gadget.streaming_element);
-      }
-      gadget.streaming_element.querySelector(".post-markdown").innerHTML = marked.parse(text);
+    .declareMethod('blockEditor', function () {
+      return this.changeState({
+        allow_submit: false,
+        editor_state: 'pending'
+      });
     })
-    .declareMethod('appendStreamingDelta', function (delta_content) {
-      var gadget = this;
-      if (!gadget.streaming_element) {
-        gadget.streaming_element = getPostDom(formatPost({
-          date: new Date().toISOString(),
-          text: "",
-          response: true
-        }));
-        gadget.element.querySelector("#post_list").appendChild(gadget.streaming_element);
-      }
-      gadget.streaming_raw_text = (gadget.streaming_raw_text || "") + delta_content;
-      gadget.streaming_element.querySelector(".post-markdown").innerHTML = marked.parse(
-        gadget.streaming_element.querySelector('pre').innerHTML + gadget.streaming_raw_text
-      );
+    .declareMethod('resetEditor', function () {
+      return this.changeState({
+        allow_submit: true,
+        editor_state: 'initialise'
+      });
     })
-    .declareMethod('finalizeStreamingContent', function (full_content) {
-      var gadget = this;
-      if (!gadget.streaming_element) {
-        gadget.streaming_element = getPostDom(formatPost({
-          date: new Date().toISOString(),
-          text: "",
-          response: true
-        }));
-        gadget.element.querySelector("#post_list").appendChild(gadget.streaming_element);
-      }
-      gadget.streaming_element.querySelector('pre').innerHTML += full_content || '';
-      gadget.streaming_raw_text = "";
-    })
-    .declareMethod('getStreamingRawText', function () {
-      var gadget = this;
-      return gadget.streaming_element ? gadget.streaming_element.querySelector('pre').innerHTML : '';
-    })
-    .declareMethod('showToolCallList', function (tool_message_list) {
+    .declareMethod('showMessage', function(message) {
       var gadget = this,
+        post_tool,
         tool_call_element;
-      if (!gadget.streaming_element) {
-        gadget.streaming_element = getPostDom(formatPost({
+      if (!gadget.new_message_element) {
+        gadget.new_message_element = getPostDom(formatPost({
           date: new Date().toISOString(),
           text: "",
           response: true
         }));
-        gadget.element.querySelector("#post_list").appendChild(gadget.streaming_element);
+        gadget.element.querySelector("#post_list").appendChild(gadget.new_message_element);
       }
-      if (gadget.tool_call_element) {
-        gadget.tool_call_element.parentNode.removeChild(gadget.tool_call_element);
+      gadget.new_message_element.querySelector(".post-markdown").innerHTML = marked.parse(message.content);
+      gadget.new_message_element.querySelector('pre').innerHTML = message.content;
+      if (message.tool_message_list.length) {
+        tool_call_element = getToolCallDom(message.tool_message_list);
+        post_tool  = gadget.new_message_element.querySelector('.post-tool');
+        if (post_tool) {
+          gadget.new_message_element.removeChild(post_tool)
+        }
+        gadget.new_message_element.appendChild(tool_call_element);
       }
-      tool_call_element = getToolCallDom(tool_message_list);
-      if (tool_call_element) {
-        gadget.streaming_element.appendChild(tool_call_element);
-      }
-      gadget.tool_call_element = tool_call_element;
     })
-    .declareMethod('clearStreamingPreview', function () {
-      var gadget = this;
-      gadget.streaming_element = null;
-      gadget.tool_call_element = null;
-      gadget.streaming_raw_text = "";
-    })
-
     .declareJob('submitPostComment', function () {
       var gadget = this,
         queue = null;
@@ -318,6 +264,7 @@
                   var location = evt.target.getResponseHeader("X-Location"),
                     uri,
                     redirect_jio_key;
+                  gadget.new_message_element = null;
                   if (location) {
                     uri = new URI(location);
                     redirect_jio_key = uri.segment(2);
@@ -330,7 +277,10 @@
                       }
                     });
                   }
-                  return gadget.changeState({ editor_state: 'initialise' })
+                  return gadget.changeState({
+                    editor_state: 'initialise',
+                    allow_submit: true
+                  })
                     .push(function () {
                       return gadget.notifyCommentPosted();
                     });
