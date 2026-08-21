@@ -30,6 +30,14 @@
     }, dom_list);
   }
 
+  function getTypingIndicatorDom() {
+    return domsugar("span", { "class": "chat-typing-indicator" }, [
+      domsugar("span"),
+      domsugar("span"),
+      domsugar("span")
+    ]);
+  }
+
   function getToolCallDiv(tool_message) {
     return domsugar("div", { "class": "post-tool-entry" }, [
       domsugar("strong", ["Tool: " + tool_message.name]),
@@ -182,7 +190,8 @@
     .declareMethod('showMessage', function(message) {
       var gadget = this,
         post_tool,
-        tool_call_element;
+        tool_call_element,
+        markdown_element;
       if (!gadget.new_message_element) {
         gadget.new_message_element = getPostDom(formatPost({
           date: new Date().toISOString(),
@@ -191,7 +200,13 @@
         }));
         gadget.element.querySelector("#post_list").appendChild(gadget.new_message_element);
       }
-      gadget.new_message_element.querySelector(".post-markdown").innerHTML = marked.parse(message.content);
+      markdown_element = gadget.new_message_element.querySelector(".post-markdown");
+      if (message.content) {
+        markdown_element.innerHTML = marked.parse(message.content);
+      } else {
+        markdown_element.innerHTML = "";
+        markdown_element.appendChild(getTypingIndicatorDom());
+      }
       gadget.new_message_element.querySelector('pre').innerHTML = message.content;
       if (message.tool_message_list.length) {
         tool_call_element = getToolCallDom(message.tool_message_list);

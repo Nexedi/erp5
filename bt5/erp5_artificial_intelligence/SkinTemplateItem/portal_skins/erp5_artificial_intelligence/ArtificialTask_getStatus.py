@@ -19,16 +19,14 @@ if artificial_task_report is not None:
   if report_line_list and report_line_list[0].getSimulationState() == target_report_state:
     report_line = report_line_list[0]
     artificial_task_line = report_line.getFollowUpValue(portal_type='Artificial Task Line')
+    message_list = loads(report_line.getTextContent() or "[]")
     if artificial_task_line:
       done = True
       content = artificial_task_line.getTextContent()
     else:
       done = False
-      content = getattr(report_line, 'streaming_content', '')
-    message_list = loads(report_line.getTextContent() or "[]")
+      content = '\n'.join([m['content'] for m in message_list if m.get('role', '') == 'assistant'])
     tool_message_list = [m for m in message_list if m.get('role') == 'tool']
-
-
 
 return dumps({
   "done": done,
