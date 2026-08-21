@@ -58,6 +58,10 @@ import warnings
 from zLOG import LOG, PROBLEM, WARNING, INFO
 import six
 
+from typing import Any, TYPE_CHECKING
+if TYPE_CHECKING:
+  from collections.abc import Sequence
+
 ACQUIRE_PERMISSION_VALUE = []
 DYNAMIC_METHOD_NAME = 'z_related_'
 DYNAMIC_METHOD_NAME_LEN = len(DYNAMIC_METHOD_NAME)
@@ -788,10 +792,28 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
     # searchResults has inherited security assertions.
     @non_publishable
-    def searchResults(self, sql_catalog_id=None, local_roles=None, **kw):
+    def searchResults(
+      self,
+      sql_catalog_id=None,  # type: str | None
+      local_roles=None,  # type: str | Sequence[str] | None
+      **kw  # type: Any
+    ):
+        # type: (...) -> Sequence[Any]
         """
-        Calls ZCatalog.searchResults with extra arguments that
-        limit the results to what the user is allowed to see.
+        Execute a catalog query.
+        
+        It calls ``ZCatalog.searchResults`` with extra arguments that limit
+        the results to what the user is allowed to see.
+
+        Args:
+          sql_catalog_id: Identifier of the catalog to use.
+          local_roles: Allowed security roles for the query. It can be a
+            sequence of roles, or a string with the roles separated by ``";"``.
+          kwargs: Additional keyword arguments passed to the catalog search.
+
+        Returns:
+          The rows containing the query results.
+
         """
         #if not _checkPermission(
         #    Permissions.AccessInactivePortalContent, self):
