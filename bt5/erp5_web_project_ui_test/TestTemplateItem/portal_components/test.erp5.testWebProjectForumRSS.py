@@ -278,6 +278,24 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     result = self.portal.Base_filterProjectActions(actions=actions)
     self.assertEqual([], result['object_view'])
 
+  def test_generate_rss_link_action_is_registered(self):
+    """The action is how a reader gets the personal feed URL to paste in a feed
+    reader; the panel builds its Actions section from action_object_jio_action,
+    so a wrong category makes it unreachable in the app."""
+    action_dict = dict(
+      (action.getReference(), action.getActionType())
+      for action in self.portal.portal_types['Discussion Forum']
+                        .getActionInformationList())
+    self.assertEqual('object_jio_action', action_dict['generate_rss_link'])
+
+  def test_filter_project_actions_keeps_generate_rss_link(self):
+    """Base_filterProjectActions drops some jio actions by id; the new one must
+    survive, otherwise the panel never shows it in the app."""
+    generate_action = {'id': 'generate_rss_link'}
+    actions = {'object_jio_action': [generate_action, {'id': 'post_query'}]}
+    result = self.portal.Base_filterProjectActions(actions=actions)
+    self.assertEqual([generate_action], result['object_jio_action'])
+
 
 def test_suite():
   suite = unittest.TestSuite()
