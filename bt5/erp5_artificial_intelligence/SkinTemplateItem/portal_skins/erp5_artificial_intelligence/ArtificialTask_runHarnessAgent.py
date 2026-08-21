@@ -9,7 +9,7 @@ connector = artificial_task.getConnectorValue()
 
 
 def finalize(report_line, message_list):
-  content = '\n'.join([x.get("content") or '' for x in message_list if x.get('role', '') != 'tool'])
+  content = '\n'.join([x.get("content") for x in message_list if x.get('role', '') != 'tool' and x.get("content", '')])
   line = artificial_task.newContent(
     portal_type='Artificial Task Line',
     text_content=content

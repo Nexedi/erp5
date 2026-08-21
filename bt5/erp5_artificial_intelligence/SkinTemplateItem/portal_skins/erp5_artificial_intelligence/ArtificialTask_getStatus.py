@@ -25,7 +25,7 @@ if artificial_task_report is not None:
       content = artificial_task_line.getTextContent()
     else:
       done = False
-      content = '\n'.join([m['content'] for m in message_list if m.get('role', '') == 'assistant'])
+      content = '\n'.join([x.get("content") for x in message_list if x.get('role', '') == 'assistant' and x.get("content", '')])
     tool_message_list = [m for m in message_list if m.get('role') == 'tool']
 
 return dumps({
