@@ -19,6 +19,11 @@
     TEST_RESULT_PORTAL_TYPE = "Test Result",
     QUERY_LIMIT = 100000,
     SUPERVISOR_FIELD_TITLE = "Supervisor",
+    MILESTONE_OUTDATED_DAY_COUNT = 90,
+    DOCUMENT_OUTDATED_DAY_COUNT = 21,
+    PORTAL_TYPE_LIST = ["Task", "Bug", "Task Report"],
+    VALID_STATE_LIST = ["planned", "auto_planned", "ordered", "confirmed",
+                        "ready", "stopped", "started", "submitted", "validated"],
     PROJECT_PAGE_LABEL = "Project Page",
     EMPTY_LIST_LABEL = "No projects yet.",
     PAGE_TITLE = "Project Management",
@@ -31,6 +36,13 @@
                                 "Task Reports", SUPERVISOR_FIELD_TITLE,
                                 PROJECT_PAGE_LABEL, EMPTY_LIST_LABEL,
                                 OUTDATED_LABEL, FAILED_LABEL, PAGE_TITLE];
+
+  function getLimitDate(day_count) {
+    //JIO query date format: "yyyy-mm-dd hh:mm:ss"
+    var date = new Date();
+    date.setDate(date.getDate() - day_count);
+    return date.toISOString().substring(0, 19).replace("T", " ");
+  }
 
   function createMultipleSimpleOrQuery(key, value_list) {
     var i,
@@ -124,7 +136,7 @@
     }
   }
 
-  function renderProjectDocumentLines(gadget, configuration, limit_date) {
+  function renderProjectDocumentLines(gadget, limit_date) {
     var i,
       query_list = [],
       document_list = [],
@@ -135,10 +147,8 @@
       type: "simple",
       value: "validated"
     }));
-    query_list.push(createMultipleSimpleOrQuery('portal_type',
-                                                configuration.portal_type_list));
-    query_list.push(createMultipleSimpleOrQuery('simulation_state',
-                                                configuration.simulation_state_list));
+    query_list.push(createMultipleSimpleOrQuery('portal_type', PORTAL_TYPE_LIST));
+    query_list.push(createMultipleSimpleOrQuery('simulation_state', VALID_STATE_LIST));
     if (limit_date) {
       query_list.push(new SimpleQuery({
         key: "modification_date",
@@ -222,20 +232,6 @@
           translation_dict[TRANSLATABLE_STRING_LIST[i]] = translation_list[i];
         }
         return translation_dict;
-      });
-  }
-
-  function getConfiguration() {
-    return new RSVP.Queue()
-      .push(function () {
-        return jIO.util.ajax({
-          type: "GET",
-          url: new URL('./ERP5Site_getProjectFrontPageConfiguration',
-                       window.location.href)
-        });
-      })
-      .push(function (result) {
-        return JSON.parse(result.target.response);
       });
   }
 
@@ -533,13 +529,11 @@
       var gadget = this;
       return new RSVP.Queue()
         .push(function () {
-          return RSVP.all([getProjectList(gadget), getConfiguration(),
-                           getTranslationDict(gadget)]);
+          return RSVP.all([getProjectList(gadget), getTranslationDict(gadget)]);
         })
         .push(function (result_list) {
           options.project_list = result_list[0];
-          options.configuration = result_list[1];
-          options.translation_dict = result_list[2];
+          options.translation_dict = result_list[1];
           return gadget.changeState(options);
         });
     })
@@ -570,17 +564,15 @@
     })
 
     .declareJob("detachRenderOutdatedMilestoneInfo", function () {
-      return renderMilestoneLineList(this,
-                                     this.state.configuration.milestone_limit_date);
+      return renderMilestoneLineList(this, getLimitDate(MILESTONE_OUTDATED_DAY_COUNT));
     })
 
     .declareJob("detachRenderProjectDocumentInfo", function () {
-      return renderProjectDocumentLines(this, this.state.configuration);
+      return renderProjectDocumentLines(this);
     })
 
     .declareJob("detachRenderOutdatedDocumentInfo", function () {
-      return renderProjectDocumentLines(this, this.state.configuration,
-                                        this.state.configuration.document_limit_date);
+      return renderProjectDocumentLines(this, getLimitDate(DOCUMENT_OUTDATED_DAY_COUNT));
     })
 
     .declareJob("detachRenderTestResultInfo", function () {
