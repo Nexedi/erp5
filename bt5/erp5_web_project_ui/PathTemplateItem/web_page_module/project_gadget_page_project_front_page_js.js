@@ -14,27 +14,23 @@
     NAME_SPAN = "name",
     FORUM_LINK_ID_SUFFIX = "forum",
     FORUM_LINK_TYPE = "link",
-    OUTDATED_LABEL = " out of date",
-    FAILED_LABEL = " failed",
+    OUTDATED_LABEL = "out of date",
+    FAILED_LABEL = "failed",
     TEST_RESULT_PORTAL_TYPE = "Test Result",
     QUERY_LIMIT = 100000,
     SUPERVISOR_FIELD_TITLE = "Supervisor",
-    //XXX hardcoded limit dates (3 months for milestones, 3 weeks for documents)
-    //define dates in System Preference Project tab?
-    //date ISO string format: "yyyy-mm-ddThh:mm:ss.mmmm"
-    //JIO query date format:  "yyyy-mm-dd hh:mm:ss"
-    MILESTONE_LIMIT_DATE = new Date(new Date().setDate(new Date().getDate() - 90))
-      .toISOString().substring(0, new Date().toISOString().length - 5).replace("T", " "),
-    DOCUMENT_LIMIT_DATE = new Date(new Date().setDate(new Date().getDate() - 21))
-      .toISOString().substring(0, new Date().toISOString().length - 5).replace("T", " "),
+    PROJECT_PAGE_LABEL = "Project Page",
+    EMPTY_LIST_LABEL = "No projects yet.",
+    PAGE_TITLE = "Project Management",
     PORTAL_TITLE_DICT = {"Task": "Tasks",
                          "Test Result" : "Test Results",
                          "Bug" : "Bugs",
                          "Project Milestone" : "Milestones",
                          "Task Report": "Task Reports"},
-    PORTAL_TYPE_LIST = ["Task", "Bug", "Task Report"],
-    VALID_STATE_LIST = ["planned", "auto_planned", "ordered", "confirmed",
-                        "ready", "stopped", "started", "submitted", "validated"];
+    TRANSLATABLE_STRING_LIST = ["Tasks", "Test Results", "Bugs", "Milestones",
+                                "Task Reports", SUPERVISOR_FIELD_TITLE,
+                                PROJECT_PAGE_LABEL, EMPTY_LIST_LABEL,
+                                OUTDATED_LABEL, FAILED_LABEL, PAGE_TITLE];
 
   function createMultipleSimpleOrQuery(key, value_list) {
     var i,
@@ -128,7 +124,7 @@
     }
   }
 
-  function renderProjectDocumentLines(gadget, limit_date) {
+  function renderProjectDocumentLines(gadget, configuration, limit_date) {
     var i,
       query_list = [],
       document_list = [],
@@ -139,8 +135,10 @@
       type: "simple",
       value: "validated"
     }));
-    query_list.push(createMultipleSimpleOrQuery('portal_type', PORTAL_TYPE_LIST));
-    query_list.push(createMultipleSimpleOrQuery('simulation_state', VALID_STATE_LIST));
+    query_list.push(createMultipleSimpleOrQuery('portal_type',
+                                                configuration.portal_type_list));
+    query_list.push(createMultipleSimpleOrQuery('simulation_state',
+                                                configuration.simulation_state_list));
     if (limit_date) {
       query_list.push(new SimpleQuery({
         key: "modification_date",
@@ -209,6 +207,35 @@
                             limit_date ? 0 : milestone_list[i].value["count(*)"],
                             limit_date ? milestone_list[i].value["count(*)"] : 0);
         }
+      });
+  }
+
+  function getTranslationDict(gadget) {
+    return new RSVP.Queue()
+      .push(function () {
+        return gadget.getTranslationList(TRANSLATABLE_STRING_LIST);
+      })
+      .push(function (translation_list) {
+        var i,
+          translation_dict = {};
+        for (i = 0; i < TRANSLATABLE_STRING_LIST.length; i += 1) {
+          translation_dict[TRANSLATABLE_STRING_LIST[i]] = translation_list[i];
+        }
+        return translation_dict;
+      });
+  }
+
+  function getConfiguration() {
+    return new RSVP.Queue()
+      .push(function () {
+        return jIO.util.ajax({
+          type: "GET",
+          url: new URL('./ERP5Site_getProjectFrontPageConfiguration',
+                       window.location.href)
+        });
+      })
+      .push(function (result) {
+        return JSON.parse(result.target.response);
       });
   }
 
@@ -281,7 +308,7 @@
     }));
   }
 
-  function renderProjectList(gadget, project_list) {
+  function renderProjectList(gadget, project_list, translation_dict) {
     var i,
       project_html,
       left_div_html,
@@ -296,8 +323,7 @@
       bug_url_list = [],
       test_result_url_list = [],
       supervisor_url_list = [],
-      milestone_view,
-      project_view;
+      milestone_view;
 
     function createProjectHtmlElement(project_id, project_title,
                                       project_url, supervisor, supervisor_url) {
@@ -307,11 +333,12 @@
         project_link = domsugar('a', {
           href: project_url,
           id: project_title + "-project_page_link"
-        }, ["(Project Page)"]),
+        }, ["(" + translation_dict[PROJECT_PAGE_LABEL] + ")"]),
         title_div = domsugar('div', { class: "project-title" },
                              [project_title_span, project_link]),
         left_info_div = domsugar('div', { class: "project-left" }),
-        supervisor_field_label = domsugar('label', {}, [SUPERVISOR_FIELD_TITLE]),
+        supervisor_field_label = domsugar('label', {},
+                                          [translation_dict[SUPERVISOR_FIELD_TITLE]]),
         supervisor_value_link = domsugar('a', {
           href: supervisor_url
         }, [supervisor]),
@@ -359,7 +386,8 @@
         open_bracket_span = domsugar('span', {}, ["("]),
         close_bracket_span = domsugar('span', {}, [")"]),
         outdated_label_span = domsugar('span', {}, [
-          (portal_type === TEST_RESULT_PORTAL_TYPE) ? FAILED_LABEL : OUTDATED_LABEL
+          " " + translation_dict[(portal_type === TEST_RESULT_PORTAL_TYPE) ?
+                                 FAILED_LABEL : OUTDATED_LABEL]
         ]),
         number_span = domsugar('span', {
           id: getProjectHtlmElementId(project_id, portal_type, NUMBER_SPAN),
@@ -379,16 +407,11 @@
           milestone_view = hateoas_url +
             '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
             project_list[i].id + '&view=Project_viewMilestoneList';
-          project_view = hateoas_url +
-            '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
-            project_list[i].id +
-            '&view=Project_viewQuickOverview';
           url_parameter_list.push(
-            getUrlParameterDict(project_list[i].id,
-                                project_view)
+            getUrlParameterDict(project_list[i].id, 'view')
           );
           milestone_url_list.push(
-            getUrlParameterDict('milestone_module',
+            getUrlParameterDict(project_list[i].id,
                                 milestone_view,
                                 [["stop_date", "ascending"]],
                                 null,
@@ -449,7 +472,7 @@
         if (project_list.length === 0) {
           ul_list.appendChild(domsugar('li', {
             class: "empty-state-message",
-            text: "No projects yet."
+            text: translation_dict[EMPTY_LIST_LABEL]
           }));
           return;
         }
@@ -478,13 +501,15 @@
                   return result_dict.test_result_url_list[i];
                 }
               })(type);
-              left_line_html = createProjectLineHtmlElement(project_list[i].id, type,
-                                                            line_url,
-                                                            ((PORTAL_TITLE_DICT
-                                                              .hasOwnProperty(type)) ?
-                                                             PORTAL_TITLE_DICT[type] :
-                                                             type),
-                                                            0, 0, NONE_STATUS);
+              left_line_html = createProjectLineHtmlElement(
+                project_list[i].id,
+                type,
+                line_url,
+                translation_dict[PORTAL_TITLE_DICT[type]],
+                0,
+                0,
+                NONE_STATUS
+              );
               left_div_html.appendChild(left_line_html);
             }
           }
@@ -502,12 +527,19 @@
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
     .declareAcquiredMethod("getSetting", "getSetting")
+    .declareAcquiredMethod("getTranslationList", "getTranslationList")
 
     .declareMethod('render', function (options) {
       var gadget = this;
-      return getProjectList(gadget)
-        .push(function (project_list) {
-          options.project_list = project_list;
+      return new RSVP.Queue()
+        .push(function () {
+          return RSVP.all([getProjectList(gadget), getConfiguration(),
+                           getTranslationDict(gadget)]);
+        })
+        .push(function (result_list) {
+          options.project_list = result_list[0];
+          options.configuration = result_list[1];
+          options.translation_dict = result_list[2];
           return gadget.changeState(options);
         });
     })
@@ -515,13 +547,14 @@
     .onStateChange(function () {
       var gadget = this;
       return gadget.updateHeader({
-        page_title: 'Project Management'
+        page_title: gadget.state.translation_dict[PAGE_TITLE]
       });
     })
 
     .declareService(function () {
       var gadget = this;
-      return renderProjectList(gadget, gadget.state.project_list)
+      return renderProjectList(gadget, gadget.state.project_list,
+                               gadget.state.translation_dict)
         .push(function () {
           //run the rest of queries and render async
           gadget.detachRenderMilestoneInfo();
@@ -529,7 +562,6 @@
           gadget.detachRenderProjectDocumentInfo();
           gadget.detachRenderOutdatedDocumentInfo();
           gadget.detachRenderTestResultInfo();
-          gadget.detachRenderProjectForumLink();
         });
     })
 
@@ -538,15 +570,17 @@
     })
 
     .declareJob("detachRenderOutdatedMilestoneInfo", function () {
-      return renderMilestoneLineList(this, MILESTONE_LIMIT_DATE);
+      return renderMilestoneLineList(this,
+                                     this.state.configuration.milestone_limit_date);
     })
 
     .declareJob("detachRenderProjectDocumentInfo", function () {
-      return renderProjectDocumentLines(this);
+      return renderProjectDocumentLines(this, this.state.configuration);
     })
 
     .declareJob("detachRenderOutdatedDocumentInfo", function () {
-      return renderProjectDocumentLines(this, DOCUMENT_LIMIT_DATE);
+      return renderProjectDocumentLines(this, this.state.configuration,
+                                        this.state.configuration.document_limit_date);
     })
 
     .declareJob("detachRenderTestResultInfo", function () {
@@ -567,42 +601,6 @@
                                 TEST_RESULT_PORTAL_TYPE,
                                 parseInt(project_test_status_dict[project_id].all_tests, RADIX),
                                 parseInt(project_test_status_dict[project_id].failures, RADIX));
-            }
-          }
-        });
-    })
-
-    .declareJob("detachRenderProjectForumLink", function () {
-      return;
-      var gadget = this,
-        i,
-        forum_link_html,
-        forum_link_list,
-        link_query = getComplexQuery({"portal_type" : "Link",
-                                      "validation_state" : "reachable",
-                                      "relative_url" : "project_module/%/forum_link"},
-                                     "AND");
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.jio_allDocs({
-            query: Query.objectToSearchText(link_query),
-            limit: QUERY_LIMIT,
-            select_list: ['url_string'],
-            sort_on: [["modification_date", "descending"]]
-          });
-        })
-        .push(function (result) {
-          forum_link_list = result.data.rows;
-          for (i = 0; i < forum_link_list.length; i += 1) {
-            forum_link_html = document.querySelector(
-              getProjectHtlmElementId(getProjectId(forum_link_list[i].id),
-                                      FORUM_LINK_TYPE,
-                                      FORUM_LINK_ID_SUFFIX, true)
-            );
-            if (forum_link_html) {
-              forum_link_html.href = forum_link_list[i].value.url_string;
-              forum_link_html.innerHTML = "Project Forum";
-              forum_link_html.classList.remove("ui-hidden");
             }
           }
         });
