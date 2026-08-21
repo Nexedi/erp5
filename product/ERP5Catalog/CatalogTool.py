@@ -35,7 +35,7 @@ from Products.CMFCore.CatalogTool import CatalogTool as CMFCoreCatalogTool
 from Products.ZSQLCatalog.ZSQLCatalog import ZCatalog
 from Products.ZSQLCatalog.SQLCatalog import ComplexQuery, SimpleQuery
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.Utils import publishable
+from Products.ERP5Type.Utils import publishable, non_publishable
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.users import system as system_user
 from Products.CMFCore.utils import UniqueObject, _getAuthenticatedUser, getToolByName
@@ -787,6 +787,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       return query
 
     # searchResults has inherited security assertions.
+    @non_publishable
     def searchResults(self, sql_catalog_id=None, local_roles=None, **kw):
         """
         Calls ZCatalog.searchResults with extra arguments that
