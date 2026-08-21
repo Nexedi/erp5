@@ -20,6 +20,7 @@ deliberately does NOT depend on erp5_web_project_ui (its own test asserts the
 decoupled case), so the deep-link is exercised here, where the provider is present.
 """
 
+import json
 import unittest
 from collections import OrderedDict
 from xml.dom.minidom import parseString
@@ -277,6 +278,74 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     actions = {'object_view': [{'id': 'view_rss'}, {'id': 'view_history'}]}
     result = self.portal.Base_filterProjectActions(actions=actions)
     self.assertEqual([], result['object_view'])
+
+  def test_generate_rss_link_action_is_registered(self):
+    """The action is how a reader gets the personal feed URL to paste in a feed
+    reader; the panel builds its Actions section from action_object_jio_action,
+    so a wrong category makes it unreachable in the app."""
+    action_dict = dict(
+      (action.getReference(), action.getActionType())
+      for action in self.portal.portal_types['Discussion Forum']
+                        .getActionInformationList())
+    self.assertEqual('object_jio_action', action_dict['generate_rss_link'])
+
+  def test_filter_project_actions_keeps_generate_rss_link(self):
+    """Base_filterProjectActions drops some jio actions by id; the new one must
+    survive, otherwise the panel never shows it in the app."""
+    generate_action = {'id': 'generate_rss_link'}
+    actions = {'object_jio_action': [generate_action, {'id': 'post_query'}]}
+    result = self.portal.Base_filterProjectActions(actions=actions)
+    self.assertEqual([generate_action], result['object_jio_action'])
+
+  def test_rss_link_gadget_is_served_by_the_app(self):
+    """The browser resolves the GadgetField url against the app root, so each
+    file the gadget links has to be reachable as a web page reference the way
+    every other gadget of this bt5 is - a rename or a missing publication makes
+    the field render an empty box with no server-side error. The gadget reuses
+    the app stylesheet instead of shipping its own. Both the forum view and the
+    action dialog embed the same gadget."""
+    skin_folder = self.portal.portal_skins.erp5_web_project
+    for form in (skin_folder.DiscussionForum_viewGenerateRssLinkDialog,
+                 skin_folder.DiscussionForum_viewThreadProject):
+      self.assertEqual('gadget_project_rss_link.html',
+                       form.rss_link_gadget.get_value('gadget_url'),
+                       form.getId())
+    web_site = self.portal.web_site_module.project_management
+    for reference in ('gadget_project_rss_link.html',
+                      'gadget_project_rss_link.js',
+                      'gadget_erp5_page_project.css'):
+      self.assertNotEqual(None, web_site.getDocumentValue(reference), reference)
+
+  def test_rss_link_gadget_is_in_the_precache_manifest(self):
+    """Base_getTranslationSourceFileList builds the data-i18n extraction list
+    from the precache manifest, so a gadget missing from it gets neither offline
+    precaching nor a translated 'Copied' label."""
+    url_list = self.portal.WebSection_getWebProjectPrecacheManifestList()
+    for url in ('gadget_project_rss_link.html',
+                'gadget_project_rss_link.js'):
+      self.assertIn(url, url_list)
+
+  def test_forum_view_does_not_generate_an_access_token(self):
+    """Minting a Restricted Access Token is a write, and it happens only on the
+    reader's click, like the old forum's generate button. Rendering the forum
+    view must only hand the gadget the jio_key it calls on click: evaluating the
+    field creates nothing and runs no token query."""
+    forum, _ = self._createForumThreadWithPosts(n_posts=1)
+    token_id_list = list(self.portal.access_token_module.objectIds())
+    field = forum.DiscussionForum_viewThreadProject.rss_link_gadget
+    self.assertEqual([('jio_key', forum.getRelativeUrl())],
+                     field.get_value('renderjs_extra'))
+    self.assertEqual(token_id_list,
+                     list(self.portal.access_token_module.objectIds()))
+
+  def test_rss_url_endpoint_answers_json(self):
+    """The gadget's click handler reads {"rss_url": ...} out of
+    DiscussionForum_getRssAccessUrlAsJSON; the wrapper must keep that shape on
+    both branches of DiscussionForum_getRssAccessUrl (token or plain url)."""
+    forum, _ = self._createForumThreadWithPosts(n_posts=1)
+    result = json.loads(forum.DiscussionForum_getRssAccessUrlAsJSON())
+    self.assertIn('DiscussionForum_viewLatestPostListAsRSS',
+                  result['rss_url'])
 
 
 def test_suite():
