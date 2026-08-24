@@ -10,7 +10,10 @@ url_list = [
   'gadget_erp5_page_project_front_page.html',
   'gadget_erp5_page_project_front_page.js',
   'gadget_erp5_page_project_page.html',
-  'gadget_erp5_page_project_page.js'
+  'gadget_erp5_page_project_page.js',
+  'gadget_project_rss_link.html',
+  'gadget_project_rss_link.js',
+  'gadget_project_rss_link.css'
 ]
 
 return url_list

@@ -46,11 +46,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>brain, url_dict=False, **kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Project_getQuickViewUrl</string> </value>
+            <value> <string>DiscussionForum_getRssAccessUrlAsJSON</string> </value>
         </item>
       </dictionary>
     </pickle>
