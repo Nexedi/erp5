@@ -82,7 +82,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_rss_link</string>
+                        <string>rss_link_gadget</string>
                       </list>
                     </value>
                 </item>
