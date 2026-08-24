@@ -317,9 +317,11 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
       self.assertNotEqual(None, web_site.getDocumentValue(reference), reference)
 
   def test_rss_link_gadget_is_in_the_precache_manifest(self):
-    """Base_getTranslationSourceFileList builds the data-i18n extraction list
-    from the precache manifest, so a gadget missing from it gets neither offline
-    precaching nor a translated 'Copied' label."""
+    """The manifest is what gets precached, and it is also the list
+    Base_getTranslationSourceFileList feeds the data-i18n extraction from - a
+    prerequisite for translating the gadget labels, though not enough on its own:
+    project_management sets no configuration_translation_gadget_url, so the app
+    has no translation data script of its own to update (plan doc, Task 7)."""
     url_list = self.portal.WebSection_getWebProjectPrecacheManifestList()
     for url in ('gadget_project_rss_link.html',
                 'gadget_project_rss_link.js'):

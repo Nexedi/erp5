@@ -161,6 +161,22 @@
   <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_erp5_project_panel.html']//a[text()='New Thread' and contains(@href, '#!display_dialog_with_history')]</td>
   <td></td>
 </tr>
+<!-- the feed url is minted on click, so the field renders a button and no token -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_rss_link.html']//button[text()='Get RSS access link']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_rss_link.html']//button[text()='Get RSS access link']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_rss_link.html']//button[text()='Copy to Clipboard']</td>
+  <td></td>
+</tr>
 <!-- Create a new thread -->
 <tr>
   <td>click</td>
