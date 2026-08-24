@@ -272,3 +272,16 @@ body.cke_editable a {
   color: #267B87;
   text-decoration: none;
 }
+
+div[data-gadget-url$="gadget_project_rss_link.html"] button {
+  color: #212529;
+  padding: 3pt;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  border-radius: 0.325em;
+  display: inline-block;
+  margin-top: 6pt;
+}
+
+div[data-gadget-url$="gadget_project_rss_link.html"] button:before {
+  padding-right: 4pt;
+}

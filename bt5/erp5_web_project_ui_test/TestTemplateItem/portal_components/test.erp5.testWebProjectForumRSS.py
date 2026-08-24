@@ -299,10 +299,11 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
 
   def test_rss_link_gadget_is_served_by_the_app(self):
     """The browser resolves the GadgetField url against the app root, so each
-    file of the gadget has to be reachable as a web page reference the way every
-    other gadget of this bt5 is - a rename or a missing publication makes the
-    field render an empty box with no server-side error. Both the forum view and
-    the action dialog embed the same gadget."""
+    file the gadget links has to be reachable as a web page reference the way
+    every other gadget of this bt5 is - a rename or a missing publication makes
+    the field render an empty box with no server-side error. The gadget reuses
+    the app stylesheet instead of shipping its own. Both the forum view and the
+    action dialog embed the same gadget."""
     skin_folder = self.portal.portal_skins.erp5_web_project
     for form in (skin_folder.DiscussionForum_viewGenerateRssLinkDialog,
                  skin_folder.DiscussionForum_viewThreadProject):
@@ -312,7 +313,7 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     web_site = self.portal.web_site_module.project_management
     for reference in ('gadget_project_rss_link.html',
                       'gadget_project_rss_link.js',
-                      'gadget_project_rss_link.css'):
+                      'gadget_erp5_page_project.css'):
       self.assertNotEqual(None, web_site.getDocumentValue(reference), reference)
 
   def test_rss_link_gadget_is_in_the_precache_manifest(self):
@@ -321,8 +322,7 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     precaching nor a translated 'Copied' label."""
     url_list = self.portal.WebSection_getWebProjectPrecacheManifestList()
     for url in ('gadget_project_rss_link.html',
-                'gadget_project_rss_link.js',
-                'gadget_project_rss_link.css'):
+                'gadget_project_rss_link.js'):
       self.assertIn(url, url_list)
 
   def test_forum_view_does_not_generate_an_access_token(self):
