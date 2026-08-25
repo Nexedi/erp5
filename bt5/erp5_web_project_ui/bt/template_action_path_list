@@ -3,6 +3,7 @@ Benchmark Result | project_view
 Bug Line | project_view
 Bug Module | project_view
 Bug | project_view
+Discussion Forum | generate_rss_link
 Discussion Forum | project_view
 Discussion Post | project_view
 Discussion Thread | project_view
@@ -19,6 +20,9 @@ Project Line | project_view
 Project Milestone | project_view
 Project Module | project_view
 Project | project_view
+Project | project_view_activity_list
+Project | project_view_document_list
+Project | project_view_milestone_list
 Role Definition | project_view
 Scalability Test Suite | project_view
 SlapOS Agent Test Suite | project_view
