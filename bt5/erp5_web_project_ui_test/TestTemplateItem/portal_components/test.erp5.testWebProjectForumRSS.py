@@ -45,7 +45,8 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     return "Test Web Project Forum RSS"
 
   def getBusinessTemplateList(self):
-    return ('erp5_web_project_ui', 'erp5_web_project_ui_test')
+    return ('erp5_web_project_ui', 'erp5_web_project_ui_test',
+            'erp5_access_token')
 
   def beforeTearDown(self):
     self.abort()
