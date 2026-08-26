@@ -40,7 +40,7 @@ class TestNamingConvention(ERP5TypeTestCase):
       'erp5_base', 'erp5_pdm',
       'erp5_simulation', 'erp5_trade', 'erp5_accounting',
       'erp5_apparel', 'erp5_mrp', 'erp5_project',
-      'erp5_ingestion_mysql_innodb_catalog', 'erp5_ingestion',
+      'erp5_ingestion',
       'erp5_jquery', 'erp5_web', 'erp5_dms', 'erp5_csv_style', 'erp5_crm',
       'erp5_budget', 'erp5_item', 'erp5_ui_test_core', 'erp5_ui_test',
       'erp5_accounting_l10n_fr', 'erp5_invoicing', 'erp5_accounting_ui_test',
