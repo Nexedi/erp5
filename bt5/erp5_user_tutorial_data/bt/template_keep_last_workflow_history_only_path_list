@@ -424,6 +424,6 @@ image_module/user-howto.manage.support.requests.sopport.request.person.001.en
 image_module/user-howto.manage.support.requests.sopport.request.team.001.en
 image_module/user-howto.manage.support.requests.switch.user.log.out.screenshot.002.en
 image_module/user-howto.manage.support.requests.worklist.received.events.to.deliver.screenshot.002.en
-image_module/user_howto_*_new
-web_page_module/osoe_howto_*_svg
-web_page_module/user_howto_*_svg
+image_module/user_howto_**
+web_page_module/osoe_howto_**
+web_page_module/user_howto_**
