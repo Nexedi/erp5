@@ -6,7 +6,10 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
   "use strict";
 
   var VALID_STATE_LIST = ["shared", "released", "published",
-                          "shared_alive", "released_alive", "published_alive"];
+                          "shared_alive", "released_alive", "published_alive"],
+    MILESTONE_ACTION = "project_view_milestone_list",
+    DOCUMENT_ACTION = "project_view_document_list",
+    ACTIVITY_ACTION = "project_view_activity_list";
 
   function addRedirectionToReference(href, url) {
     if (!href.startsWith("https") && !href.startsWith("http") &&
@@ -225,6 +228,20 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
     };
   }
 
+  function getActionUrlParameterDict(jio_key, action_name, sort_list,
+                                     column_list, extended_search) {
+    return {
+      command: 'display_erp5_action_with_history',
+      options: {
+        'jio_key': jio_key,
+        'page': action_name,
+        'field_listbox_sort_list:json': sort_list,
+        'field_listbox_column_list:json': column_list,
+        'extended_search': extended_search
+      }
+    };
+  }
+
   rJS(window)
 
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
@@ -252,9 +269,7 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
         editor;
       return new RSVP.Queue()
         .push(function () {
-          promise_list = [
-            gadget.getSetting("hateoas_url")
-          ];
+          promise_list = [];
           if (modification_dict.publication_section) {
             promise_list.push(gadget.getDeclaredGadget("editor"));
             promise_list.push(getWebPageInfo(gadget, modification_dict.jio_key,
@@ -263,30 +278,18 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
           return RSVP.all(promise_list);
         })
         .push(function (result_list) {
-          var document_view = result_list[0] +
-            '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
-            modification_dict.jio_key + '&view=Project_viewDocumentList',
-            milestone_view = result_list[0] +
-            '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
-            modification_dict.jio_key + '&view=Project_viewMilestoneList',
-            activity_view = result_list[0] +
-            '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
-            modification_dict.jio_key + '&view=Project_viewActivityList',
-            forum_view = result_list[0] +
-            '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
-            modification_dict.forum_jio_key;
-          web_page_info = result_list[2];
+          web_page_info = result_list[1];
           if (web_page_info) {
-            editor = result_list[1];
+            editor = result_list[0];
             editor.render({"editor": "fck_editor", "editable": false,
                            "value": web_page_info.content});
           }
           url_parameter_list = [
-            getUrlParameterDict('milestone_module',
-                                milestone_view,
-                                [["stop_date", "ascending"]],
-                                null,
-                                createProjectQuery(null, [["selection_domain_date_milestone_domain", "future"]])),
+            getActionUrlParameterDict(modification_dict.jio_key,
+                                      MILESTONE_ACTION,
+                                      [["stop_date", "ascending"]],
+                                      null,
+                                      createProjectQuery(null, [["selection_domain_date_milestone_domain", "future"]])),
             getUrlParameterDict('task_module',
                                 "view",
                                 [["delivery.start_date", "descending"]],
@@ -324,21 +327,21 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
                                 null,
                                 createProjectQuery(modification_dict.jio_key,
                                                    [["translated_validation_state_title", "validated"]])),
-            getUrlParameterDict(modification_dict.jio_key,
-                                document_view,
-                                [["modification_date", "descending"]],
-                                ["download", "title", "reference", "modification_date"],
-                                createProjectQuery(null, [["selection_domain_state_document_domain", "confirmed"]])),
-            getUrlParameterDict(modification_dict.jio_key,
-                                activity_view,
-                                [["modification_date", "descending"]])
+            getActionUrlParameterDict(modification_dict.jio_key,
+                                      DOCUMENT_ACTION,
+                                      [["modification_date", "descending"]],
+                                      ["download", "title", "reference", "modification_date"],
+                                      createProjectQuery(null, [["selection_domain_state_document_domain", "confirmed"]])),
+            getActionUrlParameterDict(modification_dict.jio_key,
+                                      ACTIVITY_ACTION,
+                                      [["modification_date", "descending"]])
           ];
           if (web_page_info && web_page_info.edit_view) {
             url_parameter_list.push(getUrlParameterDict(web_page_info.id, web_page_info.edit_view));
           }
           if (modification_dict.forum_jio_key) {
             url_parameter_list.push(getUrlParameterDict(modification_dict.forum_jio_key,
-                                                        forum_view,
+                                                        'view',
                                                         [["modification_date", "descending"]]));
           }
           return gadget.getUrlForList(url_parameter_list);
