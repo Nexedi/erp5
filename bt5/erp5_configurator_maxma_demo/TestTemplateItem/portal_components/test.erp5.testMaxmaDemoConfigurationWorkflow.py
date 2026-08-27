@@ -41,7 +41,6 @@ class TestMaxmaDemoConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
                        'erp5_dhtml_style',
                        'erp5_jquery',
                        'erp5_jquery_ui',
-                       'erp5_ingestion_mysql_innodb_catalog',
                        'erp5_ingestion',
                        'erp5_web',
                        'erp5_dms',
