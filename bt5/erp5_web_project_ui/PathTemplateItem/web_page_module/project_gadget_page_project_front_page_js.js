@@ -25,6 +25,8 @@
     VALID_STATE_LIST = ["planned", "auto_planned", "ordered", "confirmed",
                         "ready", "stopped", "started", "submitted", "validated"],
     PROJECT_PAGE_LABEL = "Project Page",
+    RECENT_CHANGES_LABEL = "Recent changes",
+    FEED_SCRIPT_NAME = "WebSection_viewRecentProjectChangeListAsRSS",
     EMPTY_LIST_LABEL = "No projects yet.",
     PAGE_TITLE = "Project Management",
     PORTAL_TITLE_DICT = {"Task": "Tasks",
@@ -35,7 +37,8 @@
     TRANSLATABLE_STRING_LIST = ["Tasks", "Test Results", "Bugs", "Milestones",
                                 "Task Reports", SUPERVISOR_FIELD_TITLE,
                                 PROJECT_PAGE_LABEL, EMPTY_LIST_LABEL,
-                                OUTDATED_LABEL, FAILED_LABEL, PAGE_TITLE];
+                                OUTDATED_LABEL, FAILED_LABEL, PAGE_TITLE,
+                                RECENT_CHANGES_LABEL];
 
   function getLimitDate(day_count) {
     //JIO query date format: "yyyy-mm-dd hh:mm:ss"
@@ -540,6 +543,8 @@
 
     .onStateChange(function () {
       var gadget = this;
+      gadget.element.querySelector("#js-recent-changes-title").textContent =
+        gadget.state.translation_dict[RECENT_CHANGES_LABEL];
       return gadget.updateHeader({
         page_title: gadget.state.translation_dict[PAGE_TITLE]
       });
@@ -556,6 +561,17 @@
           gadget.detachRenderProjectDocumentInfo();
           gadget.detachRenderOutdatedDocumentInfo();
           gadget.detachRenderTestResultInfo();
+          gadget.detachRenderRecentChangeInfo();
+        });
+    })
+
+    .declareJob("detachRenderRecentChangeInfo", function () {
+      return this.getDeclaredGadget("feed_reader")
+        .push(function (feed_gadget) {
+          return feed_gadget.render({
+            feed_url: new URL('./' + FEED_SCRIPT_NAME,
+                              window.location.href).toString()
+          });
         });
     })
 
