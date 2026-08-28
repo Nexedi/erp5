@@ -12,6 +12,8 @@ mapping_dict={
   "redirect_url": web_section.getLayoutProperty("configuration_redirect_url", default=""),
   "cache_file": web_section.getLayoutProperty("configuration_cache_file", default=""),
   "application_name": web_section.getTitle(),
+  "application_id": web_section.getWebSiteValue().getId(),
+  "app_version": str(web_section.getModificationDate()),
 }
 
 configuration_webapp_manifest_url = web_section.getLayoutProperty("configuration_webapp_manifest_url", default=None)
