@@ -9,6 +9,6 @@
 CREATE TABLE `deleted_catalog` (
   `uid` BIGINT UNSIGNED NOT NULL,
   `path` varchar(255) NOT NULL,
-  `deletion_timestamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `deletion_timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`deletion_timestamp`, `path`, `uid`)
 ) ENGINE=InnoDB;
