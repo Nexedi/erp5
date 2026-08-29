@@ -40,10 +40,7 @@
         <item>
             <key> <string>acquisition_base_category</string> </key>
             <value>
-              <tuple>
-                <string>order</string>
-                <string>delivery</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
