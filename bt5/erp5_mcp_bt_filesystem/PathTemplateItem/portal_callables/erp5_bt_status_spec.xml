@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="JSON Form" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>erp5_bt_status_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_bt_status_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>JSON Form</string> </value>
+        </item>
+        <item>
+            <key> <string>response_schema</string> </key>
+            <value> <string>{\n
+  "type": "object",\n
+  "additionalProperties": true,\n
+  "description": "Two-way diff between the repository and the installed ERP5 representation, plus safety.",\n
+  "properties": {\n
+    "business_template": {\n
+      "type": "string"\n
+    },\n
+    "repository_to_zodb": {\n
+      "type": "object"\n
+    },\n
+    "zodb_to_repository": {\n
+      "type": [\n
+        "object",\n
+        "null"\n
+      ]\n
+    },\n
+    "conflicts": {\n
+      "type": "array",\n
+      "items": {\n
+        "type": "string"\n
+      }\n
+    },\n
+    "update_from_repository_safe": {\n
+      "type": "boolean"\n
+    },\n
+    "export_to_repository_safe": {\n
+      "type": "boolean"\n
+    }\n
+  }\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>{\n
+  "type": "object",\n
+  "additionalProperties": false,\n
+  "required": ["business_template"],\n
+  "properties": {\n
+    "business_template": {\n
+      "type": "string",\n
+      "description": "Bare directory name of the Business Template, e.g. erp5_project."\n
+    },\n
+    "expected_repository_revision": {\n
+      "type": ["string", "null"],\n
+      "default": "",\n
+      "description": "Optional git object id (full or shortened) the caller expects HEAD to be at."\n
+    },\n
+    "expected_erp5_revision": {\n
+      "type": ["string", "null"],\n
+      "default": "",\n
+      "description": "Optional installed Business Template revision the caller expects."\n
+    },\n
+    "path_pattern": {\n
+      "default": null,\n
+      "type": ["string", "array", "null"],\n
+      "description": "Glob patterns (e.g. \'*supply_line*\') narrowing every comparison to matching paths; matched against repository-root-relative paths like bt5/erp5_core/CatalogMethodTemplateItem/..., and \'*\' spans \'/\'. Accepts a JSON array or newline/comma-separated entries. The cheap drift check for big templates."\n
+    },\n
+    "summary_only": {\n
+      "default": null,\n
+      "type": ["boolean", "integer", "null"],\n
+      "description": "Return only counts for every path list (nothing is hidden silently: counts and \'_more\' markers say what was left out). Default (null): true is set automatically for templates with more than 500 files, whose full per-file sweeps are what timed the tool out."\n
+    },\n
+    "max_list": {\n
+      "default": 25,\n
+      "type": ["integer", "null"],\n
+      "description": "Cap per returned list when summary_only is false."\n
+    }\n
+  }\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>erp5_bt_status input schema</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

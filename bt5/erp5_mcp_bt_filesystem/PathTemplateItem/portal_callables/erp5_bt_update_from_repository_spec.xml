@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="JSON Form" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>erp5_bt_update_from_repository_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_bt_update_from_repository_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>JSON Form</string> </value>
+        </item>
+        <item>
+            <key> <string>response_schema</string> </key>
+            <value> <string>{\n
+  "type": "object",\n
+  "additionalProperties": true,\n
+  "description": "Result of updating an installed Business Template from the repository.",\n
+  "properties": {\n
+    "success": {\n
+      "type": "boolean"\n
+    },\n
+    "operation": {\n
+      "type": "string"\n
+    },\n
+    "business_template": {\n
+      "type": "string"\n
+    },\n
+    "created": {\n
+      "type": "array",\n
+      "items": {\n
+        "type": "string"\n
+      }\n
+    },\n
+    "modified": {\n
+      "type": "array",\n
+      "items": {\n
+        "type": "string"\n
+      }\n
+    },\n
+    "deleted": {\n
+      "type": "array",\n
+      "items": {\n
+        "type": "string"\n
+      }\n
+    },\n
+    "revision": {\n
+      "type": "string"\n
+    },\n
+    "error": {\n
+      "type": "string"\n
+    }\n
+  }\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>{\n
+  "type": "object",\n
+  "additionalProperties": false,\n
+  "required": [\n
+    "business_template"\n
+  ],\n
+  "properties": {\n
+    "business_template": {\n
+      "type": "string",\n
+      "description": "Bare directory name of the Business Template to update."\n
+    },\n
+    "update_catalog": {\n
+      "type": [\n
+        "boolean",\n
+        "integer"\n
+      ],\n
+      "default": false,\n
+      "description": "Whether to also update the catalog."\n
+    },\n
+    "reinstall": {\n
+      "type": [\n
+        "boolean",\n
+        "integer"\n
+      ],\n
+      "default": false,\n
+      "description": "Force a full reinstall rather than a diff/keep update."\n
+    },\n
+    "force": {\n
+      "type": [\n
+        "boolean",\n
+        "integer"\n
+      ],\n
+      "default": false,\n
+      "description": "Proceed even when both the repository and ERP5 changed the same objects (overwrites ERP5-side changes)."\n
+    }\n
+  }\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>erp5_bt_update_from_repository input schema</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

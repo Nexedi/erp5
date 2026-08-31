@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="JSON Form" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>erp5_bt_export_to_repository_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_bt_export_to_repository_spec</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>JSON Form</string> </value>
+        </item>
+        <item>
+            <key> <string>response_schema</string> </key>
+            <value> <string>{\n
+  "type": "object",\n
+  "additionalProperties": true,\n
+  "description": "Result of exporting an installed Business Template to the repository.",\n
+  "properties": {\n
+    "success": {\n
+      "type": "boolean"\n
+    },\n
+    "operation": {\n
+      "type": "string"\n
+    },\n
+    "business_template": {\n
+      "type": "string"\n
+    },\n
+    "dry_run": {\n
+      "type": "boolean"\n
+    },\n
+    "zodb_to_repository": {\n
+      "type": "object"\n
+    },\n
+    "would_change": {\n
+      "type": "object"\n
+    },\n
+    "conflicts": {\n
+      "type": "array",\n
+      "items": {\n
+        "type": "string"\n
+      }\n
+    },\n
+    "export_to_repository_safe": {\n
+      "type": "boolean"\n
+    },\n
+    "revision": {\n
+      "type": "string"\n
+    },\n
+    "error": {\n
+      "type": "string"\n
+    }\n
+  }\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>{\n
+  "type": "object",\n
+  "additionalProperties": false,\n
+  "required": [\n
+    "business_template"\n
+  ],\n
+  "properties": {\n
+    "business_template": {\n
+      "type": "string",\n
+      "description": "Bare directory name of the Business Template to export."\n
+    },\n
+    "dry_run": {\n
+      "type": [\n
+        "boolean",\n
+        "integer"\n
+      ],\n
+      "default": false,\n
+      "description": "Preview what would be written/committed without touching the repository."\n
+    },\n
+    "force": {\n
+      "type": [\n
+        "boolean",\n
+        "integer"\n
+      ],\n
+      "default": false,\n
+      "description": "Overwrite conflicting local edits / drop untracked files."\n
+    },\n
+    "changelog": {\n
+      "type": "string",\n
+      "default": "",\n
+      "description": "Git commit message for the export."\n
+    }\n
+  }\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>erp5_bt_export_to_repository input schema</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

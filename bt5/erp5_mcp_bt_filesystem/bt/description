@@ -1,0 +1,1 @@
+ERP5 Business Template filesystem MCP tools: erp5_bt_status, erp5_bt_install_from_repository, erp5_bt_update_from_repository, erp5_bt_export_to_repository. Synchronize repository Business Templates (.py + XML format) with the installed ERP5/ZODB representation through the MCP gateway. Requires erp5_mcp, erp5_mcp_hateoas_dev and erp5_forge.

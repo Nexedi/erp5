@@ -1,0 +1,8 @@
+portal_callables/erp5_bt_export_to_repository**
+portal_callables/erp5_bt_export_to_repository_spec**
+portal_callables/erp5_bt_install_from_repository**
+portal_callables/erp5_bt_install_from_repository_spec**
+portal_callables/erp5_bt_status**
+portal_callables/erp5_bt_status_spec**
+portal_callables/erp5_bt_update_from_repository**
+portal_callables/erp5_bt_update_from_repository_spec**

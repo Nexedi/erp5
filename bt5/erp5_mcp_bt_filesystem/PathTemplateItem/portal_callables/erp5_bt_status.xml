@@ -1,0 +1,173 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="MCP Tool" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_count</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>erp5_bt_status</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_mt_index</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>business_template, expected_erp5_revision=\'\', expected_repository_revision=\'\', max_list=25, path_pattern=None, summary_only=None</string> </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>specification/portal_callables/erp5_bt_status_spec</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Compare a repository Business Template with its installed ERP5/ZODB representation.\n
+\n
+READ-ONLY. Reports changes made only in the repository, only in ERP5, and on both sides\n
+(conflicts), plus Python/XML validation failures, and whether updating ERP5 from the\n
+repository and exporting ERP5 to the repository are safe.\n
+\n
+The three states compared are: the baseline (the git HEAD commit of the shared working\n
+copy), the current repository files (working tree), and the current installed ZODB\n
+representation (exported to a temporary directory).\n
+\n
+REQUIRED ERP5 and repository side share the working copy configured in\n
+default_configurator_preference (my_preferred_working_copy_list).\n
+\n
+Scoping (drift checks on big templates): pass path_pattern (glob, \'*\' spans \'/\',\n
+matched against repository-root-relative paths like bt5/erp5_core/CatalogMethodTemplateItem/...)\n
+to compare only the matching paths — e.g. a scoped status on \'*supply_line*\'\n
+answers "is my catalog method in drift?" in seconds on a 1000+-file BT.\n
+summary_only=true / max_list=N cap the returned lists (counts and \'_more\'\n
+markers say what was left out); with no explicit summary_only, templates with\n
+more than 500 files are summarized automatically, because a full per-file\n
+sweep on them is what used to time this tool out.\n
+\n
+Returns JSON with: business_template, file_count, repository_to_zodb\n
+(modified/added/deleted with *_count), zodb_to_repository, conflicts,\n
+validation, update_from_repository_safe, export_to_repository_safe, and a\n
+summary_note when the summary was set automatically.\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_bt_commit</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>MCP Tool</string> </value>
+        </item>
+        <item>
+            <key> <string>read_only</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>reference</string> </key>
+            <value> <string>erp5_bt_status</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Business template filesystem status</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Length" module="BTrees.Length"/>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+</ZopeData>
