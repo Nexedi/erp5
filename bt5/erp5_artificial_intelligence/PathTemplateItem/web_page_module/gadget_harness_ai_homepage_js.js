@@ -15,7 +15,12 @@
       gadget.options = {
         'jio_key': 'artificial_task_module'
       };
-      return gadget.getSetting('hateoas_url')
+      return gadget.jio_getAttachment(
+        'portal_workflow',
+        'links'
+      ).push(function () {
+        return gadget.getSetting('hateoas_url');
+      })
         .push(function (hateoas_url) {
           gadget.hateoas_url = hateoas_url;
         })

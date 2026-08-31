@@ -112,7 +112,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ArtificialTask_viewForHarnessAI</string> </value>
+            <value> <string>ArtificialTask_viewForERP5HarnessAI</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -120,11 +120,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>ArtificialTask_viewForHarnessAI</string> </value>
+            <value> <string>ArtificialTask_viewForERP5HarnessAI</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view_chat</string> </value>
+            <value> <string>form_view_erp5_chat</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>

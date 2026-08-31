@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts87251525.6711285</string> </value>
+            <value> <string>ts88185857.0089657</string> </value>
         </item>
         <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
@@ -67,7 +67,7 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>de04882f147e5dc1fe36ba43e518cfe4</string> </value>
+            <value> <string>4f8750793fb5e6361cc234eef63de03f</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -75,7 +75,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_pt_form_view_chat.html</string> </value>
+            <value> <string>gadget_erp5_pt_form_view_erp5_chat.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -85,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_harness_ai_view_chat_html</string> </value>
+            <value> <string>gadget_harness_ai_view_erp5_chat_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -103,11 +103,11 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>854</int> </value>
+            <value> <int>691</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Artificial Task Chat view</string> </value>
+            <value> <string>Gadget Artificial Task ERP5 Chat view</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -236,7 +236,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1035.6882.55225.23756</string> </value>
+                      <value> <string>1035.22457.25311.65348</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -252,7 +252,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1787251525.677783</float>
+                              <float>1788185857.014663</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

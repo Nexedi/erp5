@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>harness_ai_view</string> </value>
+            <value> <string>browser_harness_ai_view</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -56,7 +56,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Harness AI View</string> </value>
+            <value> <string>Browser Harness AI View</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>

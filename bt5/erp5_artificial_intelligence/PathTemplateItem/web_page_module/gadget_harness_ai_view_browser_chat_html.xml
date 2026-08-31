@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts88172247.3517034</string> </value>
+            <value> <string>ts88185771.9177353</string> </value>
         </item>
         <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
@@ -66,24 +66,16 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>00adeaf22faf12a89ec09b34c19f355c</string> </value>
+            <value> <string>e930994e61b7cb35e746031060ac182b</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>text/html</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_harness_ai_homepage.js</string> </value>
+            <value> <string>gadget_erp5_pt_form_view_browser_chat.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -93,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_harness_ai_homepage_js</string> </value>
+            <value> <string>gadget_harness_ai_view_browser_chat_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -101,7 +93,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -111,11 +103,11 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1911</int> </value>
+            <value> <int>697</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Harness AI Homepage JS</string> </value>
+            <value> <string>Gadget Artificial Task Browser Chat view</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -195,7 +187,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1785936946.607831</float>
+                              <float>1788185824.834238</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -244,7 +236,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1035.6719.7276.14336</string> </value>
+                      <value> <string>1035.22455.45562.34577</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -260,7 +252,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1788172247.358197</float>
+                              <float>1788185771.925203</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

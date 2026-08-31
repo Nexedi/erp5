@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts88172247.3517034</string> </value>
+            <value> <string>ts88185891.4665544</string> </value>
         </item>
         <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
@@ -66,14 +66,8 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>00adeaf22faf12a89ec09b34c19f355c</string> </value>
+            <value> <string>3c199a579506138b828a191865f4e176</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -83,7 +77,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_harness_ai_homepage.js</string> </value>
+            <value> <string>gadget_erp5_pt_form_view_erp5_chat.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -93,7 +87,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_harness_ai_homepage_js</string> </value>
+            <value> <string>gadget_harness_ai_view_erp5_chat_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -111,11 +105,11 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1911</int> </value>
+            <value> <int>3859</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Harness AI Homepage JS</string> </value>
+            <value> <string>Gadget Artificial Task ERP5 Chat view JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -195,7 +189,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1785936946.607831</float>
+                              <float>1785942553.965818</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -244,7 +238,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1035.6719.7276.14336</string> </value>
+                      <value> <string>1035.22458.12536.29388</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -260,7 +254,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1788172247.358197</float>
+                              <float>1788186322.153973</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts87299181.352827</string> </value>
+            <value> <string>ts88185922.4464133</string> </value>
         </item>
         <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
@@ -67,7 +67,7 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>3c199a579506138b828a191865f4e176</string> </value>
+            <value> <string>969cda622ea940ba11f12a69a94959b4</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -77,7 +77,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_pt_form_view_chat.js</string> </value>
+            <value> <string>gadget_erp5_pt_form_view_browser_chat.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -87,7 +87,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_harness_ai_view_chat_js</string> </value>
+            <value> <string>gadget_harness_ai_view_browser_chat_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -105,11 +105,11 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>3859</int> </value>
+            <value> <int>3642</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Artificial Task Chat view JS</string> </value>
+            <value> <string>Gadget Artificial Task Browser Chat view JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -189,7 +189,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1785942553.965818</float>
+                              <float>1788185812.885741</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -238,7 +238,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1035.7654.5126.30003</string> </value>
+                      <value> <string>1035.22456.57776.36710</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -254,7 +254,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1787299181.357965</float>
+                              <float>1788185922.450611</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
