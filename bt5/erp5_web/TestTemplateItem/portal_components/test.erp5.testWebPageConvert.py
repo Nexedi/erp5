@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2019 Nexedi SA and Contributors. All Rights Reserved.
@@ -25,6 +26,7 @@
 #
 ##############################################################################
 
+from base64 import b64decode
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
 class TestWebPageConvert(ERP5TypeTestCase):
@@ -38,7 +40,8 @@ class TestWebPageConvert(ERP5TypeTestCase):
       "erp5_web",
       "erp5_ui_test_core",
       "erp5_ui_test",
-      "erp5_l10n_fr"
+      "erp5_l10n_fr",
+      "erp5_font",
     )
   def afterSetUp(self):
     base_web_page = self.portal.web_page_module.get('Test_html_convert', None)
@@ -127,3 +130,40 @@ class TestWebPageConvert(ERP5TypeTestCase):
     converted_data = self.base_web_page.Base_convertHtmlToSingleFile(data = test_data)
     expected_data ='<!DOCTYPE html><html><head> <link rel="stylesheet" href="data:text/html;base64," /> </head></html>'
     self.assertEqual(converted_data, expected_data)
+
+  def _assertEmojiInlined(self, converted, emoji):
+    # decode the alt attribute
+    converted = converted.decode("utf-8")
+    prefix = '<img class="emoji" alt="%s" src="data:image/png;base64,' % emoji
+    self.assertIn(prefix, converted)
+    encoded = converted.split(prefix, 1)[1].split('"', 1)[0]
+    self.assertTrue(b64decode(encoded).startswith(b"\x89PNG\r\n\x1a\n"))
+    return converted
+
+  def test_emoji_pictograph_convert(self):
+    emoji = u"\U0001F600"
+    converted = self.base_web_page.Base_convertHtmlToSingleFile(
+      data=u"before %s after" % emoji)
+    converted = self._assertEmojiInlined(converted, emoji)
+    self.assertTrue(converted.startswith(u"before "))
+    self.assertTrue(converted.endswith(u" after"))
+
+  def test_emoji_bmp_convert(self):
+    emoji = u"✅"
+    converted = self.base_web_page.Base_convertHtmlToSingleFile(data=emoji)
+    self._assertEmojiInlined(converted, emoji)
+
+  def test_emoji_flag_convert(self):
+    emoji = u"\U0001F1EC\U0001F1E7"
+    converted = self.base_web_page.Base_convertHtmlToSingleFile(data=emoji)
+    self._assertEmojiInlined(converted, emoji)
+
+  def test_emoji_keycap_convert(self):
+    emoji = u"1️⃣"
+    converted = self.base_web_page.Base_convertHtmlToSingleFile(data=emoji)
+    self._assertEmojiInlined(converted, emoji)
+
+  def test_emoji_not_matched_passthrough(self):
+    test_data = "hello world"
+    converted = self.base_web_page.Base_convertHtmlToSingleFile(data=test_data)
+    self.assertEqual(converted, test_data)
