@@ -34,11 +34,14 @@ if access_token is None:
   )
   access_token.setAgentValue(person)
 
-if access_token.getValidationState() == 'draft':
-  access_token.validate()
-
-return "%s?%s" % (request_url, make_query({
+# read id and secret before validate(): Owner loses access in validated state
+url = "%s?%s" % (request_url, make_query({
   'portal_skin': 'RSS',
   'access_token': access_token.getId(),
   'access_token_secret': access_token.getReference(),
 }))
+
+if access_token.getValidationState() == 'draft':
+  access_token.validate()
+
+return url

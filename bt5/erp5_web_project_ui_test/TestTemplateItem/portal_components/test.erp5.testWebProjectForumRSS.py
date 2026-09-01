@@ -350,6 +350,38 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     self.assertIn('DiscussionForum_viewLatestPostListAsRSS',
                   result['rss_url'])
 
+  def test_rss_access_url_for_non_manager_reader(self):
+    """A reader is only Owner of the token it mints, and validation_workflow's
+    validated state drops Owner from 'Access contents information' (it does not
+    acquire either), so reading the token id after validate() raises
+    Unauthorized: the feed URL has to be built while the token is still draft.
+    Only a Manager gets through the wrong order, which is why the other tests
+    here never saw it."""
+    forum, _ = self._createForumThreadWithPosts(n_posts=1)
+    token_module = self.portal.access_token_module
+    existing_token_id_list = list(token_module.objectIds())
+    login_reference = 'rss-reader-login'
+    person = self.portal.person_module.newContent(
+      portal_type='Person', reference='TESTP-rss-reader')
+    person.newContent(portal_type='Assignment').open()
+    person.newContent(portal_type='ERP5 Login',
+                      reference=login_reference).validate()
+    # in production this Author comes from the access_token_module local roles
+    token_module.manage_addLocalRoles(person.getUserId(), ['Author'])
+    self.tic()
+
+    self.loginByUserName(login_reference)
+    try:
+      result = json.loads(forum.DiscussionForum_getRssAccessUrlAsJSON())
+    finally:
+      self.login()
+
+    rss_url = result['rss_url']
+    token, = [x for x in token_module.objectValues()
+              if x.getId() not in existing_token_id_list]
+    self.assertEqual('validated', token.getValidationState())
+    self.assertIn('access_token=%s' % token.getId(), rss_url)
+    self.assertIn('access_token_secret=%s' % token.getReference(), rss_url)
 
 def test_suite():
   suite = unittest.TestSuite()
