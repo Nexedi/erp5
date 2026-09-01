@@ -1,0 +1,13 @@
+.harness-home-hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 10vh;
+  box-sizing: border-box;
+  text-align: center;
+}
+.harness-home-hero h1 {
+  margin: 0;
+  font-size: xxx-large;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
