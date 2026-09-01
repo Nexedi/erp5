@@ -15,12 +15,65 @@ TODO: export same components into one mhtml attachment if possible.
 # ERP5 web uses format= argument, which is also a python builtin
 # pylint: disable=redefined-builtin
 
+import io
+import re
 import six
+import zipfile
 from Products.ERP5Type.Utils import bytes2str, str2bytes, unicode2str
 from Products.PythonScripts.standard import html_quote
 from zExceptions import Unauthorized
 from base64 import b64encode, b64decode
+from Products.ERP5Type.Cache import CachingMethod
+
 portal = context.getPortalObject()
+
+EMOJI_VARIATION_SELECTOR_16 = u"\uFE0F"
+EMOJI_ZERO_WIDTH_JOINER = u"\u200D"
+EMOJI_COMBINING_ENCLOSING_KEYCAP = u"\u20E3"
+EMOJI_PICTOGRAPH_RANGE = (
+  u"\U0001F300-\U0001F5FF\U0001F600-\U0001F64F\U0001F680-\U0001F6FF"
+  u"\U0001F900-\U0001F9FF\U0001FA00-\U0001FAFF\u2600-\u26FF\u2700-\u27BF"
+)
+EMOJI_RE = re.compile(
+  u"(?:[\U0001F1E6-\U0001F1FF]{2}"                              # flag (2 regional indicators)
+  u"|[0-9#*]%(vs16)s?%(keycap)s"                                 # keycap
+  u"|[%(p)s]%(vs16)s?(?:[\U0001F3FB-\U0001F3FF])?"               # pictograph (+ skin tone)
+  u"(?:%(zwj)s[%(p)s]%(vs16)s?)*)"                               # optional ZWJ-joined continuation
+  % {
+    "p": EMOJI_PICTOGRAPH_RANGE,
+    "vs16": EMOJI_VARIATION_SELECTOR_16,
+    "zwj": EMOJI_ZERO_WIDTH_JOINER,
+    "keycap": EMOJI_COMBINING_ENCLOSING_KEYCAP,
+  }
+)
+
+def emojiToCodepointString(emoji_text):
+  return "-".join(
+    "%x" % ord(c) for c in emoji_text if c != EMOJI_VARIATION_SELECTOR_16)
+
+def _getTwemojiZip():
+  obj = portal.restrictedTraverse("twemoji/twemoji-png.zip")
+  return zipfile.ZipFile(io.BytesIO(bytes(obj)))
+
+
+getTwemojiZip = CachingMethod(_getTwemojiZip,
+                              id='_getTwemojiZip',
+                              cache_factory='erp5_content_short')
+
+
+def handleEmojiText(text):
+  def replaceEmoji(match):
+    emoji_text = match.group(0)
+    zip_file = getTwemojiZip()
+    if zip_file is None:
+      return emoji_text
+    try:
+      data = zip_file.read("twemoji-png/%s.png" % emojiToCodepointString(emoji_text))
+    except KeyError:
+      return emoji_text
+    return u'<img class="emoji" alt="%s" src="data:image/png;base64,%s" />' % (
+      html_quote(emoji_text), bytes2str(b64encode(data)))
+  return EMOJI_RE.sub(replaceEmoji, text)
 
 mhtml_message = {
   "subtype": "related",
@@ -86,7 +139,7 @@ def strHtmlPart(part):
   if part_type == "endtag":
     return "</%s>" % part[1]
   if part_type == "data":
-    return part[1]
+    return handleEmojiText(part[1])
   if part_type == "entityref":
     return "&%s;" % part[1]
   if part_type == "charref":
