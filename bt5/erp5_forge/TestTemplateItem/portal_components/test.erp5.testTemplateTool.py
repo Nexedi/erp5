@@ -861,9 +861,9 @@ class TestTemplateTool(ERP5TypeTestCase):
     ordered_list = template_tool.sortBusinessTemplateList(new_bt5_list)
     # group orders
     first_group = list(range(0, 5))
-    second_group =  list(range(5, 12))
-    third_group = list(range(12, 14))
-    fourth_group = list(range(14, 15))
+    second_group =  list(range(5, 13))
+    third_group = list(range(13, 15))
+    fourth_group = list(range(15, 16))
 
     expected_position_dict = {
       'erp5_property_sheets': first_group,
@@ -878,6 +878,7 @@ class TestTemplateTool(ERP5TypeTestCase):
       'erp5_base': second_group,
       'erp5_knowledge_pad': second_group,
       'erp5_ingestion': second_group,
+      'erp5_font': second_group,
       'erp5_web': third_group,
       'erp5_crm': third_group,
       'erp5_credential': fourth_group}
