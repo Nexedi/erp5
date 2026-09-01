@@ -15,12 +15,45 @@ TODO: export same components into one mhtml attachment if possible.
 # ERP5 web uses format= argument, which is also a python builtin
 # pylint: disable=redefined-builtin
 
+import io
 import six
+import zipfile
 from Products.ERP5Type.Utils import bytes2str, str2bytes, unicode2str
 from Products.PythonScripts.standard import html_quote
 from zExceptions import Unauthorized
 from base64 import b64encode, b64decode
+
 portal = context.getPortalObject()
+
+twemoji_data_dict = {}
+
+def getTwemojiZip():
+  if "zip_file" not in twemoji_data_dict:
+    obj = portal.restrictedTraverse("twemoji/twemoji-png.zip")
+    zip_file = zipfile.ZipFile(io.BytesIO(bytes(obj)))
+    twemoji_data_dict["zip_file"] = zip_file
+    twemoji_data_dict["name_set"] = set(zip_file.namelist())
+  return twemoji_data_dict["zip_file"], twemoji_data_dict["name_set"]
+
+def handleEmojiText(text):
+  part_list = context.Base_parseEmoji(text)
+  if len(part_list) == 1 and part_list[0][0] == "data":
+    return text
+  zip_file, name_set = getTwemojiZip()
+  result = []
+  for part in part_list:
+    if part[0] != "emoji":
+      result.append(part[1])
+      continue
+    for name in ["twemoji-png/%s.png" % stem for stem in part[2]]:
+      if name in name_set:
+        result.append(
+          u'<img class="emoji" alt="%s" src="data:image/png;base64,%s" />' % (
+            html_quote(part[1]), bytes2str(b64encode(zip_file.read(name)))))
+        break
+    else:
+      result.append(part[1])
+  return u"".join(result)
 
 mhtml_message = {
   "subtype": "related",
@@ -86,7 +119,7 @@ def strHtmlPart(part):
   if part_type == "endtag":
     return "</%s>" % part[1]
   if part_type == "data":
-    return part[1]
+    return handleEmojiText(part[1])
   if part_type == "entityref":
     return "&%s;" % part[1]
   if part_type == "charref":
