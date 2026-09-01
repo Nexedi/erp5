@@ -9,7 +9,8 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
                           "shared_alive", "released_alive", "published_alive"],
     MILESTONE_ACTION = "project_view_milestone_list",
     DOCUMENT_ACTION = "project_view_document_list",
-    ACTIVITY_ACTION = "project_view_activity_list";
+    ACTIVITY_ACTION = "project_view_activity_list",
+    NEW_BUG_ACTION = "project_new_bug";
 
   function addRedirectionToReference(href, url) {
     if (!href.startsWith("https") && !href.startsWith("http") &&
@@ -242,6 +243,16 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
     };
   }
 
+  function getDialogActionUrlParameterDict(jio_key, action_name) {
+    return {
+      command: 'display_erp5_dialog_with_history',
+      options: {
+        'jio_key': jio_key,
+        'page': action_name
+      }
+    };
+  }
+
   rJS(window)
 
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
@@ -309,6 +320,8 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
                                  "delivery.start_date", "translated_simulation_state_title"],
                                 createProjectQuery(modification_dict.jio_key,
                                                    [["selection_domain_state_bug_domain", "open"]])),
+            getDialogActionUrlParameterDict(modification_dict.jio_key,
+                                            NEW_BUG_ACTION),
             getUrlParameterDict('task_report_module',
                                 'view',
                                 [["delivery.start_date", "descending"]],
@@ -351,19 +364,20 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
           enableLink(document.querySelector("#task_link"), url_list[1]);
           enableLink(document.querySelector("#support_request_link"), url_list[2]);
           enableLink(document.querySelector("#bug_link"), url_list[3]);
-          enableLink(document.querySelector("#report_link"), url_list[4]);
-          enableLink(document.querySelector("#test_result_link"), url_list[5]);
-          enableLink(document.querySelector("#test_suite_link"), url_list[6]);
-          enableLink(document.querySelector("#document_link"), url_list[7]);
-          enableLink(document.querySelector("#activity_link"), url_list[8]);
+          enableLink(document.querySelector("#new_bug_link"), url_list[4]);
+          enableLink(document.querySelector("#report_link"), url_list[5]);
+          enableLink(document.querySelector("#test_result_link"), url_list[6]);
+          enableLink(document.querySelector("#test_suite_link"), url_list[7]);
+          enableLink(document.querySelector("#document_link"), url_list[8]);
+          enableLink(document.querySelector("#activity_link"), url_list[9]);
           if (web_page_info && web_page_info.edit_view) {
-            enableLink(document.querySelector("#web_page_link"), url_list[9]);
+            enableLink(document.querySelector("#web_page_link"), url_list[10]);
           }
           if (modification_dict.forum_jio_key) {
             if (web_page_info && web_page_info.edit_view) {
-              enableLink(document.querySelector("#forum_link"), url_list[10]);
+              enableLink(document.querySelector("#forum_link"), url_list[11]);
             } else {
-              enableLink(document.querySelector("#forum_link"), url_list[9]);
+              enableLink(document.querySelector("#forum_link"), url_list[10]);
             }
           }
           //XXX move into a job to call it async

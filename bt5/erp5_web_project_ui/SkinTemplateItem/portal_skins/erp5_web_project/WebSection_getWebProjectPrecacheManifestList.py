@@ -11,6 +11,8 @@ url_list = [
   'gadget_erp5_page_project_front_page.js',
   'gadget_erp5_page_project_page.html',
   'gadget_erp5_page_project_page.js',
+  'gadget_project_feed_reader.html',
+  'gadget_project_feed_reader.js',
   'gadget_project_rss_link.html',
   'gadget_project_rss_link.js'
 ]
