@@ -19,6 +19,7 @@ Project Cell | project_view
 Project Line | project_view
 Project Milestone | project_view
 Project Module | project_view
+Project | project_new_bug
 Project | project_view
 Project | project_view_activity_list
 Project | project_view_document_list
