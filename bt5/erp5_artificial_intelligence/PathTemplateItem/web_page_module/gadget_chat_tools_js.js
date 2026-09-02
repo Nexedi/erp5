@@ -1,4 +1,4 @@
-/*global window, document, fetch, URLSearchParams */
+/*global window, document, fetch, URLSearchParams, Interpreter */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 (function (window, document) {
   "use strict";
@@ -6,7 +6,8 @@
 
 
   var CANVAS_NOTE = "Canvas origin (0,0) is top-left, x grows right, y grows down.",
-    CANVAS_ID = "drawing-canvas";
+    CANVAS_ID = "drawing-canvas",
+    EXECUTE_JAVASCRIPT_MAX_STEPS = 1000000;
 
   function getCanvasContext(element) {
     var canvas = element.querySelector("#" + CANVAS_ID);
@@ -730,12 +731,55 @@
     };
   }
 
+  function createExecuteJavascriptTool() {
+    return {
+      definition: {
+        name: "execute_javascript",
+        description: "Execute a snippet of JavaScript in a sandboxed interpreter and return its result. " +
+          "The sandbox has no access to the page, network, cookies, or any other tool's state - it is " +
+          "for computation only. The code runs as the body of a plain (synchronous, ES5) function: use " +
+          "\"return <value>;\" to produce a result (only JSON-serializable values are usable). Errors " +
+          "thrown by the code, and code that loops for too long, are reported back as an error message. " +
+          "USE THIS WHEN: you need custom computation or to reshape/combine data you already have (e.g. " +
+          "a previous tool's result) that's easier to do in code than by hand. DO NOT USE THIS WHEN: an " +
+          "existing tool (erp5_search, erp5_read, erp5_write, erp5_create, draw_*) already does what you " +
+          "need, or you need network/DOM access - this sandbox cannot reach either.",
+        parameters: {
+          type: "object",
+          properties: {
+            code: {
+              type: "string",
+              description: "JavaScript source to run as a function body, e.g. \"return 1 + 1;\" or " +
+                "\"var total = 0; for (var i = 0; i < 10; i++) { total += i; } return total;\"."
+            }
+          },
+          required: ["code"]
+        }
+      },
+      execute: function (args) {
+        var interpreter = new Interpreter(
+            "(function () {\n" + String(args.code || "") + "\n})()"
+          ),
+          steps = 0;
+        while (interpreter.step()) {
+          steps += 1;
+          if (steps > EXECUTE_JAVASCRIPT_MAX_STEPS) {
+            throw new Error("execute_javascript: exceeded " + EXECUTE_JAVASCRIPT_MAX_STEPS +
+              " execution steps (possible infinite loop)");
+          }
+        }
+        return interpreter.pseudoToNative(interpreter.value);
+      }
+    };
+  }
+
   function createToolList(element, hateoas_url) {
     return [
       createSearchTool(hateoas_url),
       createReadTool(hateoas_url),
       createWriteTool(hateoas_url),
       createCreateTool(hateoas_url),
+      createExecuteJavascriptTool(),
       {
         definition: {
           name: "clear_canvas",
