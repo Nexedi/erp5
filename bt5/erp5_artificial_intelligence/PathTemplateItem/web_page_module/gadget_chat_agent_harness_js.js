@@ -214,28 +214,25 @@
           .push(function (text_evt) {
             var result = JSON.parse(text_evt.target.result);
             total_text += result.content || '';
-            return RSVP.all([
-              result,
-              gadget.gadget_chat_ui.showMessage({ content: total_text, tool_message_list: tool_message_list })
-            ]);
-          })
-          .push(function (result_list) {
-            var result = result_list[0];
             if (result.tool_calls && result.tool_calls.length) {
-              return loop_call(
-                loop_count + 1,
-                message_list.concat([{
-                  role: "assistant",
-                  content: result.content,
-                  tool_calls: result.tool_calls
-                }]),
-                result.tool_calls
-              );
-            }
-            return gadget.notifySubmitted({message: 'Completed', status: "success"})
-              .push(function () {
-                return gadget.gadget_chat_ui.resetEditor();
+              return gadget.gadget_chat_ui.showMessage({ content: total_text , tool_message_list: tool_message_list })
+                .push(function () {
+                 return loop_call(
+                   loop_count + 1,
+                   message_list.concat([{
+                    role: "assistant",
+                    content: result.content,
+                    tool_calls: result.tool_calls
+                  }]),
+                  result.tool_calls
+                );
               });
+            }
+            return RSVP.all([
+              gadget.gadget_chat_ui.showMessage({ content: total_text , tool_message_list: tool_message_list }),
+              gadget.notifySubmitted({message: 'Completed', status: "success"}),
+              gadget.gadget_chat_ui.resetEditor()
+            ]);
           });
       }
 
@@ -244,20 +241,21 @@
           return gadget.gadget_chat_ui.blockEditor();
         })
         .push(function () {
-          return RSVP.all([
-            gadget.gadget_chat_ui.showMessage({}),
-            gadget.notifySubmitted({message: 'Processing', status: "success"})
-          ]);
+          return gadget.notifySubmitted({message: 'Processing', status: "success"});
         })
         .push(function () {
           return gadget.gadget_chat_ui.getMessageList();
         })
         .push(function (message_list) {
-          return gadget.compactMessageList(message_list);
+          return RSVP.all([
+            gadget.gadget_chat_ui.showMessage({}),
+            gadget.compactMessageList(message_list)
+          ]);
         })
-        .push(function (message_list) {
+        .push(function (result_list) {
           // XXXXXX seems bad to do locally
-          var last_comment = message_list[message_list.length - 1].content,
+          var message_list = result_list[1],
+            last_comment = message_list[message_list.length - 1].content,
             skill_list = window.ChatSkills.matchSkillList(last_comment).concat(
               window.ChatSkills.matchSkillListFrom(last_comment, gadget.remote_skill_list)
             ),
