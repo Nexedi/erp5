@@ -1,4 +1,4 @@
-/*global window, rJS, RSVP, FormData, jIO, fetch, TextDecoder, AbortController */
+/*global window, rJS, RSVP, jIO */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 (function (window, rJS, RSVP) {
   "use strict";
@@ -17,68 +17,6 @@
     kept = lines.slice(-MAX_TOOL_OUTPUT_LINES).join("\n");
     return "[output truncated: showing last " + MAX_TOOL_OUTPUT_LINES + " of " +
       lines.length + " lines - full output is visible in the tool call panel]\n" + kept;
-  }
-
-  //XXX is it correct ?
-  function fetchStream(url, options, onDelta) {
-    var controller = new AbortController();
-    return new RSVP.Promise(function (resolve, reject) {
-      var decoder = new TextDecoder("utf-8"),
-        buffer = "",
-        final_chunk = null;
-
-      function handleLine(line) {
-        var chunk = JSON.parse(line);
-        if (chunk.type === "delta") {
-          onDelta(chunk.content);
-        } else {
-          final_chunk = chunk;
-        }
-      }
-
-      function readNext(reader) {
-        reader.read().then(function (step) {
-          var lines, i, line;
-          if (step.done) {
-            line = buffer.trim();
-            buffer = "";
-            if (line) {
-              handleLine(line);
-            }
-            if (final_chunk) {
-              return resolve(final_chunk);
-            }
-            return reject(new Error("processTask: LLM stream ended without a final chunk"));
-          }
-          buffer += decoder.decode(step.value, { stream: true });
-          lines = buffer.split("\n");
-          buffer = lines.pop();
-          for (i = 0; i < lines.length; i += 1) {
-            line = lines[i].trim();
-            if (line) {
-              handleLine(line);
-            }
-          }
-          return readNext(reader);
-        }, reject);
-      }
-
-      fetch(url, {
-        method: options.method,
-        credentials: options.credentials,
-        body: options.body,
-        signal: controller.signal
-      })
-        .then(function (response) {
-          if (!response.ok) {
-            throw new Error("processTask: LLM call failed with status " + response.status);
-          }
-          return readNext(response.body.getReader());
-        })
-        .then(null, reject);
-    }, function () {
-      controller.abort();
-    });
   }
 
   function findClientTool(name, tool_list) {
@@ -244,10 +182,15 @@
                   content: truncateToolOutput(result_content)
                 }]);
               tool_message_list.push({ name: tool_call.function.name, content: result_content });
-              gadget.gadget_chat_ui.showMessage({ content: total_text, tool_message_list: tool_message_list });
+              return RSVP.all([
+                next_message_list,
+                gadget.gadget_chat_ui.showMessage({ content: total_text, tool_message_list: tool_message_list })
+              ]);
+            })
+            .push(function (resulit_list) {
               return loop_call(
                 loop_count + 1,
-                next_message_list,
+                resulit_list[0],
                 pending_tool_call_list.slice(1)
               );
             });
@@ -256,52 +199,43 @@
 
         queue_loop
           .push(function () {
-            var form_data = new FormData(),
-              segment_text = "";
-            if (total_text === "" && !tool_message_list.length) {
-              gadget.gadget_chat_ui.showMessage({ content: "", tool_message_list: tool_message_list });
-            }
-            form_data.append("message_list", JSON.stringify(message_list));
-            form_data.append("tool_definition_list", JSON.stringify(tool_definition_list));
-            return fetchStream(
-              gadget.options.request_options.process_url,
-              { method: "POST", credentials: "same-origin", body: form_data },
-              function (delta_content) {
-                segment_text += delta_content;
-                gadget.gadget_chat_ui.showMessage({
-                  content: total_text + segment_text,
-                  tool_message_list: tool_message_list
-                });
-              }
-            );
-          })
-          .push(function (stream_result) {
-            total_text += stream_result ? (stream_result.content || '') : '';
-            if (stream_result.tool_calls && stream_result.tool_calls.length) {
-              return loop_call(
-                loop_count + 1,
-                message_list.concat([{
-                  role: "assistant",
-                  content: stream_result.content,
-                  tool_calls: stream_result.tool_calls
-                }]),
-                stream_result.tool_calls
-              );
-            }
-            stream_result.content = total_text;
             return gadget.jio_putAttachment(
               gadget.options.request_options.document_id,
               gadget.options.request_options.process_url,
               {
                 message_list: JSON.stringify(message_list),
-                finalize_result: JSON.stringify(stream_result)
-              })
+                tool_definition_list: JSON.stringify(tool_definition_list)
+              }
+            );
+          })
+          .push(function (evt) {
+            return jIO.util.readBlobAsText(evt.target.response);
+          })
+          .push(function (text_evt) {
+            var result = JSON.parse(text_evt.target.result);
+            total_text += result.content || '';
+            return RSVP.all([
+              result,
+              gadget.gadget_chat_ui.showMessage({ content: total_text, tool_message_list: tool_message_list })
+            ]);
+          })
+          .push(function (result_list) {
+            var result = result_list[0];
+            if (result.tool_calls && result.tool_calls.length) {
+              return loop_call(
+                loop_count + 1,
+                message_list.concat([{
+                  role: "assistant",
+                  content: result.content,
+                  tool_calls: result.tool_calls
+                }]),
+                result.tool_calls
+              );
+            }
+            return gadget.notifySubmitted({message: 'Completed', status: "success"})
               .push(function () {
-                return gadget.notifySubmitted({message: 'Completed', status: "success"})
-                  .push(function () {
-                    return gadget.gadget_chat_ui.resetEditor();
-                  });
-               });
+                return gadget.gadget_chat_ui.resetEditor();
+              });
           });
       }
 
@@ -310,7 +244,10 @@
           return gadget.gadget_chat_ui.blockEditor();
         })
         .push(function () {
-          return gadget.notifySubmitted({message: 'Processing', status: "success"});
+          return RSVP.all([
+            gadget.gadget_chat_ui.showMessage({}),
+            gadget.notifySubmitted({message: 'Processing', status: "success"})
+          ]);
         })
         .push(function () {
           return gadget.gadget_chat_ui.getMessageList();

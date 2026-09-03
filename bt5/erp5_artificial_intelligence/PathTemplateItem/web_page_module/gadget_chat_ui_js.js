@@ -200,14 +200,14 @@
         gadget.element.querySelector("#post_list").appendChild(gadget.new_message_element);
       }
       markdown_element = gadget.new_message_element.querySelector(".post-markdown");
-      if (message.content) {
+      if (message.hasOwnProperty('content') && message.content) {
         markdown_element.innerHTML = marked.parse(message.content);
+        gadget.new_message_element.querySelector('pre.chat-hidden-field').innerHTML = message.content;
       } else {
         markdown_element.innerHTML = "";
         markdown_element.appendChild(getTypingIndicatorDom());
       }
-      gadget.new_message_element.querySelector('pre').innerHTML = message.content;
-      if (message.tool_message_list.length) {
+      if (message.hasOwnProperty('tool_message_list') && message.tool_message_list.length) {
         tool_call_element = getToolCallDom(message.tool_message_list);
         post_tool  = gadget.new_message_element.querySelector('.post-tool');
         if (post_tool) {
