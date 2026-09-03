@@ -54,26 +54,8 @@
             </value>
         </item>
         <item>
-            <key> <string>_count</string> </key>
-            <value>
-              <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
-            </value>
-        </item>
-        <item>
-            <key> <string>_mt_index</string> </key>
-            <value>
-              <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
-            </value>
-        </item>
-        <item>
-            <key> <string>_tree</string> </key>
-            <value>
-              <persistent> <bytes encoding="base64">AAAAAAAAAAQ=</bytes> </persistent>
-            </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>7300</string> </value>
+            <value> <string>6149</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -83,11 +65,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>3</string> </value>
+            <value> <string>9</string> </value>
         </item>
         <item>
             <key> <string>int_index</string> </key>
-            <value> <int>3</int> </value>
+            <value> <int>7</int> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -101,31 +83,9 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Zinsen und ähnliche Aufwendungen</string> </value>
+            <value> <string>Aufwendungen für Altersversorgung für Gesellschafter-Geschäftsführer</string> </value>
         </item>
       </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="Length" module="BTrees.Length"/>
-    </pickle>
-    <pickle> <int>0</int> </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="OOBTree" module="BTrees.OOBTree"/>
-    </pickle>
-    <pickle>
-      <none/>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
-    <pickle>
-      <global name="OOBTree" module="BTrees.OOBTree"/>
-    </pickle>
-    <pickle>
-      <none/>
     </pickle>
   </record>
 </ZopeData>
