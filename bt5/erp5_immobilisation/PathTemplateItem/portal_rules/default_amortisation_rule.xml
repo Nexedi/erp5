@@ -7,6 +7,30 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Delete_objects_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>_count</string> </key>
             <value>
               <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
@@ -16,6 +40,23 @@
             <key> <string>_identity_criterion</string> </key>
             <value>
               <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>same_total_quantity</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>int</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
             </value>
         </item>
         <item>
@@ -41,6 +82,12 @@
             <value> <string>default_amortisation_rule</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>default_amortisation_rule</string> </value>
         </item>
@@ -55,11 +102,13 @@
             <value> <string>Amortisation Rule</string> </value>
         </item>
         <item>
+            <key> <string>same_total_quantity</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
             <key> <string>test_method_id</string> </key>
             <value>
-              <tuple>
-                <string>Rule_testFalse</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
