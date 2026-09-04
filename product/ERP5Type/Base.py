@@ -77,6 +77,7 @@ from Products.ERP5Type.mixin.temporary import TemporaryDocumentMixin
 from Products.ERP5Type.XMLExportImport import Base_asXML
 from Products.ERP5Type.Cache import CachingMethod, clearCache, getReadOnlyTransactionCache
 from .Accessor import WorkflowState
+from .dynamic.accessor_holder import registerAccessor
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.Accessor.TypeDefinition import type_definition
 
@@ -522,6 +523,17 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
   portal_workflow = aq_inner(portal_workflow)
   portal_type = ptype_klass.__name__
 
+  # Snapshot the class attribute names once. Existence checks below are then
+  # plain set membership tests instead of class attribute reads: each read of a
+  # missing name would fall back to the slow metaclass __getattr__ right after
+  # a class modification (python/cpython#156339).
+  class_name_set = set(dir(ptype_klass))
+  security = ptype_klass.security
+  declareProtected = security.declareProtected
+  security_names = security.names
+  registerWorkflowMethod = ptype_klass.registerWorkflowMethod
+
+
   workflow_dict = {}
   interaction_workflow_dict = {}
   for wf in portal_workflow.getWorkflowValueListFor(portal_type):
@@ -541,26 +553,32 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
                                      WorkflowState.TranslatedTitleGetter),
           ('serialize%s' % UpperCase(state_var), WorkflowState.SerializeGetter),
           ):
-        if not hasattr(ptype_klass, method_id):
+        if method_id not in class_name_set:
           method = getter(method_id, wf_id)
           # Attach to portal_type
-          ptype_klass.registerAccessor(method,
-                                       Permissions.AccessContentsInformation)
+          registerAccessor(ptype_klass, method,
+                           Permissions.AccessContentsInformation,
+                           declareProtected=declareProtected)
+          class_name_set.add(method_id)
 
       storage = workflow_dict
 
       for transition_id in wf_transition_reference_list:
         list_method_id = 'get%sTransitionDateList' % UpperCase(transition_id)
-        if not hasattr(ptype_klass, list_method_id):
+        if list_method_id not in class_name_set:
           method = WorkflowHistoryAccessor.ListGetter(list_method_id, wf_id, transition_id, 'time')
-          ptype_klass.registerAccessor(method,
-                                       Permissions.AccessContentsInformation)
+          registerAccessor(ptype_klass, method,
+                           Permissions.AccessContentsInformation,
+                           declareProtected=declareProtected)
+          class_name_set.add(list_method_id)
 
         method_id = 'get%sTransitionDate' % UpperCase(transition_id)
-        if not hasattr(ptype_klass, method_id):
+        if method_id not in class_name_set:
           method = WorkflowHistoryAccessor.Getter(method_id, list_method_id)
-          ptype_klass.registerAccessor(method,
-                                       Permissions.AccessContentsInformation)
+          registerAccessor(ptype_klass, method,
+                           Permissions.AccessContentsInformation,
+                           declareProtected=declareProtected)
+          class_name_set.add(method_id)
 
     elif wf_type in ['InteractionWorkflowDefinition', 'Interaction Workflow']:
       storage = interaction_workflow_dict
@@ -583,12 +601,13 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
     transition_id_set, trigger_dict = v
     for tr_id, tdef in six.iteritems(trigger_dict):
       method_id = convertToMixedCase(tr_id)
-      try:
+      if method_id in class_name_set:
         method = getattr(ptype_klass, method_id)
-      except AttributeError:
-        ptype_klass.security.declareProtected(Permissions.AccessContentsInformation,
-                                              method_id)
-        ptype_klass.registerWorkflowMethod(method_id, wf_id, tr_id)
+      else:
+        declareProtected(Permissions.AccessContentsInformation,
+                         method_id)
+        registerWorkflowMethod(method_id, wf_id, tr_id)
+        class_name_set.add(method_id)
         continue
 
       # Wrap method
@@ -657,16 +676,18 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
           #     It's not consistent with regexp based filters.
           method_id_list = [imethod_id]
         for method_id in method_id_list:
-          method = getattr(ptype_klass, method_id, _MARKER)
-          if method is _MARKER:
+          if method_id not in class_name_set:
             # set a default security, if this method is not already
             # protected.
-            if method_id not in ptype_klass.security.names:
-              ptype_klass.security.declareProtected(
+            if method_id not in security_names:
+              declareProtected(
                   Permissions.AccessContentsInformation, method_id)
-            ptype_klass.registerWorkflowMethod(method_id, wf_id, tr_id,
+            registerWorkflowMethod(method_id, wf_id, tr_id,
                                                tdef.getTriggerOncePerTransaction())
+            class_name_set.add(method_id)
             continue
+
+          method = getattr(ptype_klass, method_id)
 
           # Wrap method
           if not callable(method) or method_id in (
