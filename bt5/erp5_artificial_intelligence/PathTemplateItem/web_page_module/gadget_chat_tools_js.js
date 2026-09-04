@@ -1,11 +1,97 @@
-/*global window, document, fetch, URLSearchParams, Interpreter */
+/*global window, document, fetch, URLSearchParams, Sval */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 (function (window, document) {
   "use strict";
 
   var CANVAS_NOTE = "Canvas origin (0,0) is top-left, x grows right, y grows down.",
     CANVAS_ID = "drawing-canvas",
-    EXECUTE_JAVASCRIPT_MAX_STEPS = 1000000;
+    EXECUTE_JAVASCRIPT_MAX_LOOP_ITERATIONS = 1000000,
+    LOOP_GUARD_VAR = "__loop_guard_count__",
+    LOOP_GUARD_MAX_VAR = "__loop_guard_max__",
+    LOOP_NODE_TYPE = {
+      WhileStatement: 1,
+      DoWhileStatement: 1,
+      ForStatement: 1,
+      ForInStatement: 1,
+      ForOfStatement: 1
+    };
+
+  // Sval (execute_javascript's sandbox) is a real JS engine - fast, but unlike the
+  // ES5 tree-walker it replaced, it has no built-in way to stop a runaway loop (a
+  // bare `while (true) {}` blocks its evalCode-equivalent forever - verified by
+  // actually hanging it before writing this). No maintained "loop guard" library
+  // exists for this (the one candidate found, "loop-protect", hasn't been published
+  // since 2018 and has no license), so this small transform is our own: it walks the
+  // ESTree AST Sval's own parser produces and injects a counter check at the top of
+  // every loop body, so a runaway loop throws instead of hanging the tab. Recursion
+  // (e.g. `function f(){return f();}`) isn't handled here - it already self-limits
+  // via the JS call stack, same as it would in real, non-sandboxed JS.
+  function loopGuardCheckStatement() {
+    return {
+      type: "IfStatement",
+      test: {
+        type: "BinaryExpression",
+        operator: ">",
+        left: {
+          type: "UpdateExpression",
+          operator: "++",
+          prefix: true,
+          argument: { type: "Identifier", name: LOOP_GUARD_VAR }
+        },
+        right: { type: "Identifier", name: LOOP_GUARD_MAX_VAR }
+      },
+      consequent: {
+        type: "ThrowStatement",
+        argument: {
+          type: "NewExpression",
+          callee: { type: "Identifier", name: "RangeError" },
+          arguments: [{
+            type: "Literal",
+            value: "execute_javascript: exceeded " + EXECUTE_JAVASCRIPT_MAX_LOOP_ITERATIONS +
+              " loop iterations (possible infinite loop)"
+          }]
+        }
+      },
+      alternate: null
+    };
+  }
+
+  function asBlockStatement(body) {
+    if (body.type === "BlockStatement") { return body; }
+    return { type: "BlockStatement", body: [body] };
+  }
+
+  // Generic ESTree walker: visits every node reachable through own properties (arrays
+  // of nodes or single nodes), so it finds loops anywhere - inside nested functions,
+  // object/class bodies, etc. - without needing per-node-type traversal rules.
+  function walkAst(node, visit) {
+    var key, child, i;
+    if (!node || typeof node.type !== "string") { return; }
+    visit(node);
+    for (key in node) {
+      if (node.hasOwnProperty(key) && key !== "type") {
+        child = node[key];
+        if (Array.isArray(child)) {
+          for (i = 0; i < child.length; i += 1) {
+            if (child[i] && typeof child[i].type === "string") { walkAst(child[i], visit); }
+          }
+        } else if (child && typeof child.type === "string") {
+          walkAst(child, visit);
+        }
+      }
+    }
+  }
+
+  function guardLoops(ast) {
+    walkAst(ast, function (node) {
+      var block;
+      if (LOOP_NODE_TYPE.hasOwnProperty(node.type)) {
+        block = asBlockStatement(node.body);
+        node.body = { type: "BlockStatement", body: [loopGuardCheckStatement()].concat(block.body) };
+      }
+    });
+    return ast;
+  }
 
   function getCanvasContext(element) {
     var canvas = element.querySelector("#" + CANVAS_ID);
@@ -733,11 +819,13 @@
     return {
       definition: {
         name: "execute_javascript",
-        description: "Execute a snippet of JavaScript in a sandboxed interpreter and return its result. " +
-          "The sandbox has no access to the page, network, cookies, or any other tool's state - it is " +
-          "for computation only. The code runs as the body of a plain (synchronous, ES5) function: use " +
-          "\"return <value>;\" to produce a result (only JSON-serializable values are usable). Errors " +
-          "thrown by the code, and code that loops for too long, are reported back as an error message. " +
+        description: "Execute a snippet of JavaScript in a sandboxed engine (Sval, a real modern JS " +
+          "engine - not just an ES5 subset) and return its result. The sandbox has no access to the " +
+          "page, network, cookies, or any other tool's state - it is for computation only. The code " +
+          "runs as the body of a plain (synchronous) function: use \"return <value>;\" to produce a " +
+          "result (only JSON-serializable values are usable). Errors thrown by the code, and loops that " +
+          "run for too long, are reported back as an error message (function recursion is not separately " +
+          "bounded here - very deep recursion fails on its own with a stack error, same as normal JS). " +
           "USE THIS WHEN: you need custom computation or to reshape/combine data you already have (e.g. " +
           "a previous tool's result) that's easier to do in code than by hand. DO NOT USE THIS WHEN: an " +
           "existing tool (erp5_search, erp5_read, erp5_write, erp5_create, draw_*) already does what you " +
@@ -755,18 +843,14 @@
         }
       },
       execute: function (args) {
-        var interpreter = new Interpreter(
-            "(function () {\n" + String(args.code || "") + "\n})()"
-          ),
-          steps = 0;
-        while (interpreter.step()) {
-          steps += 1;
-          if (steps > EXECUTE_JAVASCRIPT_MAX_STEPS) {
-            throw new Error("execute_javascript: exceeded " + EXECUTE_JAVASCRIPT_MAX_STEPS +
-              " execution steps (possible infinite loop)");
-          }
-        }
-        return interpreter.pseudoToNative(interpreter.value);
+        var interp = new Sval({ ecmaVer: "latest", sourceType: "script", sandBox: true }),
+          wrapped = "var " + LOOP_GUARD_VAR + " = 0, " + LOOP_GUARD_MAX_VAR + " = " +
+            EXECUTE_JAVASCRIPT_MAX_LOOP_ITERATIONS + ";\n" +
+            "exports.__result = (function () {\n" + String(args.code || "") + "\n})();",
+          ast = interp.parse(wrapped);
+        guardLoops(ast);
+        interp.run(ast);
+        return interp.exports.__result;
       }
     };
   }
