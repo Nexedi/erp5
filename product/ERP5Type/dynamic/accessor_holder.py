@@ -49,20 +49,21 @@ from AccessControl import ClassSecurityInfo
 from zLOG import LOG, ERROR, INFO, WARNING
 import six
 
+_skip_permission_tuple = (Permissions.AccessContentsInformation,
+                          Permissions.ModifyPortalContent)
+
+def registerAccessor(cls,
+                     accessor,
+                     permission,
+                     declareProtected):
+  accessor_name = accessor.__name__
+  setattr(cls, accessor_name, accessor)
+  if permission is not None and \
+      accessor_name[0] != '_' and \
+      permission not in _skip_permission_tuple:
+    declareProtected(permission, accessor_name)
+
 class AccessorHolderType(type):
-  _skip_permission_tuple = (Permissions.AccessContentsInformation,
-                            Permissions.ModifyPortalContent)
-  def registerAccessor(cls,
-                       accessor,
-                       permission=None):
-    accessor_name = accessor.__name__
-    setattr(cls, accessor_name, accessor)
-    if permission is None:
-      return
-    # private accessors do not need declarative security
-    if accessor_name[0] != '_' and \
-        permission not in AccessorHolderType._skip_permission_tuple:
-      cls.security.declareProtected(permission, accessor_name)
 
   def __new__(meta_class, class_name, base_tuple=(object,), attribute_dict={}):
     # we dont want to add several times to the same list, so make sure
@@ -330,18 +331,19 @@ def applyCategoryAsRelatedValueAccessor(accessor_holder,
     read_permission = Permissions.AccessContentsInformation
 
   uppercase_category_id = UpperCase(category_id)
+  declareProtected = accessor_holder.security.declareProtected
 
   # two special cases
   accessor_name = uppercase_category_id[0].lower() + uppercase_category_id[1:]
   accessor = RelatedValue.ListGetter(accessor_name + 'RelatedValues', category_id)
-  accessor_holder.registerAccessor(accessor, read_permission)
+  registerAccessor(accessor_holder, accessor, read_permission, declareProtected=declareProtected)
   accessor = RelatedValue.IdListGetter(accessor_name + 'RelatedIds', category_id)
-  accessor_holder.registerAccessor(accessor, read_permission)
+  registerAccessor(accessor_holder, accessor, read_permission, declareProtected=declareProtected)
 
   for accessor_class, accessor_name_list in six.iteritems(related_accessor_definition_dict):
     for accessor_name in accessor_name_list:
       accessor = accessor_class(accessor_name % uppercase_category_id, category_id)
-      accessor_holder.registerAccessor(accessor, read_permission)
+      registerAccessor(accessor_holder, accessor, read_permission, declareProtected=declareProtected)
 
 def getPropertySheetValueList(site, property_sheet_name_list):
   try:

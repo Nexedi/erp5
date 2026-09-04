@@ -18,6 +18,7 @@ from AccessControl import ClassSecurityInfo
 from zLOG import LOG, WARNING, BLATHER
 
 from .portal_type_class import generatePortalTypeClass
+from .accessor_holder import registerAccessor
 from .accessor_holder import AccessorHolderType
 from . import persistent_migration
 from ZODB.POSException import ConflictError
@@ -309,7 +310,8 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
       value = cls.__name__ in site._getPortalGroupedTypeSet(group)
       accessor_name = 'is' + UpperCase(group) + 'Type'
       method = ConstantGetter(accessor_name, group, value)
-      cls.registerAccessor(method, Permissions.AccessContentsInformation)
+      registerAccessor(cls, method, Permissions.AccessContentsInformation,
+                       declareProtected=cls.security.declareProtected)
 
     from Products.ERP5Type.Cache import initializePortalCachingProperties
     initializePortalCachingProperties(site)

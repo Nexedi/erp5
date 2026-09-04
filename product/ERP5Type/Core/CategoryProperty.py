@@ -37,6 +37,7 @@ from Products.ERP5Type.Utils import UpperCase
 from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 from Products.ERP5Type.Core.StandardProperty import StandardProperty
 from zLOG import LOG, WARNING
+from Products.ERP5Type.dynamic.accessor_holder import registerAccessor
 import six
 
 class CategoryProperty(IdAsReferenceMixin('_category'), XMLObject):
@@ -190,16 +191,17 @@ class CategoryProperty(IdAsReferenceMixin('_category'), XMLObject):
 
     # Actually create accessors
     uppercase_category_id = UpperCase(category_id)
+    declareProtected = accessor_holder.security.declareProtected
 
     # three special cases
     accessor = Category.Tester('has' + uppercase_category_id, category_id)
-    accessor_holder.registerAccessor(accessor, read_permission)
+    registerAccessor(accessor_holder, accessor, read_permission, declareProtected=declareProtected)
 
     accessor_name = uppercase_category_id[0].lower() + uppercase_category_id[1:]
     accessor = Value.ListGetter(accessor_name + 'Values', category_id)
-    accessor_holder.registerAccessor(accessor, read_permission)
+    registerAccessor(accessor_holder, accessor, read_permission, declareProtected=declareProtected)
     accessor = Value.IdListGetter(accessor_name + 'Ids', category_id)
-    accessor_holder.registerAccessor(accessor, read_permission)
+    registerAccessor(accessor_holder, accessor, read_permission, declareProtected=declareProtected)
 
     # then getters
     for id_format, accessor_class in six.iteritems(cls.getter_definition_dict):
@@ -210,13 +212,13 @@ class CategoryProperty(IdAsReferenceMixin('_category'), XMLObject):
       if not (SOURCE_DESTINATION_REFERENCE_LEGACY and accessor_name in (
               'getSourceReference', 'getDestinationReference')):
         public_accessor = accessor_class(accessor_name, category_id)
-        accessor_holder.registerAccessor(public_accessor, read_permission)
+        registerAccessor(accessor_holder, public_accessor, read_permission, declareProtected=declareProtected)
 
       # create the private getter on the fly instead of having a definition dict
       # that's twice the size for the same info
       accessor_name = '_category' + accessor_name[0].upper() + accessor_name[1:]
       private_accessor = accessor_class(accessor_name, category_id)
-      accessor_holder.registerAccessor(private_accessor, read_permission)
+      registerAccessor(accessor_holder, private_accessor, read_permission, declareProtected=declareProtected)
 
     # and setters
     for id_format, accessor_class in six.iteritems(cls.setter_definition_dict):
@@ -229,12 +231,12 @@ class CategoryProperty(IdAsReferenceMixin('_category'), XMLObject):
         continue
 
       accessor = accessor_class(accessor_name, category_id)
-      accessor_holder.registerAccessor(accessor, write_permission)
+      registerAccessor(accessor_holder, accessor, write_permission, declareProtected=declareProtected)
 
       # TODO: merge with StandardProperty
       if accessor_name.startswith('_set'):
         accessor = Alias.Reindex(accessor_name[1:], accessor_name)
-        accessor_holder.registerAccessor(accessor, write_permission)
+        registerAccessor(accessor_holder, accessor, write_permission, declareProtected=declareProtected)
 
     # Only add the category ID if it is not already in _categories,
     # which may happen when getting the categories with acquisition

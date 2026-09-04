@@ -37,6 +37,7 @@ from Products.ERP5Type.Accessor.TypeDefinition import type_definition, list_type
 from Products.ERP5Type.Utils import UpperCase, createExpressionContext, \
      evaluateExpressionFromString
 from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
+from Products.ERP5Type.dynamic.accessor_holder import registerAccessor
 import six
 
 class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
@@ -209,13 +210,13 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
       name = format % uppercase_reference
 
       instance = klass(name, reference, *argument_list)
-      accessor_holder.registerAccessor(instance, permission)
+      registerAccessor(accessor_holder, instance, permission, declareProtected=accessor_holder.security.declareProtected)
 
       # Public setters actually just calls the private one and then
       # perform a re-indexing
       if name.startswith('_set'):
         instance = Alias.Reindex(name[1:], name)
-        accessor_holder.registerAccessor(instance, permission)
+        registerAccessor(accessor_holder, instance, permission, declareProtected=accessor_holder.security.declareProtected)
 
   @classmethod
   def _applyRangeOnAccessorHolder(cls,
@@ -568,8 +569,8 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
         translation_domain_reference, 'string',
         property_dict['translation_domain'])
 
-      accessor_holder.registerAccessor(
-        accessor, translated_property_dict['read_permission'])
+      registerAccessor(accessor_holder,
+        accessor, translated_property_dict['read_permission'], declareProtected=accessor_holder.security.declareProtected)
 
     # After applying specific getters, setters and testers, apply
     # common getters, setters and testers

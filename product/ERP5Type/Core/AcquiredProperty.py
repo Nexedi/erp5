@@ -36,6 +36,7 @@ from Products.ERP5Type.Accessor import Base, List, Content, ContentProperty, \
      Acquired, Alias, Translation, AcquiredProperty as AcquiredPropertyAccessor
 
 from zLOG import LOG, WARNING
+from Products.ERP5Type.dynamic.accessor_holder import registerAccessor
 import six
 
 class AcquiredProperty(StandardProperty):
@@ -350,8 +351,9 @@ class AcquiredProperty(StandardProperty):
          property_dict['multivalued']),
         (property_dict['elementary_type'] == 'tales'))
 
-      accessor_holder.registerAccessor(instance,
-                                       property_dict['read_permission'])
+      registerAccessor(accessor_holder, instance,
+                                       property_dict['read_permission'],
+                                       declareProtected=accessor_holder.security.declareProtected)
 
   @classmethod
   def _applyTranslationAcquiredOnAccessorHolder(cls,
@@ -399,21 +401,24 @@ class AcquiredProperty(StandardProperty):
            property_dict['multivalued']),
           (property_dict['elementary_type'] == 'tales'))
 
-        accessor_holder.registerAccessor(setter_instance,
-                                         property_dict['write_permission'])
+        registerAccessor(accessor_holder, setter_instance,
+                                         property_dict['write_permission'],
+                                         declareProtected=accessor_holder.security.declareProtected)
 
         alias_reindex_setter = Alias.Reindex('set' + capitalised_composed_id,
                                              '_set' + capitalised_composed_id)
 
-        accessor_holder.registerAccessor(alias_reindex_setter,
-                                         property_dict['write_permission'])
+        registerAccessor(accessor_holder, alias_reindex_setter,
+                                         property_dict['write_permission'],
+                                         declareProtected=accessor_holder.security.declareProtected)
 
         alias_reindex_setter = Alias.Reindex(
           'setDefault' + capitalised_composed_id,
           '_set' + capitalised_composed_id)
 
-        accessor_holder.registerAccessor(alias_reindex_setter,
-                                         property_dict['write_permission'])
+        registerAccessor(accessor_holder, alias_reindex_setter,
+                                         property_dict['write_permission'],
+                                         declareProtected=accessor_holder.security.declareProtected)
 
       # Language-independent accessors
       if acquired_property_id in \
