@@ -80,6 +80,7 @@ def getSkinPrefixList(self):
 
     # Base classes (maybe should be interfaces)
     'Entity', # A base class for Person / Organisation
+    'Actor', # A base class for Person / Workgroup
     'PackingListLine',
     'IndividualVariation',
     'ExternalLogin',
