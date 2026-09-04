@@ -154,7 +154,7 @@
       var gadget = this,
         queue_loop = new RSVP.Queue(),
         tool_message_list = [],
-        total_text = "",
+        initial_message_length = 0,
         tool_definition_list = gadget.tool_list.map(function (tool) {
           return { type: "function", "function": tool.definition };
         }).concat(gadget.remote_tool_definition_list);
@@ -181,10 +181,14 @@
                   name: tool_call.function.name,
                   content: truncateToolOutput(result_content)
                 }]);
-              tool_message_list.push({ name: tool_call.function.name, content: result_content });
+              tool_message_list.push({
+                name: tool_call.function.name,
+                content: result_content,
+                'role': 'tole'
+              });
               return RSVP.all([
                 next_message_list,
-                gadget.gadget_chat_ui.showMessage({ content: total_text, tool_message_list: tool_message_list })
+                gadget.gadget_chat_ui.showMessage({tool_message_list: tool_message_list })
               ]);
             })
             .push(function (resulit_list) {
@@ -204,7 +208,8 @@
               gadget.options.request_options.process_url,
               {
                 message_list: JSON.stringify(message_list),
-                tool_definition_list: JSON.stringify(tool_definition_list)
+                tool_definition_list: JSON.stringify(tool_definition_list),
+                initial_message_length: initial_message_length
               }
             );
           })
@@ -213,9 +218,12 @@
           })
           .push(function (text_evt) {
             var result = JSON.parse(text_evt.target.result);
-            total_text += result.content || '';
             if (result.tool_calls && result.tool_calls.length) {
-              return gadget.gadget_chat_ui.showMessage({ content: total_text , tool_message_list: tool_message_list })
+              tool_message_list.push({
+                'role': 'assistant',
+                'content': result.content
+              })
+              return gadget.gadget_chat_ui.showMessage({tool_message_list: tool_message_list })
                 .push(function () {
                  return loop_call(
                    loop_count + 1,
@@ -229,7 +237,7 @@
               });
             }
             return RSVP.all([
-              gadget.gadget_chat_ui.showMessage({ content: total_text , tool_message_list: tool_message_list }),
+              gadget.gadget_chat_ui.showMessage({ content: result.content , tool_message_list: tool_message_list }),
               gadget.notifySubmitted({message: 'Completed', status: "success"}),
               gadget.gadget_chat_ui.resetEditor()
             ]);
@@ -262,7 +270,9 @@
             skill_message_list = (skill_list || []).map(function (skill) {
               return { role: "system", content: skill.instructions };
             });
-          return loop_call(0, skill_message_list.concat(message_list));
+          message_list = skill_message_list.concat(message_list);
+          initial_message_length = message_list.length;
+          return loop_call(0, message_list);
         });
       return queue_loop;
     });

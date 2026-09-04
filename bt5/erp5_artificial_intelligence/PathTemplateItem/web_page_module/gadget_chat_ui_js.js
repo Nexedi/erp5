@@ -37,6 +37,14 @@
     ]);
   }
 
+  function getAssistantMessageDiv(assistant_message) {
+    return domsugar("div", { "class": "post-tool-entry post-assistant-entry" }, [
+      domsugar("strong", ["Assistant"]),
+      domsugar("br"),
+      assistant_message.content || ""
+    ]);
+  }
+
   function getToolCallDiv(tool_message) {
     return domsugar("div", { "class": "post-tool-entry" }, [
       domsugar("strong", ["Tool: " + tool_message.name]),
@@ -45,18 +53,24 @@
     ]);
   }
 
+  function getAgentMessageDiv(agent_message) {
+    return agent_message.role === "assistant" ?
+      getAssistantMessageDiv(agent_message) :
+      getToolCallDiv(agent_message);
+  }
+
   function getToolCallSummaryText(count) {
     return "Tool calls (" + count + ")";
   }
 
-  function getToolCallDom(tool_message_list) {
-    if (!tool_message_list.length) {
+  function getToolCallDom(tool_message_list, details_open) {
+    if (!tool_message_list || !tool_message_list.length) {
       return;
     }
     return domsugar("li", { "class": "post-tool" }, [
-      domsugar("details", {}, [
+      domsugar("details", details_open ? { open: "open" } : {}, [
         domsugar("summary", [getToolCallSummaryText(tool_message_list.length)])
-      ].concat(tool_message_list.map(getToolCallDiv)))
+      ].concat(tool_message_list.map(getAgentMessageDiv)))
     ]);
   }
 
@@ -131,7 +145,7 @@
               var post_list = post_list_and_translation[0].map(formatPost),
                 translationAttachment = post_list_and_translation[1][1];
               return post_list.map(function (post) {
-                var tool_call_dom = getToolCallDom(JSON.parse(post.report_text_content_list || "[]")),
+                var tool_call_dom = getToolCallDom(JSON.parse(post.tool_message_list || "[]"), false),
                   post_dom;
                 post_dom = getPostDom(post, translationAttachment);
                 if (tool_call_dom) {
@@ -188,7 +202,9 @@
     })
     .declareMethod('showMessage', function (message) {
       var gadget = this,
+        tool_message_list = message.tool_message_list || [],
         post_tool,
+        details_open,
         tool_call_element,
         markdown_element;
       if (!gadget.new_message_element) {
@@ -201,14 +217,16 @@
       }
       markdown_element = gadget.new_message_element.querySelector(".post-markdown");
       if (message.hasOwnProperty('content') && message.content) {
+        details_open = false;
         markdown_element.innerHTML = marked.parse(message.content);
         gadget.new_message_element.querySelector('pre.chat-hidden-field').innerHTML = message.content;
       } else {
+        details_open = true;
         markdown_element.innerHTML = "";
         markdown_element.appendChild(getTypingIndicatorDom());
       }
-      if (message.hasOwnProperty('tool_message_list') && message.tool_message_list.length) {
-        tool_call_element = getToolCallDom(message.tool_message_list);
+      if (tool_message_list.length) {
+        tool_call_element = getToolCallDom(tool_message_list, details_open);
         post_tool  = gadget.new_message_element.querySelector('.post-tool');
         if (post_tool) {
           gadget.new_message_element.removeChild(post_tool);

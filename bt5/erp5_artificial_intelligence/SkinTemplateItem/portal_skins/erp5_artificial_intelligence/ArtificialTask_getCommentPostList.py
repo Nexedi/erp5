@@ -8,15 +8,15 @@ for line in artifical_task.objectValues(
  ):
   report_line = line.getFollowUpRelatedValue(portal_type='Artificial Task Report Line')
   if report_line:
-    report_text_content_list = json.loads(report_line.getTextContent())
-    report_text_content_list = [x for x in report_text_content_list if x.get('role', '') == 'tool']
+    report_message_list = json.loads(report_line.getTextContent())
+    tool_message_list = [x for x in report_message_list if x.get('role', '') in ('tool', 'assistant')]
   else:
-    report_text_content_list = []
+    tool_message_list = []
 
   comment_list.append((dict(
     date=line.getCreationDate().ISO8601(),
     text=line.getTextContent(),
-    report_text_content_list = json.dumps(report_text_content_list),
+    tool_message_list = json.dumps(tool_message_list),
     response = True if line.getSimulationState() == 'delivered' else False
   )))
 

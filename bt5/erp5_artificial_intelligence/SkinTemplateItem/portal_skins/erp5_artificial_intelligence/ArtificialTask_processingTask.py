@@ -83,7 +83,7 @@ else:
 
     artificial_task_report.newContent(
       portal_type='Artificial Task Report Line',
-      text_content = json.dumps(message_list + [response], indent=2),
+      text_content = json.dumps(message_list[int(initial_message_length):] + [response], indent=2),
       follow_up_value = line
     )
     line.deliver()
