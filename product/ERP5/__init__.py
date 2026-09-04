@@ -49,8 +49,9 @@ from .Tool import CategoryTool, IdTool, TemplateTool,\
                  TrashTool,\
                  SolverTool
 from . import ERP5Site
-from .Document import PythonScript, SQLMethod
+from .Document import PageTemplate, PythonScript, SQLMethod
 object_classes = ( ERP5Site.ERP5Site,
+                   PageTemplate.PageTemplateThroughZMI,
                    PythonScript.PythonScriptThroughZMI,
                    SQLMethod.SQLMethod,
                  )
