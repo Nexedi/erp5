@@ -3,8 +3,6 @@
 (function (window, document) {
   "use strict";
 
-
-
   var CANVAS_NOTE = "Canvas origin (0,0) is top-left, x grows right, y grows down.",
     CANVAS_ID = "drawing-canvas",
     EXECUTE_JAVASCRIPT_MAX_STEPS = 1000000;
