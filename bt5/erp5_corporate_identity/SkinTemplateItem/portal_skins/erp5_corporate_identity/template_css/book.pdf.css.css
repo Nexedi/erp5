@@ -60,10 +60,8 @@
 .ci-book table tbody td,
 .ci-book table tbody td span,
 .ci-book table tbody td li,
-.ci-book table tbody td em,
 .ci-book table tbody td strong,
 .ci-book table tbody td a,
-.ci-book table tbody td em,
 .ci-book pre code {
   font-size: 4.7625mm; /* 13.5pt; */ /* 18px; */
 }
