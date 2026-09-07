@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2021 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2021-2026 Nexedi SA and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -27,12 +27,22 @@
 ##############################################################################
 import json
 import jsonschema
+from jsonschema.exceptions import ValidationError
 from erp5.component.module.JsonUtils import loadJson
 from erp5.component.document.JSONType import JSONType
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Utils import unicode2str
+
+
+class InputSchemaValidationError(ValidationError):
+  """Raised when the request payload violates input schema."""
+
+                                                                                                                                                                 
+class OutputSchemaValidationError(ValidationError):
+  """Raised when the after_method_id result violates output schema."""
+
 
 class JSONForm(JSONType):
   """
@@ -59,23 +69,47 @@ class JSONForm(JSONType):
                     , PropertySheet.Reference
                     )
 
-  def __call__(self, json_data, list_error=False): #pylint:disable=arguments-differ
-    validation_result = self.validateJSON(json_data, list_error)
+  def __call__(self, json_data, list_error=False, allow_unschematized_output=True): #pylint:disable=arguments-differ
+    def raise_missing_output_error():
+      raise ValueError('%s has an output schema but response is empty' % self.getRelativeUrl())
+
+    input_schema = self.getInputSchema()
+    self.checkJSON(json_data, list_error, input_schema, InputSchemaValidationError)
+    method_id = self.getAfterMethodId()
+    output_schema = self.getOutputSchema()
+    if not method_id:
+      if output_schema is not None:
+        raise_missing_output_error()
+      return "Nothing to do"
+    method = getattr(getattr(self, 'aq_parent', None), method_id)
+    result = method(json_data, self)
+    if output_schema is not None:
+      if not result:
+        raise_missing_output_error()
+      self.checkJSON(result, list_error, output_schema, OutputSchemaValidationError)
+    elif result and not allow_unschematized_output:
+      raise ValueError('%s does not have an output schema but response is not empty' % self.getRelativeUrl())
+    return result
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'checkJSON')
+  def checkJSON(self, json_data, list_error=False, schema=None, exception=ValidationError):
+    """
+    Validate contained JSON with the Schema defined in the Portal Type,
+    raising an exception if invalid.
+    """
+    validation_result = self.validateJSON(json_data, list_error, schema)
     if validation_result is not True:
       if not list_error:
-        raise jsonschema.exceptions.ValidationError(validation_result.message)
+        raise exception(validation_result.message)
       else:
         raise ValueError(json.dumps(validation_result))
-    if self.getAfterMethodId():
-      return getattr(getattr(self, 'aq_parent', None), self.getAfterMethodId())(json_data, self)
-    return "Nothing to do"
 
   security.declareProtected(Permissions.AccessContentsInformation, 'validateJSON')
-  def validateJSON(self, json_data, list_error=False):
+  def validateJSON(self, json_data, list_error=False, schema=None):
     """
     Validate contained JSON with the Schema defined in the Portal Type.
     """
-    defined_schema = loadJson(self.getTextContent(""))
+    defined_schema = schema or self.getInputSchema()
     try:
       jsonschema.validate(json_data, defined_schema, format_checker=jsonschema.FormatChecker())
     except jsonschema.exceptions.ValidationError as err:
@@ -88,3 +122,15 @@ class JSONForm(JSONType):
         }
       return err
     return True
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getInputSchema')
+  def getInputSchema(self):
+    return self._getSchema("TextContent")
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getOutputSchema')
+  def getOutputSchema(self):
+    return self._getSchema("ResponseSchema")
+
+  def _getSchema(self, key):
+    schema = getattr(self, "get%s" % key)()
+    return schema and loadJson(schema)
