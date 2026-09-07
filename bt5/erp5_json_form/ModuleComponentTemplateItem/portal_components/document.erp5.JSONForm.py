@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2021 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2021-2026 Nexedi SA and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -59,16 +59,24 @@ class JSONForm(JSONType):
                     , PropertySheet.Reference
                     )
 
-  def __call__(self, json_data, list_error=False): #pylint:disable=arguments-differ
+  def __call__(self, json_data, list_error=False, serialize=True): #pylint:disable=arguments-differ
     validation_result = self.validateJSON(json_data, list_error)
     if validation_result is not True:
       if not list_error:
         raise jsonschema.exceptions.ValidationError(validation_result.message)
       else:
         raise ValueError(json.dumps(validation_result))
-    if self.getAfterMethodId():
-      return getattr(getattr(self, 'aq_parent', None), self.getAfterMethodId())(json_data, self)
-    return "Nothing to do"
+    method_id = self.getAfterMethodId()
+    if not method_id:
+      return "Nothing to do"
+    method = getattr(getattr(self, 'aq_parent', None), method_id)
+    result = method(json_data, self)
+    returns_json = self.getAfterMethodReturnsJson()
+    if not returns_json and serialize:
+      return json.dumps(result)
+    if returns_json and not serialize:
+      return loadJson(result)
+    return result
 
   security.declareProtected(Permissions.AccessContentsInformation, 'validateJSON')
   def validateJSON(self, json_data, list_error=False):
