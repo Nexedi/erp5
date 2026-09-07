@@ -1,0 +1,42 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal">
+  <tal:block metal:define-macro="current_cell">
+    <tr>
+      <td colspan="3"><b tal:content="string:Check current cell=${check_value}"></b></td>
+    </tr>
+    <tr>
+      <td>assertValue</td>
+      <td>//textarea[@id='ce-cell-content']</td>
+      <td tal:content="check_value"></td>
+    </tr>
+    <tr>
+      <td colspan="3"><b tal:content="string:Set current cell=${set_value}"></b></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//textarea[@id='ce-cell-content' and not(contains(@class, "disabled"))]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>fireEvent</td>
+      <td>//textarea[@id='ce-cell-content']</td>
+      <td>focus</td>
+    </tr>
+    <tr>
+      <td>fireEvent</td>
+      <td>//textarea[@id='ce-cell-content']</td>
+      <td>input</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>//textarea[@id='ce-cell-content']</td>
+      <td tal:content="set_value"></td>
+    </tr>
+    <tr>
+      <td>fireEvent</td>
+      <td>//textarea[@id='ce-cell-content']</td>
+      <td>input</td>
+    </tr>
+  </tal:block>
+
+</tal:block>
