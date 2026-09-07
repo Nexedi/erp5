@@ -46,7 +46,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>section_category, node_uid, mirror_section_uid, grouping_reference</string> </value>
+            <value> <string>section_uid, node_uid, mirror_section_uid, grouping_reference</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

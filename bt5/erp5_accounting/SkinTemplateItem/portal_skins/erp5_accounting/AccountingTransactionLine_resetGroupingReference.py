@@ -29,8 +29,10 @@ for (section_value, node_uid, mirror_section_uid) in (
     section_value = section_value.Organisation_getMappingRelatedOrganisation()
     section_category = section_value.getGroup(base=True)
     if section_category:
+      section_uid = portal.Base_getSectionUidListForSectionCategory(
+        section_category, strict=False)
       ungrouped_line_set.update(resetGroupingReference(
-          section_category=section_category,
+          section_uid=section_uid,
           node_uid=node_uid,
           mirror_section_uid=mirror_section_uid,
           grouping_reference=grouping_reference
