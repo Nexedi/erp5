@@ -1,97 +1,13 @@
-/*global window, document, fetch, URLSearchParams, Sval */
+/*global window, document, fetch, URLSearchParams, Worker, Promise, setTimeout, clearTimeout */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 (function (window, document) {
   "use strict";
 
   var CANVAS_NOTE = "Canvas origin (0,0) is top-left, x grows right, y grows down.",
     CANVAS_ID = "drawing-canvas",
-    EXECUTE_JAVASCRIPT_MAX_LOOP_ITERATIONS = 1000000,
-    LOOP_GUARD_VAR = "__loop_guard_count__",
-    LOOP_GUARD_MAX_VAR = "__loop_guard_max__",
-    LOOP_NODE_TYPE = {
-      WhileStatement: 1,
-      DoWhileStatement: 1,
-      ForStatement: 1,
-      ForInStatement: 1,
-      ForOfStatement: 1
-    };
-
-  // Sval (execute_javascript's sandbox) is a real JS engine - fast, but unlike the
-  // ES5 tree-walker it replaced, it has no built-in way to stop a runaway loop (a
-  // bare `while (true) {}` blocks its evalCode-equivalent forever - verified by
-  // actually hanging it before writing this). No maintained "loop guard" library
-  // exists for this (the one candidate found, "loop-protect", hasn't been published
-  // since 2018 and has no license), so this small transform is our own: it walks the
-  // ESTree AST Sval's own parser produces and injects a counter check at the top of
-  // every loop body, so a runaway loop throws instead of hanging the tab. Recursion
-  // (e.g. `function f(){return f();}`) isn't handled here - it already self-limits
-  // via the JS call stack, same as it would in real, non-sandboxed JS.
-  function loopGuardCheckStatement() {
-    return {
-      type: "IfStatement",
-      test: {
-        type: "BinaryExpression",
-        operator: ">",
-        left: {
-          type: "UpdateExpression",
-          operator: "++",
-          prefix: true,
-          argument: { type: "Identifier", name: LOOP_GUARD_VAR }
-        },
-        right: { type: "Identifier", name: LOOP_GUARD_MAX_VAR }
-      },
-      consequent: {
-        type: "ThrowStatement",
-        argument: {
-          type: "NewExpression",
-          callee: { type: "Identifier", name: "RangeError" },
-          arguments: [{
-            type: "Literal",
-            value: "execute_javascript: exceeded " + EXECUTE_JAVASCRIPT_MAX_LOOP_ITERATIONS +
-              " loop iterations (possible infinite loop)"
-          }]
-        }
-      },
-      alternate: null
-    };
-  }
-
-  function asBlockStatement(body) {
-    if (body.type === "BlockStatement") { return body; }
-    return { type: "BlockStatement", body: [body] };
-  }
-
-  // Generic ESTree walker: visits every node reachable through own properties (arrays
-  // of nodes or single nodes), so it finds loops anywhere - inside nested functions,
-  // object/class bodies, etc. - without needing per-node-type traversal rules.
-  function walkAst(node, visit) {
-    var key, child, i;
-    if (!node || typeof node.type !== "string") { return; }
-    visit(node);
-    for (key in node) {
-      if (node.hasOwnProperty(key) && key !== "type") {
-        child = node[key];
-        if (Array.isArray(child)) {
-          for (i = 0; i < child.length; i += 1) {
-            if (child[i] && typeof child[i].type === "string") { walkAst(child[i], visit); }
-          }
-        } else if (child && typeof child.type === "string") {
-          walkAst(child, visit);
-        }
-      }
-    }
-  }
-
-  function guardLoops(ast) {
-    walkAst(ast, function (node) {
-      var block;
-      if (LOOP_NODE_TYPE.hasOwnProperty(node.type)) {
-        block = asBlockStatement(node.body);
-        node.body = { type: "BlockStatement", body: [loopGuardCheckStatement()].concat(block.body) };
-      }
-    });
-    return ast;
-  }
+    SANDBOX_WORKER_URL = "gadget_chat_sandbox_worker.js",
+    SANDBOX_DEFAULT_TIMEOUT_MS = 10000,
+    SANDBOX_MAX_TIMEOUT_MS = 120000;
 
   function getCanvasContext(element) {
     var canvas = element.querySelector("#" + CANVAS_ID);
@@ -819,38 +735,152 @@
     return {
       definition: {
         name: "execute_javascript",
-        description: "Execute a snippet of JavaScript in a sandboxed engine (Sval, a real modern JS " +
-          "engine - not just an ES5 subset) and return its result. The sandbox has no access to the " +
-          "page, network, cookies, or any other tool's state - it is for computation only. The code " +
-          "runs as the body of a plain (synchronous) function: use \"return <value>;\" to produce a " +
-          "result (only JSON-serializable values are usable). Errors thrown by the code, and loops that " +
-          "run for too long, are reported back as an error message (function recursion is not separately " +
-          "bounded here - very deep recursion fails on its own with a stack error, same as normal JS). " +
-          "USE THIS WHEN: you need custom computation or to reshape/combine data you already have (e.g. " +
-          "a previous tool's result) that's easier to do in code than by hand. DO NOT USE THIS WHEN: an " +
-          "existing tool (erp5_search, erp5_read, erp5_write, erp5_create, draw_*) already does what you " +
-          "need, or you need network/DOM access - this sandbox cannot reach either.",
+        description: "Execute JavaScript and get the result back. Runs in the same isolated sandbox " +
+          "worker as run_wasm - no DOM, no network, no cookies, no access to the page or any other " +
+          "tool's state. Write the body of an async function: `await` is available, and you must " +
+          "\"return <value>;\" to produce a result (only JSON-serializable values are usable; console " +
+          "output is captured separately and returned alongside the result). A `utils` object with " +
+          "b64encode/b64decode/describe helpers is also available to the code. Errors thrown by the " +
+          "code are reported back as an error message; a runaway loop is killed at its deadline, which " +
+          "costs one worker, not the tab. USE THIS WHEN: you need custom computation or to " +
+          "reshape/combine data you already have (e.g. a previous tool's result) that's easier to do in " +
+          "code than by hand. DO NOT USE THIS WHEN: an existing tool (erp5_search, erp5_read, " +
+          "erp5_write, erp5_create, draw_*, run_wasm) already does what you need, or you need " +
+          "network/DOM access - this sandbox cannot reach either.",
         parameters: {
           type: "object",
           properties: {
             code: {
               type: "string",
-              description: "JavaScript source to run as a function body, e.g. \"return 1 + 1;\" or " +
+              description: "Async function body, e.g. \"return 1 + 1;\" or " +
                 "\"var total = 0; for (var i = 0; i < 10; i++) { total += i; } return total;\"."
-            }
+            },
+            timeout_ms: { type: "integer", description: "Deadline in ms (default 10000, max 120000)." }
           },
           required: ["code"]
         }
       },
       execute: function (args) {
-        var interp = new Sval({ ecmaVer: "latest", sourceType: "script", sandBox: true }),
-          wrapped = "var " + LOOP_GUARD_VAR + " = 0, " + LOOP_GUARD_MAX_VAR + " = " +
-            EXECUTE_JAVASCRIPT_MAX_LOOP_ITERATIONS + ";\n" +
-            "exports.__result = (function () {\n" + String(args.code || "") + "\n})();",
-          ast = interp.parse(wrapped);
-        guardLoops(ast);
-        interp.run(ast);
-        return interp.exports.__result;
+        return runSandboxJob("js", { code: args.code }, args.timeout_ms).then(function (result) {
+          var parts = [];
+          if (result.logs && result.logs.length) {
+            parts.push("console:\n" + result.logs.join("\n"));
+          }
+          if (result.ok) {
+            parts.push("result:\n" + (result.resultText || "(undefined)"));
+          } else {
+            parts.push("ERROR: " + result.error + (result.stack ? "\n" + result.stack : ""));
+          }
+          return parts.join("\n\n");
+        });
+      }
+    };
+  }
+
+  // execute_javascript and run_wasm both need CSP the page doesn't grant
+  // itself (AsyncFunction / WebAssembly.instantiate both need
+  // 'unsafe-eval'/'wasm-unsafe-eval', and this site's CSP has neither) - so
+  // both run in a dedicated Worker instead. gadget_chat_sandbox_worker.js is
+  // a "Web Script" document, and
+  // erp5_web_renderjs_ui's WebPage_viewAsWeb.py only sets the
+  // Content-Security-Policy response header for portal types other than
+  // "Web Script" - so that worker's own HTTP response carries no CSP header
+  // at all. A Worker's CSP comes from its own script's response headers, not
+  // from the page that created it (that only happens for blob:/data: worker
+  // scripts, which have no response of their own to carry a header - and
+  // which this page's script-src 'self' could not even construct, no blob:
+  // source there). So WebAssembly works inside that worker without touching
+  // this site's CSP. Ported from ai-agent-harness's js/sandbox.js.
+  function runSandboxJob(kind, payload, timeout_ms) {
+    var budget = Math.min(Math.max(Number(timeout_ms) || SANDBOX_DEFAULT_TIMEOUT_MS, 100), SANDBOX_MAX_TIMEOUT_MS);
+    return new Promise(function (resolve) {
+      var worker = new Worker(SANDBOX_WORKER_URL),
+        settled = false,
+        timer;
+      function finish(value) {
+        if (settled) { return; }
+        settled = true;
+        clearTimeout(timer);
+        worker.terminate();
+        resolve(value);
+      }
+      timer = setTimeout(function () {
+        finish({ ok: false, error: "execution exceeded " + budget + " ms and was terminated" });
+      }, budget);
+      worker.onmessage = function (event) {
+        var data = event.data;
+        finish(data.ok ? data.result : { ok: false, error: data.error });
+      };
+      worker.onerror = function (event) {
+        finish({ ok: false, error: "worker error: " + (event.message || "unknown") });
+      };
+      worker.postMessage({ id: "run_wasm", kind: kind, payload: payload });
+    });
+  }
+
+  function createRunWasmTool() {
+    return {
+      definition: {
+        name: "run_wasm",
+        description: "Assemble WebAssembly text format (.wat) into a module, instantiate it and call " +
+          "its exports. Use this when you want the result to be a real WASM artifact, or for hot " +
+          "numeric loops. Runs in an isolated sandbox worker with no DOM and no network access, using a " +
+          "spec-complete WAT assembler - the full instruction set is supported, including tables and " +
+          "call_indirect. Both folded (i32.add (local.get 0) (local.get 1)) and flat notation work. " +
+          "Host functions importable from module \"env\": log_i32, log_i64, log_f32, log_f64, " +
+          "log_str(ptr,len), abort(code), now() -> f64, random() -> f64. Export a memory as \"memory\" " +
+          "if you want log_str or a memory dump to work. i64 arguments and results are exchanged as " +
+          "decimal strings with an \"n\" suffix, e.g. \"42n\".",
+        parameters: {
+          type: "object",
+          properties: {
+            wat: { type: "string", description: "WebAssembly text source, starting with (module …)." },
+            wasm_base64: { type: "string", description: "Alternative to `wat`: a pre-assembled module, base64-encoded." },
+            calls: {
+              type: "array",
+              description: "Exported functions to call, in order.",
+              items: {
+                type: "object",
+                properties: {
+                  name: { type: "string" },
+                  args: { type: "array", description: "Numbers, or \"123n\" strings for i64." }
+                },
+                required: ["name"]
+              }
+            },
+            dump_memory: { type: "integer", description: "Show the first N bytes of exported memory." },
+            timeout_ms: { type: "integer", description: "Deadline in ms (default 10000, max 120000)." }
+          }
+        }
+      },
+      execute: function (args) {
+        var spec = {
+          wat: args.wat,
+          wasm_base64: args.wasm_base64,
+          calls: args.calls,
+          dump_memory: args.dump_memory
+        };
+        return runSandboxJob("wasm", spec, args.timeout_ms).then(function (result) {
+          var lines, i, call;
+          if (!result.ok) {
+            return "ERROR: " + result.error;
+          }
+          lines = ["assembled " + result.wasm_bytes + " bytes", "exports: " + (result.exports.join(", ") || "(none)")];
+          for (i = 0; i < (result.calls || []).length; i += 1) {
+            call = result.calls[i];
+            lines.push(call.error ?
+                call.name + "(" + (call.args || []).join(", ") + ") -> ERROR " + call.error :
+                call.name + "(" + (call.args || []).join(", ") + ") -> " + JSON.stringify(call.result));
+          }
+          if (result.logs && result.logs.length) {
+            lines.push("log:\n" + result.logs.join("\n"));
+          }
+          if (result.memory_head_hex) {
+            lines.push("memory (" + result.memory_pages + " pages) hex: " + result.memory_head_hex);
+            lines.push("memory as text: " + result.memory_head_text);
+          }
+          return lines.join("\n");
+        });
       }
     };
   }
@@ -862,6 +892,7 @@
       createWriteTool(hateoas_url),
       createCreateTool(hateoas_url),
       createExecuteJavascriptTool(),
+      createRunWasmTool(),
       {
         definition: {
           name: "clear_canvas",

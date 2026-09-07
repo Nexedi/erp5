@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts86975297.337184</string> </value>
+            <value> <string>ts88784259.9713998</string> </value>
         </item>
         <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
@@ -67,7 +67,7 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>fb3e83dea682eaa76e1047a2655aadbd</string> </value>
+            <value> <string>29afa027be82e76b767d521be525cdeb</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -77,17 +77,15 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_chat_tools.js</string> </value>
+            <value> <string>gadget_chat_sandbox_worker.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_chat_tools_js</string> </value>
+            <value> <string>gadget_chat_sandbox_worker_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -101,7 +99,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>47670</int> </value>
+            <value> <int>7757</int> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -130,6 +128,12 @@
                     <key> <string>document_publication_workflow</string> </key>
                     <value>
                       <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAQ=</bytes> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -166,6 +170,54 @@
                       <value> <string></string> </value>
                   </item>
                   <item>
+                      <key> <string>validation_state</string> </key>
+                      <value> <string>published_alive</string> </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>edit</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>actor</string> </key>
+                      <value> <string>zope</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>comment</string> </key>
+                      <value>
+                        <none/>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>error_message</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>serial</string> </key>
+                      <value> <string>1035.32286.13186.55808</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>state</string> </key>
+                      <value> <string>current</string> </value>
+                  </item>
+                  <item>
                       <key> <string>time</string> </key>
                       <value>
                         <object>
@@ -175,16 +227,12 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1788516389.977799</float>
+                              <float>1788784259.9838</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
                         </object>
                       </value>
-                  </item>
-                  <item>
-                      <key> <string>validation_state</string> </key>
-                      <value> <string>published_alive</string> </value>
                   </item>
                 </dictionary>
               </list>
