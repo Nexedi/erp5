@@ -46,7 +46,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>message_list = None, tool_definition_list = None, compact_message_list=None, initial_message_length = 0,  **kw</string> </value>
+            <value> <string>message_list = None, tool_definition_list = None, compact_message_list=None, initial_message_length = 0, is_subagent = False, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

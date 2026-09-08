@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts88876141.8080025</string> </value>
+            <value> <string>ts88856412.9975643</string> </value>
         </item>
         <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
@@ -67,7 +67,7 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>69420ff8bc4f9138b3fbbae28ddfc9cc</string> </value>
+            <value> <string>fb06d0319affc861dd5cd1409928bc31</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -77,25 +77,19 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_chat_agent_harness.js</string> </value>
+            <value> <string>gadget_chat_library_loader.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_chat_agent_harness_js</string> </value>
+            <value> <string>gadget_chat_library_loader_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
             <value> <string>en</string> </value>
-        </item>
-        <item>
-            <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -105,11 +99,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>15166</int> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>Gadget Chat Agent Harnes JS</string> </value>
+            <value> <int>3564</int> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -180,23 +170,6 @@
                       <value> <string></string> </value>
                   </item>
                   <item>
-                      <key> <string>time</string> </key>
-                      <value>
-                        <object>
-                          <klass>
-                            <global name="DateTime" module="DateTime.DateTime"/>
-                          </klass>
-                          <tuple/>
-                          <state>
-                            <tuple>
-                              <float>1788516383.212644</float>
-                              <string>UTC</string>
-                            </tuple>
-                          </state>
-                        </object>
-                      </value>
-                  </item>
-                  <item>
                       <key> <string>validation_state</string> </key>
                       <value> <string>published_alive</string> </value>
                   </item>
@@ -238,7 +211,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1035.33941.25939.17305</string> </value>
+                      <value> <string>1035.33629.19484.37256</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -254,7 +227,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1788876141.819033</float>
+                              <float>1788856413.002331</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

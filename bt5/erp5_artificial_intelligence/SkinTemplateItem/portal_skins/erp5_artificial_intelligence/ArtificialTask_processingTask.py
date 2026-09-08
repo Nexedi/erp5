@@ -16,6 +16,14 @@ message_list = message_list or []
 if compact_message_list and isinstance(compact_message_list, str):
   compact_message_list = json.loads(compact_message_list)
 
+if is_subagent:
+  response = conn.getResponseWithUsage(
+    messages=message_list, model=model, tools=tool_definition_list)
+  return json.dumps({
+    "content": response["content"],
+    "tool_calls": response.get("tool_calls") or [],
+  })
+
 simulation_state = artificial_task.getSimulationState()
 
 if simulation_state == 'draft':

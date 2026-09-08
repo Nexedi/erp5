@@ -4,11 +4,13 @@
   "use strict";
 
   importScripts('watr.js');
-  var wat2wasm = self.wat2wasm;   // exported by watr_js.js
+  var wat2wasm = self.wat2wasm;
 
-  // =====================================================================
-  // js/util.js - the small pieces exec.js needs (b64 codec, safe describe)
-  // =====================================================================
+  importScripts('gadget_chat_library_loader.js');
+  var LIBRARY_CATALOG = self.ChatLibraryLoader.LIBRARY_CATALOG,
+    loadLibraries = self.ChatLibraryLoader.loadLibraries;
+
+
 
   function b64encode(bytes) {
     var s = '', i;
@@ -58,12 +60,13 @@
   }
 
   /**
-   * Evaluate JavaScript. The code body may use `await` and receives `args`
-   * and `utils` (b64encode/b64decode/describe). The value of the last
-   * `return` — or of the whole source, if it is a single expression — is the
-   * result.
+   * Evaluate JavaScript. The code body may use `await` and receives `args`,
+   * `utils` (b64encode/b64decode/describe) and `lib` (any libraryNames
+   * requested, keyed by catalog name - those are also attached as their
+   * usual UMD global, e.g. `_` for lodash). The value of the last `return`
+   * — or of the whole source, if it is a single expression — is the result.
    */
-  async function execJS(code, args = null) {
+  async function execJS(code, args = null, libraryNames = []) {
     const logs = [];
     const record = (level) => (...parts) => {
       logs.push(`[${level}] ${parts.map((p) => describe(p, 2000)).join(' ')}`);
@@ -74,22 +77,29 @@
       table: record('table'), dir: record('dir'), trace: record('trace'),
     };
 
+    let lib;
+    try {
+      lib = await loadLibraries(libraryNames);
+    } catch (err) {
+      return { ok: false, error: `library load failed: ${err.message}`, resultText: '', logs };
+    }
+
     let fn;
     const trimmed = code.trim();
     const looksLikeExpression = !/\breturn\b/.test(code) && !/[;{}\n]/.test(trimmed);
     try {
       if (!looksLikeExpression) throw new SyntaxError('not an expression');
-      fn = new AsyncFunction('args', 'console', 'utils', `return (${trimmed});`);
+      fn = new AsyncFunction('args', 'console', 'utils', 'lib', `return (${trimmed});`);
     } catch {
       try {
-        fn = new AsyncFunction('args', 'console', 'utils', code);
+        fn = new AsyncFunction('args', 'console', 'utils', 'lib', code);
       } catch (err) {
         return { ok: false, error: `SyntaxError: ${err.message}`, resultText: '', logs };
       }
     }
 
     try {
-      const result = await fn(args, sandboxConsole, { b64encode, b64decode, describe });
+      const result = await fn(args, sandboxConsole, { b64encode, b64decode, describe }, lib);
       return { ok: true, result: jsonable(result), resultText: describe(result), logs };
     } catch (err) {
       return { ok: false, error: `${err.name}: ${err.message}`, resultText: '', logs,
@@ -197,9 +207,23 @@
   self.onmessage = async (event) => {
     const { id, kind, payload } = event.data;
     try {
-      const result = kind === 'js'
-        ? await execJS(payload.code, payload.args ?? null)
-        : await execWasm(payload);
+      let result;
+      if (kind === 'js') {
+        result = await execJS(payload.code, payload.args ?? null, payload.libraries ?? []);
+      } else if (kind === 'wasm') {
+        result = await execWasm(payload);
+      } else if (kind === 'library_list') {
+        result = {
+          ok: true,
+          libraries: Object.keys(LIBRARY_CATALOG).map((name) => ({
+            name,
+            global: LIBRARY_CATALOG[name].global,
+            description: LIBRARY_CATALOG[name].description,
+          })),
+        };
+      } else {
+        result = { ok: false, error: `unknown job kind "${kind}"` };
+      }
       self.postMessage({ id, ok: true, result });
     } catch (err) {
       self.postMessage({ id, ok: false, error: `${err.name}: ${err.message}` });

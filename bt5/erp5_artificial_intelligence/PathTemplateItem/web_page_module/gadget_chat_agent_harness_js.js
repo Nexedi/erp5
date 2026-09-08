@@ -5,7 +5,9 @@
 
   var COMPACT_THRESHOLD = 50,
     KEEP_RECENT = 20,
-    MAX_TOOL_OUTPUT_LINES = 200;
+    MAX_TOOL_OUTPUT_LINES = 200,
+    SUBAGENT_DEFAULT_MAX_LOOP_COUNT = 20,
+    SUBAGENT_MAX_LOOP_COUNT_CAP = 50;
 
   function truncateToolOutput(content) {
     var text = typeof content === "string" ? content : JSON.stringify(content),
@@ -72,20 +74,125 @@
     .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
 
+    .declareMethod('runSubagentTask', function (task, max_turns) {
+      var gadget = this,
+        queue_loop = new RSVP.Queue(),
+        document_id = gadget.options.request_options.document_id,
+        process_url = gadget.options.request_options.process_url,
+        max_loop_count = Math.min(Math.max(Number(max_turns) || SUBAGENT_DEFAULT_MAX_LOOP_COUNT, 1), SUBAGENT_MAX_LOOP_COUNT_CAP),
+        tool_definition_list = gadget.tool_list
+          .filter(function (tool) { return tool.definition.name !== "spawn_subagent"; })
+          .map(function (tool) { return { type: "function", "function": tool.definition }; });
+
+      function subagentLoopCall(loop_count, message_list, pending_tool_call_list) {
+        var has_tool_call = Boolean(pending_tool_call_list && pending_tool_call_list.length);
+
+        if (loop_count >= max_loop_count) {
+          return new RSVP.Queue().push(function () {
+            return "[subagent stopped: exceeded " + max_loop_count + " turns without a final answer]";
+          });
+        }
+
+        if (has_tool_call) {
+          queue_loop
+            .push(function () {
+              return RSVP.all(pending_tool_call_list.map(function (tool_call) {
+                return runClientToolCall(tool_call, gadget.tool_list);
+              }));
+            })
+            .push(function (client_tool_result_list) {
+              var next_message_list = message_list, i, tool_call, client_tool_result;
+              for (i = 0; i < pending_tool_call_list.length; i += 1) {
+                tool_call = pending_tool_call_list[i];
+                client_tool_result = client_tool_result_list[i];
+                next_message_list = next_message_list.concat([{
+                  role: "tool",
+                  tool_call_id: tool_call.id,
+                  name: tool_call.function.name,
+                  content: truncateToolOutput('args:' + (tool_call.function.arguments ? tool_call.function.arguments : '') + '\n' + 'result:' + client_tool_result.content)
+                }]);
+              }
+              return subagentLoopCall(
+                loop_count + 1,
+                next_message_list,
+                null
+              );
+            });
+          return;
+        }
+
+        queue_loop
+          .push(function () {
+            return gadget.jio_putAttachment(
+              document_id,
+              process_url,
+              {
+                message_list: JSON.stringify(message_list),
+                tool_definition_list: JSON.stringify(tool_definition_list),
+                is_subagent: "1"
+              }
+            );
+          })
+          .push(function (evt) {
+            return jIO.util.readBlobAsText(evt.target.response);
+          })
+          .push(function (text_evt) {
+            var result = JSON.parse(text_evt.target.result);
+            if (result.tool_calls && result.tool_calls.length) {
+              return subagentLoopCall(
+                loop_count + 1,
+                message_list.concat([{
+                  role: "assistant",
+                  content: result.content,
+                  tool_calls: result.tool_calls
+                }]),
+                result.tool_calls
+              );
+            }
+            return result.content;
+          });
+      }
+
+      subagentLoopCall(0, [{ role: "user", content: task }])
+      return queue_loop;
+    })
+
     .declareMethod('render', function (options) {
       var gadget = this;
       gadget.options = options;
       gadget.tool_list = window.ChatTools.createToolList(gadget.element, options.hateoas_url);
-      gadget.remote_tool_definition_list = (options.tool_list || []).map(
-        function (tool) {
-          return typeof tool === "string" ? JSON.parse(tool) : tool;
+      gadget.tool_list.push({
+        definition: {
+          name: "spawn_subagent",
+          description: "Delegate a self-contained sub-task to a fresh, independent instance of this " +
+            "same agent - same tools (everything except spawn_subagent itself, to prevent runaway " +
+            "recursion), but its own separate conversation that starts empty (it has NO access to this " +
+            "conversation's history - give it a full, self-contained task description). Runs to " +
+            "completion (its own multi-turn tool-calling loop) before this call returns; only its final " +
+            "answer comes back - none of its intermediate searches/reads/retries appear in this " +
+            "conversation. USE THIS WHEN: a piece of the current task is large or noisy enough to " +
+            "isolate (e.g. \"research X and summarize\", \"go create and populate these 5 documents, " +
+            "report back what was done\"). DO NOT USE THIS for a trivial one-tool-call task - just call " +
+            "that tool directly.",
+          parameters: {
+            type: "object",
+            properties: {
+              task: {
+                type: "string",
+                description: "Full, self-contained description of what the sub-agent should do."
+              },
+              max_turns: {
+                type: "integer",
+                description: "Cap on the sub-agent's own turn count (default 20, max 50)."
+              }
+            },
+            required: ["task"]
+          }
+        },
+        execute: function (args) {
+          return gadget.runSubagentTask(args.task, args.max_turns);
         }
-      );
-      gadget.remote_skill_list = (options.skill_list || []).map(
-        function (skill) {
-          return typeof skill === "string" ? JSON.parse(skill) : skill;
-        }
-      );
+      });
       return gadget.getDeclaredGadget("gadget_chat_ui")
         .push(function (gadget_chat_ui) {
           gadget.gadget_chat_ui = gadget_chat_ui;
@@ -157,35 +264,41 @@
         initial_message_length = 0,
         tool_definition_list = gadget.tool_list.map(function (tool) {
           return { type: "function", "function": tool.definition };
-        }).concat(gadget.remote_tool_definition_list);
+        });
 
       function loop_call(loop_count, message_list, pending_tool_call_list) {
         var has_tool_call = Boolean(
             pending_tool_call_list && pending_tool_call_list.length
-          ),
-          tool_call = has_tool_call ? pending_tool_call_list[0] : null;
+          );
         if (loop_count >= max_loop_count) {
           throw new Error("processTask: too many iterations");
         }
 
-        if (tool_call) {
+        if (has_tool_call) {
           queue_loop
             .push(function () {
-              return runClientToolCall(tool_call, gadget.tool_list);
+              return RSVP.all(pending_tool_call_list.map(function (tool_call) {
+                return runClientToolCall(tool_call, gadget.tool_list);
+              }));
             })
-            .push(function (client_tool_result) {
-              var result_content = 'args:' + (tool_call.function.arguments ? tool_call.function.arguments : '') + '\n' + 'result:' + client_tool_result.content,
-                next_message_list = message_list.concat([{
+            .push(function (client_tool_result_list) {
+              var next_message_list = message_list, i, tool_call, client_tool_result, result_content;
+              for (i = 0; i < pending_tool_call_list.length; i += 1) {
+                tool_call = pending_tool_call_list[i];
+                client_tool_result = client_tool_result_list[i];
+                result_content = 'args:' + (tool_call.function.arguments ? tool_call.function.arguments : '') + '\n' + 'result:' + client_tool_result.content;
+                next_message_list = next_message_list.concat([{
                   role: "tool",
                   tool_call_id: tool_call.id,
                   name: tool_call.function.name,
                   content: truncateToolOutput(result_content)
                 }]);
-              tool_message_list.push({
-                name: tool_call.function.name,
-                content: result_content,
-                'role': 'tole'
-              });
+                tool_message_list.push({
+                  name: tool_call.function.name,
+                  content: result_content,
+                  'role': 'tole'
+                });
+              }
               return RSVP.all([
                 next_message_list,
                 gadget.gadget_chat_ui.showMessage({tool_message_list: tool_message_list })
@@ -195,7 +308,7 @@
               return loop_call(
                 loop_count + 1,
                 resulit_list[0],
-                pending_tool_call_list.slice(1)
+                null
               );
             });
           return;
@@ -264,9 +377,7 @@
           // XXXXXX seems bad to do locally
           var message_list = result_list[1],
             last_comment = message_list[message_list.length - 1].content,
-            skill_list = window.ChatSkills.matchSkillList(last_comment).concat(
-              window.ChatSkills.matchSkillListFrom(last_comment, gadget.remote_skill_list)
-            ),
+            skill_list = window.ChatSkills.matchSkillList(last_comment),
             skill_message_list = (skill_list || []).map(function (skill) {
               return { role: "system", content: skill.instructions };
             });
