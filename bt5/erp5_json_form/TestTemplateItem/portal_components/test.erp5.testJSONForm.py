@@ -109,6 +109,22 @@ return {
       allow_unschematized_output=False,
     )
 
+  def test_call_json_with_defaults(self):
+    input_schema = """{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "my-schema.json",
+  "properties": {
+    "title": {
+      "type": "string",
+      "default": "foo"
+    }
+  }
+}"""
+    result = self._callJSONForm(
+      {}, self.response_script_id, input_schema=input_schema, fill_default_json_data=True
+    )
+    self.assertEqual(result['content'], {"title": "foo"})
+
   def test_call_invalid_json_list_errors(self):
     """
     """
@@ -241,6 +257,7 @@ return {
     input_schema=None,
     output_schema=None,
     list_error=False,
+    fill_default_json_data=False,
   ):
     self._fixJSONForm(
       input_schema,
@@ -248,7 +265,8 @@ return {
       after_method_id=after_method_id,
     )
     self.tic()
-    return self._getDefaultJSONForm()(data, list_error=list_error)
+    json_form = self._getDefaultJSONForm()
+    return json_form(data, list_error=list_error, fill_default_json_data=fill_default_json_data)
 
   def _fixJSONForm(
     self,
