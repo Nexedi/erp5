@@ -28,7 +28,7 @@
 import json
 import jsonschema
 from jsonschema.exceptions import ValidationError
-from erp5.component.module.JsonUtils import loadJson
+from erp5.component.module.JsonUtils import loadJson, fillDefaultJsonData
 from erp5.component.document.JSONType import JSONType
 
 from AccessControl import ClassSecurityInfo
@@ -74,6 +74,7 @@ class JSONForm(JSONType):
       raise ValueError('%s has an output schema but response is empty' % self.getRelativeUrl())
 
     input_schema = self.getInputSchema()
+    json_data = fillDefaultJsonData(input_schema, json_data)
     self.checkJSON(json_data, list_error, input_schema, InputSchemaValidationError)
     method_id = self.getAfterMethodId()
     output_schema = self.getOutputSchema()
