@@ -39,7 +39,9 @@
         <item>
             <key> <string>text_content_warning_message</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>W:266,  4: Unused variable \'json_form\' (unused-variable)</string>
+              </tuple>
             </value>
         </item>
         <item>
