@@ -52,6 +52,7 @@ return context.WebPage_viewAsBook(
   include_linked_content=include_linked_content,
   include_report_content=include_report_content,
   margin15mm = margin15mm,
+  reverse_short_title_title = reverse_short_title_title,
   format=format,
   **kw
 )

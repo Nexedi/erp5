@@ -99,5 +99,6 @@ if context.REQUEST["portal_skin"] == "Book":
     display_svg=display_svg,
     transformation=transformation,
     batch_mode=batch_mode,
+    reverse_short_title_title = reverse_short_title_title,
     **kw
   )

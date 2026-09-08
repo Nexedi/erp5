@@ -53,6 +53,7 @@ book_include_history_table = int(kw.get('include_history_table') or 0)
 book_include_reference_table = int(kw.get('include_reference_table') or 0)
 book_include_linked_content = int(kw.get('include_linked_content') or 0)
 book_include_report_content = int(kw.get('include_report_content') or 0)
+reverse_short_title_title = int(kw.get('reverse_short_title_title') or 0)
 margin_15mm = int(kw.get('margin15mm') or 0)
 
 override_source_person_title = kw.get('override_source_person_title')
@@ -79,10 +80,14 @@ book_language = book.getLanguage()
 
 # XXX sigh for passing "" around
 book_reference = override_document_reference if override_document_reference else book.getReference()
-book_short_title = override_document_short_title if override_document_short_title else book.getShortTitle()
 book_version = override_document_version if override_document_version else book.getVersion() or "001"
 book_description = override_document_description if override_document_description else book.getDescription()
-book_title = override_document_title if override_document_title else book.getTitle()
+if reverse_short_title_title:
+  book_title = override_document_short_title if override_document_short_title else book.getShortTitle()
+  book_short_title = override_document_title if override_document_title else book.getTitle()
+else:
+  book_short_title = override_document_short_title if override_document_short_title else book.getShortTitle()
+  book_title = override_document_title if override_document_title else book.getTitle()
 
 if six.PY2 and isinstance(book_content, six.text_type):
   book_content = unicode2str(book_content)
@@ -99,7 +104,7 @@ if override_batch_mode:
 
 book_short_date = book_modification_date.strftime('%Y-%m-%d')
 if book_language and 'AcceptLanguage' in book.REQUEST:
-  book.REQUEST['AcceptLanguage'].set(book_language, 10)
+  book.REQUEST['AcceptLanguage'].set(book_language, 150)
 else:
   book_language = blank
 
@@ -149,11 +154,22 @@ if book_include_report_content:
   book_report_js_list = pref.getPreferredCorporateIdentityTemplateReportJsList() or []
   book_content = book.WebPage_embedReportDocumentList(doc_content=book_content, doc_language=book_language, doc_format=book_format)
 
+# Should be done BEFORE generating table of links because legend of image needs to get wrapped along with the image
+for image in re.findall('(<img.*?/>)', book_content):
+  book_content = book_content.replace(
+    image,
+    book.WebPage_validateImage(
+      img_string=image,
+      img_svg_format=book_display_svg,
+      img_wrap=True
+    )
+  )
+
 # table of links
 if book_include_reference_table:
   book_link_list = book.WebPage_createLinkOverview(book_content)
   table_link_list = book.WebPage_createTableOverview(book_content)
-  image_link_list = book.WebPage_createImageOverview(book_content)
+  image_link_list = book.WebPage_createImageOverview(book_content, img_wrap=True)
   for referenced_document in book_link_list.get("reference_list", []):
     book_reference_list.append(referenced_document.get("item"))
     book_content = book_content.replace(referenced_document.get("input"), referenced_document.get("output"))
@@ -219,15 +235,6 @@ if book_include_content_table:
       doc_toc_title=book_translated_toc_title
     )
 
-for image in re.findall('(<img.*?/>)', book_content):
-  book_content = book_content.replace(
-    image,
-    book.WebPage_validateImage(
-      img_string=image,
-      img_svg_format=book_display_svg,
-      img_wrap=True
-    )
-  )
 # ============================ Transformation ==================================
 
 # ========================== Format: mhtml/html ================================
@@ -326,6 +333,7 @@ elif book_format == "pdf":
     book_report_js_list=book_report_js_list,
     book_content=book_content,
   )
+
 
   book_head = book.WebPage_createBookHeader(
     book_theme=book_theme.get("theme"),
