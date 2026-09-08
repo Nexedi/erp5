@@ -27,7 +27,7 @@
 ##############################################################################
 import json
 import jsonschema
-from erp5.component.module.JsonUtils import loadJson
+from erp5.component.module.JsonUtils import loadJson, fillDefaultJsonData
 from erp5.component.document.JSONType import JSONType
 
 from AccessControl import ClassSecurityInfo
@@ -60,7 +60,9 @@ class JSONForm(JSONType):
                     )
 
   def __call__(self, json_data, list_error=False, serialize=True): #pylint:disable=arguments-differ
-    self.checkJSON(json_data, list_error, self.getInputSchema())
+    input_schema = self.getInputSchema()
+    json_data = fillDefaultJsonData(input_schema, json_data)
+    self.checkJSON(json_data, list_error, input_schema)
     method_id = self.getAfterMethodId()
     if not method_id:
       return "Nothing to do"
