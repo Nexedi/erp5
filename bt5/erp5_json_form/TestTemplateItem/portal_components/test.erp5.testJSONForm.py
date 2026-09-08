@@ -108,6 +108,22 @@ return {
       output_schema="",
     )
 
+  def test_call_json_with_defaults(self):
+    input_schema = """{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "my-schema.json",
+  "properties": {
+    "title": {
+      "type": "string",
+      "default": "foo"
+    }
+  }
+}"""
+    result = self._callJSONForm(
+      {}, self.response_script_id, input_schema=input_schema
+    )
+    self.assertEqual(result['content'], {"title": "foo"})
+
   def test_call_invalid_json_list_errors(self):
     """
     """
