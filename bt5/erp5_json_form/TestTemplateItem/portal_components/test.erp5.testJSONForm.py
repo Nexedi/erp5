@@ -26,6 +26,9 @@
 ##############################################################################
 
 import json
+
+from jsonschema.exceptions import ValidationError
+
 from erp5.component.module.JsonUtils import loadJson
 from DateTime import DateTime
 
@@ -46,6 +49,25 @@ class Test(ERP5TypeTestCase):
         "type": "string"
       }
     }
+}"""
+
+  default_output_schema = """{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "my-schema.json",
+  "type": "object",
+  "properties": {
+    "datetime": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "content": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "datetime",
+    "content"
+  ]
 }"""
 
   def afterSetUp(self):
@@ -106,6 +128,9 @@ return {
       "",  # Empty script Id
     )
     self.assertEqual('Nothing to do', result)
+
+  def test_call_valid_json_without_output_schema(self):
+    self._assertValidJSONCall(self.json_response_script_id, output_schema="")
 
   def test_call_invalid_json_list_errors(self):
     """
@@ -171,7 +196,7 @@ return {
     json_data = {
 	"timestamp": "2018-11-13T20:20:67"
 }
-    self._fixJSONForm(schema, self.json_response_script_id)
+    self._fixJSONForm(schema, after_method_id=self.json_response_script_id)
     self.tic()
     json_form = self._getDefaultJSONForm()
     self.assertRaises(ValueError, json_form, json_data, list_error=True)
@@ -182,13 +207,50 @@ return {
       error_list = [["Validation Error", "'2018-11-13T20:20:67' is not a 'date-time'"]]
       self.assertEqual({"my-schema.json": error_list}, loadJson(str(e)))
 
+  def test_call_invalid_output_schema(self):
+    output_schema = """{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "my-schema.json",
+  "type": "object",
+  "properties": {
+    "datetime": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "datetime"
+  ],
+  "additionalProperties": false
+}"""
+
+    def _(list_error=False):
+      self._callJSONForm(
+        {"title": "foo"},
+        output_schema=output_schema,
+        list_error=list_error,
+        after_method_id=self.json_response_script_id,
+      )
+
+    self.assertRaises(ValidationError, _)
+    try:
+      _(True)
+      raise ValueError("No error raised during processing")
+    except ValueError as e:
+      error_list = [[
+        "Validation Error",
+        "Additional properties are not allowed ('content' was unexpected)"
+      ]]
+      self.assertEqual({"my-schema.json": error_list}, loadJson(str(e)))
+
   def _assertValidJSONCall(
     self,
     after_method_id,
     serialize=True,
     after_method_returns_json=True,
     data=None,
-    input_schema=None
+    input_schema=None,
+    output_schema=None,
   ):
     data = {"title": "foo"} if data is None else data
     result = self._callJSONForm(
@@ -196,7 +258,8 @@ return {
       after_method_id,
       serialize=serialize,
       after_method_returns_json=after_method_returns_json,
-      input_schema=input_schema
+      input_schema=input_schema,
+      output_schema=output_schema,
     )
     content = loadJson(result)['content'] if serialize else result['content']
     self.assertEqual(content, loadJson(json.dumps(data)))
@@ -207,25 +270,32 @@ return {
     after_method_id=None,
     serialize=True,
     after_method_returns_json=True,
-    input_schema=None
+    input_schema=None,
+    output_schema=None,
+    list_error=False,
   ):
     self._fixJSONForm(
       input_schema,
+      output_schema,
       after_method_id=after_method_id,
       after_method_returns_json=after_method_returns_json,
     )
     self.tic()
-    return self._getDefaultJSONForm()(data, serialize=serialize)
+    json_form = self._getDefaultJSONForm()
+    return json_form(data, serialize=serialize, list_error=list_error)
 
   def _fixJSONForm(
     self,
     input_schema="",
+    output_schema=None,
     after_method_id="",
     after_method_returns_json=True,
     reference=None,
   ):
     if input_schema is None:
       input_schema = self.default_input_schema
+    if output_schema is None:
+      output_schema = self.default_output_schema
     if reference is None:
       reference = self.default_json_form_reference
     callables = self.portal.portal_callables
@@ -239,6 +309,7 @@ return {
       )
     json_form.edit(
       text_content=input_schema,
+      response_schema=output_schema,
       after_method_id=after_method_id,
       after_method_returns_json=after_method_returns_json,
     )
