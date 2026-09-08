@@ -50,7 +50,7 @@ if dialog_id is not None:
   request.form['field_your_override_document_title'] = context.Base_getBookParameter(title=True)
   request.form['field_your_override_document_version'] = context.Base_getBookParameter(version=True)
   request.form['field_your_override_logo_reference'] = context.Base_getBookParameter(logo=True)
-  request.form['field_your_override_source_person_title'] = context.Base_getBookParameter(source_person=True)
+  #request.form['field_your_override_source_person_title'] = context.Base_getBookParameter(source_person=True)
   request.form['field_your_override_document_reference'] = context.Base_getBookParameter(reference=True)
   request.form['field_your_override_source_organisation_title'] = context.Base_getBookParameter(source_organisation=True)
   request.form['transformation'] = transformation
@@ -60,4 +60,5 @@ if dialog_id is not None:
   request.form['include_linked_content'] = include_linked_content
   request.form['include_report_content'] = include_report_content
   request.form['margin15mm'] = margin15mm
+  request.form['reverse_short_title_title'] = reverse_short_title_title
   return context.Base_renderForm(dialog_id)
