@@ -60,11 +60,11 @@
           content: typeof result === "string" ? result : JSON.stringify(result)
         };
       }, function (e) {
-      result = "Error running tool \"" + tool_call.function.name + "\": " + e.message;
+      result = "Error running tool \"" + tool_call.function.name + "\": " + JSON.stringify(e, Object.getOwnPropertyNames(e));
       return {
         tool_call_id: tool_call.id,
         name: tool_call.function.name,
-        content: typeof result === "string" ? result : JSON.stringify(result)
+        content: result
       };
     });
   }
