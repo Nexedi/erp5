@@ -1,0 +1,6 @@
+<workflow_chain>
+ <chain>
+  <type>Electronic Invoice</type>
+  <workflow>edit_workflow, electronic_invoice_workflow</workflow>
+ </chain>
+</workflow_chain>
