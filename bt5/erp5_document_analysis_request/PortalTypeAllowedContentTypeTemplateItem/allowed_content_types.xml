@@ -1,0 +1,11 @@
+<allowed_content_type_list>
+ <portal_type id="Document Analysis Module">
+  <item>Document Analysis</item>
+ </portal_type>
+ <portal_type id="Document Analysis Request Module">
+  <item>Document Analysis Request</item>
+ </portal_type>
+ <portal_type id="Document conversion Module">
+  <item>Document Conversion</item>
+ </portal_type>
+</allowed_content_type_list>
