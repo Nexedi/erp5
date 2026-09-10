@@ -448,7 +448,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, TextConvertableMixin, F
       # Backward compatibility for OnlyOffice formats, such as XLSY
       # Guessing metadata is not supported by Cloudooo, but converting to
       # base format is. We therefore guess after conversion.
-      if self.getTargetFormatItemList() is not None:
+      if self.getTargetFormatItemList() is not None and not use_data_property:
         self.updateLocalMetadataFromDocument(data=self.getBaseData())
       else:
         raise ConversionError("OOoDocument: error getting document metadata (Code %s: %s)"
