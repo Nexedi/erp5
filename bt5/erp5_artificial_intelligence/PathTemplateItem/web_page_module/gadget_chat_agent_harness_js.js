@@ -54,10 +54,14 @@
         return tool.execute(args);
       })
       .push(function (result) {
+
+        var message_list = result && typeof result === "object" ? result.message_list : undefined,
+          content = message_list ? result.content : result;
         return {
           tool_call_id: tool_call.id,
           name: tool_call.function.name,
-          content: typeof result === "string" ? result : JSON.stringify(result)
+          content: typeof content === "string" ? content : JSON.stringify(content),
+          message_list: message_list
         };
       }, function (e) {
       result = "Error running tool \"" + tool_call.function.name + "\": " + JSON.stringify(e, Object.getOwnPropertyNames(e));
@@ -87,9 +91,19 @@
       function subagentLoopCall(loop_count, message_list, pending_tool_call_list) {
         var has_tool_call = Boolean(pending_tool_call_list && pending_tool_call_list.length);
 
+        function subagentError(e) {
+          return {
+            content: "Error running sub-agent: " + JSON.stringify(e, Object.getOwnPropertyNames(e)),
+            message_list: message_list
+          };
+        }
+
         if (loop_count >= max_loop_count) {
           return new RSVP.Queue().push(function () {
-            return "[subagent stopped: exceeded " + max_loop_count + " turns without a final answer]";
+            return {
+              content: "[subagent stopped: exceeded " + max_loop_count + " turns without a final answer]",
+              message_list: message_list
+            };
           });
         }
 
@@ -117,7 +131,8 @@
                 next_message_list,
                 null
               );
-            });
+            })
+            .push(undefined, subagentError);
           return;
         }
 
@@ -149,17 +164,29 @@
                 result.tool_calls
               );
             }
-            return result.content;
-          });
+            return {
+              content: result.content,
+              message_list: message_list.concat([{ role: "assistant", content: result.content }])
+            };
+          })
+          .push(undefined, subagentError);
       }
 
-      subagentLoopCall(0, [{ role: "user", content: task }])
+      subagentLoopCall(0, [{ role: "user", content: task }]);
       return queue_loop;
     })
 
     .declareMethod('render', function (options) {
-      var gadget = this;
+      var gadget = this,
+        request_options_builder = options.request_options,
+        document_id = request_options_builder.document_id;
       gadget.options = options;
+      gadget.options.request_options = {
+        document_id: document_id,
+        post_url: request_options_builder.post_url(document_id),
+        get_url: request_options_builder.get_url(document_id),
+        process_url: request_options_builder.process_url(document_id)
+      };
       gadget.tool_list = window.ChatTools.createToolList(gadget.element, options.hateoas_url);
       gadget.tool_list.push({
         definition: {
@@ -291,7 +318,8 @@
                   role: "tool",
                   tool_call_id: tool_call.id,
                   name: tool_call.function.name,
-                  content: truncateToolOutput(result_content)
+                  content: truncateToolOutput(result_content),
+                  sub_message_list: client_tool_result.message_list
                 }]);
                 tool_message_list.push({
                   name: tool_call.function.name,

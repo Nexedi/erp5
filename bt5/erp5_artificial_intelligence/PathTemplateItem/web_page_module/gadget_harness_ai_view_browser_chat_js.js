@@ -48,9 +48,17 @@
             'hateoas_url': gadget.hateoas_url,
             'request_options': {
               'document_id': gadget.options.jio_key,
-              'post_url': gadget.hateoas_url + gadget.options.jio_key + "/ArtificialTask_createCommentLine",
-              'get_url': gadget.hateoas_url + gadget.options.jio_key + "/ArtificialTask_getCommentPostListAsJson",
-              'process_url': gadget.hateoas_url + gadget.options.jio_key + "/ArtificialTask_processingTask"
+              // Builders, not resolved URLs: gadget_chat_agent_harness_js calls each
+              // one with the document_id to get the actual URL to use.
+              'post_url': function (document_id) {
+                return gadget.hateoas_url + document_id + "/ArtificialTask_createCommentLine";
+              },
+              'get_url': function (document_id) {
+                return gadget.hateoas_url + document_id + "/ArtificialTask_getCommentPostListAsJson";
+              },
+              'process_url': function (document_id) {
+                return gadget.hateoas_url + document_id + "/ArtificialTask_processingTask";
+              }
             },
             'editor_options' : {
               editor: 'gadget_editor.html',

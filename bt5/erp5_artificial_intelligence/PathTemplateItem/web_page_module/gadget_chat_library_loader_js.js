@@ -59,41 +59,94 @@
     });
   }
 
-  /** Fetch (or reuse a cached copy of) a catalog entry's source text. */
-  async function fetchLibrarySource(name) {
-    const entry = LIBRARY_CATALOG[name];
-    if (!entry) {
-      throw new Error(`unknown library "${name}" - use job kind "library_list" to see the catalog`);
+  /**
+   * Resolve a catalog name or a bare https:// URL into a fetchable entry.
+   * Catalog entries know their UMD global ahead of time; external URLs don't,
+   * so `global` is left null and loadLibraries() auto-detects it after eval.
+   * `.mjs` URLs are treated as ES modules (dynamic `import()`), everything
+   * else as a classic/UMD script (indirect `eval`).
+   */
+  function resolveEntry(nameOrUrl) {
+    var catalogEntry = LIBRARY_CATALOG[nameOrUrl], file, extension, host;
+    if (catalogEntry) {
+      return { url: catalogEntry.url, global: catalogEntry.global, description: catalogEntry.description, kind: 'classic' };
     }
+    if (!/^https:\/\//.test(nameOrUrl)) {
+      throw new Error('unknown library "' + nameOrUrl + '" - use a name from library_list, or an https:// URL');
+    }
+    file = (nameOrUrl.split('/').pop() || 'library').split('?')[0];
+    extension = (file.split('.').pop() || '').toLowerCase();
+    try {
+      host = new URL(nameOrUrl).host;
+    } catch (ignore) {
+      host = nameOrUrl;
+    }
+    return {
+      url: nameOrUrl,
+      global: null,
+      description: 'external library from ' + host,
+      kind: extension === 'mjs' ? 'esm' : 'classic'
+    };
+  }
+
+  /** Fetch (or reuse a cached copy of) an entry's source text, keyed by URL. */
+  async function fetchLibrarySource(entry) {
     const db = await openLibraryDb();
-    const cached = await libraryDbGet(db, name);
-    if (cached && cached.url === entry.url) return cached.source;
+    const cached = await libraryDbGet(db, entry.url);
+    if (cached) return cached.source;
     const res = await fetch(entry.url);
-    if (!res.ok) throw new Error(`fetching "${name}" failed: HTTP ${res.status}`);
+    if (!res.ok) throw new Error(`fetching "${entry.url}" failed: HTTP ${res.status}`);
     const source = await res.text();
-    await libraryDbPut(db, name, { url: entry.url, source, fetched_at: Date.now() });
+    await libraryDbPut(db, entry.url, { url: entry.url, source, fetched_at: Date.now() });
     return source;
   }
 
   /**
-   * Load and evaluate catalog libraries by name, attaching each one's UMD
-   * global onto this worker's global scope (`self`), and return a
-   * {name: value} map for code that prefers `lib.lodash` over the bare
-   * global `_`.
+   * Load libraries by catalog name or https:// URL, attaching each one onto
+   * this worker's global scope (`self`) - classic/UMD bundles via indirect
+   * `eval` (auto-detecting the global they attached when it isn't already
+   * known), ES modules (`.mjs`) via a blob-URL dynamic `import()` - and
+   * return a {name: value} map for code that prefers `lib.lodash` over the
+   * bare global `_`.
    */
   async function loadLibraries(names) {
     const lib = {};
     for (const name of names || []) {
-      const entry = LIBRARY_CATALOG[name];
-      if (!entry) throw new Error(`unknown library "${name}" - use job kind "library_list" to see the catalog`);
-      const source = await fetchLibrarySource(name);
-      if (self[entry.global] === undefined) {
-        (0, eval)(source); // indirect eval: runs as global-scope code, attaches onto self
+      const entry = resolveEntry(name);
+      const source = await fetchLibrarySource(entry);
+
+      if (entry.kind === 'esm') {
+        const blobUrl = URL.createObjectURL(new Blob([source], { type: 'text/javascript' }));
+        try {
+          const mod = await import(/* webpackIgnore: true */ blobUrl);
+          lib[name] = mod.default && Object.keys(mod).length === 1 ? mod.default : mod;
+        } finally {
+          URL.revokeObjectURL(blobUrl);
+        }
+        continue;
       }
-      lib[name] = self[entry.global];
+
+      if (entry.global) {
+        if (self[entry.global] === undefined) {
+          (0, eval)(source); // indirect eval: runs as global-scope code, attaches onto self
+        }
+        lib[name] = self[entry.global];
+        continue;
+      }
+
+      // Unknown global (external URL): eval and see what appeared, rather
+      // than trusting a hard-coded export name.
+      const before = Object.keys(self);
+      (0, eval)(source);
+      const appeared = Object.keys(self).filter((key) => before.indexOf(key) === -1 && self[key] !== undefined);
+      if (!appeared.length) {
+        throw new Error(`"${name}" attached no detectable global after loading - it may not be a UMD/IIFE `
+          + 'bundle (an ES module needs an .mjs URL to be loaded correctly)');
+      }
+      lib[name] = self[appeared[appeared.length - 1]];
     }
     return lib;
   }
 
-  self.ChatLibraryLoader = { LIBRARY_CATALOG: LIBRARY_CATALOG, loadLibraries: loadLibraries };
+  self.ChatLibraryLoader = { LIBRARY_CATALOG: LIBRARY_CATALOG, resolveEntry: resolveEntry, loadLibraries: loadLibraries };
 }(self));

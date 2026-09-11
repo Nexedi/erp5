@@ -1,4 +1,4 @@
-/*global window, document, fetch, URLSearchParams, Worker, Promise, RSVP, setTimeout, clearTimeout */
+/*global window, document, fetch, URLSearchParams, Worker, Promise, RSVP, AbortController, setTimeout, clearTimeout */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 (function (window, document) {
   "use strict";
@@ -279,12 +279,33 @@
     return handleApiError(err, null, null);
   }
 
-  function catchApiError(promise) {
-    return promise.then(null, function (err) { return errorMessage(err); });
+  // Appends an error-handling step to an existing RSVP.Queue (returned by
+  // runAbortableApiCall) rather than using .then() - .then() would return a
+  // brand new promise that does not propagate .cancel() back to the queue
+  // it was called on, silently breaking the abort-on-navigation wiring below.
+  function catchApiError(queue) {
+    return queue.push(undefined, function (err) { return errorMessage(err); });
   }
 
-  function getJSON(url) {
-    return fetch(url, { credentials: "same-origin", method: "GET" }).then(function (response) {
+  // Wraps a fetch-based operation so it is individually cancellable: fn is
+  // called with an AbortSignal to thread into every fetch() it makes, and
+  // the returned RSVP.Queue's .cancel() aborts that signal directly (mirrors
+  // runSandboxJob's Worker cancellation below, using AbortController instead
+  // of Worker.terminate()). Returning an RSVP.Queue (not a .then()-chained
+  // promise) matters: RSVP.Queue's own .cancel() propagates all the way down
+  // to this canceller when the harness's queue_loop is cancelled on gadget
+  // removal (navigation) - a plain .then() promise would not.
+  function runAbortableApiCall(fn) {
+    var controller = new AbortController();
+    return new RSVP.Queue(new RSVP.Promise(function (resolve, reject) {
+      fn(controller.signal).then(resolve, reject);
+    }, function canceller() {
+      controller.abort();
+    }));
+  }
+
+  function getJSON(url, signal) {
+    return fetch(url, { credentials: "same-origin", method: "GET", signal: signal }).then(function (response) {
       return response.text().then(function (text) {
         var err;
         if (!response.ok) {
@@ -330,7 +351,7 @@
   // if the value is unchanged. See ERP5Document_getHateoas.py's
   // RelationStringField branch for where catalog_index/portal_types/
   // relation_field_id/relation_item_uid come from.
-  function resolveRelationUid(hateoas_url, field_def, new_value) {
+  function resolveRelationUid(hateoas_url, field_def, new_value, signal) {
     var current_default = field_def["default"],
       current_value = Array.isArray(current_default) ? current_default[0] : current_default,
       current_uid_list = field_def.relation_item_uid || [],
@@ -355,7 +376,7 @@
       select_list: ["uid", catalog_index],
       limit: [0, 10]
     });
-    return getJSON(search_url).then(function (data) {
+    return getJSON(search_url, signal).then(function (data) {
       var contents = (data._embedded && data._embedded.contents) || [],
         exact_match = contents.filter(function (item) { return item[catalog_index] === new_value; })[0],
         item = exact_match || contents[0];
@@ -367,12 +388,12 @@
   // first, then submits the WHOLE form with field_values overlaid on top.
   // ERP5's Base_edit requires every field submitted together, not just the
   // changed ones, or the edit is silently ignored/partial.
-  function writeFields(hateoas_url, relative_url, view_name, field_values) {
+  function writeFields(hateoas_url, relative_url, view_name, field_values, signal) {
     return getJSON(withQuery(scriptUrl(hateoas_url), {
       mode: "traverse",
       relative_url: relative_url,
       view: view_name || "view"
-    })).then(function (data) {
+    }), signal).then(function (data) {
       var view = (data._embedded && data._embedded._view) || {},
         match_by_key = {},
         remaining_field_values = {},
@@ -417,7 +438,7 @@
       for (key in match_by_key) {
         if (match_by_key.hasOwnProperty(key) && RELATION_FIELD_TYPE[match_by_key[key].field_def.type]) {
           relation_uid_promise_list.push(
-            resolveRelationUid(hateoas_url, match_by_key[key].field_def, match_by_key[key].value)
+            resolveRelationUid(hateoas_url, match_by_key[key].field_def, match_by_key[key].value, signal)
               .then(function (matched_key, uid) {
                 if (uid) {
                   match_by_key[matched_key].uid = uid;
@@ -460,7 +481,7 @@
         if (view.form_id && typeof view.form_id === "object") {
           appendParam(form_data, "form_id", view.form_id["default"] || "");
         }
-        return fetch(edit_url, { credentials: "same-origin", method: "POST", body: form_data })
+        return fetch(edit_url, { credentials: "same-origin", method: "POST", body: form_data, signal: signal })
           .then(function (response) {
             return response.text().then(function (text) {
               var data2 = null, err;
@@ -539,7 +560,9 @@
         if (args.select_list) { query_dict.select_list = args.select_list; }
         if (args.sort_on) { query_dict.sort_on = args.sort_on; }
         return catchApiError(
-          getJSON(withQuery(script_url, query_dict)).then(function (data) {
+          runAbortableApiCall(function (signal) {
+            return getJSON(withQuery(script_url, query_dict), signal);
+          }).push(function (data) {
             var embedded = data._embedded || {},
               contents = embedded.contents || [];
             return {
@@ -574,27 +597,28 @@
       execute: function (args) {
         var view_name = args.view || "view";
         return catchApiError(
-          getJSON(withQuery(script_url, { mode: "traverse", relative_url: args.relative_url, view: view_name }))
-            .then(function (data) {
-              var links = data._links || {},
-                view = (data._embedded && data._embedded._view) || {},
-                resolved_url = (links.traversed_document && links.traversed_document.name) || args.relative_url;
-              return {
-                title: data.title || "",
-                portal_type: (links.type && links.type.name) || "",
-                relative_url: resolved_url,
-                url: browserUrl(hateoas_url, resolved_url),
-                parent: (links.parent && links.parent.name) || "",
-                fields: filterEmptyFields(simplifyDocument(view, false)),
-                workflows: normalizeLinkList(links.action_workflow),
-                actions: normalizeLinkList(links.action_object_jio_action),
-                views: normalizeLinkList(links.action_object_view),
-                exchanges: normalizeLinkList(links.action_object_jio_exchange),
-                prints: normalizeLinkList(links.action_object_jio_print),
-                all_listboxes: extractAllListboxesMeta(view),
-                has_create_action: Boolean(links.action_object_new_content_action)
-              };
-            })
+          runAbortableApiCall(function (signal) {
+            return getJSON(withQuery(script_url, { mode: "traverse", relative_url: args.relative_url, view: view_name }), signal);
+          }).push(function (data) {
+            var links = data._links || {},
+              view = (data._embedded && data._embedded._view) || {},
+              resolved_url = (links.traversed_document && links.traversed_document.name) || args.relative_url;
+            return {
+              title: data.title || "",
+              portal_type: (links.type && links.type.name) || "",
+              relative_url: resolved_url,
+              url: browserUrl(hateoas_url, resolved_url),
+              parent: (links.parent && links.parent.name) || "",
+              fields: filterEmptyFields(simplifyDocument(view, false)),
+              workflows: normalizeLinkList(links.action_workflow),
+              actions: normalizeLinkList(links.action_object_jio_action),
+              views: normalizeLinkList(links.action_object_view),
+              exchanges: normalizeLinkList(links.action_object_jio_exchange),
+              prints: normalizeLinkList(links.action_object_jio_print),
+              all_listboxes: extractAllListboxesMeta(view),
+              has_create_action: Boolean(links.action_object_new_content_action)
+            };
+          })
         );
       }
     };
@@ -636,16 +660,17 @@
       },
       execute: function (args) {
         return catchApiError(
-          writeFields(hateoas_url, args.relative_url, args.view, args.field_values || {})
-            .then(function (result) {
-              return {
-                status: "success",
-                relative_url: result.relative_url,
-                url: browserUrl(hateoas_url, result.relative_url),
-                fields_updated: result.fields_set,
-                unresolved_relations: result.unresolved_relations
-              };
-            })
+          runAbortableApiCall(function (signal) {
+            return writeFields(hateoas_url, args.relative_url, args.view, args.field_values || {}, signal);
+          }).push(function (result) {
+            return {
+              status: "success",
+              relative_url: result.relative_url,
+              url: browserUrl(hateoas_url, result.relative_url),
+              fields_updated: result.fields_set,
+              unresolved_relations: result.unresolved_relations
+            };
+          })
         );
       }
     };
@@ -687,31 +712,32 @@
         form_data.append("portal_type", args.portal_type);
         form_data.append("parent_relative_url", args.relative_url);
         return catchApiError(
-          fetch(create_url, { credentials: "same-origin", method: "POST", body: form_data })
-            .then(function (response) {
-              var location = response.headers.get("X-Location") || "",
-                new_relative_url = location.indexOf("urn:jio:get:") !== -1 ?
-                    location.split("urn:jio:get:").pop() : null,
-                err;
-              if (response.status !== 201 || !new_relative_url) {
-                return response.text().then(function (text) {
-                  err = new Error("HTTP " + response.status);
-                  err.httpError = true;
-                  err.response = response;
-                  err.text = text;
-                  throw err;
-                });
-              }
-              return {
-                status: "success",
-                portal_type: args.portal_type,
-                parent: args.relative_url,
-                relative_url: new_relative_url,
-                url: browserUrl(hateoas_url, new_relative_url),
-                next_step: "Call erp5_read(relative_url=\"" + new_relative_url + "\") to get its field " +
-                  "ids, then erp5_write to set them - this document has no fields set yet."
-              };
-            })
+          runAbortableApiCall(function (signal) {
+            return fetch(create_url, { credentials: "same-origin", method: "POST", body: form_data, signal: signal });
+          }).push(function (response) {
+            var location = response.headers.get("X-Location") || "",
+              new_relative_url = location.indexOf("urn:jio:get:") !== -1 ?
+                  location.split("urn:jio:get:").pop() : null,
+              err;
+            if (response.status !== 201 || !new_relative_url) {
+              return response.text().then(function (text) {
+                err = new Error("HTTP " + response.status);
+                err.httpError = true;
+                err.response = response;
+                err.text = text;
+                throw err;
+              });
+            }
+            return {
+              status: "success",
+              portal_type: args.portal_type,
+              parent: args.relative_url,
+              relative_url: new_relative_url,
+              url: browserUrl(hateoas_url, new_relative_url),
+              next_step: "Call erp5_read(relative_url=\"" + new_relative_url + "\") to get its field " +
+                "ids, then erp5_write to set them - this document has no fields set yet."
+            };
+          })
         );
       }
     };
@@ -728,8 +754,9 @@
           "must \"return <value>;\" to produce a result (only JSON-serializable values are usable; " +
           "console output is captured separately and returned alongside the result). A `utils` object " +
           "with b64encode/b64decode/describe helpers is also available to the code. Pass `libraries` " +
-          "(names from library_list) to preload third-party helpers, available both as their usual " +
-          "global (e.g. `_` for lodash) and via `lib.<name>` (e.g. `lib.lodash`). Errors thrown by the " +
+          "(names from library_list, or any https:// URL to a UMD/IIFE script or .mjs ES module) to " +
+          "preload third-party helpers, available both as their usual global (e.g. `_` for lodash) and " +
+          "via `lib.<name>` (e.g. `lib.lodash`). Errors thrown by the " +
           "code are reported back as an error message; a runaway loop is killed at its deadline, which " +
           "costs one worker, not the tab. USE THIS WHEN: you need custom computation or to " +
           "reshape/combine data you already have (e.g. a previous tool's result) that's easier to do in " +
@@ -746,7 +773,7 @@
             },
             libraries: {
               type: "array",
-              description: "Names from library_list to load before running code, e.g. [\"lodash\", \"dayjs\"].",
+              description: "Names from library_list, or https:// URLs, to load before running code, e.g. [\"lodash\", \"dayjs\"].",
               items: { type: "string" }
             },
             timeout_ms: { type: "integer", description: "Deadline in ms (default 10000, max 120000)." }
@@ -883,7 +910,9 @@
         name: "library_list",
         description: "List the third-party JavaScript libraries execute_javascript's `libraries` " +
           "parameter can load. Each entry names the global variable the library attaches inside the " +
-          "sandbox once loaded (e.g. \"_\" for lodash), alongside `lib.<name>`.",
+          "sandbox once loaded (e.g. \"_\" for lodash), alongside `lib.<name>`. Any https:// URL to a " +
+          "UMD/IIFE script or an .mjs ES module also works, even though it isn't listed here - use " +
+          "library_inspect to see what one of these actually exposes before guessing at its API.",
         parameters: { type: "object", properties: {} }
       },
       execute: function () {
@@ -898,6 +927,43 @@
     };
   }
 
+  function createLibraryInspectTool() {
+    return {
+      definition: {
+        name: "library_inspect",
+        description: "Download a library (if not already cached) and report what it actually exposes - " +
+          "its own and prototype property/method names - so you can check its real API surface before " +
+          "writing code against it instead of guessing. Accepts names from library_list, or any " +
+          "https:// URL to a UMD/IIFE script or an .mjs ES module (the requesting website must allow " +
+          "cross-origin fetches, e.g. most CDNs do - there is no proxy to work around one that doesn't).",
+        parameters: {
+          type: "object",
+          properties: {
+            libraries: {
+              type: "array",
+              description: "Names from library_list, or https:// URLs, to inspect, e.g. [\"lodash\", " +
+                "\"https://cdn.jsdelivr.net/npm/nanoid@5/bin/index.js\"].",
+              items: { type: "string" }
+            }
+          },
+          required: ["libraries"]
+        }
+      },
+      execute: function (args) {
+        return new RSVP.Queue(runSandboxJob("library_inspect", { libraries: args.libraries }))
+          .push(function (result) {
+            if (!result.ok) { return "ERROR: " + result.error; }
+            return result.libraries.map(function (lib) {
+              if (lib.error) { return lib.name + " - ERROR: " + lib.error; }
+              return lib.name + (lib.global ? " (global \"" + lib.global + "\")" : "") + ", " + lib.type +
+                ": " + lib.description + "\n  " + lib.url +
+                (lib.members.length ? "\n  members: " + lib.members.join(", ") : "");
+            }).join("\n\n");
+          });
+      }
+    };
+  }
+
   function createToolList(element, hateoas_url) {
     return [
       createSearchTool(hateoas_url),
@@ -906,7 +972,8 @@
       createCreateTool(hateoas_url),
       createExecuteJavascriptTool(),
       createRunWasmTool(),
-      createLibraryListTool()
+      createLibraryListTool(),
+      createLibraryInspectTool()
     ];
   }
 
