@@ -3,6 +3,9 @@
 (function (window, rJS, RSVP, marked) {
   "use strict";
 
+
+  marked.setOptions({breaks: true});
+
   function formatPost(post) {
     var date = new Date(post.date);
     post.date_formatted = date.toLocaleString();
@@ -49,7 +52,7 @@
     return domsugar("div", { "class": "post-tool-entry" }, [
       domsugar("strong", ["Tool: " + tool_message.name]),
       domsugar("br"),
-      tool_message.content
+      domsugar("div", { "class": "post-markdown", html: marked.parse(tool_message.content || "") })
     ]);
   }
 
