@@ -49,6 +49,7 @@ import Acquisition
 from zLOG import LOG, WARNING
 from ZODB.POSException import ConflictError
 from ZTUtils import make_query
+from ZPublisher.mapply import mapply
 
 from Products.ERP5Type.Globals import InitializeClass, get_request
 from Products.PythonScripts.Utility import allow_class
@@ -74,7 +75,8 @@ class ListMethodWrapper(MethodWrapper):
   """
   def __call__(self, *args, **kw):
     brain_list = []
-    for obj in getattr(self.context, self.method_name)(*args, **kw):
+    list_method = getattr(self.context, self.method_name)
+    for obj in mapply(list_method, args, kw):
       brain = ZSQLBrain(None, None).__of__(obj)
       brain.uid = obj.getUid()
       brain.path = obj.getPath()
