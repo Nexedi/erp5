@@ -1,4 +1,4 @@
-/*global window, document, fetch, URLSearchParams, Worker, Promise, setTimeout, clearTimeout */
+/*global window, document, fetch, URLSearchParams, Worker, Promise, RSVP, setTimeout, clearTimeout */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 (function (window, document) {
   "use strict";
@@ -755,34 +755,41 @@
         }
       },
       execute: function (args) {
-        return runSandboxJob("js", { code: args.code, libraries: args.libraries }, args.timeout_ms).then(function (result) {
-          var parts = [];
-          if (result.logs && result.logs.length) {
-            parts.push("console:\n" + result.logs.join("\n"));
-          }
-          if (result.ok) {
-            parts.push("result:\n" + (result.resultText || "(undefined)"));
-          } else {
-            parts.push("ERROR: " + result.error + (result.stack ? "\n" + result.stack : ""));
-          }
-          return parts.join("\n\n");
-        });
+        return new RSVP.Queue(runSandboxJob("js", { code: args.code, libraries: args.libraries }, args.timeout_ms))
+          .push(function (result) {
+            var parts = [];
+            if (result.logs && result.logs.length) {
+              parts.push("console:\n" + result.logs.join("\n"));
+            }
+            if (result.ok) {
+              parts.push("result:\n" + (result.resultText || "(undefined)"));
+            } else {
+              parts.push("ERROR: " + result.error + (result.stack ? "\n" + result.stack : ""));
+            }
+            return parts.join("\n\n");
+          });
       }
     };
   }
 
 
   function runSandboxJob(kind, payload, timeout_ms) {
-    var budget = Math.min(Math.max(Number(timeout_ms) || SANDBOX_DEFAULT_TIMEOUT_MS, 100), SANDBOX_MAX_TIMEOUT_MS);
-    return new Promise(function (resolve) {
-      var worker = new Worker(SANDBOX_WORKER_URL),
-        settled = false,
-        timer;
+    var budget = Math.min(Math.max(Number(timeout_ms) || SANDBOX_DEFAULT_TIMEOUT_MS, 100), SANDBOX_MAX_TIMEOUT_MS),
+      settled = false,
+      worker,
+      timer;
+
+    function cleanup() {
+      settled = true;
+      clearTimeout(timer);
+      worker.terminate();
+    }
+
+    return new RSVP.Promise(function (resolve) {
+      worker = new Worker(SANDBOX_WORKER_URL);
       function finish(value) {
         if (settled) { return; }
-        settled = true;
-        clearTimeout(timer);
-        worker.terminate();
+        cleanup();
         resolve(value);
       }
       timer = setTimeout(function () {
@@ -796,6 +803,9 @@
         finish({ ok: false, error: "worker error: " + (event.message || "unknown") });
       };
       worker.postMessage({ id: "run_wasm", kind: kind, payload: payload });
+    }, function canceller() {
+      if (settled) { return; }
+      cleanup();
     });
   }
 
@@ -841,27 +851,28 @@
           calls: args.calls,
           dump_memory: args.dump_memory
         };
-        return runSandboxJob("wasm", spec, args.timeout_ms).then(function (result) {
-          var lines, i, call;
-          if (!result.ok) {
-            return "ERROR: " + result.error;
-          }
-          lines = ["assembled " + result.wasm_bytes + " bytes", "exports: " + (result.exports.join(", ") || "(none)")];
-          for (i = 0; i < (result.calls || []).length; i += 1) {
-            call = result.calls[i];
-            lines.push(call.error ?
-                call.name + "(" + (call.args || []).join(", ") + ") -> ERROR " + call.error :
-                call.name + "(" + (call.args || []).join(", ") + ") -> " + JSON.stringify(call.result));
-          }
-          if (result.logs && result.logs.length) {
-            lines.push("log:\n" + result.logs.join("\n"));
-          }
-          if (result.memory_head_hex) {
-            lines.push("memory (" + result.memory_pages + " pages) hex: " + result.memory_head_hex);
-            lines.push("memory as text: " + result.memory_head_text);
-          }
-          return lines.join("\n");
-        });
+        return new RSVP.Queue(runSandboxJob("wasm", spec, args.timeout_ms))
+          .push(function (result) {
+            var lines, i, call;
+            if (!result.ok) {
+              return "ERROR: " + result.error;
+            }
+            lines = ["assembled " + result.wasm_bytes + " bytes", "exports: " + (result.exports.join(", ") || "(none)")];
+            for (i = 0; i < (result.calls || []).length; i += 1) {
+              call = result.calls[i];
+              lines.push(call.error ?
+                  call.name + "(" + (call.args || []).join(", ") + ") -> ERROR " + call.error :
+                  call.name + "(" + (call.args || []).join(", ") + ") -> " + JSON.stringify(call.result));
+            }
+            if (result.logs && result.logs.length) {
+              lines.push("log:\n" + result.logs.join("\n"));
+            }
+            if (result.memory_head_hex) {
+              lines.push("memory (" + result.memory_pages + " pages) hex: " + result.memory_head_hex);
+              lines.push("memory as text: " + result.memory_head_text);
+            }
+            return lines.join("\n");
+          });
       }
     };
   }
@@ -876,12 +887,13 @@
         parameters: { type: "object", properties: {} }
       },
       execute: function () {
-        return runSandboxJob("library_list", {}).then(function (result) {
-          if (!result.ok) { return "ERROR: " + result.error; }
-          return result.libraries.map(function (lib) {
-            return lib.name + " (global \"" + lib.global + "\"): " + lib.description;
-          }).join("\n");
-        });
+        return new RSVP.Queue(runSandboxJob("library_list", {}))
+          .push(function (result) {
+            if (!result.ok) { return "ERROR: " + result.error; }
+            return result.libraries.map(function (lib) {
+              return lib.name + " (global \"" + lib.global + "\"): " + lib.description;
+            }).join("\n");
+          });
       }
     };
   }
