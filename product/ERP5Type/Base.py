@@ -509,7 +509,7 @@ def getClassPropertyList(klass):
   return ps_list
 
 from Products.ERP5Type.Accessor import WorkflowHistory as WorkflowHistoryAccessor
-def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
+def initializePortalTypeDynamicWorkflowMethods(accessor_builder, portal_workflow):
   """We should now make sure workflow methods are defined
   and also make sure simulation state is defined."""
   from Products.ERP5Type.Core.WorkflowTransition import TRIGGER_WORKFLOW_METHOD
@@ -520,7 +520,7 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
   # is looked up with _aq_dynamic, thus causes infinite recursions.
 
   portal_workflow = aq_inner(portal_workflow)
-  portal_type = ptype_klass.__name__
+  portal_type = accessor_builder.accessor_holder_name
 
   workflow_dict = {}
   interaction_workflow_dict = {}
@@ -541,26 +541,26 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
                                      WorkflowState.TranslatedTitleGetter),
           ('serialize%s' % UpperCase(state_var), WorkflowState.SerializeGetter),
           ):
-        if not hasattr(ptype_klass, method_id):
+        if not accessor_builder.hasAccessor(method_id):
           method = getter(method_id, wf_id)
           # Attach to portal_type
-          ptype_klass.registerAccessor(method,
-                                       Permissions.AccessContentsInformation)
+          accessor_builder.registerAccessor(method,
+                                            Permissions.AccessContentsInformation)
 
       storage = workflow_dict
 
       for transition_id in wf_transition_reference_list:
         list_method_id = 'get%sTransitionDateList' % UpperCase(transition_id)
-        if not hasattr(ptype_klass, list_method_id):
+        if not accessor_builder.hasAccessor(list_method_id):
           method = WorkflowHistoryAccessor.ListGetter(list_method_id, wf_id, transition_id, 'time')
-          ptype_klass.registerAccessor(method,
-                                       Permissions.AccessContentsInformation)
+          accessor_builder.registerAccessor(method,
+                                            Permissions.AccessContentsInformation)
 
         method_id = 'get%sTransitionDate' % UpperCase(transition_id)
-        if not hasattr(ptype_klass, method_id):
+        if not accessor_builder.hasAccessor(method_id):
           method = WorkflowHistoryAccessor.Getter(method_id, list_method_id)
-          ptype_klass.registerAccessor(method,
-                                       Permissions.AccessContentsInformation)
+          accessor_builder.registerAccessor(method,
+                                            Permissions.AccessContentsInformation)
 
     elif wf_type in ['InteractionWorkflowDefinition', 'Interaction Workflow']:
       storage = interaction_workflow_dict
@@ -583,25 +583,18 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
     transition_id_set, trigger_dict = v
     for tr_id, tdef in six.iteritems(trigger_dict):
       method_id = convertToMixedCase(tr_id)
-      try:
-        method = getattr(ptype_klass, method_id)
-      except AttributeError:
-        ptype_klass.security.declareProtected(Permissions.AccessContentsInformation,
-                                              method_id)
-        ptype_klass.registerWorkflowMethod(method_id, wf_id, tr_id)
+      if not accessor_builder.hasAccessor(method_id):
+        accessor_builder.registerWorkflowMethod(method_id, wf_id, tr_id)
         continue
 
-      # Wrap method
+      new_workflow_method, method = accessor_builder.ensureWorkflowMethod(method_id)
       if not callable(method):
         LOG('initializePortalTypeDynamicWorkflowMethods', 100,
             'WARNING! Can not initialize %s on %s' % \
               (method_id, portal_type))
         continue
 
-      if not isinstance(method, WorkflowMethod):
-        method = WorkflowMethod(method)
-        setattr(ptype_klass, method_id, method)
-      else:
+      if not new_workflow_method:
         # We must be sure that we
         # are going to register class defined
         # workflow methods to the appropriate transition
@@ -615,7 +608,7 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
 
   # all methods in mro of portal type class: that contains all
   # workflow methods and accessors you could possibly ever need
-  class_method_id_list = ptype_klass.getClassMethodIdList(ptype_klass)
+  class_method_id_set = accessor_builder.accessor_holder_class_method_id_set
 
   interaction_queue = []
   # XXX This part is (more or less...) a copy and paste
@@ -650,24 +643,19 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
                                     method_id_matcher))
 
           # XXX - class stuff is missing here
-          method_id_list = [x for x in class_method_id_list if method_id_matcher(x)]
+          method_id_list = [x for x in class_method_id_set if method_id_matcher(x)]
         else:
           # Single method
           # XXX What if the method does not exist ?
           #     It's not consistent with regexp based filters.
           method_id_list = [imethod_id]
         for method_id in method_id_list:
-          method = getattr(ptype_klass, method_id, _MARKER)
-          if method is _MARKER:
-            # set a default security, if this method is not already
-            # protected.
-            if method_id not in ptype_klass.security.names:
-              ptype_klass.security.declareProtected(
-                  Permissions.AccessContentsInformation, method_id)
-            ptype_klass.registerWorkflowMethod(method_id, wf_id, tr_id,
-                                               tdef.getTriggerOncePerTransaction())
+          if not accessor_builder.hasAccessor(method_id):
+            accessor_builder.registerWorkflowMethod(
+              method_id, wf_id, tr_id, tdef.getTriggerOncePerTransaction())
             continue
 
+          new_workflow_method, method = accessor_builder.ensureWorkflowMethod(method_id)
           # Wrap method
           if not callable(method) or method_id in (
               # To prevent infinite recursion in case of mistake in a worflow,
@@ -678,10 +666,7 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
                 'WARNING! Can not initialize %s on %s' % \
                   (method_id, portal_type))
             continue
-          if not isinstance(method, WorkflowMethod):
-            method = WorkflowMethod(method)
-            setattr(ptype_klass, method_id, method)
-          else:
+          if not new_workflow_method:
             # We must be sure that we
             # are going to register class defined
             # workflow methods to the appropriate transition
@@ -700,15 +685,16 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
   # workflow methods
   # TODO we could just queue the ids of methods that are attached to the
   # portal type class in the previous loop, to improve performance
-  new_method_set = set(ptype_klass.getWorkflowMethodIdList())
-  added_method_set = new_method_set.difference(class_method_id_list)
+  new_method_set = accessor_builder.accessor_holder_workflow_method_id_set
+  added_method_set = new_method_set.difference(class_method_id_set)
   # We need to run this part twice in order to handle interactions of interactions
   # ex. an interaction workflow creates a workflow method which matches
   # the regexp of another interaction workflow
   for wf_id, tr_id, transition_id_set, once, method_id_matcher in interaction_queue:
     for method_id in [x for x in added_method_set if method_id_matcher(x)]:
       # method must already exist and be a workflow method
-      method = getattr(ptype_klass, method_id)
+      new_workflow_method, method = accessor_builder.ensureWorkflowMethod(method_id)
+      assert not new_workflow_method
       transition_id = method.getTransitionId()
       if transition_id in transition_id_set:
         method.registerTransitionAlways(portal_type, wf_id, transition_id)

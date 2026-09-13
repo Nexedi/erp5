@@ -30,8 +30,7 @@ from Products.ERP5Type.Core.Folder import Folder
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.Expression import Expression
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.Base import PropertyHolder
-from Products.ERP5Type.dynamic.accessor_holder import AccessorHolderType
+from Products.ERP5Type.dynamic.accessor_holder import AccessorHolderType, AccessorBuilder
 from Acquisition import aq_base
 
 from zLOG import LOG, INFO, WARNING
@@ -50,17 +49,17 @@ class PropertySheet(Folder):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   security.declarePrivate('createAccessorHolder')
-  def createAccessorHolder(self, expression_context, portal):
+  def createAccessorHolder(self, expression_context, portal) -> AccessorBuilder:
     """
     Create a new accessor holder from the Property Sheet
     """
     my_id = self.getId()
     __traceback_info__ = my_id
     accessor_holder = AccessorHolderType(my_id)
+    accessor_builder = AccessorBuilder(accessor_holder)
+    self.applyOnAccessorHolder(accessor_builder, expression_context, portal)
 
-    self.applyOnAccessorHolder(accessor_holder, expression_context, portal)
-
-    return accessor_holder
+    return accessor_builder
 
   @staticmethod
   def _guessFilesystemPropertyPortalType(attribute_dict):
@@ -165,7 +164,7 @@ class PropertySheet(Folder):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'applyOnAccessorHolder')
-  def applyOnAccessorHolder(self, accessor_holder, expression_context, portal):
+  def applyOnAccessorHolder(self, accessor_builder: AccessorBuilder, expression_context, portal):
     # Accessor generation used to first generate accessors for
     # properties, *then* accessors for categories only if the latter
     # accessors have not been defined by the former (by using
@@ -184,14 +183,16 @@ class PropertySheet(Folder):
           None) is None:
         # Prevent implicit acquisition of this method when subobject doesn't
         # have one with same name, triggering an infinite recursion.
-        # We raise a RuntimeError, to be consistent with infinit recursion
+        # We raise a RuntimeError, to be consistent with infinite recursion
         # (to avoid regressions).
         raise RuntimeError('Malformed property definition %r on %s' % (
           property_definition, self.getPath()))
       try:
-        property_definition.applyOnAccessorHolder(accessor_holder,
-                                                  expression_context,
-                                                  portal)
+        property_definition.applyOnAccessorHolder(
+          accessor_builder,
+          expression_context,
+          portal,
+        )
       except ValueError as e:
         LOG("ERP5Type.Core.PropertySheet", INFO,
             "Invalid property '%s' for Property Sheet '%s': %s" % \

@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from Products.ERP5Type.dynamic.accessor_holder import AccessorBuilder
 from Products.ERP5Form.Document.PreferenceType import PreferenceType
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
@@ -57,6 +58,7 @@ def _generatePreferenceToolAccessorHolder(portal_type_name,
     pass
 
   preference_tool_accessor_holder = AccessorHolderType('PreferenceTool')
+  preference_tool_accessor_builder = AccessorBuilder(preference_tool_accessor_holder)
 
   for accessor_holder in accessor_holder_list:
     for prop in accessor_holder._properties:
@@ -79,9 +81,10 @@ def _generatePreferenceToolAccessorHolder(portal_type_name,
       read_permission = prop.get('read_permission')
       for attribute_name in attr_list:
         method = PreferenceMethod(attribute_name, prop.get('default'))
-        preference_tool_accessor_holder.registerAccessor(method, read_permission)
+        preference_tool_accessor_builder.registerAccessor(method, read_permission)
 
-  accessor_holder_module.registerAccessorHolder(preference_tool_accessor_holder)
+  preference_tool_accessor_builder.finalize()
+  accessor_holder_module.registerAccessorHolder(preference_tool_accessor_builder)
 
   return preference_tool_accessor_holder
 

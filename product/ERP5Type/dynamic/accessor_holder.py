@@ -33,6 +33,7 @@ Accessor Holders, that is, generation of methods for ERP5
 * Utils, Property Sheet Tool can be probably be cleaned up as well by
 moving specialized code here.
 """
+import enum
 import collections
 from six import string_types as basestring
 from types import ModuleType
@@ -49,21 +50,8 @@ from AccessControl import ClassSecurityInfo
 from zLOG import LOG, ERROR, INFO, WARNING
 import six
 
-class AccessorHolderType(type):
-  _skip_permission_tuple = (Permissions.AccessContentsInformation,
-                            Permissions.ModifyPortalContent)
-  def registerAccessor(cls,
-                       accessor,
-                       permission=None):
-    accessor_name = accessor.__name__
-    setattr(cls, accessor_name, accessor)
-    if permission is None:
-      return
-    # private accessors do not need declarative security
-    if accessor_name[0] != '_' and \
-        permission not in AccessorHolderType._skip_permission_tuple:
-      cls.security.declareProtected(permission, accessor_name)
 
+class AccessorHolderType(type):
   def __new__(meta_class, class_name, base_tuple=(object,), attribute_dict={}):
     # we dont want to add several times to the same list, so make sure
     # that duplicate attributes just point to the same list object
@@ -79,20 +67,165 @@ class AccessorHolderType(type):
                                                          base_tuple,
                                                          attribute_dict)
 
-  def _finalize(cls):
-    cls.security.apply(cls)
-    InitializeClass(cls)
+
+class AccessorPermission(enum.Enum):
+  Public = 'public'
+  Private = 'private'
+
+class AccessorBuilder:
+  """This class role is to build accessors on accessor holder classes.
+
+  cpython manages a attribute cache for types, that is cleared every
+  time a class attribute is modified and rebuilt every time an attribute
+  is accessed. Since cpython 13, only 1000 cache rebuilt are allowed
+  for a given class, after this the cache is permanently disabled for
+  this class.
+
+  To limit the number of cache rebuilt caused by the pattern of setting
+  an attribute and reading it, this class reads all necessary attributes
+  from the accessor_holder during __init__ and after this only write.
+  """
+  _skip_permission_tuple = (Permissions.AccessContentsInformation,
+                            Permissions.ModifyPortalContent)
+  def __init__(
+    self,
+    accessor_holder # type: AccessorHolderType
+  ):
+    self.accessor_holder_name = accessor_holder.__name__
+    self._accessor_holder = accessor_holder
+    self._accessor_holder_attributes = set(dir(accessor_holder))
+    self._accessor_holder_security = accessor_holder.security
+    self._categories = set(self._accessor_holder._categories)
+    self._added_categories = set()
+    self._added_constraints = []
+    self._added_properties = []
+
+    self._workflow_method_dict = {}
+    self._non_workflow_method_dict = {}
+    from Products.ERP5Type.Base import WorkflowMethod  # XXX circular import
+    for cls in reversed(self._accessor_holder.mro()):
+      for method_id, method in vars(cls).items():
+        if isinstance(method, WorkflowMethod):
+          self._workflow_method_dict[method_id] = method
+          self._non_workflow_method_dict.pop(method_id, None)
+        else:
+          self._non_workflow_method_dict[method_id] = method
+          self._workflow_method_dict.pop(method_id, None)
+    self._added_workflow_methods = set()
+    self._registered_workflow_methods = set()
+
+    if hasattr(accessor_holder, 'getClassMethodIdList'):
+      self.accessor_holder_class_method_id_set = set(
+        accessor_holder.getClassMethodIdList(accessor_holder))
+    else:
+      self.accessor_holder_class_method_id_set = set() 
+    if hasattr(accessor_holder, 'getWorkflowMethodIdList'):
+      self.accessor_holder_workflow_method_id_set = set(
+        accessor_holder.getWorkflowMethodIdList())
+    else:
+      self.accessor_holder_workflow_method_id_set = set()
+
+    self._finalized = False
+
+  def hasAccessor(self, accessor_name):
+    return accessor_name in self._accessor_holder_attributes
+
+  def registerAccessor(
+      self,
+      accessor,
+      permission:str | AccessorPermission | None=None,
+      name:str | None=None
+    ):
+    if name is None:
+      name = accessor.__name__
+    setattr(self._accessor_holder, name, accessor)
+    self._accessor_holder_attributes.add(name)
+
+    from Products.ERP5Type.Base import WorkflowMethod  # XXX circular import
+    if isinstance(accessor, WorkflowMethod):
+      self._workflow_method_dict[name] = accessor
+      self._non_workflow_method_dict.pop(name, None)
+    else:
+      self._non_workflow_method_dict[name] = accessor
+      self._workflow_method_dict.pop(name, None)
+
+    if permission is None:
+      return
+
+    if permission is AccessorPermission.Public:
+      self._accessor_holder_security.declarePublic(name)
+      return
+    if permission is AccessorPermission.Private:
+      self._accessor_holder_security.declarePrivate(name)
+      return
+
+    # private accessors do not need declarative security
+    if name[0] != '_' and \
+        permission not in self._skip_permission_tuple:
+      self._accessor_holder_security.declareProtected(permission, name)
+
+  def registerWorkflowMethod(self, id, wf_id, tr_id, once_per_transaction=0):
+    # set a default security, if this method is not already protected.
+    if id not in self._accessor_holder_security.names:
+      self._accessor_holder_security.declareProtected(Permissions.AccessContentsInformation, id)
+    self._registered_workflow_methods.add((id, wf_id, tr_id, once_per_transaction))
+
+  def addBaseCategory(self, base_category_id):
+    if base_category_id not in self._categories:
+      self._added_categories.add(base_category_id)
+
+  def addConstraint(self, constraint_definition):
+    self._added_constraints.append(constraint_definition)
+
+  def addPropertyMap(self, property_map):
+    self._added_properties.append(property_map)
+
+  def ensureWorkflowMethod(self, method_id):
+    if method_id in self._workflow_method_dict:
+      return False, self._workflow_method_dict[method_id]
+    from Products.ERP5Type.Base import Base, WorkflowMethod  # XXX circular import
+    method = self._non_workflow_method_dict.pop(method_id, None)
+    if method is None:
+      method = WorkflowMethod(Base._doNothing, id=method_id)
+    else:
+      method = WorkflowMethod(method, id=method_id)
+    self._workflow_method_dict[method_id] = method
+    self._added_workflow_methods.add(method_id)
+    self.accessor_holder_workflow_method_id_set.add(method_id)
+    return True, method
+
+  def finalize(self):
+    assert not self._finalized
+    if self._added_categories:
+      self._accessor_holder._categories.extend(sorted(self._added_categories))
+    if self._added_properties:
+      self._accessor_holder._properties.extend(self._added_properties)
+    if self._added_constraints:
+      self._accessor_holder._constraints.extend(self._added_constraints)
+    for method_id in self._added_workflow_methods:
+      method = self._workflow_method_dict[method_id]
+      setattr(self._accessor_holder, method_id, method)
+
+    for (id, wf_id, tr_id, once_per_transaction) in self._registered_workflow_methods:
+      self._accessor_holder.registerWorkflowMethod(id, wf_id, tr_id, once_per_transaction)
+
+    self._accessor_holder_security.apply(self._accessor_holder)
+    InitializeClass(self._accessor_holder)
+    self._finalized = True
+
+  def __del__(self):
+    assert self._finalized
+
 
 class AccessorHolderModuleType(ModuleType):
-  def registerAccessorHolder(self, accessor_holder):
-    """
-    Add an accessor holder to the module
-    """
+  def registerAccessorHolder(self, accessor_builder: AccessorBuilder):
+    """Register the accessor holder of a finalized builder on this module."""
+    accessor_holder = accessor_builder._accessor_holder
     # Set the module of the given accessor holder properly
     accessor_holder.__module__ = self.__name__
 
-    # Finalize the class as no accessors is added from now on
-    accessor_holder._finalize()
+    # No accessors will be added from now on
+    assert accessor_builder._finalized
 
     self.__setattr__(accessor_holder.__name__, accessor_holder)
 
@@ -195,22 +328,27 @@ def _generateBaseAccessorHolder(portal):
   base_category_id_list = category_tool.objectIds()
 
   accessor_holder = AccessorHolderType(base_accessor_holder_id)
+  accessor_builder = AccessorBuilder(accessor_holder)
 
   for base_category_id in base_category_id_list:
-    applyCategoryAsRelatedValueAccessor(accessor_holder,
+    buildCategoryAsRelatedValueAccessor(accessor_builder,
                                         base_category_id,
                                         category_tool)
 
   # Create providesIFoo() getters of ZODB/FS Interface classes
   def provides(class_id):
-    accessor_name = 'provides' + class_id
-    setattr(accessor_holder, accessor_name, lambda self: self.provides(class_id))
-    accessor_holder.security.declarePublic(accessor_name)
+    accessor_builder.registerAccessor(
+      lambda self: self.provides(class_id),
+      AccessorPermission.Public,
+      name='provides' + class_id,
+    )
+
   for class_id in set(portal.portal_types.getInterfaceTypeList() +
                       migrated_interface_list):
     provides(class_id)
 
-  erp5.accessor_holder.registerAccessorHolder(accessor_holder)
+  accessor_builder.finalize()
+  erp5.accessor_holder.registerAccessorHolder(accessor_builder)
   return accessor_holder
 
 related_accessor_definition_dict = {
@@ -314,12 +452,12 @@ related_accessor_definition_dict = {
     '_categoryGet%sRelatedProperty',
   ),
 }
-def applyCategoryAsRelatedValueAccessor(accessor_holder,
+def buildCategoryAsRelatedValueAccessor(accessor_builder,
                                         category_id,
                                         category_tool):
   """
   Take one category_id, generate and apply all related value accessors
-  implied by this category, and apply/set them to the accessor_holder
+  implied by this category, and apply/set them to the accessor_builder
   """
   cat_object = category_tool.get(category_id, None)
   if cat_object is not None:
@@ -334,14 +472,14 @@ def applyCategoryAsRelatedValueAccessor(accessor_holder,
   # two special cases
   accessor_name = uppercase_category_id[0].lower() + uppercase_category_id[1:]
   accessor = RelatedValue.ListGetter(accessor_name + 'RelatedValues', category_id)
-  accessor_holder.registerAccessor(accessor, read_permission)
+  accessor_builder.registerAccessor(accessor, read_permission)
   accessor = RelatedValue.IdListGetter(accessor_name + 'RelatedIds', category_id)
-  accessor_holder.registerAccessor(accessor, read_permission)
+  accessor_builder.registerAccessor(accessor, read_permission)
 
   for accessor_class, accessor_name_list in six.iteritems(related_accessor_definition_dict):
     for accessor_name in accessor_name_list:
       accessor = accessor_class(accessor_name % uppercase_category_id, category_id)
-      accessor_holder.registerAccessor(accessor, read_permission)
+      accessor_builder.registerAccessor(accessor, read_permission)
 
 def getPropertySheetValueList(site, property_sheet_name_list):
   try:
@@ -399,11 +537,12 @@ def getAccessorHolderList(site, portal_type_name, property_sheet_value_list):
         expression_context = createExpressionContext(site)
 
       # Generate the accessor holder as it has not been done yet
-      accessor_holder_class = property_sheet.createAccessorHolder(
+      accessor_builder = property_sheet.createAccessorHolder(
         expression_context, site)
 
-      accessor_holder_module.registerAccessorHolder(accessor_holder_class)
-      accessor_holder_list.append(accessor_holder_class)
+      accessor_builder.finalize()
+      accessor_holder_module.registerAccessorHolder(accessor_builder)
+      accessor_holder_list.append(accessor_builder._accessor_holder)
 
       # LOG("ERP5Type.dynamic", INFO,
       #     "Created accessor holder for %s" % property_sheet_name)

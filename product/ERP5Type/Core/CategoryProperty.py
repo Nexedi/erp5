@@ -142,7 +142,7 @@ class CategoryProperty(IdAsReferenceMixin('_category'), XMLObject):
 
   @classmethod
   def applyDefinitionOnAccessorHolder(cls,
-                                      accessor_holder,
+                                      accessor_builder,
                                       category_id,
                                       portal):
     try:
@@ -178,7 +178,7 @@ class CategoryProperty(IdAsReferenceMixin('_category'), XMLObject):
                      'write_permission': Permissions.ModifyPortalContent}
 
     StandardProperty.applyDefinitionOnAccessorHolder(property_dict,
-                                                     accessor_holder,
+                                                     accessor_builder,
                                                      portal,
                                                      do_register=False)
 
@@ -193,13 +193,13 @@ class CategoryProperty(IdAsReferenceMixin('_category'), XMLObject):
 
     # three special cases
     accessor = Category.Tester('has' + uppercase_category_id, category_id)
-    accessor_holder.registerAccessor(accessor, read_permission)
+    accessor_builder.registerAccessor(accessor, read_permission)
 
     accessor_name = uppercase_category_id[0].lower() + uppercase_category_id[1:]
     accessor = Value.ListGetter(accessor_name + 'Values', category_id)
-    accessor_holder.registerAccessor(accessor, read_permission)
+    accessor_builder.registerAccessor(accessor, read_permission)
     accessor = Value.IdListGetter(accessor_name + 'Ids', category_id)
-    accessor_holder.registerAccessor(accessor, read_permission)
+    accessor_builder.registerAccessor(accessor, read_permission)
 
     # then getters
     for id_format, accessor_class in six.iteritems(cls.getter_definition_dict):
@@ -210,13 +210,13 @@ class CategoryProperty(IdAsReferenceMixin('_category'), XMLObject):
       if not (SOURCE_DESTINATION_REFERENCE_LEGACY and accessor_name in (
               'getSourceReference', 'getDestinationReference')):
         public_accessor = accessor_class(accessor_name, category_id)
-        accessor_holder.registerAccessor(public_accessor, read_permission)
+        accessor_builder.registerAccessor(public_accessor, read_permission)
 
       # create the private getter on the fly instead of having a definition dict
       # that's twice the size for the same info
       accessor_name = '_category' + accessor_name[0].upper() + accessor_name[1:]
       private_accessor = accessor_class(accessor_name, category_id)
-      accessor_holder.registerAccessor(private_accessor, read_permission)
+      accessor_builder.registerAccessor(private_accessor, read_permission)
 
     # and setters
     for id_format, accessor_class in six.iteritems(cls.setter_definition_dict):
@@ -229,17 +229,16 @@ class CategoryProperty(IdAsReferenceMixin('_category'), XMLObject):
         continue
 
       accessor = accessor_class(accessor_name, category_id)
-      accessor_holder.registerAccessor(accessor, write_permission)
+      accessor_builder.registerAccessor(accessor, write_permission)
 
       # TODO: merge with StandardProperty
       if accessor_name.startswith('_set'):
         accessor = Alias.Reindex(accessor_name[1:], accessor_name)
-        accessor_holder.registerAccessor(accessor, write_permission)
+        accessor_builder.registerAccessor(accessor, write_permission)
 
     # Only add the category ID if it is not already in _categories,
     # which may happen when getting the categories with acquisition
-    if category_id not in accessor_holder._categories:
-      accessor_holder._categories.append(category_id)
+    accessor_builder.addBaseCategory(category_id)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'applyOnAccessorHolder')
