@@ -18,7 +18,7 @@ from AccessControl import ClassSecurityInfo
 from zLOG import LOG, WARNING, BLATHER
 
 from .portal_type_class import generatePortalTypeClass
-from .accessor_holder import AccessorHolderType
+from .accessor_holder import AccessorHolderType, AccessorBuilder
 from . import persistent_migration
 from ZODB.POSException import ConflictError
 import six
@@ -284,9 +284,10 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
 
   def generatePortalTypeAccessors(cls, site, portal_type_category_list):
     category_tool = getattr(site, 'portal_categories', None)
+    accessor_builder = AccessorBuilder(cls)
     for category_id in portal_type_category_list:
       # we need to generate only categories defined on portal type
-      CategoryProperty.applyDefinitionOnAccessorHolder(cls,
+      CategoryProperty.applyDefinitionOnAccessorHolder(accessor_builder,
                                                        category_id,
                                                        category_tool)
 
@@ -297,7 +298,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
             "Could not generate workflow methods for %s"
             % cls.__name__)
     else:
-      initializePortalTypeDynamicWorkflowMethods(cls, portal_workflow)
+      initializePortalTypeDynamicWorkflowMethods(accessor_builder, portal_workflow)
 
     # portal type group methods, isNodeType, isResourceType...
     from Products.ERP5Type.ERP5Type import ERP5TypeInformation
@@ -309,10 +310,11 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
       value = cls.__name__ in site._getPortalGroupedTypeSet(group)
       accessor_name = 'is' + UpperCase(group) + 'Type'
       method = ConstantGetter(accessor_name, group, value)
-      cls.registerAccessor(method, Permissions.AccessContentsInformation)
+      accessor_builder.registerAccessor(method, Permissions.AccessContentsInformation)
 
     from Products.ERP5Type.Cache import initializePortalCachingProperties
     initializePortalCachingProperties(site)
+    accessor_builder.finalize()
 
   # TODO in reality much optimization can be done for all
   # PropertyHolder methods:

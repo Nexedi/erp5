@@ -175,7 +175,7 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
   @staticmethod
   def _applyDefinitionFormatDictOnAccessorHolder(reference,
                                                  definition_dict,
-                                                 accessor_holder,
+                                                 accessor_builder,
                                                  argument_list,
                                                  permission):
     """
@@ -197,8 +197,8 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
     @type reference: str
     @param definition_dict: Definition of accessors being created
     @type definition_dict: dict
-    @param accessor_holder: Accessor holder to applied the accessors on
-    @type accessor_holder: Products.ERP5Type.dynamic.accessor_holder.AccessorHolderType
+    @param accessor_builder: Accessor builder to apply the accessors
+    @type accessor_builder: Products.ERP5Type.dynamic.accessor_holder.AccessorBuilder
     @param argument_list: Arguments to be given to the accessor class constructor
     @type argument_list: list
     @param permission: Permission to be applied on the accessor
@@ -209,18 +209,18 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
       name = format % uppercase_reference
 
       instance = klass(name, reference, *argument_list)
-      accessor_holder.registerAccessor(instance, permission)
+      accessor_builder.registerAccessor(instance, permission)
 
       # Public setters actually just calls the private one and then
       # perform a re-indexing
       if name.startswith('_set'):
         instance = Alias.Reindex(name[1:], name)
-        accessor_holder.registerAccessor(instance, permission)
+        accessor_builder.registerAccessor(instance, permission)
 
   @classmethod
   def _applyRangeOnAccessorHolder(cls,
                                   property_dict,
-                                  accessor_holder,
+                                  accessor_builder,
                                   kind,
                                   portal):
     """
@@ -228,8 +228,8 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
 
     @param property_dict: Property to generate getter for
     @type property_dict: dict
-    @param accessor_holder: Accessor holder to applied the accessors on
-    @type accessor_holder: Products.ERP5Type.dynamic.accessor_holder.AccessorHolderType
+    @param accessor_builder: Accessor holder to applied the accessors on
+    @type accessor_builder: Products.ERP5Type.dynamic.accessor_holder.AccessorBuilder
     @param kind: 'min' or 'max'
     @type kind: string
     @param portal: Portal object
@@ -247,7 +247,7 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
     property_dict['range'] = False
 
     cls.applyDefinitionOnAccessorHolder(property_dict,
-                                        accessor_holder,
+                                        accessor_builder,
                                         portal,
                                         do_register=False)
 
@@ -391,14 +391,15 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
   @classmethod
   def _applySetterDefinitionDictOnAccessorHolder(cls,
                                                  property_dict,
-                                                 accessor_holder):
+                                                 accessor_builder,
+                                                 ):
     """
     Apply setters for the given property on the given accessor holder.
 
     @param property_dict: Property to generate getter for
     @type property_dict: dict
-    @param accessor_holder: Accessor holder to applied the accessors on
-    @type accessor_holder: Products.ERP5Type.dynamic.accessor_holder.AccessorHolderType
+    @param accessor_builder: Accessor holder to applied the accessors on
+    @type accessor_builder: Products.ERP5Type.dynamic.accessor_holder.AccessorBuilder
 
     @see _applyGetterDefinitionDictOnAccessorHolder
     """
@@ -412,7 +413,7 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
       definition_dict = cls._primitive_setter_definition_dict
 
     cls._applyDefinitionFormatDictOnAccessorHolder(
-      property_dict['reference'], definition_dict, accessor_holder,
+      property_dict['reference'], definition_dict, accessor_builder,
       argument_list, property_dict['write_permission'])
 
   _tester_definition_dict = {
@@ -432,15 +433,15 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
   @classmethod
   def _applyTesterDefinitionDictOnAccessorHolder(cls,
                                                  property_dict,
-                                                 accessor_holder):
+                                                 accessor_builder):
     """
     Apply testers and boolean accessors for the given property on the
-    given accessor holder.
+    given accessor builder.
 
     @param property_dict: Property to generate getter for
     @type property_dict: dict
-    @param accessor_holder: Accessor holder to applied the accessors on
-    @type accessor_holder: Products.ERP5Type.dynamic.accessor_holder.AccessorHolderType
+    @param accessor_builder: Accessor builder to applied the accessors on
+    @type accessor_builder: Products.ERP5Type.dynamic.accessor_holder.AccessorBuilder
 
     @see _applyGetterDefinitionDictOnAccessorHolder
     """
@@ -448,7 +449,7 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
                             property_dict['storage_id'])
 
     cls._applyDefinitionFormatDictOnAccessorHolder(
-      property_dict['reference'], cls._tester_definition_dict, accessor_holder,
+      property_dict['reference'], cls._tester_definition_dict, accessor_builder,
       tester_argument_list, property_dict['read_permission'])
 
     boolean_argument_list = (property_dict['elementary_type'],
@@ -456,7 +457,7 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
                              property_dict['storage_id'])
 
     cls._applyDefinitionFormatDictOnAccessorHolder(
-      property_dict['reference'], cls._boolean_definition_dict, accessor_holder,
+      property_dict['reference'], cls._boolean_definition_dict, accessor_builder,
       boolean_argument_list, property_dict['read_permission'])
 
   _translated_getter_definition_dict = {
@@ -469,7 +470,7 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
   @classmethod
   def applyDefinitionOnAccessorHolder(cls,
                                       property_dict,
-                                      accessor_holder,
+                                      accessor_builder,
                                       portal,
                                       do_register=True):
     """
@@ -491,8 +492,8 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
 
     @param property_dict: Property to generate getter for
     @type property_dict: dict
-    @param accessor_holder: Accessor holder to applied the accessors on
-    @type accessor_holder: Products.ERP5Type.dynamic.accessor_holder.AccessorHolderType
+    @param accessor_builder: Builder to apply the accessors on the accessor holder
+    @type accessor_builder: Products.ERP5Type.dynamic.accessor_holder.AccessorBuilder
     @param portal: Portal object
     @type portal: Products.ERP5.ERP5Site.ERP5Site
     @param do_register: Register the property in the Zope property map
@@ -509,8 +510,7 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
     # Create range accessors if relevant
     if property_dict['range']:
       for kind in ('min', 'max'):
-        cls._applyRangeOnAccessorHolder(property_dict.copy(),
-                                        accessor_holder, kind, portal)
+        cls._applyRangeOnAccessorHolder(property_dict.copy(), accessor_builder, kind, portal)
 
     # Create translation accessors if relevant
     if property_dict['translatable']:
@@ -529,11 +529,11 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
 
       cls._applyDefinitionFormatDictOnAccessorHolder(
         translated_reference, cls._translated_getter_definition_dict,
-        accessor_holder, argument_list,
+        accessor_builder, argument_list,
         translated_property_dict['read_permission'])
 
       cls._applyTranslationLanguageOnAccessorHolder(translated_property_dict,
-                                                    accessor_holder, portal)
+                                                    accessor_builder, portal)
 
       # make accessor to translation_domain
       # first create default one as a normal property
@@ -554,7 +554,7 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
       # This will always be a StandardProperty, so avoid calling
       # super() here
       StandardProperty.applyDefinitionOnAccessorHolder(
-        translation_domain_property_dict, accessor_holder, portal,
+        translation_domain_property_dict, accessor_builder, portal,
         do_register=False)
 
       # Then override getPropertyTranslationDomain accessor
@@ -563,19 +563,19 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
         translation_domain_reference, 'string',
         property_dict['translation_domain'])
 
-      accessor_holder.registerAccessor(
+      accessor_builder.registerAccessor(
         accessor, translated_property_dict['read_permission'])
 
     # After applying specific getters, setters and testers, apply
     # common getters, setters and testers
     cls._applyGetterDefinitionDictOnAccessorHolder(property_dict,
-                                                   accessor_holder)
+                                                   accessor_builder)
 
     cls._applySetterDefinitionDictOnAccessorHolder(property_dict,
-                                                   accessor_holder)
+                                                   accessor_builder)
 
     cls._applyTesterDefinitionDictOnAccessorHolder(property_dict,
-                                                   accessor_holder)
+                                                   accessor_builder)
 
     # By default, register the property as a Zope property map, by
     # adding it to _properties, which will be later used by
@@ -583,7 +583,7 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
     if do_register:
       property_map = cls._asPropertyMap(property_dict)
       if property_map:
-        accessor_holder._properties.append(property_map)
+        accessor_builder.addPropertyMap(property_map)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'asDict')
@@ -622,7 +622,7 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
   security.declareProtected(Permissions.ModifyPortalContent,
                             'applyOnAccessorHolder')
   def applyOnAccessorHolder(self,
-                            accessor_holder,
+                            accessor_builder,
                             expression_context,
                             portal):
     """
@@ -638,7 +638,7 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
     @see applyDefinitionOnAccessorHolder
     """
     self.applyDefinitionOnAccessorHolder(self.asDict(expression_context),
-                                         accessor_holder,
+                                         accessor_builder,
                                          portal)
 
   @classmethod
