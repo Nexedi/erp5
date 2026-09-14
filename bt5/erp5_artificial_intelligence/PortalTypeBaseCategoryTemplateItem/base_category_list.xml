@@ -1,4 +1,7 @@
 <base_category_list>
+ <portal_type id="Artificial Dummy Response Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="Artificial Task">
   <item>connector</item>
  </portal_type>

@@ -1,4 +1,7 @@
 <allowed_content_type_list>
+ <portal_type id="Artificial Dummy Response Module">
+  <item>Artificial Dummy Response</item>
+ </portal_type>
  <portal_type id="Artificial Task">
   <item>Artificial Task Line</item>
  </portal_type>

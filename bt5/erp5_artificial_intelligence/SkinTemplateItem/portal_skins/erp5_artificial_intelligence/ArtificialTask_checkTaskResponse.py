@@ -2,9 +2,9 @@ import json
 
 portal = context.getPortalObject()
 
-active_process = portal.restrictedTraverse(response_id)
+dummy_response = portal.restrictedTraverse(response_id)
 
-description = active_process.getDescription()
+description = dummy_response.getDescription()
 
 if description:
   result = json.loads(description)
