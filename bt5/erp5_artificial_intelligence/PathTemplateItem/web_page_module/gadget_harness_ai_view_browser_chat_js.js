@@ -3,7 +3,7 @@
 (function (window, rJS, RSVP, calculatePageTitle) {
   "use strict";
 
-  var CHECK_TASK_RESPONSE_POLL_INTERVAL = 1000;
+  var CHECK_TASK_RESPONSE_POLL_INTERVAL = 3000;
 
   rJS(window)
     /////////////////////////////////////////////////////////////////

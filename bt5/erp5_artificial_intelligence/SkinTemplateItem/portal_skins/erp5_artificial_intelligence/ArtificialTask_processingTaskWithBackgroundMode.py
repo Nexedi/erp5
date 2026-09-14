@@ -3,7 +3,7 @@ artificial_task = context
 conn = artificial_task.getConnectorValue()
 model = artificial_task.getModel()
 
-active_process = artificial_task.restrictedTraverse(active_process_relative_url)
+dummy_response = artificial_task.restrictedTraverse(dummy_response_relative_url)
 
 if tool_definition_list and isinstance(tool_definition_list, str):
   tool_definition_list = json.loads(tool_definition_list)
@@ -19,7 +19,7 @@ if compact_message_list and isinstance(compact_message_list, str):
 if is_subagent:
   response = conn.getResponseWithUsage(
     messages=message_list, model=model, tools=tool_definition_list)
-  active_process.edit(
+  dummy_response.edit(
     description = json.dumps(response)
   )
 
@@ -44,7 +44,7 @@ elif compact_message_list:
     model=model,
     tools=[])
 
-  active_process.edit(
+  dummy_response.edit(
     description = json.dumps(summary_response)
   )
 
@@ -68,6 +68,6 @@ else:
 
   response = conn.getResponseWithUsage(
     messages=message_list, model=model, tools=tool_definition_list)
-  active_process.edit(
+  dummy_response.edit(
     description = json.dumps(response)
   )

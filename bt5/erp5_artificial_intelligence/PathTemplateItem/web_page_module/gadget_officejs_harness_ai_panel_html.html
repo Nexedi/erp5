@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Harness AI Panel</title>
+    <link rel="http://www.renderjs.org/rel/interface" href="interface_panel.html">
+    <!--
+      data-i18n="New Task"
+      data-i18n="Setting"
+      data-i18n="Close"
+    -->
+
+    <!-- renderjs -->
+    <script src="rsvp.js"></script>
+    <script src="renderjs.js"></script>
+    <script src="domsugar.js"></script>
+    <script src="jiodev.js"></script>
+    <script src="gadget_global.js"></script>
+    <script src="gadget_erp5_global.js"></script>
+
+    <!-- custom script -->
+    <script src="gadget_officejs_harness_ai_panel.js"></script>
+
+  </head>
+  <body>
+    <div>
+      <div data-role="header">
+        <div class="ui-btn-left">
+          <div class="ui-controlgroup-controls">
+            <button data-i18n="Close" class="ui-btn-icon-notext ui-icon-delete">Close</button>
+          </div>
+        </div>
+        <div class="panel_img">
+        <img alt="ORKONN" src="gadget_orkonn_panel.png"/>
+        </div>
+      </div>
+      <div>
+        <ul></ul>
+        <dl></dl>
+      </div>
+    </div>
+  </body>
+</html>

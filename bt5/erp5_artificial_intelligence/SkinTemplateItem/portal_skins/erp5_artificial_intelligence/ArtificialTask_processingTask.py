@@ -3,12 +3,11 @@ artificial_task = context
 # simulate background mode
 portal = artificial_task.getPortalObject()
 
-active_process = portal.portal_activities.newActiveProcess(
-  start_date=DateTime(),
-  causality_value=artificial_task,
+dummy_response = portal.artificial_dummy_response_module.newContent(
+  portal_type='Artificial Dummy Response',
 )
 
-active_process_relative_url = active_process.getRelativeUrl()
+dummy_response_relative_url = dummy_response.getRelativeUrl()
 
 if artificial_task.getSimulationState() != 'processing':
   artificial_task.start()
@@ -19,7 +18,7 @@ artificial_task.activate(activity='SQLQueue').ArtificialTask_processingTaskWithB
   compact_message_list = compact_message_list,
   initial_message_list = initial_message_length,
   is_subagent = is_subagent,
-  active_process_relative_url = active_process_relative_url
+  dummy_response_relative_url = dummy_response_relative_url
 )
 
-return active_process_relative_url
+return dummy_response_relative_url
