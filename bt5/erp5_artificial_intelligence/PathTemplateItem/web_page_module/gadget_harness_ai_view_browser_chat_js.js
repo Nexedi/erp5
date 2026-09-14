@@ -3,6 +3,8 @@
 (function (window, rJS, RSVP, calculatePageTitle) {
   "use strict";
 
+  var CHECK_TASK_RESPONSE_POLL_INTERVAL = 1000;
+
   rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -41,9 +43,43 @@
       var gadget = this,
         document_id = argument_list[0],
         body = argument_list[1];
+
+      function checkTaskResponse(active_process_relative_url) {
+        return gadget.jio_getAttachment(
+          document_id,
+          gadget.hateoas_url + document_id + "/ArtificialTask_checkTaskResponse?response_id=" +
+            encodeURIComponent(active_process_relative_url)
+        )
+          .push(function (result) {
+            if (result.status !== 'done') {
+              return new RSVP.Queue(RSVP.delay(CHECK_TASK_RESPONSE_POLL_INTERVAL))
+                .push(function () {
+                  return checkTaskResponse(active_process_relative_url);
+                });
+            }
+            return result;
+          });
+      }
+
       return gadget.jio_putAttachment(
         document_id,
         gadget.hateoas_url + document_id + "/ArtificialTask_processingTask",
+        body
+      )
+        .push(function (evt) {
+          return jIO.util.readBlobAsText(evt.target.response);
+        })
+        .push(function (text_evt) {
+          return checkTaskResponse(text_evt.target.result);
+        });
+    })
+    .allowPublicAcquisition('storeTaskResult', function (argument_list) {
+      var gadget = this,
+        document_id = argument_list[0],
+        body = argument_list[1];
+      return gadget.jio_putAttachment(
+        document_id,
+        gadget.hateoas_url + document_id + "/ArtificialTask_storeTaskResult",
         body
       );
     })

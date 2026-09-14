@@ -1,4 +1,4 @@
-/*global window, rJS, RSVP, jIO */
+/*global window, rJS, RSVP */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 (function (window, rJS, RSVP) {
   "use strict";
@@ -76,6 +76,7 @@
   rJS(window)
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
     .declareAcquiredMethod("requestProcessTask", "requestProcessTask")
+    .declareAcquiredMethod("storeTaskResult", "storeTaskResult")
 
     .declareMethod('runSubagentTask', function (task, max_turns) {
       var gadget = this,
@@ -145,11 +146,7 @@
               }
             );
           })
-          .push(function (evt) {
-            return jIO.util.readBlobAsText(evt.target.response);
-          })
-          .push(function (text_evt) {
-            var result = JSON.parse(text_evt.target.result);
+          .push(function (result) {
             if (result.tool_calls && result.tool_calls.length) {
               return subagentLoopCall(
                 loop_count + 1,
@@ -255,11 +252,7 @@
         gadget.options.jio_key,
         { compact_message_list: JSON.stringify(old_message_list) }
       )
-        .push(function (evt) {
-          return jIO.util.readBlobAsText(evt.target.response);
-        })
-        .push(function (text_evt) {
-          var result = JSON.parse(text_evt.target.result);
+        .push(function (result) {
           if (!result.content) {
             throw new Error("compactMessageList: empty summary");
           }
@@ -341,11 +334,7 @@
               }
             );
           })
-          .push(function (evt) {
-            return jIO.util.readBlobAsText(evt.target.response);
-          })
-          .push(function (text_evt) {
-            var result = JSON.parse(text_evt.target.result);
+          .push(function (result) {
             if (result.tool_calls && result.tool_calls.length) {
               tool_message_list.push({
                 'role': 'assistant',
@@ -367,7 +356,14 @@
             return RSVP.all([
               gadget.gadget_chat_ui.showMessage({ content: result.content , tool_message_list: tool_message_list }),
               gadget.notifySubmitted({message: 'Completed', status: "success"}),
-              gadget.gadget_chat_ui.resetEditor()
+              gadget.gadget_chat_ui.resetEditor(),
+              gadget.storeTaskResult(
+                gadget.options.jio_key,
+                {
+                  message_list: JSON.stringify(message_list.slice(initial_message_length).concat([result])),
+                  content: result.content
+                }
+              )
             ]);
           });
       }
