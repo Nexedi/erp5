@@ -19,6 +19,35 @@
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("redirect", "redirect")
 
+    .allowPublicAcquisition('getCommentPostList', function (argument_list) {
+      var gadget = this,
+        document_id = argument_list[0];
+      return gadget.jio_getAttachment(
+        document_id,
+        gadget.hateoas_url + document_id + "/ArtificialTask_getCommentPostListAsJson"
+      );
+    })
+    .allowPublicAcquisition('postComment', function (argument_list) {
+      var gadget = this,
+        document_id = argument_list[0],
+        form_data_json = argument_list[1];
+      return gadget.jio_putAttachment(
+        document_id,
+        gadget.hateoas_url + document_id + "/ArtificialTask_createCommentLine",
+        form_data_json
+      );
+    })
+    .allowPublicAcquisition('requestProcessTask', function (argument_list) {
+      var gadget = this,
+        document_id = argument_list[0],
+        body = argument_list[1];
+      return gadget.jio_putAttachment(
+        document_id,
+        gadget.hateoas_url + document_id + "/ArtificialTask_processingTask",
+        body
+      );
+    })
+
     .declareMethod('render', function (options) {
       var gadget = this;
       gadget.options = options;
@@ -46,20 +75,7 @@
           return chat_gadget.render({
             'chat_state': rendered_form.my_simulation_state['default'],
             'hateoas_url': gadget.hateoas_url,
-            'request_options': {
-              'document_id': gadget.options.jio_key,
-              // Builders, not resolved URLs: gadget_chat_agent_harness_js calls each
-              // one with the document_id to get the actual URL to use.
-              'post_url': function (document_id) {
-                return gadget.hateoas_url + document_id + "/ArtificialTask_createCommentLine";
-              },
-              'get_url': function (document_id) {
-                return gadget.hateoas_url + document_id + "/ArtificialTask_getCommentPostListAsJson";
-              },
-              'process_url': function (document_id) {
-                return gadget.hateoas_url + document_id + "/ArtificialTask_processingTask";
-              }
-            },
+            'jio_key': gadget.options.jio_key,
             'editor_options' : {
               editor: 'gadget_editor.html',
               options: {

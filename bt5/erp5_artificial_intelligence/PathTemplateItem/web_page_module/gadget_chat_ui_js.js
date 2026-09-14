@@ -79,11 +79,11 @@
 
   rJS(window)
     .declareAcquiredMethod("translate", "translate")
-    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
-    .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("notifyCommentPosted", "notifyCommentPosted")
+    .declareAcquiredMethod("getCommentPostList", "getCommentPostList")
+    .declareAcquiredMethod("postComment", "postComment")
 
     .declareMethod('render', function (options) {
       var gadget = this;
@@ -101,7 +101,7 @@
         return gadget.changeState({
           'editor_state': 'initialise',
           'allow_submit': true,
-          'render_comment': true ? gadget.options.request_options.get_url : false
+          'render_comment': true
         });
       });
     })
@@ -136,10 +136,7 @@
         queue
           .push(function () {
             return RSVP.all([
-              gadget.jio_getAttachment(
-                gadget.options.request_options.document_id,
-                gadget.options.request_options.get_url
-              ),
+              gadget.getCommentPostList(gadget.options.jio_key),
               gadget.translate("Attachment:")
             ]);
           })
@@ -259,7 +256,6 @@
             .push(function () {
               var choose_file_html_element = gadget.element.querySelector('#attachment'),
                 file_blob = choose_file_html_element.files[0],
-                url = gadget.options.request_options.post_url,
                 comment_text = content.comment,
                 form_data_json = {},
                 post;
@@ -289,9 +285,8 @@
                       file_name: file_blob.name
                     };
                   }
-                  return gadget.jio_putAttachment(
-                    gadget.options.request_options.document_id,
-                    url,
+                  return gadget.postComment(
+                    gadget.options.jio_key,
                     form_data_json
                   );
                 })
@@ -304,7 +299,7 @@
                     uri = new URI(location);
                     redirect_jio_key = uri.segment(2);
                   }
-                  if (redirect_jio_key && (gadget.options.request_options.document_id != redirect_jio_key)) {
+                  if (redirect_jio_key && (gadget.options.jio_key != redirect_jio_key)) {
                     return gadget.redirect({
                       command: 'display',
                       options: {

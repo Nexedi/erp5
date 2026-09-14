@@ -9,6 +9,21 @@
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
+    .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
+
+    .allowPublicAcquisition('getCommentPostList', function () {
+      return [];
+    })
+    .allowPublicAcquisition('postComment', function (argument_list) {
+      var gadget = this,
+        document_id = argument_list[0],
+        form_data_json = argument_list[1];
+      return gadget.jio_putAttachment(
+        document_id,
+        gadget.hateoas_url + document_id + "/ArtificialTaskModule_startNewArtificialTask",
+        form_data_json
+      );
+    })
 
     .declareMethod('render', function () {
       var gadget = this;
@@ -37,10 +52,7 @@
         .push(function (chat) {
           return chat.render({
               'hateoas_url': gadget.hateoas_url,
-              'request_options': {
-                'document_id': gadget.options.jio_key,
-                'post_url': gadget.hateoas_url + gadget.options.jio_key + "/ArtificialTaskModule_startNewArtificialTask"
-              },
+              'jio_key': gadget.options.jio_key,
               'editor_options' : {
                 editor: 'gadget_editor.html',
                 options: {

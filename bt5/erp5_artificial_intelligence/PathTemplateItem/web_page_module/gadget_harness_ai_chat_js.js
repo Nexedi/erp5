@@ -7,7 +7,7 @@
 
   rJS(window)
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
-    .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
+    .declareAcquiredMethod("requestProcessTask", "requestProcessTask")
 
     .declareMethod('render', function (options) {
       var gadget = this;
@@ -19,9 +19,8 @@
         })
         .push(function () {
           if (options.chat_state == 'planned') {
-            return gadget.jio_putAttachment(
-              gadget.options.request_options.document_id,
-              gadget.options.request_options.process_url,
+            return gadget.requestProcessTask(
+              gadget.options.jio_key,
               {}
             )
             .push(function () {
@@ -35,9 +34,8 @@
     })
     .allowPublicAcquisition('notifyCommentPosted', function () {
       var gadget = this;
-      return gadget.jio_putAttachment(
-        gadget.options.request_options.document_id,
-        gadget.options.request_options.process_url,
+      return gadget.requestProcessTask(
+        gadget.options.jio_key,
         {}
       )
         .push(function () {
@@ -55,8 +53,8 @@
           })
           .push(function () {
             return gadget.jio_getAttachment(
-              gadget.options.request_options.document_id,
-              gadget.options.request_options.status_url
+              gadget.options.jio_key,
+              gadget.options.status_url
             );
           })
           .push(function (result) {

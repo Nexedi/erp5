@@ -74,15 +74,13 @@
   }
 
   rJS(window)
-    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
-    .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
+    .declareAcquiredMethod("requestProcessTask", "requestProcessTask")
 
     .declareMethod('runSubagentTask', function (task, max_turns) {
       var gadget = this,
         queue_loop = new RSVP.Queue(),
-        document_id = gadget.options.request_options.document_id,
-        process_url = gadget.options.request_options.process_url,
+        document_id = gadget.options.jio_key,
         max_loop_count = Math.min(Math.max(Number(max_turns) || SUBAGENT_DEFAULT_MAX_LOOP_COUNT, 1), SUBAGENT_MAX_LOOP_COUNT_CAP),
         tool_definition_list = gadget.tool_list
           .filter(function (tool) { return tool.definition.name !== "spawn_subagent"; })
@@ -138,9 +136,8 @@
 
         queue_loop
           .push(function () {
-            return gadget.jio_putAttachment(
+            return gadget.requestProcessTask(
               document_id,
-              process_url,
               {
                 message_list: JSON.stringify(message_list),
                 tool_definition_list: JSON.stringify(tool_definition_list),
@@ -177,16 +174,8 @@
     })
 
     .declareMethod('render', function (options) {
-      var gadget = this,
-        request_options_builder = options.request_options,
-        document_id = request_options_builder.document_id;
+      var gadget = this;
       gadget.options = options;
-      gadget.options.request_options = {
-        document_id: document_id,
-        post_url: request_options_builder.post_url(document_id),
-        get_url: request_options_builder.get_url(document_id),
-        process_url: request_options_builder.process_url(document_id)
-      };
       gadget.tool_list = window.ChatTools.createToolList(gadget.element, options.hateoas_url);
       gadget.tool_list.push({
         definition: {
@@ -262,9 +251,8 @@
         return message_list;
       }
 
-      return gadget.jio_putAttachment(
-        gadget.options.request_options.document_id,
-        gadget.options.request_options.process_url,
+      return gadget.requestProcessTask(
+        gadget.options.jio_key,
         { compact_message_list: JSON.stringify(old_message_list) }
       )
         .push(function (evt) {
@@ -344,9 +332,8 @@
 
         queue_loop
           .push(function () {
-            return gadget.jio_putAttachment(
-              gadget.options.request_options.document_id,
-              gadget.options.request_options.process_url,
+            return gadget.requestProcessTask(
+              gadget.options.jio_key,
               {
                 message_list: JSON.stringify(message_list),
                 tool_definition_list: JSON.stringify(tool_definition_list),
