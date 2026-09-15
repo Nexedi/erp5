@@ -1,0 +1,9 @@
+Artificial Task Line | aggregate
+Artificial Task Line | causality
+Artificial Task Line | specialise
+Artificial Task Module | business_application
+Artificial Task Report Line | aggregate
+Artificial Task Report Line | connector
+Artificial Task Report Module | business_application
+Artificial Task | aggregate
+Artificial Task | connector

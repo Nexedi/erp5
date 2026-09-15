@@ -1,0 +1,14 @@
+<allowed_content_type_list>
+ <portal_type id="Artificial Task">
+  <item>Artificial Task Line</item>
+ </portal_type>
+ <portal_type id="Artificial Task Module">
+  <item>Artificial Task</item>
+ </portal_type>
+ <portal_type id="Artificial Task Report">
+  <item>Artificial Task Report Line</item>
+ </portal_type>
+ <portal_type id="Artificial Task Report Module">
+  <item>Artificial Task Report</item>
+ </portal_type>
+</allowed_content_type_list>

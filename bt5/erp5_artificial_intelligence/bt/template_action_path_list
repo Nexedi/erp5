@@ -1,0 +1,13 @@
+Artificial Task Line | harness_ai_view
+Artificial Task Line | view
+Artificial Task Module | browser_harness_ai_view
+Artificial Task Module | erp5_harness_ai_view
+Artificial Task Module | view
+Artificial Task Report Line | view
+Artificial Task Report Module | view
+Artificial Task Report | jump_to_artificial_task
+Artificial Task Report | view
+Artificial Task | browser_harness_ai_view
+Artificial Task | erp5_harness_ai_view
+Artificial Task | jump_to_related_artificial_task_report
+Artificial Task | view
