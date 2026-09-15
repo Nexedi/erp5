@@ -909,9 +909,7 @@ class SingleItemsWidget(ItemsWidget):
   def render_items(self, field, key, value, REQUEST, render_prefix=None):
     # get items
     cell = getattr(REQUEST, 'cell', None)
-    items = field.get_value('items', REQUEST=REQUEST, cell=cell)
-    if not items:
-      return []
+    items = field.get_value('items', REQUEST=REQUEST, cell=cell) or []
 
     # check if we want to select first item
     if not value and field.get_value('first_item', REQUEST=REQUEST,
@@ -1051,11 +1049,7 @@ class MultiItemsWidget(ItemsWidget):
     # XXX -yo
     selected_found = {}
 
-    items = field.get_value('items', REQUEST=REQUEST, cell=getattr(REQUEST, 'cell', None)) # Added request
-    from Products.ERP5Form.MultiLinkField import MultiLinkFieldWidget
-    if not items:
-      return []
-
+    items = field.get_value('items', REQUEST=REQUEST, cell=getattr(REQUEST, 'cell', None)) or []
     css_class = field.get_value('css_class')
     extra_item = field.get_value('extra_item')
     rendered_items = []
@@ -1119,7 +1113,7 @@ class MultiItemsWidget(ItemsWidget):
           d[item_value] = item_text
       result = []
       for e in value:
-          result.append(d[e])
+          result.append(d.get(e, '??? (%s)' % e))
       return result
 
   def render_view(self, field, value, REQUEST=None, render_prefix=None):
