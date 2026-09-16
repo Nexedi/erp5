@@ -256,11 +256,6 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
     '_baseGet%s': Translation.TranslatedPropertyGetter
   }
 
-  _translation_language_getter_definition_dict = {
-    'get%s': Translation.TranslatedPropertyGetter,
-    '_baseGet%s': Translation.TranslatedPropertyGetter
-  }
-
   _translation_language_tester_definition_dict = {
     'has%s': Translation.TranslatedPropertyTester
   }
