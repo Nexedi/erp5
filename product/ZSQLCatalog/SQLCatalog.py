@@ -1304,7 +1304,7 @@ class Catalog(Folder,
     connection_id = getattr(self, self.getSqlCatalogSchema()).connection_id
     db = getattr(self.getPortalObject(), connection_id)()
     if not db._registered and not db.innodb_locks_unsafe_for_binlog:
-      db._query('SET TRANSACTION ISOLATION LEVEL READ COMMITTED')
+      db._query('SET TRANSACTION ISOLATION LEVEL READ COMMITTED', allow_reconnect=True)
 
     object_path_dict = {}
     uid_list = []
