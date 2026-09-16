@@ -1,0 +1,20 @@
+portal_callables/ERP5Site_createCurrency
+portal_callables/ERP5Site_createOrganisation
+portal_callables/ERP5Site_createProduct
+portal_callables/ERP5Site_createPurchaseOrder
+portal_callables/ERP5Site_getCurrentTime
+portal_types/Artificial Task Module/browser_harness_ai_view
+portal_types/Artificial Task/browser_harness_ai_view
+web_page_module/gadget_chat_*
+web_page_module/gadget_harness_ai*
+web_page_module/gadget_officejs_artificial_task_view_*
+web_page_module/gadget_officejs_harness_ai_*
+web_page_module/marked_umd_js
+web_page_module/skill_create_purchase_order
+web_page_module/watr_js
+web_site_module/browser_harness_ai
+web_site_module/browser_harness_ai/**
+web_site_module/erp5_harness_ai
+web_site_module/erp5_harness_ai/**
+web_site_module/officejs_harness_ai
+web_site_module/officejs_harness_ai/**
