@@ -123,12 +123,14 @@
               (response.error.message || JSON.stringify(response.error)));
           }
           message = response.choices[0].message;
-          delete message.role;
-          return message;
-          return {
-            content: message.content || "",
-            tool_calls: message.tool_calls || []
-          };
+          if (message.tool_calls) {
+            return {
+              content: message.content || "",
+              tool_calls: message.tool_calls
+            };
+          }
+          response.content = message.content;
+          return response;
         });
     })
     .allowPublicAcquisition('storeTaskResult', function (argument_list) {
@@ -137,9 +139,8 @@
         body = argument_list[1],
         int_index = gadget.next_int_index || 0,
         message_list = body.message_list ? JSON.parse(body.message_list) : [],
-        tool_message_list = message_list.filter(function (message) {
-          return message.role === 'tool' || message.role === 'assistant';
-        });
+        tool_message_list =  message_list.slice(0, -1),
+        trace = message_list[message_list.length - 1];
       gadget.next_int_index = int_index + 1;
       return gadget.jio_post({
         portal_type: 'Artificial Task Line',
@@ -147,6 +148,7 @@
         text_content: body.content,
         int_index: int_index,
         response: true,
+        trace: trace,
         tool_message_list: JSON.stringify(tool_message_list)
       })
         .push(function () {
