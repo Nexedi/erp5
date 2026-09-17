@@ -45,25 +45,8 @@
             </value>
         </item>
         <item>
-            <key> <string>_local_properties</string> </key>
-            <value>
-              <tuple>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>reference</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
-            <value> <string>title, reference=None, dry_run=True, **kw</string> </value>
+            <value> <string>relative_url, action_id, dry_run=True, **kw</string> </value>
         </item>
         <item>
             <key> <string>categories</string> </key>
@@ -75,45 +58,42 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>{\n
+            <value> <string encoding="cdata"><![CDATA[
+
+{\n
   "type": "function",\n
   "function": {\n
-    "name": "ERP5Site_createOrganisation",\n
-    "description": "Get or create an Organisation (e.g. a supplier or client). Returns the existing one if an Organisation with the same reference (or title, if no reference given) already exists; otherwise creates and validates a new one.",\n
+    "name": "ERP5Document_doAction",\n
+    "description": "Perform any action on a module or document: create a new document inside it, invoke a workflow transition (e.g. \'plan\', \'confirm\', \'start\', \'stop\', \'validate\', \'deliver\'), or invoke a custom object action. Call ERP5Document_getActionList on the same relative_url first to find which action_id values are currently valid (including \'add <portal_type>\' entries built from can_create_here) and, if an action opens a dialog, which extra field values (dialog_field_list) it expects - pass those as extra keyword arguments here (for \'add <portal_type>\', they become the new document\'s field values; a relation field, whose id usually ends in \'_value\', takes the related document\'s relative_url as a string).",\n
     "parameters": {\n
       "type": "object",\n
       "properties": {\n
-        "title": {\n
+        "relative_url": {\n
           "type": "string",\n
-          "description": "Organisation title, e.g. company name"\n
+          "description": "relative_url of the module or existing document to act on"\n
         },\n
-        "reference": {\n
+        "action_id": {\n
           "type": "string",\n
-          "description": "Optional unique reference/code identifying the organisation. Used to look up an existing one if provided."\n
+          "description": "id of the action to invoke: a workflow transition (e.g. \'confirm\', \'start\', \'validate\'), a custom object action, or \'add <portal_type>\' (e.g. \'add Purchase Order Line\') to create a new document of that portal_type inside relative_url"\n
         },\n
         "dry_run": {\n
           "type": "boolean",\n
-          "description": "If true (default), do not create anything if it doesn\'t exist yet: just return a preview/summary. Set to false to actually create the organisation."\n
+          "description": "If true (default), do not invoke or create anything: just return a preview. Set to false to actually do it."\n
         }\n
       },\n
       "required": [\n
-        "title"\n
+        "relative_url",\n
+        "action_id"\n
       ]\n
     }\n
   }\n
-}</string> </value>
+}
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Site_createOrganisation</string> </value>
-        </item>
-        <item>
-            <key> <string>reference</string> </key>
-            <value> <string>20260811-27BF</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>ERP5Site_createOrganisation</string> </value>
+            <value> <string>ERP5Document_doAction</string> </value>
         </item>
       </dictionary>
     </pickle>
