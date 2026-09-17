@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <title>Listfield</title>
+
+    <!-- renderjs -->
+    <script src="rsvp.js" type="text/javascript"></script>
+    <script src="renderjs.js" type="text/javascript"></script>
+    <script src="handlebars.js" type="text/javascript"></script>
+    <!-- custom script -->
+    <script src="gadget_trade_field_list.js" type="text/javascript"></script>
+
+    <script id="option-template" type="text/x-handlebars-template">
+      <option value="{{value}}" data-i18n="{{text}}">{{text}}</option>
+    </script>
+
+    <script id="selected-option-template" type="text/x-handlebars-template">
+      <option selected="selected" data-i18n="{{text}}" value="{{value}}">{{text}}</option>
+    </script>
+
+  </head>
+  <body>
+    <select />
+  </body>
+</html>
