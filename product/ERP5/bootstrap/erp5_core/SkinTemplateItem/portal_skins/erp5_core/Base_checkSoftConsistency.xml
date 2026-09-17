@@ -46,11 +46,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>constraint_type_list=None</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_checkConsistency</string> </value>
+            <value> <string>Base_checkSoftConsistency</string> </value>
         </item>
       </dictionary>
     </pickle>
