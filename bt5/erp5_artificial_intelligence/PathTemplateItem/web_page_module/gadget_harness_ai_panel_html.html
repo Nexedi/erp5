@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Harness Panel</title>
+    <link rel="http://www.renderjs.org/rel/interface" href="interface_panel.html">
+    <!--
+      data-i18n="Home"
+      data-i18n="Support Requests"
+      data-i18n="Preferences"
+      data-i18n="Logout"
+      data-i18n="Views"
+      data-i18n="Decisions"
+      data-i18n="Actions"
+      data-i18n="Jumps"
+    -->
+
+    <!-- renderjs -->
+    <script src="rsvp.js"></script>
+    <script src="renderjs.js"></script>
+    <script src="domsugar.js"></script>
+    <script src="jiodev.js"></script>
+    <script src="gadget_global.js"></script>
+    <script src="gadget_erp5_global.js"></script>
+
+    <!-- custom script -->
+    <script src="gadget_harness_ai_panel.js"></script>
+
+  </head>
+  <body>
+    <div>
+      <div data-role="header">
+        <div class="ui-btn-left">
+          <div class="ui-controlgroup-controls">
+            <button data-i18n="Close" class="ui-btn-icon-notext ui-icon-delete">Close</button>
+          </div>
+        </div>
+        <div class="panel_img">
+        <img alt="ORKONN" src="gadget_orkonn_panel.png"/>
+        </div>
+      </div>
+      <div>
+
+        <form>
+          <button type="submit" class="ui-icon-action ui-btn-icon-right ui-screen-hidden">Submit</button>
+          <div data-gadget-url="gadget_erp5_searchfield.html"
+               data-gadget-scope="erp5_searchfield"
+               data-gadget-sandbox="public"></div>
+        </form>
+        <ul></ul>
+        <dl></dl>
+      </div>
+    </div>
+  </body>
+</html>
