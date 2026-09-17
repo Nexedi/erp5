@@ -1,19 +1,16 @@
 import json
 
 
-def get_dialog_field_list(document, action):
+def resolve_dialog(document, action):
   # The action's own resolved url (e.g. ".../confirm" for a bare
   # transition with no dialog, or ".../SomeType_viewSomeDialog" when it
   # opens a dialog first) is what a human actually navigates to for
-  # this action - not necessarily the same as its id/reference (used by
-  # ERP5Document_doAction). Traverse to whatever that url's last path
-  # segment names, acquired directly on the document so field TALES
-  # expressions referring to "here" resolve to it. If that target is
-  # itself a Formulator Form (most ERP5 dialogs are), read its fields
-  # directly - no ERP5Document_getHateoas involved. A "view" action
-  # whose target is a Page Template rendering a form internally, rather
-  # than being a Form itself, is not something this can see into; it
-  # simply comes back with no fields.
+  # this action - not necessarily the same as its id/reference. Traverse
+  # to whatever that url's last path segment names, acquired directly on
+  # the document so field TALES expressions referring to "here" resolve
+  # to it. Returns None if that target is not itself a Formulator Form
+  # (e.g. a bare transition, or a Page Template rendering a form
+  # internally rather than being one).
   url = action.get('url') or ''
   view_name = url.rstrip('/').rsplit('/', 1)[-1] if url else action.get('id')
   if view_name:
@@ -29,6 +26,13 @@ def get_dialog_field_list(document, action):
       "Could not find view '%s' (from action url %r) on document '%s'" % (
         view_name, url, document.getRelativeUrl()))
   if not hasattr(target, 'get_fields'):
+    return None
+  return target
+
+
+def get_dialog_field_list(document, action):
+  target = resolve_dialog(document, action)
+  if target is None:
     return None
 
   field_list = []
@@ -52,14 +56,14 @@ def get_dialog_field_list(document, action):
   return field_list or None
 
 
-def build_action_list(document, action_source_list):
+def build_action_list(document, action_source_list, action_id_override=None):
   result = []
   for action in action_source_list:
     action_id = action.get('id')
     if not action_id:
       continue
     result.append({
-      'action_id': action_id,
+      'action_id': action_id_override or action_id,
       'title': action.get('title') or action.get('name'),
       'dialog_field_list': get_dialog_field_list(document, action),
     })
@@ -92,11 +96,14 @@ workflow_action_list = build_action_list(document, action_dict.get('workflow', [
 object_action_list = build_action_list(
   document, document.Base_fixDialogActions(action_dict, 'object_action') or [])
 
-# "View" actions (e.g. the document's own "view" action): these are not
-# a dialog or a transition, but the object's own editable view - where
-# the fields listed in dialog_field_list are the object's current
-# content, editable and saved directly.
-object_view_list = build_action_list(document, action_dict.get('object_view', []))
+# The document's own "view" action is not itself an invokable action -
+# saving edited field values on an existing document is done via the
+# document's own generic edit() method (action_id 'edit', handled
+# specially by ERP5Document_doAction) - so report that as the action_id
+# here rather than the view's own id, even though its dialog_field_list
+# still comes from the real "view" action's form.
+object_view_list = build_action_list(
+  document, action_dict.get('object_view', []), action_id_override='edit')
 
 return json.dumps({
   'relative_url': relative_url,

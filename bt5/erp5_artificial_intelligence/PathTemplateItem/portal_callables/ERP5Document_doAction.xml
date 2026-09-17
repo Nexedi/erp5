@@ -64,7 +64,7 @@
   "type": "function",\n
   "function": {\n
     "name": "ERP5Document_doAction",\n
-    "description": "Perform any action on a module or document: create a new document inside it, invoke a workflow transition (e.g. \'plan\', \'confirm\', \'start\', \'stop\', \'validate\', \'deliver\'), or invoke a custom object action. Call ERP5Document_getActionList on the same relative_url first to find which action_id values are currently valid (including \'add <portal_type>\' entries built from can_create_here) and, if an action opens a dialog, which extra field values (dialog_field_list) it expects - pass those as extra keyword arguments here (for \'add <portal_type>\', they become the new document\'s field values; a relation field, whose id usually ends in \'_value\', takes the related document\'s relative_url as a string).",\n
+    "description": "Perform any action on a module or document: create a new document inside it, invoke a workflow transition (e.g. \'plan\', \'confirm\', \'start\', \'stop\', \'validate\', \'deliver\'), invoke a custom object action, or save edits to a document\'s own fields (action_id \'edit\'). Call ERP5Document_getActionList on the same relative_url first to find which action_id values are currently valid (including \'add <portal_type>\' entries built from can_create_here, and \'edit\' from object_view_list). If that action opens a dialog, its fields (dialog_field_list) are automatically pre-filled with their own default/current values before invoking - you only need to pass keyword arguments for the fields whose value you want to override (for \'add <portal_type>\' or \'edit\', they become the document\'s field values, using the plain property id with any \'my_\' prefix removed; a relation field, whose id usually ends in \'_value\', takes the related document\'s relative_url as a string).",\n
     "parameters": {\n
       "type": "object",\n
       "properties": {\n
@@ -74,7 +74,7 @@
         },\n
         "action_id": {\n
           "type": "string",\n
-          "description": "id of the action to invoke: a workflow transition (e.g. \'confirm\', \'start\', \'validate\'), a custom object action, or \'add <portal_type>\' (e.g. \'add Purchase Order Line\') to create a new document of that portal_type inside relative_url"\n
+          "description": "id of the action to invoke: a workflow transition (e.g. \'confirm\', \'start\', \'validate\'), a custom object action, \'add <portal_type>\' (e.g. \'add Purchase Order Line\') to create a new document of that portal_type inside relative_url, or \'edit\' to save edits to relative_url\'s own fields"\n
         },\n
         "dry_run": {\n
           "type": "boolean",\n
