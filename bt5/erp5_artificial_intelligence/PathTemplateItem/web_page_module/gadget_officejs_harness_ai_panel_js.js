@@ -63,8 +63,8 @@
           .push(function () {
             return RSVP.hash({
               url_list: gadget.getUrlForList([
+                {command: 'display', options: {page: "ojs_harness_ai_homepage"}},
                 {command: 'display'},
-                {command: 'display', options: {page: "ojs_harness_ai_task_list"}},
                 {command: 'display', options: {page: "ojs_harness_ai_setting"}}
               ]),
               translation_list: gadget.getTranslationList([

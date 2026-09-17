@@ -36,7 +36,16 @@
       migration_version: currentVersion()
     })
       .push(function () {
-        return gadget.redirect({command: "display", options: {page: 'ojs_sync', auto_repair: 'true'}});
+        return gadget.redirect({command: "display", options: {
+          page: 'ojs_sync',
+          auto_repair: 'true',
+          redirect: JSON.stringify({
+            command: 'display',
+            options: {
+              page: "ojs_harness_ai_homepage"
+            }
+          })
+        }});
       });
   }
 

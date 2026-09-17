@@ -16,6 +16,8 @@
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
     .declareAcquiredMethod("jio_post", "jio_post")
     .declareAcquiredMethod("jio_put", "jio_put")
+    .declareAcquiredMethod("getUrlFor", "getUrlFor")
+
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
 
     .allowPublicAcquisition('getCommentPostList', function (argument_list) {
@@ -201,7 +203,17 @@
           });
         })
         .push(function () {
+          return RSVP.all([
+            gadget.getUrlFor({command: 'history_previous'}),
+            gadget.getUrlFor({command: 'selection_previous'}),
+            gadget.getUrlFor({command: 'selection_next'})
+          ]);
+        })
+        .push(function (all_result) {
           return gadget.updateHeader({
+            selection_url: all_result[0],
+            previous_url: all_result[1],
+            next_url: all_result[2],
             page_title: gadget.state.doc.title
           });
         });

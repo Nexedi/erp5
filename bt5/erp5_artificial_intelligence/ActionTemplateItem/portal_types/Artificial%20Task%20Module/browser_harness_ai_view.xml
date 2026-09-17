@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Action Information" module="erp5.portal_type"/>
+      <global name="ActionInformation" module="Products.CMFCore.ActionInformation"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -13,20 +13,20 @@
             </value>
         </item>
         <item>
-            <key> <string>action_permission</string> </key>
+            <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>View</string>
+                <string>action_type/object_list</string>
               </tuple>
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>action_type/object_jio_view</string>
-              </tuple>
-            </value>
+            <key> <string>category</string> </key>
+            <value> <string>object_list</string> </value>
+        </item>
+        <item>
+            <key> <string>condition</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -35,16 +35,24 @@
             </value>
         </item>
         <item>
-            <key> <string>float_index</string> </key>
-            <value> <float>2.0</float> </value>
+            <key> <string>icon</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>browser_harness_ai_view</string> </value>
         </item>
         <item>
-            <key> <string>reference</string> </key>
-            <value> <string>browser_harness_ai_view</string> </value>
+            <key> <string>permissions</string> </key>
+            <value>
+              <tuple>
+                <string>View</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>priority</string> </key>
+            <value> <float>2.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -65,7 +73,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/ArtificialTask_viewForBrowserHarnessAI</string> </value>
+            <value> <string>string:${object_url}/ArtificialTaskModule_viewArtificialTaskList</string> </value>
         </item>
       </dictionary>
     </pickle>

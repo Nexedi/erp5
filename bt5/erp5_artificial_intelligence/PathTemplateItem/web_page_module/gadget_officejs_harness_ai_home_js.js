@@ -1,14 +1,14 @@
-/*global window, rJS */
+/*global window, rJS, RSVP */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS) {
+(function (window, rJS, RSVP) {
   "use strict";
 
   rJS(window)
-    .declareAcquiredMethod("getSetting", "getSetting")
+    .declareAcquiredMethod("getSettingList", "getSettingList")
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
     .declareAcquiredMethod("jio_post", "jio_post")
     .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
-
+    .declareAcquiredMethod("redirect", "redirect")
     .allowPublicAcquisition('getCommentPostList', function () {
       return [];
     })
@@ -39,13 +39,32 @@
     })
 
     .declareMethod('render', function () {
-      var gadget = this;
+      var gadget = this,
+        current_version,
+        index;
       gadget.options = {'jio_key': 'artificial_task_module'};
-      return gadget.getSetting('hateoas_url')
-        .push(function (hateoas_url) {
-          gadget.hateoas_url = hateoas_url;
-        })
+
+      current_version = window.location.href.replace(window.location.hash, "");
+      index = current_version.indexOf(window.location.host) +
+        window.location.host.length;
+      current_version = current_version.substr(index);
+
+      return new RSVP.Queue()
         .push(function () {
+          return gadget.getSettingList(["migration_version", "app_configurator", "hateoas_url"]);
+        })
+        .push(function (setting_list) {
+          var configurator = setting_list[1] || 'ojs_configurator';
+          if (setting_list[0] !== current_version) {
+            return gadget.redirect({
+              'command': 'display',
+              'options': {
+                'page': configurator,
+                'auto_repair': true
+              }
+            });
+          }
+          gadget.hateoas_url = setting_list[2];
           return gadget.changeState({id: 'artificial_task_module'});
         });
     })
@@ -70,4 +89,4 @@
           });
         });
     });
-}(window, rJS));
+}(window, rJS, RSVP));

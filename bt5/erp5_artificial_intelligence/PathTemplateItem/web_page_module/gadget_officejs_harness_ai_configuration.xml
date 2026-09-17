@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts89567299.528045</string> </value>
+            <value> <string>ts89637610.0265415</string> </value>
         </item>
         <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
@@ -67,20 +67,20 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>6548ed272c81b2764d0bfc6463ffe162</string> </value>
+            <value> <string>827b2e9c652273a90f79f724c8b8b83a</string> </value>
         </item>
         <item>
             <key> <string>data</string> </key>
             <value> <bytes>CONFIGURATION MANIFEST\n
-# generated on Wed Sep 16 14:01:39 2026\n
+# generated on Thu Sep 17 09:33:30 2026\n
 CACHE:\n
 \n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0FydGlmaWNpYWwgVGFzaw==\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0FydGlmaWNpYWwgVGFzay9icm93c2VyX2hhcm5lc3NfYWlfdmlldw==\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0FydGlmaWNpYWwgVGFzay9vZmZpY2Vqc19oYXJuZXNzX2FpX3ZpZXc=\n
 hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfYXJ0aWZpY2lhbF9pbnRlbGxpZ2VuY2UvQXJ0aWZpY2lhbFRhc2tfdmlld0ZvckJyb3dzZXJIYXJuZXNzQUk=\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0FydGlmaWNpYWwgVGFzayBNb2R1bGU=\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0FydGlmaWNpYWwgVGFzayBNb2R1bGUvYnJvd3Nlcl9oYXJuZXNzX2FpX3ZpZXc=\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfYXJ0aWZpY2lhbF9pbnRlbGxpZ2VuY2UvQXJ0aWZpY2lhbFRhc2tNb2R1bGVfdmlld0FydGlmaWNpYWxUYXNrTGlzdA==\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0FydGlmaWNpYWwgVGFzayBNb2R1bGUvb2ZmaWNlanNfaGFybmVzc19haV92aWV3\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfYXJ0aWZpY2lhbF9pbnRlbGxpZ2VuY2UvQXJ0aWZpY2lhbFRhc2tNb2R1bGVfdmlld0FydGlmaWNpYWxUYXNrTGlzdEZvckppbw==\n
 \n
 NETWORK:\n
 *</bytes> </value>
@@ -95,7 +95,7 @@ NETWORK:\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>750</int> </value>
+            <value> <int>758</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>

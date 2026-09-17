@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts89569502.5626137</string> </value>
+            <value> <string>ts89632869.5599873</string> </value>
         </item>
         <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
@@ -75,11 +75,11 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>6a04931e410f877a6d7842c52ee2316a</string> </value>
+            <value> <string>bd26e515d552775575388d8a5f9c3e61</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_harness_ai_homepage.js</string> </value>
+            <value> <string>gadget_erp5_page_ojs_harness_ai_homepage.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -107,7 +107,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>2386</int> </value>
+            <value> <int>3164</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -246,7 +246,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1035.45515.54851.19336</string> </value>
+                      <value> <string>1035.46563.8146.9028</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -262,7 +262,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1789569502.574373</float>
+                              <float>1789632869.566669</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
