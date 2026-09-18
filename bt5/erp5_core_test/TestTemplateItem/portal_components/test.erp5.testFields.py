@@ -598,6 +598,13 @@ class TestListField(ERP5TypeTestCase):
     self.assertEqual(script.attrib['value'], '<script>alert("value")</script>')
     self.assertEqual(script.text_content(), '<script>alert("text content")</script>')
 
+  def test_render_missing_item_empty_items(self):
+    self.field.values['items'] = []
+    (option, ), _, = lxml.html.fragments_fromstring(  # pylint:disable=unbalanced-tuple-unpacking
+      self.field.render(value='other'))
+    self.assertEqual(option.attrib['value'], 'other')
+    self.assertEqual(option.text_content(), '??? (other)')
+
   def test_render_disabled(self):
     self.field.values['default'] = ''
     # None items are rendered as disabled
@@ -665,6 +672,51 @@ class TestMultiListField(ERP5TypeTestCase):
     self.assertEqual(second.attrib['value'], 'b',)
     self.assertTrue(second.attrib['selected'])
 
+  def test_render_missing_item(self):
+    select, input_element, = lxml.html.fragments_fromstring(  # pylint:disable=unbalanced-tuple-unpacking
+      self.field.render(value=['other']))
+    # listfields render an input to confirm that the field was posted
+    # in the form's action script
+    self.assertEqual(input_element.name, 'default_field_test_field:int')
+    self.assertEqual(input_element.type, 'hidden')
+
+    self.assertEqual(
+      [(e.text_content(), e.tag, sorted(e.attrib.items())) for e in list(select)],
+      [
+        ('A', 'option', [('value', 'a')]),
+        ('B', 'option', [('value', 'b')]),
+        ('??? (other)', 'option', [('selected', 'selected'), ('value', 'other')]),
+      ],
+    )
+
+  def test_render_missing_item_mixed(self):
+    select, input_element, = lxml.html.fragments_fromstring(  # pylint:disable=unbalanced-tuple-unpacking
+      self.field.render(value=['a', 'other']))
+    self.assertEqual(input_element.name, 'default_field_test_field:int')
+    self.assertEqual(input_element.type, 'hidden')
+    self.assertEqual(
+      [(e.text_content(), e.tag, sorted(e.attrib.items())) for e in list(select)],
+      [
+        ('A', 'option', [('selected', 'selected'), ('value', 'a')]),
+        ('B', 'option', [('value', 'b')]),
+        ('??? (other)', 'option', [('selected', 'selected'), ('value', 'other')]),
+      ],
+    )
+
+  def test_render_missing_item_empty_items(self):
+    self.field.values['items'] = []
+    select, input_element, = lxml.html.fragments_fromstring(  # pylint:disable=unbalanced-tuple-unpacking
+      self.field.render(value=['other']))
+    self.assertEqual(input_element.name, 'default_field_test_field:int')
+    self.assertEqual(input_element.type, 'hidden')
+
+    self.assertEqual(
+      [(e.text_content(), e.tag, sorted(e.attrib.items())) for e in list(select)],
+      [
+        ('??? (other)', 'option', [('selected', 'selected'), ('value', 'other')]),
+      ],
+    )
+
   def test_render_escape_html(self):
     self.field.values['default'] = []
     self.field.values['items'] = [
@@ -691,6 +743,17 @@ class TestMultiListField(ERP5TypeTestCase):
 
   def test_render_view_tuple(self):
     self.assertEqual('A<br />\nB', self.field.render_view(value=('a', 'b')))
+
+  def test_render_view_missing_item(self):
+    self.assertEqual('??? (other)', self.field.render_view(value=['other']))
+
+  def test_render_view_missing_item_mixed(self):
+    self.assertEqual('A<br />\n??? (other)',
+                     self.field.render_view(value=['a', 'other']))
+
+  def test_render_view_missing_item_empty_items(self):
+    self.field.values['items'] = []
+    self.assertEqual('??? (other)', self.field.render_view(value=['other']))
 
   def test_render_items_odf_tuple(self):
     self.assertEqual(
