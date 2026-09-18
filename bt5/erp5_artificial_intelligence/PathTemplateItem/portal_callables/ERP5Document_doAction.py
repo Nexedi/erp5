@@ -1,6 +1,7 @@
 import json
 
 ADD_PREFIX = 'add '
+context.log(kw)
 
 portal = context.getPortalObject()
 document = portal.restrictedTraverse(relative_url)
@@ -24,25 +25,56 @@ def strip_field_prefix(field_id):
   return field_id
 
 
-def resolve_dialog(action):
-  # Same resolution as ERP5Document_getActionList.resolve_dialog: the
-  # action's own resolved url's last path segment, acquired directly on
-  # the document. Returns None if that target is not itself a
-  # Formulator Form (e.g. a bare transition with no dialog).
+def resolve_dialog(target, action):
+  # The action's own resolved url's last path segment, acquired
+  # directly on the target document. Returns None if that target is not
+  # itself a Formulator Form (e.g. a bare transition with no dialog).
   url = action.get('url') or ''
   view_name = url.rstrip('/').rsplit('/', 1)[-1] if url else action.get('id')
   if view_name:
     view_name = view_name.split('?', 1)[0]
   if not view_name:
-    return None, None
-  target = getattr(document, view_name, None)
-  if target is None:
+    return None
+  view = getattr(target, view_name, None)
+  if view is None:
     raise ValueError(
       "Could not find view '%s' (from action url %r) on document '%s'" % (
-        view_name, url, document.getRelativeUrl()))
-  if not hasattr(target, 'get_fields'):
-    return None, view_name
-  return target, view_name
+        view_name, url, target.getRelativeUrl()))
+  if not hasattr(view, 'get_fields'):
+    return None
+  return view
+
+
+def resolve_own_view_dialog(target):
+  # Same as resolve_dialog, but for target's own "view" action (used to
+  # read back its current field values after a change, generically -
+  # no assumption about which properties matter, e.g. title is just one
+  # of them).
+  action_dict = target.Base_filterDuplicateActions(
+    portal.portal_actions.listFilteredActionsFor(target))
+  object_view_action_list = action_dict.get('object_view', [])
+  if not object_view_action_list:
+    return None
+  return resolve_dialog(target, object_view_action_list[0])
+
+
+def read_current_property_dict(target):
+  # Re-read whatever a document's own "view" form currently shows,
+  # generically - this is a genuine read-back of what is actually
+  # stored now, not an echo of whatever kwargs a caller sent (which
+  # could be wrong, ignored, or only partially applied).
+  dialog = resolve_own_view_dialog(target)
+  if dialog is None:
+    return None
+  property_dict = {}
+  for field in dialog.get_fields():
+    try:
+      if field.get_value('hidden'):
+        continue
+      property_dict[strip_field_prefix(field.id)] = field.get_value('default')
+    except Exception:
+      continue
+  return property_dict
 
 
 # "add <portal_type>" is the same convention context_box_render.zpt uses
@@ -66,13 +98,22 @@ if action_id.startswith(ADD_PREFIX):
   if kw:
     new_document.edit(**{key: resolve_value(key, value) for key, value in kw.items()})
 
-  return json.dumps({
+  result_dict = {
     'dry_run': False,
     'created': True,
     'relative_url': new_document.getRelativeUrl(),
     'portal_type': new_document.getPortalType(),
-    'title': new_document.getTitle(),
-  }, default=str)
+    'property_dict': read_current_property_dict(new_document),
+  }
+  if not kw:
+    result_dict['warning'] = (
+      'No field values were passed - this document was created with only '
+      'default values (see property_dict). If you already know values '
+      'for it (e.g. a title or other detail the user gave you), call '
+      'ERP5Document_doAction again on relative_url \'%s\' with '
+      'action_id \'edit\' and those values as keyword arguments.'
+    ) % new_document.getRelativeUrl()
+  return json.dumps(result_dict, default=str)
 
 # "edit" is not itself a real "view"/"workflow"/"object" action - it is
 # ERP5Document_getActionList's action_id for "save this document's own
@@ -83,18 +124,7 @@ if action_id.startswith(ADD_PREFIX):
 # prefix to get the real property ids, apply their current/default
 # values, then let any explicitly-passed overrides win.
 if action_id == 'edit':
-  action_dict = document.Base_filterDuplicateActions(
-    portal.portal_actions.listFilteredActionsFor(document))
-  object_view_action_list = action_dict.get('object_view', [])
-  if not object_view_action_list:
-    return json.dumps({
-      'done': False,
-      'relative_url': relative_url,
-      'action_id': action_id,
-      'message': 'This document has no "view" action to edit.',
-    })
-
-  dialog, _view_name = resolve_dialog(object_view_action_list[0])
+  dialog = resolve_own_view_dialog(document)
   if dialog is None:
     return json.dumps({
       'done': False,
@@ -129,12 +159,21 @@ if action_id == 'edit':
 
   document.edit(**{key: resolve_value(key, value) for key, value in final_kw.items()})
 
-  return json.dumps({
+  result_dict = {
     'dry_run': False,
     'done': True,
     'relative_url': relative_url,
     'action_id': action_id,
-  }, default=str)
+    'property_dict': read_current_property_dict(document),
+  }
+  if not kw:
+    result_dict['warning'] = (
+      'No field values were passed - this call only re-saved the '
+      'existing values shown in property_dict, nothing changed. If you '
+      'intended to set a specific value (e.g. from what the user asked '
+      'for), call again with it as a keyword argument.'
+    )
+  return json.dumps(result_dict, default=str)
 
 method = getattr(document, action_id, None)
 if method is None or not callable(method):
@@ -165,16 +204,15 @@ for action_source_list in (
   if matched_action is not None:
     break
 
-if matched_action is not None:
-  dialog, _view_name = resolve_dialog(matched_action)
-  if dialog is not None:
-    for field in dialog.get_fields():
-      try:
-        if field.get_value('hidden') or not field.get_value('editable'):
-          continue
-        final_kw[field.id] = field.get_value('default')
-      except Exception:
+dialog = resolve_dialog(document, matched_action) if matched_action is not None else None
+if dialog is not None:
+  for field in dialog.get_fields():
+    try:
+      if field.get_value('hidden') or not field.get_value('editable'):
         continue
+      final_kw[field.id] = field.get_value('default')
+    except Exception:
+      continue
 final_kw.update(kw)
 
 if dry_run:
@@ -194,6 +232,11 @@ result_dict = {
   'done': True,
   'relative_url': relative_url,
   'action_id': action_id,
+  # A bare workflow transition/object action has no form of its own to
+  # re-read (dialog is None in that case) - fall back to echoing what
+  # was sent so the response is never empty, but prefer the document's
+  # own current view whenever that action had a real dialog.
+  'property_dict': read_current_property_dict(document) if dialog is not None else final_kw,
 }
 if hasattr(document, 'getSimulationState'):
   result_dict['simulation_state'] = document.getSimulationState()

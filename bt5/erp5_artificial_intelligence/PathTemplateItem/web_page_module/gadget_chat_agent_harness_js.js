@@ -305,6 +305,7 @@
                 tool_message_list.push({
                   name: tool_call.function.name,
                   content: result_content,
+                  sub_message_list: client_tool_result.message_list,
                   'role': 'tole'
                 });
               }

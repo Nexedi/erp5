@@ -48,12 +48,29 @@
     ]);
   }
 
+  function getSubMessageDiv(sub_message) {
+    var label = sub_message.role === "tool" ?
+        ("Tool: " + sub_message.name) :
+        (sub_message.role === "assistant" ? "Assistant" : "Task");
+    return domsugar("div", { "class": "post-tool-entry post-tool-sub-entry" }, [
+      domsugar("strong", [label]),
+      domsugar("br"),
+      domsugar("div", { "class": "post-markdown", html: marked.parse(sub_message.content || "") })
+    ]);
+  }
+
   function getToolCallDiv(tool_message) {
-    return domsugar("div", { "class": "post-tool-entry" }, [
+    var dom_list = [
       domsugar("strong", ["Tool: " + tool_message.name]),
       domsugar("br"),
       domsugar("div", { "class": "post-markdown", html: marked.parse(tool_message.content || "") })
-    ]);
+    ];
+    if (tool_message.sub_message_list && tool_message.sub_message_list.length) {
+      dom_list.push(domsugar("details", { "class": "post-tool-sub-list" }, [
+        domsugar("summary", ["Sub-agent trace (" + tool_message.sub_message_list.length + ")"])
+      ].concat(tool_message.sub_message_list.map(getSubMessageDiv))));
+    }
+    return domsugar("div", { "class": "post-tool-entry" }, dom_list);
   }
 
   function getAgentMessageDiv(agent_message) {

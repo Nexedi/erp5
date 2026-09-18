@@ -101,11 +101,17 @@ line_list = [
   "`dialog_field_list` of the extra values it expects.",
   "3. Call **ERP5Document_doAction(relative_url, action_id, "
   "dry_run=True)** with `action_id = 'add <portal_type>'` (using one of "
-  "the `can_create_here` values) to create the document - pass field "
-  "values as extra keyword arguments (a relation field, whose id "
-  "usually ends in `_value`, takes the related document's relative_url "
-  "as a string). Always preview with `dry_run=true` (the default) "
-  "first; only pass `dry_run=false` once the user has confirmed.",
+  "the `can_create_here` values) to create the document. Before "
+  "calling, go through step 2's `dialog_field_list` (or the equivalent "
+  "listed against the parent type below) and pass a keyword argument "
+  "for EVERY field the user already gave you a value for (a title, "
+  "description, amount, related document, etc., with any `my_` prefix "
+  "removed) - do not skip this and let it silently fall back to a "
+  "blank default. A relation field, whose id usually ends in `_value`, "
+  "takes the related document's relative_url as a string. Always "
+  "preview with `dry_run=true` (the default) first and check its "
+  "`property_dict` reflects what the user asked for; only pass "
+  "`dry_run=false` once the user has confirmed.",
   "4. Call **ERP5Document_getActionList** again, this time on the "
   "newly-created (or just-acted-on) document's relative_url, to see "
   "what to do next - create a sub-object (e.g. an order line) by going "
@@ -114,11 +120,13 @@ line_list = [
   "dry_run=True)** with an `action_id` taken from the most recent "
   "`ERP5Document_getActionList` call's `workflow_action_list` or "
   "`object_action_list` (never guess one). If that action had a "
-  "`dialog_field_list`, pass those field ids/values as extra keyword "
-  "arguments. Always preview with `dry_run=true` (the default) first; "
-  "only pass `dry_run=false` once "
-  "the user has confirmed. Then go back to step 4 to see what's "
-  "available next.",
+  "`dialog_field_list`, pass a keyword argument for every field the "
+  "user already gave you a value for, the same way as step 3 - do not "
+  "call this with no keyword arguments just because the fields are "
+  "optional; check dialog_field_list every time. Always preview with "
+  "`dry_run=true` (the default) first and check its `property_dict`; "
+  "only pass `dry_run=false` once the user has confirmed. Then go back "
+  "to step 4 to see what's available next.",
   "",
 ]
 
