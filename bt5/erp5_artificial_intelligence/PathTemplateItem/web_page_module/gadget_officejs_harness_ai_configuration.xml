@@ -1,0 +1,186 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Manifest" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts89637610.0265415</string> </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value> <string>827b2e9c652273a90f79f724c8b8b83a</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <bytes>CONFIGURATION MANIFEST\n
+# generated on Thu Sep 17 09:33:30 2026\n
+CACHE:\n
+\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0FydGlmaWNpYWwgVGFzaw==\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0FydGlmaWNpYWwgVGFzay9vZmZpY2Vqc19oYXJuZXNzX2FpX3ZpZXc=\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfYXJ0aWZpY2lhbF9pbnRlbGxpZ2VuY2UvQXJ0aWZpY2lhbFRhc2tfdmlld0ZvckJyb3dzZXJIYXJuZXNzQUk=\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0FydGlmaWNpYWwgVGFzayBNb2R1bGU=\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0FydGlmaWNpYWwgVGFzayBNb2R1bGUvb2ZmaWNlanNfaGFybmVzc19haV92aWV3\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfYXJ0aWZpY2lhbF9pbnRlbGxpZ2VuY2UvQXJ0aWZpY2lhbFRhc2tNb2R1bGVfdmlld0FydGlmaWNpYWxUYXNrTGlzdEZvckppbw==\n
+\n
+NETWORK:\n
+*</bytes> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>gadget_officejs_harness_ai.configuration</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>gadget_officejs_harness_ai_configuration</string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>758</int> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>publish_alive</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>actor</string> </key>
+                      <value> <string>zope</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>comment</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>error_message</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>time</string> </key>
+                      <value>
+                        <object>
+                          <klass>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                          </klass>
+                          <tuple/>
+                          <state>
+                            <tuple>
+                              <float>1789567115.845476</float>
+                              <string>UTC</string>
+                            </tuple>
+                          </state>
+                        </object>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>validation_state</string> </key>
+                      <value> <string>published_alive</string> </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
