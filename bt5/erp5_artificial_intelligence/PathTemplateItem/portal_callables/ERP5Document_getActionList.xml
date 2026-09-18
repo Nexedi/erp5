@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Python Script" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>relative_url, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>callable_type/script</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+{\n
+  "type": "function",\n
+  "function": {\n
+    "name": "ERP5Document_getActionList",\n
+    "description": "Check, right now, which workflow transitions and custom object actions are currently available on an existing document (with any dialog fields they expect), which portal_types can currently be created inside it (can_create_here - pass \'add <portal_type>\' as action_id to ERP5Document_doAction to create one), and which fields are directly editable on the document\'s own view (object_view_list) - i.e. its current content, the values a human would see and save on the object\'s main view/edit form. object_view_list entries always report action_id \'edit\' - pass that to ERP5Document_doAction to save edits to this document\'s own fields. This mirrors what a human sees in the document\'s own \'Action\' menu (\'Workflows\' and \'Object\' sections, plus its \'Add\' entries) plus its main view, so it reflects the document\'s current workflow state and your permissions - unlike a static reference, it never goes stale. Call this on a module or document BEFORE deciding what to do next, and again after creating or acting on a document, to find which action_id values (including \'add <portal_type>\' and \'edit\') are now valid for ERP5Document_doAction and which extra field values (via its **kw) that action expects.",\n
+    "parameters": {\n
+      "type": "object",\n
+      "properties": {\n
+        "relative_url": {\n
+          "type": "string",\n
+          "description": "relative_url of the module or document to inspect, e.g. \'purchase_order_module\' or \'purchase_order_module/20260101-1\'"\n
+        }\n
+      },\n
+      "required": [\n
+        "relative_url"\n
+      ]\n
+    }\n
+  }\n
+}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Document_getActionList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
