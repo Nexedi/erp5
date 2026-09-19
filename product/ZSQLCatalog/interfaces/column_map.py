@@ -185,7 +185,7 @@ class IColumnMap(Interface):
         text).
     """
 
-  def build(sql_catalog):
+  def build(sql_catalog, renderer):
     """
       Resolve all unresolved registered columns (ie, not mapped to tables).
       Resolve all used tables to unique aliases.
