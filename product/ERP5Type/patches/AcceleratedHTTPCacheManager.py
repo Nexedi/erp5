@@ -13,6 +13,10 @@ def ZCache_set(self, ob, data, view_name, keywords, mtime_func):
     # data.  mtime_func is also ignored because using "now" for
     # Last-Modified is as good as using any time in the past.
     REQUEST = ob.REQUEST
+    # Do nothing if ob is not directly published.
+    published = REQUEST.get('PUBLISHED')
+    if getattr(published, '__self__', published) != ob:
+        return
     RESPONSE = REQUEST.RESPONSE
     anon = 1
     u = REQUEST.get('AUTHENTICATED_USER', None)
