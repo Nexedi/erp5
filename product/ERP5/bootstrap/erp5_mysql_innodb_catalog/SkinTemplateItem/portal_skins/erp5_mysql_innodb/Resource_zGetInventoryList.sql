@@ -110,7 +110,10 @@ WHERE
 </dtml-if>
 
 <dtml-if convert_quantity_result>
-  AND concat(<dtml-var stock_table_id>.variation_text,'\n') REGEXP measure.variation
+  AND ( measure.variation_text_line_1 is NULL OR measure.variation_text_line_1 = stock.variation_text_line_1 )
+  AND ( measure.variation_text_line_2 is NULL OR measure.variation_text_line_2 = stock.variation_text_line_2 )
+  AND ( measure.variation_text_line_3 is NULL OR measure.variation_text_line_3 = stock.variation_text_line_3 )
+  AND ( measure.variation_text_line_4 is NULL OR measure.variation_text_line_4 = stock.variation_text_line_4 )
 </dtml-if>
 
 <dtml-if group_by_expression>
