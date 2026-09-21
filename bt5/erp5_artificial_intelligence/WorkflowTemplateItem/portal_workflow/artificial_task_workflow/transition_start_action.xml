@@ -30,7 +30,7 @@
         </item>
         <item>
             <key> <string>action_name</string> </key>
-            <value> <string>Post Event</string> </value>
+            <value> <string>Ask AI</string> </value>
         </item>
         <item>
             <key> <string>categories</string> </key>
@@ -65,7 +65,6 @@
               <tuple>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Manager</string>
               </tuple>
             </value>
         </item>
@@ -85,7 +84,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Post Event Action</string> </value>
+            <value> <string>Ask AI Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

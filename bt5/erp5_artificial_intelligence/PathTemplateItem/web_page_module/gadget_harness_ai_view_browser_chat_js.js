@@ -10,6 +10,7 @@
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
+    .declareAcquiredMethod("updatePanel", "updatePanel")
     .declareAcquiredMethod("translate", "translate")
     .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("getTranslationList", "getTranslationList")
@@ -87,6 +88,7 @@
     .declareMethod('render', function (options) {
       var gadget = this;
       gadget.options = options;
+      options.erp5_document._links.action_workflow = [];
       return gadget.getSetting('hateoas_url')
         .push(function (hateoas_url) {
           gadget.hateoas_url = hateoas_url;
@@ -126,14 +128,12 @@
           });
 
         })
-
         // render the header
         .push(function () {
           return RSVP.all([
             gadget.getUrlFor({command: 'history_previous'}),
             gadget.getUrlFor({command: 'selection_previous'}),
             gadget.getUrlFor({command: 'selection_next'}),
-            gadget.getUrlFor({command: 'change', options: {page: "tab"}}),
             calculatePageTitle(gadget, gadget.state.erp5_document)
           ]);
         })
@@ -142,8 +142,7 @@
             selection_url: all_result[0],
             previous_url: all_result[1],
             next_url: all_result[2],
-            tab_url: all_result[3],
-            page_title: all_result[4]
+            page_title: all_result[3]
           });
         });
     });

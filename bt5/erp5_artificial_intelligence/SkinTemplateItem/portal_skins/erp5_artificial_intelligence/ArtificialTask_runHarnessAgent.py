@@ -7,6 +7,8 @@ portal = artificial_task.getPortalObject()
 processing_tag = 'process_%s' % artificial_task.getRelativeUrl()
 connector = artificial_task.getConnectorValue()
 
+if portal.portal_activities.countMessageWithTag(processing_tag) > 1:
+  return
 
 def finalize(report_line, message_list):
   content = '\n'.join([x.get("content") for x in message_list if x.get('role', '') != 'tool' and x.get("content", '')])

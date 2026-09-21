@@ -4,10 +4,13 @@
   "use strict";
 
   var POLL_INTERVAL = 1000;
+  var STATE_POLL_INTERVAL = 3000;
 
   rJS(window)
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
+    .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("requestProcessTask", "requestProcessTask")
+    .declareAcquiredMethod("refreshPanel", "refreshPanel")
 
     .declareMethod('render', function (options) {
       var gadget = this;
@@ -18,7 +21,7 @@
           return gadget_chat_ui.render(options);
         })
         .push(function () {
-          if (options.chat_state == 'planned') {
+          if (options.chat_state == 'planned' && false) {
             return gadget.requestProcessTask(
               gadget.options.jio_key,
               {}
@@ -27,12 +30,11 @@
               return gadget.pollTask();
             });
           }
-          if (options.chat_state === 'processing') {
-            return gadget.pollTask();
-          }
         });
     })
     .allowPublicAcquisition('notifyCommentPosted', function () {
+      return;
+      /*
       var gadget = this;
       return gadget.requestProcessTask(
         gadget.options.jio_key,
@@ -41,6 +43,7 @@
         .push(function () {
           return gadget.pollTask();
         });
+      */
     })
     .declareJob('pollTask', function () {
       var gadget = this,
@@ -65,6 +68,10 @@
             if (result.done) {
               queue_loop
                 .push(function () {
+                  return gadget.refreshPanel();
+                })
+                .push(function () {
+                  gadget.is_processing = false;
                   return gadget_chat_ui.resetEditor();
                 });
             } else {
@@ -76,5 +83,22 @@
       check();
       return queue_loop;
 
-    });
+    })
+    .onLoop(function () {
+      var gadget = this;
+      if (gadget.is_processing) {
+        return;
+      }
+      return gadget.jio_getAttachment(
+        gadget.options.jio_key,
+        gadget.options.view
+      )
+        .push(function (erp5_document) {
+          var simulation_state = erp5_document._embedded._view.my_simulation_state['default'];
+          if (simulation_state === 'processing' && !gadget.is_processing) {
+            gadget.is_processing = true;
+            return gadget.pollTask();
+          }
+        });
+    }, STATE_POLL_INTERVAL);
 }(window, rJS, RSVP));

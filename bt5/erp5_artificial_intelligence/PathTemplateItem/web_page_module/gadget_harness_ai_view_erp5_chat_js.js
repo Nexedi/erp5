@@ -8,6 +8,8 @@
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
+    .declareAcquiredMethod("updatePanel", "updatePanel")
+    .declareAcquiredMethod("refreshHeaderAndPanel", "refreshHeaderAndPanel")
     .declareAcquiredMethod("translate", "translate")
     .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("getTranslationList", "getTranslationList")
@@ -47,6 +49,24 @@
         body
       );
     })
+    .allowPublicAcquisition('refreshPanel', function () {
+      var gadget = this;
+      return gadget.jio_getAttachment(
+        gadget.options.jio_key,
+        gadget.options.view
+      )
+        .push(function (erp5_document) {
+          gadget.state.erp5_document = erp5_document;
+          return gadget.updatePanel({
+            erp5_document: erp5_document,
+            jio_key: gadget.options.jio_key,
+            view: gadget.options.view
+          });
+        })
+        .push(function () {
+          return gadget.refreshHeaderAndPanel();
+        });
+    })
 
     .declareMethod('render', function (options) {
       var gadget = this;
@@ -76,6 +96,7 @@
             'chat_state': rendered_form.my_simulation_state['default'],
             'hateoas_url': gadget.hateoas_url,
             'jio_key': gadget.options.jio_key,
+            'view': gadget.options.view,
             'status_url':  gadget.hateoas_url + gadget.options.jio_key + "/ArtificialTask_getStatus",
             'editor_options' : {
               editor: 'gadget_editor.html',
@@ -91,14 +112,12 @@
           });
 
         })
-
         // render the header
         .push(function () {
           return RSVP.all([
             gadget.getUrlFor({command: 'history_previous'}),
             gadget.getUrlFor({command: 'selection_previous'}),
             gadget.getUrlFor({command: 'selection_next'}),
-            gadget.getUrlFor({command: 'change', options: {page: "tab"}}),
             calculatePageTitle(gadget, gadget.state.erp5_document)
           ]);
         })
@@ -107,8 +126,7 @@
             selection_url: all_result[0],
             previous_url: all_result[1],
             next_url: all_result[2],
-            tab_url: all_result[3],
-            page_title: all_result[4]
+            page_title: all_result[3]
           });
         });
     });

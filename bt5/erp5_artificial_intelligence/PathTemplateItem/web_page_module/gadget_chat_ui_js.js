@@ -6,6 +6,8 @@
 
   marked.setOptions({breaks: true});
 
+  var COMMENT_POLL_INTERVAL = 3000;
+
   function formatPost(post) {
     var date = new Date(post.date);
     post.date_formatted = date.toLocaleString();
@@ -27,6 +29,9 @@
       dom_list.push(domsugar("strong", [translationAttachment]));
       dom_list.push(domsugar("a", { href: post.attachment_link }, [post.attachment_name]));
     }
+    dom_list.push(domsugar("time", { datetime: post.date, title: post.date }, [
+      post.author ? (post.author + " · " + post.date_formatted) : post.date_formatted
+    ]));
     return domsugar("li", {
       "class": post.response ? "post-answer" : "post-question"
     }, dom_list);
@@ -182,10 +187,29 @@
       }
       return queue;
     })
+    .onLoop(function () {
+      var gadget = this;
+      return gadget.getCommentPostList(gadget.options.jio_key)
+        .push(function (post_list) {
+          return gadget.getMessageList()
+            .push(function (rendered_list) {
+              var new_post_list = post_list.slice(rendered_list.length);
+              return new_post_list.reduce(function (sub_queue, post) {
+                return sub_queue.push(function () {
+                  return gadget.appendPost(post);
+                });
+              }, new RSVP.Queue());
+            });
+        });
+    }, COMMENT_POLL_INTERVAL)
     .declareMethod('appendPost', function (post) {
       var gadget = this,
         post_list_element = gadget.element.querySelector("#post_list"),
-        dom = getPostDom(formatPost(post));
+        dom = getPostDom(formatPost(post)),
+        tool_call_dom = getToolCallDom(JSON.parse(post.tool_message_list || "[]"), false);
+      if (tool_call_dom) {
+        dom.appendChild(tool_call_dom);
+      }
       post_list_element.appendChild(dom);
     })
     .declareMethod('getMessageList', function () {
@@ -228,7 +252,8 @@
         gadget.new_message_element = getPostDom(formatPost({
           date: new Date().toISOString(),
           text: "",
-          response: true
+          response: true,
+          author: "Assistant"
         }));
         gadget.element.querySelector("#post_list").appendChild(gadget.new_message_element);
       }
@@ -283,7 +308,8 @@
               post = {
                 date: new Date().toISOString(),
                 text: comment_text,
-                response: false
+                response: false,
+                author: ""
               };
 
               return new RSVP.Queue()

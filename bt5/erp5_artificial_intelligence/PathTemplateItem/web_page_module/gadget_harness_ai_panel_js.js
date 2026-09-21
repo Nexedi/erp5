@@ -5,6 +5,27 @@
            mergeGlobalActionWithRawActionList) {
   "use strict";
 
+  function appendDt(fragment, dt_title, dt_icon,
+                    action_list, href_list, index) {
+    var element_list = [
+      domsugar('dt', {
+        text: dt_title,
+        'class': 'ui-btn-icon-left ui-icon-' + dt_icon
+      })
+    ],
+      i;
+    for (i = 0; i < action_list.length; i += 1) {
+      element_list.push(domsugar('dd', {'class': 'document-listview'}, [
+        domsugar('a', {
+          href: href_list[index + i],
+          text: action_list[i].title,
+          'class': action_list[i].class_name || null
+        })
+      ]));
+    }
+    fragment.appendChild(domsugar(null, element_list));
+  }
+
   rJS(window)
     .setState({
       visible: false
@@ -32,16 +53,26 @@
     })
 
     .declareMethod('render', function render(options) {
-      var jio_key = 'artificial_task_module', //options.jio_key,
+      var erp5_document = options.erp5_document,
+        jio_key = options.jio_key,
         view = options.view,
         jump_view = options.jump_view,
         visible = options.visible,
-        action_list = [],
-        context = this;
+        context = this,
+        group_mapping,
+        workflow_list;
 
       if (visible === undefined) {
         visible = context.state.visible;
       }
+
+      if (erp5_document !== undefined) {
+        group_mapping = mergeGlobalActionWithRawActionList(jio_key,
+          view, jump_view,
+          erp5_document._links, ["action_workflow"], {}, {});
+        workflow_list = JSON.stringify(group_mapping.action_workflow);
+      }
+
       return context.getUrlParameter('editable')
         .push(function (editable) {
           return context.changeState({
@@ -50,6 +81,7 @@
             jio_key: jio_key,
             view: view,
             jump_view: jump_view,
+            workflow_list: workflow_list,
             editable: editable
           });
         });
@@ -57,6 +89,7 @@
     .onStateChange(function onStateChange(modification_dict) {
       var i,
         gadget = this,
+        workflow_list,
         queue = new RSVP.Queue();
 
       if (modification_dict.hasOwnProperty("visible")) {
@@ -138,6 +171,34 @@
             }
             domsugar(gadget.element.querySelector("ul"),
                      [domsugar(null, element_list)]);
+          });
+      }
+
+      if (modification_dict.hasOwnProperty("workflow_list")) {
+        queue
+          .push(function () {
+            workflow_list = gadget.state.workflow_list ?
+              JSON.parse(gadget.state.workflow_list) : [];
+            gadget.element.querySelector("dl").textContent = '';
+            if (!workflow_list.length) {
+              return;
+            }
+            return RSVP.hash({
+              url_list: gadget.getUrlForList(workflow_list.map(function (action) {
+                return action.url_kw;
+              })),
+              translation_list: gadget.getTranslationList(['Workflows'])
+            });
+          })
+          .push(function (result_dict) {
+            var dl_fragment;
+            if (!result_dict) {
+              return;
+            }
+            dl_fragment = document.createDocumentFragment();
+            appendDt(dl_fragment, result_dict.translation_list[0], 'random',
+                     workflow_list, result_dict.url_list, 0);
+            domsugar(gadget.element.querySelector("dl"), [dl_fragment]);
           });
       }
 

@@ -21,7 +21,6 @@
                 <string>destination/portal_workflow/artificial_task_workflow/transition_delete</string>
                 <string>destination/portal_workflow/artificial_task_workflow/transition_delete_action</string>
                 <string>destination/portal_workflow/artificial_task_workflow/transition_plan</string>
-                <string>destination/portal_workflow/artificial_task_workflow/transition_plan_action</string>
               </tuple>
             </value>
         </item>

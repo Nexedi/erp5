@@ -1,3 +1,4 @@
+portal_alarms/run_artificial_task_alarm
 portal_callables/ERP5Document_doAction
 portal_callables/ERP5Document_getActionList
 portal_types/Artificial Task Module/officejs_harness_ai_view

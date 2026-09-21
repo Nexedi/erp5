@@ -17,7 +17,6 @@
             <value>
               <tuple>
                 <string>destination/portal_workflow/artificial_task_workflow/transition_respond</string>
-                <string>destination/portal_workflow/artificial_task_workflow/transition_respond_action</string>
               </tuple>
             </value>
         </item>
