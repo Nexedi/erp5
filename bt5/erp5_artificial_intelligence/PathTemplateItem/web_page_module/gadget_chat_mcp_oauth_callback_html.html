@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Connecting to MCP server</title>
+  </head>
+  <body>
+    <p>Completing sign-in...</p>
+    <script type="text/javascript">
+      (function () {
+        "use strict";
+        var params = new URLSearchParams(window.location.search),
+          payload = {
+            source: "erp5-mcp-oauth",
+            code: params.get("code"),
+            state: params.get("state"),
+            error: params.get("error") || params.get("error_description")
+          };
+        if (window.opener) {
+          window.opener.postMessage(payload, window.location.origin);
+          window.close();
+        } else {
+          document.body.textContent = "Sign-in complete. You can close this window.";
+        }
+      }());
+    </script>
+  </body>
+</html>
