@@ -9,8 +9,9 @@ dummy_response = portal.artificial_dummy_response_module.newContent(
 
 dummy_response_relative_url = dummy_response.getRelativeUrl()
 
-if artificial_task.getSimulationState() != 'processing':
-  artificial_task.start()
+
+if artificial_task.getSimulationState() == 'planned':
+  artificial_task.respond()
 
 artificial_task.activate(activity='SQLQueue').ArtificialTask_processingTaskWithBackgroundMode(
   message_list = message_list,

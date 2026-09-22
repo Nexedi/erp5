@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts90068632.211043</string> </value>
+            <value> <string>ts90079925.849910</string> </value>
         </item>
         <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
@@ -67,7 +67,7 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>25871b32b675a738fa95544880e1d13d</string> </value>
+            <value> <string>fa51825ce5b4172ed73d0dfdac4cf1f9</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -77,17 +77,15 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_chat_skills.js</string> </value>
+            <value> <string>gadget_chat_mcp_oauth.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_chat_skills_js</string> </value>
+            <value> <string>gadget_chat_mcp_oauth_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -101,7 +99,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>494</int> </value>
+            <value> <int>9369</int> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -172,23 +170,6 @@
                       <value> <string></string> </value>
                   </item>
                   <item>
-                      <key> <string>time</string> </key>
-                      <value>
-                        <object>
-                          <klass>
-                            <global name="DateTime" module="DateTime.DateTime"/>
-                          </klass>
-                          <tuple/>
-                          <state>
-                            <tuple>
-                              <float>1786089135.142394</float>
-                              <string>UTC</string>
-                            </tuple>
-                          </state>
-                        </object>
-                      </value>
-                  </item>
-                  <item>
                       <key> <string>validation_state</string> </key>
                       <value> <string>published_alive</string> </value>
                   </item>
@@ -230,7 +211,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1035.37941.10104.32221</string> </value>
+                      <value> <string>1035.38143.41590.2</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -246,7 +227,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1790068632.221183</float>
+                              <float>1790079925.84991</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

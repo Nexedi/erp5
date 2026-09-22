@@ -389,7 +389,7 @@
         </item>
         <item>
             <key> <string>configuration_icon_url</string> </key>
-            <value> <string>orkonn_Icon.png</string> </value>
+            <value> <string>gadget_wendelin_panel.png</string> </value>
         </item>
         <item>
             <key> <string>configuration_jio_gadget_url</string> </key>
@@ -694,7 +694,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1035.22555.15337.63453</string> </value>
+                      <value> <string>1035.27859.59814.21145</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -710,7 +710,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1788191760.891098</float>
+                              <float>1790065159.650502</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

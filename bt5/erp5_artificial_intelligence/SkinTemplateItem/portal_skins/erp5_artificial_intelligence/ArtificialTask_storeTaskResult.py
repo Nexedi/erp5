@@ -25,7 +25,9 @@ artificial_task_report_line = artificial_task_report.newContent(
 
 line.deliver()
 artificial_task_report_line.deliver()
+"""
 if artificial_task.getSimulationState() == 'planned':
   artificial_task.start()
 
 artificial_task.respond()
+"""

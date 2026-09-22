@@ -2,17 +2,45 @@
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 (function (window, rJS, RSVP, SimpleQuery, ComplexQuery) {
   "use strict";
-  // postComment/storeTaskResult consumers only ever read evt.target.getResponseHeader
-  // (used to detect a server-side redirect to a freshly created document, which never
-  // happens here since we are already viewing an existing document) - stub it so the
-  // fake "event" returned by the local versions of these methods behaves the same way.
+
   function fakeXhrEvent() {
     return {target: {getResponseHeader: function () { return null; }}};
+  }
+
+
+  function parseMcpServerList(text) {
+    return window.ChatMCP.parseServerListText(text).value || [];
+  }
+
+
+  function parseMcpOAuthTokenMap(json_text) {
+    var parsed;
+    if (!json_text) {
+      return {};
+    }
+    try {
+      parsed = JSON.parse(json_text);
+    } catch (ignore) {
+      return {};
+    }
+    return (parsed && typeof parsed === "object" && !Array.isArray(parsed)) ? parsed : {};
+  }
+
+
+  function overlayOAuthTokens(mcp_server_list, mcp_oauth_token_map) {
+    mcp_server_list.forEach(function (server_config) {
+      var oauth_state = mcp_oauth_token_map[server_config.name];
+      if (!server_config.token && oauth_state && oauth_state.access_token) {
+        server_config.token = oauth_state.access_token;
+      }
+    });
+    return mcp_server_list;
   }
 
   rJS(window)
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("getSettingList", "getSettingList")
+    .declareAcquiredMethod("setSettingList", "setSettingList")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
     .declareAcquiredMethod("jio_post", "jio_post")
     .declareAcquiredMethod("jio_put", "jio_put")
@@ -32,7 +60,7 @@
             new SimpleQuery({key: "parent_relative_url", type: "simple", value: document_id})
           ]
         }),
-        select_list: ["text_content", "int_index", "response", "tool_message_list"],
+        select_list: ["text_content", "int_index", "response", "tool_message_list", "author", "date"],
         sort_on: [["int_index", "ascending"]]
       })
         .push(function (result) {
@@ -42,10 +70,11 @@
           }, -1) + 1;
           return rows.map(function (row) {
             return {
-              date: new Date().toISOString(),
+              date: row.value.date || new Date().toISOString(),
               text: row.value.text_content,
               tool_message_list: row.value.tool_message_list || "[]",
-              response: row.value.response || false
+              response: row.value.response || false,
+              author: row.value.author || ""
             };
           });
         });
@@ -61,7 +90,9 @@
         parent_relative_url: document_id,
         text_content: form_data_json.data,
         int_index: int_index,
-        response: false
+        response: false,
+        author: "",
+        date: new Date().toISOString()
       })
         .push(function () {
           return fakeXhrEvent();
@@ -150,6 +181,8 @@
         text_content: body.content,
         int_index: int_index,
         response: true,
+        author: "Assistant",
+        date: new Date().toISOString(),
         trace: trace,
         tool_message_list: JSON.stringify(tool_message_list)
       })
@@ -167,7 +200,7 @@
     .declareMethod('render', function (options) {
       var gadget = this;
       gadget.options = options;
-      return gadget.getSettingList(["hateoas_url", "baseUrl", "apiKey", "model"])
+      return gadget.getSettingList(["hateoas_url", "baseUrl", "apiKey", "model", "mcpServerList", "mcpOAuthTokenMap"])
         .push(function (setting_list) {
           gadget.hateoas_url = setting_list[0];
           gadget.llm_settings = {
@@ -175,10 +208,30 @@
             apiKey: setting_list[2] || '',
             model: setting_list[3] || ''
           };
+          gadget.mcp_oauth_token_map = parseMcpOAuthTokenMap(setting_list[5]);
+          gadget.mcp_server_list = overlayOAuthTokens(parseMcpServerList(setting_list[4]), gadget.mcp_oauth_token_map);
           return gadget.changeState({
             jio_key: options.jio_key,
             doc: options.doc
           });
+        });
+    })
+
+    .declareMethod('refreshMcpServerAuth', function (server_config) {
+      var gadget = this,
+        oauth_state = gadget.mcp_oauth_token_map[server_config.name];
+      return new RSVP.Queue(window.ChatMCPOAuth.refresh(oauth_state))
+        .push(function (refreshed) {
+          if (!refreshed) {
+            return null;
+          }
+          gadget.mcp_oauth_token_map[server_config.name] = refreshed;
+          return gadget.setSettingList({
+            mcpOAuthTokenMap: JSON.stringify(gadget.mcp_oauth_token_map)
+          })
+            .push(function () {
+              return refreshed;
+            });
         });
     })
     .onStateChange(function () {
@@ -189,6 +242,10 @@
             'chat_state': gadget.state.doc.state,
             'hateoas_url': gadget.hateoas_url,
             'jio_key': gadget.state.jio_key,
+            'mcp_server_list': gadget.mcp_server_list,
+            'mcp_on_auth_expired': function (server_config) {
+              return gadget.refreshMcpServerAuth(server_config);
+            },
             'editor_options': {
               editor: 'gadget_editor.html',
               options: {

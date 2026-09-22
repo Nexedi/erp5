@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts90068632.211043</string> </value>
+            <value> <string>ts90079925.849910</string> </value>
         </item>
         <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
@@ -67,17 +67,15 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>25871b32b675a738fa95544880e1d13d</string> </value>
+            <value> <string>7e722598d10b62b4fce8f3801b3cc701</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>text/html</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_chat_skills.js</string> </value>
+            <value> <string>gadget_chat_mcp_oauth_callback.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -87,11 +85,15 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_chat_skills_js</string> </value>
+            <value> <string>gadget_chat_mcp_oauth_callback_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
             <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -101,7 +103,11 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>494</int> </value>
+            <value> <int>880</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Gadget Chat MCP OAuth Callback</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -130,12 +136,6 @@
                     <key> <string>document_publication_workflow</string> </key>
                     <value>
                       <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>edit_workflow</string> </key>
-                    <value>
-                      <persistent> <bytes encoding="base64">AAAAAAAAAAQ=</bytes> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -181,7 +181,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1786089135.142394</float>
+                              <float>1790079925.84991</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -191,67 +191,6 @@
                   <item>
                       <key> <string>validation_state</string> </key>
                       <value> <string>published_alive</string> </value>
-                  </item>
-                </dictionary>
-              </list>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
-    <pickle>
-      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_log</string> </key>
-            <value>
-              <list>
-                <dictionary>
-                  <item>
-                      <key> <string>action</string> </key>
-                      <value> <string>edit</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>comment</string> </key>
-                      <value>
-                        <none/>
-                      </value>
-                  </item>
-                  <item>
-                      <key> <string>error_message</string> </key>
-                      <value> <string></string> </value>
-                  </item>
-                  <item>
-                      <key> <string>serial</string> </key>
-                      <value> <string>1035.37941.10104.32221</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>state</string> </key>
-                      <value> <string>current</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>time</string> </key>
-                      <value>
-                        <object>
-                          <klass>
-                            <global name="DateTime" module="DateTime.DateTime"/>
-                          </klass>
-                          <tuple/>
-                          <state>
-                            <tuple>
-                              <float>1790068632.221183</float>
-                              <string>UTC</string>
-                            </tuple>
-                          </state>
-                        </object>
-                      </value>
                   </item>
                 </dictionary>
               </list>

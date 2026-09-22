@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts89638544.2542477</string> </value>
+            <value> <string>ts90087507.9106767</string> </value>
         </item>
         <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
@@ -75,7 +75,7 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>92f7b2c8b55724ab351be7798d9c9fda</string> </value>
+            <value> <string>ed949b8d35399c61ebac0173e27565b8</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
@@ -107,7 +107,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8134</int> </value>
+            <value> <int>9908</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -197,7 +197,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1789567084.001324</float>
+                              <float>1790080774.080044</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -246,7 +246,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1035.46668.45900.22835</string> </value>
+                      <value> <string>1035.54140.62537.18585</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -262,7 +262,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1789638544.261547</float>
+                              <float>1790087507.924561</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

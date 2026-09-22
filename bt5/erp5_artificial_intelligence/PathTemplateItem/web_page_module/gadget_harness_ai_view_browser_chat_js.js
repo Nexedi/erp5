@@ -88,7 +88,7 @@
     .declareMethod('render', function (options) {
       var gadget = this;
       gadget.options = options;
-      options.erp5_document._links.action_workflow = [];
+      options.erp5_document._links.action_object_jio_action = [];
       return gadget.getSetting('hateoas_url')
         .push(function (hateoas_url) {
           gadget.hateoas_url = hateoas_url;

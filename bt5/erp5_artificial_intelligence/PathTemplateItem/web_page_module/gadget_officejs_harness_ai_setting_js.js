@@ -1,4 +1,4 @@
-/*global window, rJS, RSVP, fetch, Option */
+/*global window, document, rJS, RSVP, fetch, Option */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 (function (window, rJS, RSVP) {
   "use strict";
@@ -66,6 +66,67 @@
       });
   }
 
+  // Same defensive-degrade rule as window.ChatMCP.parseServerListText
+  // elsewhere in this feature: a hand-edited/corrupted stored value degrades
+  // to "no OAuth connections" rather than breaking the settings page.
+  function parseMcpOAuthTokenMap(json_text) {
+    var parsed;
+    if (!json_text) {
+      return {};
+    }
+    try {
+      parsed = JSON.parse(json_text);
+    } catch (ignore) {
+      return {};
+    }
+    return (parsed && typeof parsed === "object" && !Array.isArray(parsed)) ? parsed : {};
+  }
+
+  // Renders one row per currently-saved MCP server (name + connection status
+  // + a Connect/Reconnect button) into the static #mcp_connection_list
+  // container in the page template - this is plain hand-built DOM, not part
+  // of the generic form_view gadget, since that only renders declarative
+  // field types and has no notion of a per-row action button.
+  function renderMcpConnectionList(gadget) {
+    var container = gadget.element.querySelector('#mcp_connection_list'),
+      server_list = window.ChatMCP.parseServerListText(gadget.state.mcpServerList).value || [];
+    if (!container) {
+      return;
+    }
+    container.textContent = "";
+    if (!server_list.length) {
+      container.textContent = "No MCP servers configured yet - add one above and click Save.";
+      return;
+    }
+    server_list.forEach(function (server_config) {
+      var oauth_state = gadget.state.mcpOAuthTokenMap[server_config.name],
+        row = document.createElement("div"),
+        name_strong = document.createElement("strong"),
+        status_span = document.createElement("span"),
+        button = document.createElement("button"),
+        status_text;
+      if (!oauth_state) {
+        status_text = "Not connected";
+      } else if (window.ChatMCPOAuth.isExpired(oauth_state)) {
+        status_text = "Connection expired";
+      } else {
+        status_text = "Connected";
+      }
+      row.className = "mcp-connection-row";
+      name_strong.textContent = server_config.name;
+      status_span.className = "mcp-connection-status";
+      status_span.textContent = " - " + status_text + " ";
+      button.type = "button";
+      button.className = "mcp-connect-button ui-btn";
+      button.setAttribute("data-server-name", server_config.name);
+      button.textContent = oauth_state ? "Reconnect" : "Connect";
+      row.appendChild(name_strong);
+      row.appendChild(status_span);
+      row.appendChild(button);
+      container.appendChild(row);
+    });
+  }
+
   function currentVersion() {
     var version = window.location.href.replace(window.location.hash, ""),
       index = version.indexOf(window.location.host) + window.location.host.length;
@@ -96,6 +157,7 @@
       baseUrl: content.base_url || "",
       apiKey: content.api_key || "",
       model: content.model || "",
+      mcpServerList: content.mcp_server_list || "",
       migration_version: currentVersion()
     })
       .push(function () {
@@ -162,16 +224,53 @@
             });
         })
         .push(function (content) {
+          var validation;
           if (content === null) {
-            return;
+            return null;
           }
-          return setLLMConfiguration(gadget, content);
+          validation = window.ChatMCP.parseServerListText(content.mcp_server_list);
+          if (!validation.ok) {
+            return gadget.notifySubmitted({ message: validation.error, status: "error" })
+              .push(function () { return null; });
+          }
+          return setLLMConfiguration(gadget, content)
+            .push(function (save_result) {
+              gadget.state.mcpServerList = content.mcp_server_list || "";
+              renderMcpConnectionList(gadget);
+              if (!validation.value.length) {
+                return save_result;
+              }
+              // Purely informational: probing MCP servers never blocks or
+              // reverts the save that already happened above - a server can
+              // be legitimately unreachable right now (VPN not connected
+              // yet, still starting up, ...) without that being a config error.
+              return new RSVP.Queue(RSVP.all(validation.value.map(function (server_config) {
+                return window.ChatMCP.probeServer(server_config);
+              })))
+                .push(function (probe_result_list) {
+                  var failed_list = probe_result_list
+                    .map(function (probe, i) { return { name: validation.value[i].name, probe: probe }; })
+                    .filter(function (x) { return !x.probe.ok; });
+                  if (failed_list.length) {
+                    return gadget.notifySubmitted({
+                      message: "Saved, but could not reach: " +
+                        failed_list.map(function (x) { return x.name + " (" + x.probe.error + ")"; }).join(", "),
+                      status: "error"
+                    });
+                  }
+                })
+                .push(undefined, function () { return null; })
+                .push(function () { return save_result; });
+            });
         });
     })
 
     .declareMethod("triggerSubmit", function () {
       return this.element.querySelector('button[type="submit"]').click();
     }, {mutex: 'render'})
+    .allowPublicAcquisition('notifySubmit', function notifySubmit() {
+      return this.triggerSubmit();
+    })
 
     /////////////////////////////////////////
     // Populate the Model select once Base URL and API Key look filled in
@@ -189,11 +288,13 @@
 
     .declareService(function () {
       var gadget = this;
-      return gadget.getSettingList(["baseUrl", "apiKey", "model"])
+      return gadget.getSettingList(["baseUrl", "apiKey", "model", "mcpServerList", "mcpOAuthTokenMap"])
         .push(function (setting_list) {
           gadget.state.baseUrl = setting_list[0] || "";
           gadget.state.apiKey = setting_list[1] || "";
           gadget.state.model = setting_list[2] || "";
+          gadget.state.mcpServerList = setting_list[3] || "";
+          gadget.state.mcpOAuthTokenMap = parseMcpOAuthTokenMap(setting_list[4]);
           return gadget.getDeclaredGadget('form_view');
         })
         .push(function (form_gadget) {
@@ -232,6 +333,23 @@
                 "hidden": 0,
                 "type": "ListField",
                 "items": gadget.state.model ? [[gadget.state.model, gadget.state.model]] : []
+              },
+              "my_mcp_server_list": {
+                "description": "Optional. One MCP server URL per line (Streamable HTTP transport), " +
+                  "e.g.:\nhttps://example.com/mcp\nhttps://other-example.com/mcp\n" +
+                  "Each server is identified by its URL alone - no separate name to fill in. If a " +
+                  "server needs sign-in, save this first, then use the Connect button that appears " +
+                  "for it below. A self-hosted server's origin must already be allowed by this app's " +
+                  "Content-Security-Policy connect-src, same constraint the Base URL above is already " +
+                  "subject to - otherwise the browser blocks the request. Leave empty for none.",
+                "title": "MCP Servers (one URL per line)",
+                "default": gadget.state.mcpServerList,
+                "css_class": "",
+                "required": 0,
+                "editable": 1,
+                "key": "mcp_server_list",
+                "hidden": 0,
+                "type": "TextAreaField"
               }
             }},
               "_links": {
@@ -243,16 +361,55 @@
             form_definition: {
               group_list: [[
                 "top",
-                [["my_base_url"], ["my_api_key"], ["my_model"]]
+                [["my_base_url"], ["my_api_key"], ["my_model"], ["my_mcp_server_list"]]
               ]]
             }
           });
         })
         .push(function () {
+          renderMcpConnectionList(gadget);
           if (gadget.state.baseUrl && gadget.state.apiKey) {
             return gadget.deferUpdateModelListField();
           }
         });
-    });
+    })
+
+    /////////////////////////////////////////
+    // MCP server "Connect"/"Reconnect" buttons (plain hand-built DOM inside
+    // #mcp_connection_list, not part of the generic form_view gadget)
+    /////////////////////////////////////////
+    .onEvent('click', function (evt) {
+      var gadget = this,
+        server_name,
+        server_config;
+      if (!evt.target.classList || !evt.target.classList.contains('mcp-connect-button')) {
+        return;
+      }
+      server_name = evt.target.getAttribute('data-server-name');
+      server_config = (window.ChatMCP.parseServerListText(gadget.state.mcpServerList).value || [])
+        .filter(function (s) { return s.name === server_name; })[0];
+      if (!server_config) {
+        return;
+      }
+      evt.target.disabled = true;
+      return window.ChatMCPOAuth.connect(server_config, gadget.state.mcpOAuthTokenMap[server_name])
+        .push(function (oauth_state) {
+          gadget.state.mcpOAuthTokenMap[server_name] = oauth_state;
+          return gadget.setSettingList({ mcpOAuthTokenMap: JSON.stringify(gadget.state.mcpOAuthTokenMap) });
+        })
+        .push(function () {
+          return gadget.notifySubmitted({ message: "Connected to \"" + server_name + "\".", status: "success" });
+        })
+        .push(undefined, function (error) {
+          return gadget.notifySubmitted({
+            message: "Could not connect to \"" + server_name + "\": " + (error && error.message ? error.message : error),
+            status: "error"
+          });
+        })
+        .push(function () {
+          evt.target.disabled = false;
+          renderMcpConnectionList(gadget);
+        });
+    }, false, false);
 
 }(window, rJS, RSVP));

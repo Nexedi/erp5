@@ -236,6 +236,7 @@
       });
     })
     .declareMethod('resetEditor', function () {
+      this.new_message_element = null;
       return this.changeState({
         allow_submit: true,
         editor_state: 'initialise'

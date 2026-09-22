@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Workflow Transition" module="erp5.portal_type"/>
+      <global name="Interaction Workflow" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -25,21 +25,14 @@
             </value>
         </item>
         <item>
-            <key> <string>action</string> </key>
-            <value> <string>%(content_url)s/Base_viewWorkflowActionDialog?workflow_action=start_action</string> </value>
-        </item>
-        <item>
-            <key> <string>action_name</string> </key>
-            <value> <string>Start</string> </value>
-        </item>
-        <item>
-            <key> <string>categories</string> </key>
+            <key> <string>comment</string> </key>
             <value>
-              <tuple>
-                <string>action_type/workflow</string>
-                <string>after_script/portal_workflow/artificial_task_workflow/transition_start</string>
-              </tuple>
+              <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>pricing_interaction_workflow</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -48,47 +41,16 @@
             </value>
         </item>
         <item>
-            <key> <string>guard_group</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>guard_permission</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>guard_role</string> </key>
-            <value>
-              <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>icon</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
-            <value> <string>transition_start_action</string> </value>
+            <value> <string>artificial_task_interaction_workflow</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Workflow Transition</string> </value>
+            <value> <string>Interaction Workflow</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Start Action</string> </value>
-        </item>
-        <item>
-            <key> <string>trigger_type</string> </key>
-            <value> <int>1</int> </value>
+            <value> <string>Artificial Task Interaction Workflow</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -5,7 +5,7 @@
  </chain>
  <chain>
   <type>Artificial Task</type>
-  <workflow>artificial_task_workflow, edit_workflow</workflow>
+  <workflow>artificial_task_interaction_workflow, artificial_task_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Artificial Task Line</type>

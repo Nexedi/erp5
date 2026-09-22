@@ -173,40 +173,55 @@
     .declareMethod('render', function (options) {
       var gadget = this;
       gadget.options = options;
-      gadget.tool_list = window.ChatTools.createToolList(gadget.element, options.hateoas_url);
-      gadget.tool_list.push({
-        definition: {
-          name: "spawn_subagent",
-          description: "Delegate a self-contained sub-task to a fresh, independent instance of this " +
-            "same agent - same tools (everything except spawn_subagent itself, to prevent runaway " +
-            "recursion), but its own separate conversation that starts empty (it has NO access to this " +
-            "conversation's history - give it a full, self-contained task description). Runs to " +
-            "completion (its own multi-turn tool-calling loop) before this call returns; only its final " +
-            "answer comes back - none of its intermediate searches/reads/retries appear in this " +
-            "conversation. USE THIS WHEN: a piece of the current task is large or noisy enough to " +
-            "isolate (e.g. \"research X and summarize\", \"go create and populate these 5 documents, " +
-            "report back what was done\"). DO NOT USE THIS for a trivial one-tool-call task - just call " +
-            "that tool directly.",
-          parameters: {
-            type: "object",
-            properties: {
-              task: {
-                type: "string",
-                description: "Full, self-contained description of what the sub-agent should do."
-              },
-              max_turns: {
-                type: "integer",
-                description: "Cap on the sub-agent's own turn count (default 20, max 50)."
+      return new RSVP.Queue(window.ChatTools.createToolList(
+          gadget.element,
+          options.mcp_server_list,
+          function onMcpServerError(server_config, error) {
+            if (window.console && window.console.warn) {
+              window.console.warn(
+                "MCP server \"" + (server_config && server_config.name) + "\" unavailable: " +
+                  (error && error.message ? error.message : error)
+              );
+            }
+          },
+          options.mcp_on_auth_expired
+        ))
+        .push(function (tool_list) {
+          gadget.tool_list = tool_list;
+          gadget.tool_list.push({
+            definition: {
+              name: "spawn_subagent",
+              description: "Delegate a self-contained sub-task to a fresh, independent instance of this " +
+                "same agent - same tools (everything except spawn_subagent itself, to prevent runaway " +
+                "recursion), but its own separate conversation that starts empty (it has NO access to this " +
+                "conversation's history - give it a full, self-contained task description). Runs to " +
+                "completion (its own multi-turn tool-calling loop) before this call returns; only its final " +
+                "answer comes back - none of its intermediate searches/reads/retries appear in this " +
+                "conversation. USE THIS WHEN: a piece of the current task is large or noisy enough to " +
+                "isolate (e.g. \"research X and summarize\", \"go create and populate these 5 documents, " +
+                "report back what was done\"). DO NOT USE THIS for a trivial one-tool-call task - just call " +
+                "that tool directly.",
+              parameters: {
+                type: "object",
+                properties: {
+                  task: {
+                    type: "string",
+                    description: "Full, self-contained description of what the sub-agent should do."
+                  },
+                  max_turns: {
+                    type: "integer",
+                    description: "Cap on the sub-agent's own turn count (default 20, max 50)."
+                  }
+                },
+                required: ["task"]
               }
             },
-            required: ["task"]
-          }
-        },
-        execute: function (args) {
-          return gadget.runSubagentTask(args.task, args.max_turns);
-        }
-      });
-      return gadget.getDeclaredGadget("gadget_chat_ui")
+            execute: function (args) {
+              return gadget.runSubagentTask(args.task, args.max_turns);
+            }
+          });
+          return gadget.getDeclaredGadget("gadget_chat_ui");
+        })
         .push(function (gadget_chat_ui) {
           gadget.gadget_chat_ui = gadget_chat_ui;
           return gadget_chat_ui.render(options);
