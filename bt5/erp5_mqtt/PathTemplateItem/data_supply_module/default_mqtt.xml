@@ -15,7 +15,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>shm</string>
               </tuple>
             </value>
         </item>
@@ -50,7 +49,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>shm</string>
               </tuple>
             </value>
         </item>
