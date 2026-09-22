@@ -1089,7 +1089,7 @@ class CategoryTool(BaseTool):
                   message = "category does not exists for %s (%s)"%(
                                        context.getPath(), category_list)
                   LOG('CMFCategory', ERROR, message)
-                  raise CategoryError (message)
+                  # raise CategoryError (message)
                 else :
                   append('%s/%s' % (base_category_id, category_value.getRelativeUrl()))
             else :
@@ -1098,7 +1098,7 @@ class CategoryTool(BaseTool):
                   message = "category does not exists for %s (%s)"%(
                                        context.getPath(), category_list)
                   LOG('CMFCategory', ERROR, message)
-                  raise CategoryError (message)
+                  # raise CategoryError (message)
                 else :
                   append(category_value.getRelativeUrl())
       # WE MUST IMPLEMENT HERE THE REST OF THE SEMANTICS
