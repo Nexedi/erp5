@@ -1,0 +1,7 @@
+portal_callables/MCPUtility_renderTextTable
+portal_callables/MCP_getPortalTypeSchema
+portal_callables/MCP_getPortalTypeSchemaForm
+portal_callables/MCP_listPortalType
+portal_callables/MCP_listPortalTypeForm
+portal_callables/MCP_listPortalTypes
+portal_callables/MCP_listPortalTypesForm
