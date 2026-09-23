@@ -23,9 +23,9 @@
             <value>
               <tuple>
                 <string>action_type/workflow</string>
-                <string>before_script/portal_workflow/assignment_workflow/script_Assignment_updateUserSecurityGroup</string>
-                <string>after_script/portal_workflow/assignment_workflow/script_Assignment_setStopDate</string>
                 <string>destination/portal_workflow/assignment_workflow/state_closed</string>
+                <string>after_script/portal_workflow/assignment_workflow/script_Assignment_setStopDate</string>
+                <string>after_script/portal_workflow/assignment_workflow/script_Assignment_updateUserSecurityGroup</string>
               </tuple>
             </value>
         </item>
