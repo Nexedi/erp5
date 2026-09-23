@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Python Script" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>relative_url, action_id, dry_run=True, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>callable_type/script</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+{\n
+  "type": "function",\n
+  "function": {\n
+    "name": "ERP5Document_doAction",\n
+    "description": "Perform any action on a module or document: create a new document inside it, invoke a workflow transition (e.g. \'plan\', \'confirm\', \'start\', \'stop\', \'validate\', \'deliver\'), invoke a custom object action, or save edits to a document\'s own fields (action_id \'edit\'). Call ERP5Document_getActionList on the same relative_url first to find which action_id values are currently valid (including \'add <portal_type>\' entries built from can_create_here, and \'edit\' from object_view_list). If that action opens a dialog, its fields (dialog_field_list) are automatically pre-filled with their own default/current values before invoking - you only need to pass keyword arguments for the fields whose value you want to override (for \'add <portal_type>\' or \'edit\', they become the document\'s field values, using the plain property id with any \'my_\' prefix removed; a relation field, whose id usually ends in \'_value\', takes the related document\'s relative_url as a string). IMPORTANT: before calling this with dry_run=false, look at the dialog_field_list you got from ERP5Document_getActionList for this exact action_id and decide, for each field, whether the user already gave you a value for it (a title, a description, an amount, a related document, etc.) - if so, you MUST pass that field\'s id (with any \'my_\' prefix removed) as a keyword argument here; do not leave it to fall back to its own default/current value, which is very often blank and not what the user asked for. Prefer setting every such field directly in the same \'add <portal_type>\' call rather than creating a blank document and editing it afterward. If you call this with no keyword arguments at all, the response includes a warning reminding you to check dialog_field_list again. Every response also includes property_dict, re-read directly from the document after the call (not just an echo of what you sent) - check it to confirm your values actually stuck instead of guessing or repeating the same call.",\n
+    "parameters": {\n
+      "type": "object",\n
+      "properties": {\n
+        "relative_url": {\n
+          "type": "string",\n
+          "description": "relative_url of the module or existing document to act on"\n
+        },\n
+        "action_id": {\n
+          "type": "string",\n
+          "description": "id of the action to invoke: a workflow transition (e.g. \'confirm\', \'start\', \'validate\'), a custom object action, \'add <portal_type>\' (e.g. \'add Purchase Order Line\') to create a new document of that portal_type inside relative_url, or \'edit\' to save edits to relative_url\'s own fields"\n
+        },\n
+        "dry_run": {\n
+          "type": "boolean",\n
+          "description": "If true (default), do not invoke or create anything: just return a preview. Set to false to actually do it."\n
+        }\n
+      },\n
+      "required": [\n
+        "relative_url",\n
+        "action_id"\n
+      ]\n
+    }\n
+  }\n
+}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Document_doAction</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
