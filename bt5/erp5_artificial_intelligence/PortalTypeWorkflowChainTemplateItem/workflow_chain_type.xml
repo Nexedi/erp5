@@ -1,7 +1,7 @@
 <workflow_chain>
  <chain>
-  <type>Artificial Dummy Response</type>
-  <workflow>edit_workflow</workflow>
+  <type>Artificial Agent</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
   <type>Artificial Task</type>

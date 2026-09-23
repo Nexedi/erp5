@@ -4,7 +4,7 @@ portal = artificial_task.getPortalObject()
 
 line = artificial_task.newContent(portal_type='Artificial Task Line', text_content=data)
 line.setSourceValue(portal.portal_membership.getAuthenticatedMember().getUserValue())
-line.stop()
+line.deliver()
 
 return json.dumps({
   "post": {

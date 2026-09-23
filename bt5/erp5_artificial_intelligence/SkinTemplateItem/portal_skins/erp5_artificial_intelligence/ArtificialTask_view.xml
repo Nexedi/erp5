@@ -79,7 +79,7 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_model</string>
+                        <string>my_contributor_title_list</string>
                       </list>
                     </value>
                 </item>
@@ -87,8 +87,6 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_tool_list</string>
-                        <string>my_skill_list</string>
                         <string>my_translated_simulation_state_title</string>
                       </list>
                     </value>

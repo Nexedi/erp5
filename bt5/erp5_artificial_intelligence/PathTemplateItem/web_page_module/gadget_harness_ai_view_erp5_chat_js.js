@@ -39,16 +39,6 @@
         form_data_json
       );
     })
-    .allowPublicAcquisition('requestProcessTask', function (argument_list) {
-      var gadget = this,
-        document_id = argument_list[0],
-        body = argument_list[1];
-      return gadget.jio_putAttachment(
-        document_id,
-        gadget.hateoas_url + document_id + "/ArtificialTask_startHarnessAgent",
-        body
-      );
-    })
     .allowPublicAcquisition('refreshPanel', function () {
       var gadget = this;
       return gadget.jio_getAttachment(

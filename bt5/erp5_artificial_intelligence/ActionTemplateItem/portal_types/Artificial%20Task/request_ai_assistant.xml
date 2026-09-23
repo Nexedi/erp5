@@ -81,7 +81,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/ArtificialTask_requestAIAssistant</string> </value>
+            <value> <string>string:${object_url}/ArtificialTask_requestAIAssistantDialog</string> </value>
         </item>
       </dictionary>
     </pickle>

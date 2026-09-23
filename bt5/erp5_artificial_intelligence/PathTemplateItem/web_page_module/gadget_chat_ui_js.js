@@ -254,7 +254,7 @@
           date: new Date().toISOString(),
           text: "",
           response: true,
-          author: "Assistant"
+          author: message.author || "Assistant"
         }));
         gadget.element.querySelector("#post_list").appendChild(gadget.new_message_element);
       }

@@ -5,7 +5,19 @@ MAX_LOOP_COUNT = 50
 artificial_task = context
 portal = artificial_task.getPortalObject()
 processing_tag = 'process_%s' % artificial_task.getRelativeUrl()
-connector = artificial_task.getConnectorValue()
+if not request_line_relative_url:
+  request_line = portal.portal_catalog.getResultValue(
+    portal_type='Artificial Task Line',
+    simulation_state='stopped',
+    parent_uid= artificial_task.getUid()
+  )
+  request_line_relative_url = request_line.getRelativeUrl()
+
+else:
+  request_line = artificial_task.restrictedTraverse(request_line_relative_url)
+
+artificial_agent = request_line.getDestinationValue(portal_type='Artificial Agent')
+connector = artificial_agent.getConnectorValue()
 
 if portal.portal_activities.countMessageWithTag(processing_tag) > 1:
   return
@@ -14,7 +26,9 @@ def finalize(report_line, message_list):
   content = '\n'.join([x.get("content") for x in message_list if x.get('role', '') != 'tool' and x.get("content", '')])
   line = artificial_task.newContent(
     portal_type='Artificial Task Line',
-    text_content=content
+    text_content=content,
+    source_value = artificial_agent,
+    follow_up_value = request_line
   )
   report_line.edit(
     text_content=json.dumps(message_list, indent=2),
@@ -22,7 +36,8 @@ def finalize(report_line, message_list):
   )
   line.deliver()
   report_line.deliver()
-  artificial_task.respond()
+  request_line.deliver()
+  artificial_task.complete()
 
 
 default_message_list = artificial_task.ArtificialTask_getMessageList()
@@ -104,6 +119,7 @@ elif pending_tool_call_list:
       after_path_and_method_id=(artificial_task_report_line.getPath(), ('immediateReindexObject',))),
     script.id
   )(
+    request_line_relative_url = request_line_relative_url,
     artificial_task_report_line_relative_url=artificial_task_report_line_relative_url,
     pending_tool_call_list=remaining_tool_call_list,
     loop_count=loop_count + 1,
@@ -111,8 +127,8 @@ elif pending_tool_call_list:
 
 else:
   # The beginning to call llm
-  tool_list = artificial_task.getToolList()
-  skill_list = artificial_task.getSkillList()
+  tool_list = artificial_agent.getToolList()
+  skill_list = artificial_agent.getSkillList()
   tool_definition_list = [
     json.loads(getattr(portal.portal_callables, x).getDescription()) for x in tool_list
   ]
@@ -124,7 +140,7 @@ else:
 
   try:
     response = connector.getResponseWithUsage(
-      messages=system_level_message_list + default_message_list + message_list, model=artificial_task.getModel(),
+      messages=system_level_message_list + default_message_list + message_list, model=artificial_agent.getModel(),
       tools=tool_definition_list)
   except Exception as llm_error:
     message_list.append({
@@ -151,6 +167,7 @@ else:
         after_path_and_method_id=(artificial_task_report_line.getPath(), ('immediateReindexObject',))),
       script.id
     )(
+      request_line_relative_url = request_line_relative_url,
       artificial_task_report_line_relative_url=artificial_task_report_line_relative_url,
       pending_tool_call_list=tool_calls,
       loop_count=loop_count + 1,

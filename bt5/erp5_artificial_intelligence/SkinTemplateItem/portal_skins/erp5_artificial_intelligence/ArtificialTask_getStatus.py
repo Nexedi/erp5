@@ -11,6 +11,7 @@ else:
   target_report_state = 'delivered'
 
 artificial_task_report = artificial_task.getFollowUpRelatedValue(portal_type='Artificial Task Report')
+author = 'Assistant'
 if artificial_task_report is not None:
   report_line_list = artificial_task_report.objectValues(
     portal_type='Artificial Task Report Line',
@@ -23,12 +24,14 @@ if artificial_task_report is not None:
     if artificial_task_line:
       done = True
       content = artificial_task_line.getTextContent()
+      author = artificial_task_line.getSourceTitle()
     else:
       done = False
     tool_message_list = [m for m in message_list if m.get('role') in ('tool', 'assistant')]
 
 return dumps({
   "done": done,
+  "author": author,
   "content": content,
   "tool_message_list": tool_message_list,
 })
