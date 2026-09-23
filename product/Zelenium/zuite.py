@@ -129,6 +129,7 @@ class Zuite( OrderedFolder ):
 
     test_case_metatypes = ( 'File'
                           , 'Page Template'
+                          , 'ERP5 Page Template'
                           )
     filesystem_path = ''
     filename_glob = ''
