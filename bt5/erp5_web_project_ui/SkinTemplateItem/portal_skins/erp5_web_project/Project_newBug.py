@@ -1,5 +1,5 @@
 """
-  Creates a new bug on the current project and jumps to it.
+  Creates and opens a new bug on the current project and jumps to it.
 """
 Base_translateString = context.Base_translateString
 portal_type = 'Bug'
@@ -19,6 +19,7 @@ bug = module.newContent(portal_type=portal_type,
                         description=description,
                         source_project=context.getRelativeUrl(),
                         **bug_kw)
+bug.confirm()
 
 portal_status_message = Base_translateString(
   "Created and associated a new ${portal_type} to the project.",
