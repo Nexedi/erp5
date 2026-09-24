@@ -363,7 +363,7 @@
         </item>
         <item>
             <key> <string>configuration_application_title</string> </key>
-            <value> <string>Harness AI</string> </value>
+            <value> <string>ERP5 Harness AI</string> </value>
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
@@ -371,7 +371,7 @@
         </item>
         <item>
             <key> <string>configuration_default_view_action_reference</string> </key>
-            <value> <string>erp5_harness_ai_view</string> </value>
+            <value> <string>view</string> </value>
         </item>
         <item>
             <key> <string>configuration_frontpage_gadget_url</string> </key>
@@ -403,7 +403,7 @@
         </item>
         <item>
             <key> <string>configuration_panel_gadget_url</string> </key>
-            <value> <string>gadget_harness_ai_panel.html</string> </value>
+            <value> <string>gadget_erp5_harness_ai_panel.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_precache_manifest_script_list</string> </key>
@@ -694,7 +694,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1035.27859.59814.21145</string> </value>
+                      <value> <string>1035.56688.11140.29934</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -710,7 +710,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1790065159.650502</float>
+                              <float>1790243525.212292</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

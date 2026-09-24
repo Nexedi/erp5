@@ -7,13 +7,13 @@
 // hand-rolled assembler would be - it supports the FULL instruction set
 // including tables/call_indirect/SIMD/bulk memory.
 //
-// Loaded via importScripts() from gadget_chat_sandbox_worker.js, a classic
+// Loaded via importScripts() from gadget_officejs_harness_ai_sandbox_worker.js, a classic
 // (non-module) Worker - this file therefore has no import/export of its own,
 // and executes in that same Worker global scope under the SAME Content-
 // Security-Policy as the rest of it (importScripts() does not fetch or apply
 // a separate CSP per imported file - the worker has exactly one CSP list,
 // established once from the worker's own top-level script response). See
-// gadget_chat_sandbox_worker_js.js's header comment for why that CSP is
+// gadget_officejs_harness_ai_sandbox_worker_js.js's header comment for why that CSP is
 // empty here. Everything below is private to this file's own closure except
 // the one explicit export at the bottom, self.wat2wasm - mirrors this
 // project's window.ChatTools/window.ChatSkills export convention, just on

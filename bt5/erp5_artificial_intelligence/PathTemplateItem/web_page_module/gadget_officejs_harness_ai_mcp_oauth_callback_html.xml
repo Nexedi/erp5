@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts90246519.7972116</string> </value>
+            <value> <string>ts90079925.849910</string> </value>
         </item>
         <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
@@ -66,30 +66,16 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>582e53a98b7a3d07c4d5cb81f46530ef</string> </value>
+            <value> <string>7e722598d10b62b4fce8f3801b3cc701</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
         </item>
         <item>
-            <key> <string>creators</string> </key>
-            <value>
-              <tuple>
-                <string>cedric.le.ninivin</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_harness_ai_router.html</string> </value>
+            <value> <string>gadget_officejs_harness_ai_mcp_oauth_callback.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -99,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_harness_ai_router_html</string> </value>
+            <value> <string>gadget_officejs_harness_ai_mcp_oauth_callback_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -117,21 +103,11 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>2493</int> </value>
-        </item>
-        <item>
-            <key> <string>text_content_substitution_mapping_method_id</string> </key>
-            <value> <string>WebPage_getRenderJSSubstitutionMappingDict</string> </value>
+            <value> <int>880</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Harness AI router Gadget</string> </value>
-        </item>
-        <item>
-            <key> <string>url_string</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Gadget OfficeJS Harness AI MCP OAuth Callback</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -160,12 +136,6 @@
                     <key> <string>document_publication_workflow</string> </key>
                     <value>
                       <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>edit_workflow</string> </key>
-                    <value>
-                      <persistent> <bytes encoding="base64">AAAAAAAAAAQ=</bytes> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -211,7 +181,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1789567092.572688</float>
+                              <float>1790079925.84991</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -221,67 +191,6 @@
                   <item>
                       <key> <string>validation_state</string> </key>
                       <value> <string>published_alive</string> </value>
-                  </item>
-                </dictionary>
-              </list>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
-    <pickle>
-      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_log</string> </key>
-            <value>
-              <list>
-                <dictionary>
-                  <item>
-                      <key> <string>action</string> </key>
-                      <value> <string>edit</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>comment</string> </key>
-                      <value>
-                        <none/>
-                      </value>
-                  </item>
-                  <item>
-                      <key> <string>error_message</string> </key>
-                      <value> <string></string> </value>
-                  </item>
-                  <item>
-                      <key> <string>serial</string> </key>
-                      <value> <string>1035.56793.59544.56780</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>state</string> </key>
-                      <value> <string>current</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>time</string> </key>
-                      <value>
-                        <object>
-                          <klass>
-                            <global name="DateTime" module="DateTime.DateTime"/>
-                          </klass>
-                          <tuple/>
-                          <state>
-                            <tuple>
-                              <float>1790246519.801104</float>
-                              <string>UTC</string>
-                            </tuple>
-                          </state>
-                        </object>
-                      </value>
                   </item>
                 </dictionary>
               </list>

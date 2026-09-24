@@ -323,7 +323,7 @@
         </item>
         <item>
             <key> <string>configuration_application_title</string> </key>
-            <value> <string>Harness AI</string> </value>
+            <value> <string>Officejs Harness AI</string> </value>
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>

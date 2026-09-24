@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Style" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts90246519.7972116</string> </value>
+            <value> <string>ts87134119.9508502</string> </value>
         </item>
         <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
@@ -73,23 +73,17 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>582e53a98b7a3d07c4d5cb81f46530ef</string> </value>
+            <value> <string>dad5df857409cc2833bfe8774d5d1e3f</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
-        </item>
-        <item>
-            <key> <string>creators</string> </key>
             <value>
-              <tuple>
-                <string>cedric.le.ninivin</string>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_harness_ai_router.html</string> </value>
+            <value> <string>gadget_erp5_page_harness_ai_homepage.css</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -99,7 +93,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_harness_ai_router_html</string> </value>
+            <value> <string>gadget_erp5_harness_ai_homepage_css</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -107,7 +101,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Style</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -117,21 +111,11 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>2493</int> </value>
-        </item>
-        <item>
-            <key> <string>text_content_substitution_mapping_method_id</string> </key>
-            <value> <string>WebPage_getRenderJSSubstitutionMappingDict</string> </value>
+            <value> <int>320</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Harness AI router Gadget</string> </value>
-        </item>
-        <item>
-            <key> <string>url_string</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Gadget erp5 harness ai homepage css</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -211,7 +195,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1789567092.572688</float>
+                              <float>1787134070.943898</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -260,7 +244,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1035.56793.59544.56780</string> </value>
+                      <value> <string>1035.56685.2413.5239</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -276,7 +260,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1790246519.801104</float>
+                              <float>1790239827.831599</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

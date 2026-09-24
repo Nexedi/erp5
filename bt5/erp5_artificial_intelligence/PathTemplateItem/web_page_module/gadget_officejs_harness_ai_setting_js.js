@@ -139,27 +139,73 @@
   // instead), so this page is responsible for setting up the same "Local is
   // Enough" jio storage itself, plus our own LLM settings, in one
   // setSettingList call.
+  //
+  // base_url/api_key/model/mcp_server_list themselves are stored on an
+  // Artificial Agent jio document (not directly as flat settings keys) -
+  // only its id travels through settings. Creating/updating that document
+  // requires the app's own jio storage (jio_storage_description above) to
+  // already be live, which only happens on the *next* full page load (see
+  // rjs_gadget_erp5_launcher_js.js's .ready(), which calls createJio once
+  // per load using whatever jio_storage_description was saved before this
+  // load started) - so on someone's very first ever save there is no
+  // Artificial Agent document yet to write to. In that one case, fall back
+  // to storing the raw fields directly as a transient bridge; .declareService
+  // below finishes the migration to an Artificial Agent id the next time
+  // this page loads, once the jio storage from this save is actually live.
   function setLLMConfiguration(gadget, content) {
     var jio_storage_description = {
-      type: "query",
-      sub_storage: {
-        type: "uuid",
+        type: "query",
         sub_storage: {
-          type: "indexeddb",
-          database: "local_default"
+          type: "uuid",
+          sub_storage: {
+            type: "indexeddb",
+            database: "local_default"
+          }
         }
-      }
-    };
-    return gadget.setSettingList({
-      jio_storage_description: jio_storage_description,
-      jio_storage_name: 'LOCAL',
-      sync_reload: true,
-      baseUrl: content.base_url || "",
-      apiKey: content.api_key || "",
-      model: content.model || "",
-      mcpServerList: content.mcp_server_list || "",
-      migration_version: currentVersion()
-    })
+      },
+      agent_data = {
+        portal_type: 'Artificial Agent',
+        base_url: content.base_url || "",
+        api_key: content.api_key || "",
+        model: content.model || "",
+        mcp_server_list: content.mcp_server_list || ""
+      };
+    return new RSVP.Queue()
+      .push(function () {
+        if (gadget.state.agentId) {
+          return gadget.jio_put(gadget.state.agentId, agent_data)
+            .push(function () {
+              return gadget.state.agentId;
+            });
+        }
+        return gadget.jio_post(agent_data);
+      })
+      .push(function (agent_id) {
+        return gadget.setSettingList({
+          jio_storage_description: jio_storage_description,
+          jio_storage_name: 'LOCAL',
+          sync_reload: true,
+          agentId: agent_id,
+          baseUrl: "",
+          apiKey: "",
+          model: "",
+          mcpServerList: "",
+          migration_version: currentVersion()
+        });
+      }, function () {
+        // jio storage not bootstrapped yet (very first ever save) - keep
+        // the raw fields as a transient bridge, see comment above.
+        return gadget.setSettingList({
+          jio_storage_description: jio_storage_description,
+          jio_storage_name: 'LOCAL',
+          sync_reload: true,
+          baseUrl: content.base_url || "",
+          apiKey: content.api_key || "",
+          model: content.model || "",
+          mcpServerList: content.mcp_server_list || "",
+          migration_version: currentVersion()
+        });
+      })
       .push(function () {
         return gadget.redirect({command: "display", options: {
           page: 'ojs_sync',
@@ -179,6 +225,9 @@
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getSettingList", "getSettingList")
     .declareAcquiredMethod("setSettingList", "setSettingList")
+    .declareAcquiredMethod("jio_get", "jio_get")
+    .declareAcquiredMethod("jio_post", "jio_post")
+    .declareAcquiredMethod("jio_put", "jio_put")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("translate", "translate")
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
@@ -288,13 +337,65 @@
 
     .declareService(function () {
       var gadget = this;
-      return gadget.getSettingList(["baseUrl", "apiKey", "model", "mcpServerList", "mcpOAuthTokenMap"])
+      return gadget.getSettingList(["agentId", "baseUrl", "apiKey", "model", "mcpServerList", "mcpOAuthTokenMap"])
         .push(function (setting_list) {
-          gadget.state.baseUrl = setting_list[0] || "";
-          gadget.state.apiKey = setting_list[1] || "";
-          gadget.state.model = setting_list[2] || "";
-          gadget.state.mcpServerList = setting_list[3] || "";
-          gadget.state.mcpOAuthTokenMap = parseMcpOAuthTokenMap(setting_list[4]);
+          gadget.state.agentId = setting_list[0] || "";
+          gadget.state.mcpOAuthTokenMap = parseMcpOAuthTokenMap(setting_list[5]);
+
+          if (gadget.state.agentId) {
+            return gadget.jio_get(gadget.state.agentId)
+              .push(function (doc) {
+                gadget.state.baseUrl = doc.base_url || "";
+                gadget.state.apiKey = doc.api_key || "";
+                gadget.state.model = doc.model || "";
+                gadget.state.mcpServerList = doc.mcp_server_list || "";
+              }, function (error) {
+                if (error.status_code !== 404) {
+                  throw error;
+                }
+                gadget.state.baseUrl = "";
+                gadget.state.apiKey = "";
+                gadget.state.model = "";
+                gadget.state.mcpServerList = "";
+              });
+          }
+
+          // Not migrated to an Artificial Agent document yet - use the raw
+          // bridge fields (see setLLMConfiguration), and opportunistically
+          // finish the migration now that this is a fresh page load, so the
+          // jio storage bootstrapped by rjs_gadget_erp5_launcher_js.js's
+          // .ready() is actually live.
+          gadget.state.baseUrl = setting_list[1] || "";
+          gadget.state.apiKey = setting_list[2] || "";
+          gadget.state.model = setting_list[3] || "";
+          gadget.state.mcpServerList = setting_list[4] || "";
+          if (!gadget.state.baseUrl && !gadget.state.apiKey &&
+              !gadget.state.model && !gadget.state.mcpServerList) {
+            return;
+          }
+          return gadget.jio_post({
+            portal_type: 'Artificial Agent',
+            base_url: gadget.state.baseUrl,
+            api_key: gadget.state.apiKey,
+            model: gadget.state.model,
+            mcp_server_list: gadget.state.mcpServerList
+          })
+            .push(function (agent_id) {
+              gadget.state.agentId = agent_id;
+              return gadget.setSettingList({
+                agentId: agent_id,
+                baseUrl: "",
+                apiKey: "",
+                model: "",
+                mcpServerList: ""
+              });
+            }, function () {
+              // Storage still not ready - keep using the raw fields, retry
+              // migration on the next page load.
+              return null;
+            });
+        })
+        .push(function () {
           return gadget.getDeclaredGadget('form_view');
         })
         .push(function (form_gadget) {
