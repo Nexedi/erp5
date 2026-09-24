@@ -383,6 +383,132 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     self.assertIn('access_token=%s' % token.getId(), rss_url)
     self.assertIn('access_token_secret=%s' % token.getReference(), rss_url)
 
+  def _getForumFeedSection(self):
+    return self.portal.web_site_module.project_management.forum_feed
+
+  def _createDraftThreadWithPost(self):
+    thread = self.portal.discussion_thread_module.newContent(
+      portal_type='Discussion Thread', title='draft thread')
+    post = thread.newContent(portal_type='Discussion Post', title='draft post')
+    self.tic()
+    self.assertEqual('draft', thread.getValidationState())
+    return post
+
+  def test_forum_feed_list_covers_every_forum(self):
+    """The aggregated feed is not scoped to one forum: posts of threads from
+    two different forums come back together, newest first."""
+    _, thread_a = self._createForumThreadWithPosts(n_posts=2)
+    _, thread_b = self._createForumThreadWithPosts(n_posts=1)
+    post_list = self._getForumFeedSection().WebSection_getLatestForumPostList()
+    self.assertEqual(
+      sorted(x.getRelativeUrl() for x in
+             thread_a.objectValues() + thread_b.objectValues()),
+      sorted(x.getRelativeUrl() for x in post_list))
+    date_list = [x.getObject().getModificationDate() for x in post_list]
+    self.assertEqual(sorted(date_list, reverse=True), date_list)
+
+  def test_forum_feed_list_skips_posts_of_unlisted_threads(self):
+    """Discussion Post has no workflow of its own, so the thread state is
+    applied by the second query: a post of a draft thread must not appear."""
+    _, thread = self._createForumThreadWithPosts(n_posts=1)
+    draft_post = self._createDraftThreadWithPost()
+    url_list = [x.getRelativeUrl() for x in
+                self._getForumFeedSection().WebSection_getLatestForumPostList()]
+    self.assertNotIn(draft_post.getRelativeUrl(), url_list)
+    self.assertEqual([x.getRelativeUrl() for x in thread.objectValues()],
+                     url_list)
+
+  def test_forum_feed_list_limit_and_size_accept_strings(self):
+    """The listbox passes limit and size from the URL, so they arrive as
+    strings; the smaller of the two wins."""
+    self._createForumThreadWithPosts(n_posts=3)
+    section = self._getForumFeedSection()
+    self.assertEqual(3, len(section.WebSection_getLatestForumPostList()))
+    self.assertEqual(2, len(section.WebSection_getLatestForumPostList(limit='2')))
+    self.assertEqual(
+      1, len(section.WebSection_getLatestForumPostList(limit='2', size='1')))
+
+  def test_forum_feed_rss_links_open_each_post_in_its_own_forum(self):
+    """Items come from several forums; each <link> must seed the history with
+    the forum of that post (p.jio_key) so the top bar leads back to it."""
+    forum_a, thread_a = self._createForumThreadWithPosts(n_posts=1)
+    forum_b, thread_b = self._createForumThreadWithPosts(n_posts=1)
+    doc = parseString(
+      self._getForumFeedSection().WebSection_viewLatestForumPostListAsRSS())
+    link_list = [getSubnodeContent(x, 'link')
+                 for x in doc.getElementsByTagName('item')]
+    self.assertEqual(2, len(link_list))
+    for forum, thread in ((forum_a, thread_a), (forum_b, thread_b)):
+      link, = [x for x in link_list
+               if 'n.jio_key=%s&' % thread.getRelativeUrl() in x]
+      self.assertIn('#!push_history_stored_state', link)
+      self.assertIn('p.jio_key=%s&' % forum.getRelativeUrl(), link)
+
+  def test_forum_feed_section_is_wired_to_panel_and_link_page(self):
+    """The panel entry and the Web Section project_view action both name the
+    section by its relative url; a rename on either side breaks the link
+    silently, and the link page must hand the gadget the aggregated endpoint
+    without minting a token on render."""
+    section = self._getForumFeedSection()
+    relative_url = 'web_site_module/project_management/forum_feed'
+    self.assertEqual(relative_url, section.getRelativeUrl())
+    self.assertEqual('Web Section', section.getPortalType())
+    panel_js = self.portal.web_page_module.project_gadget_erp5_panel_js
+    self.assertIn('jio_key: "%s"' % relative_url, panel_js.getTextContent())
+    action, = [x for x in self.portal.portal_types['Web Section']
+                                   .getActionInformationList()
+               if x.getReference() == 'project_view']
+    self.assertIn(relative_url, action.getConditionText())
+    self.assertIn('WebSection_viewForumFeedProject', action.getActionText())
+    token_id_list = list(self.portal.access_token_module.objectIds())
+    field = section.WebSection_viewForumFeedProject.rss_link_gadget
+    self.assertEqual('gadget_project_rss_link.html', field.get_value('gadget_url'))
+    self.assertEqual(
+      [('jio_key', relative_url),
+       ('url_script', 'WebSection_getForumFeedRssAccessUrlAsJSON')],
+      field.get_value('renderjs_extra'))
+    self.assertEqual(token_id_list,
+                     list(self.portal.access_token_module.objectIds()))
+
+  def test_forum_feed_rss_url_endpoint_answers_json(self):
+    """Same JSON shape as the per-forum endpoint, pointing at the aggregated
+    RSS form of the section."""
+    result = json.loads(
+      self._getForumFeedSection().WebSection_getForumFeedRssAccessUrlAsJSON())
+    self.assertIn(
+      'forum_feed/WebSection_viewLatestForumPostListAsRSS?', result['rss_url'])
+
+  def test_forum_feed_rss_access_url_for_non_manager_reader(self):
+    """Base_getRssAccessUrl is shared with the forum action; a reader's token
+    must bind to the aggregated feed url and be read before validate()."""
+    section = self._getForumFeedSection()
+    token_module = self.portal.access_token_module
+    existing_token_id_list = list(token_module.objectIds())
+    login_reference = 'forum-feed-reader-login'
+    person = self.portal.person_module.newContent(
+      portal_type='Person', reference='TESTP-forum-feed-reader')
+    person.newContent(portal_type='Assignment').open()
+    person.newContent(portal_type='ERP5 Login',
+                      reference=login_reference).validate()
+    token_module.manage_addLocalRoles(person.getUserId(), ['Author'])
+    self.tic()
+
+    self.loginByUserName(login_reference)
+    try:
+      result = json.loads(section.WebSection_getForumFeedRssAccessUrlAsJSON())
+    finally:
+      self.login()
+
+    token, = [x for x in token_module.objectValues()
+              if x.getId() not in existing_token_id_list]
+    self.assertEqual('validated', token.getValidationState())
+    self.assertEqual(
+      '%s/WebSection_viewLatestForumPostListAsRSS' % section.absolute_url(),
+      token.getUrlString())
+    self.assertIn('access_token=%s' % token.getId(), result['rss_url'])
+    self.assertIn('access_token_secret=%s' % token.getReference(),
+                  result['rss_url'])
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(
