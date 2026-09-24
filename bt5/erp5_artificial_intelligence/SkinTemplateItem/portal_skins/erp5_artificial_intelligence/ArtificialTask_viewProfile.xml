@@ -57,9 +57,7 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>my_text_content</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -79,7 +77,7 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_source_title</string>
+                        <string>my_contributor_title_list</string>
                       </list>
                     </value>
                 </item>
@@ -87,8 +85,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_destination_title</string>
-                        <string>my_translated_simulation_state_title</string>
+                        <string>my_follow_up_title_list</string>
                       </list>
                     </value>
                 </item>
@@ -97,7 +94,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ArtificialTaskLine_view</string> </value>
+            <value> <string>ArtificialTask_viewProfile</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -105,7 +102,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>ArtificialTaskLine_view</string> </value>
+            <value> <string>ArtificialTask_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -121,7 +118,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Artificial Task Line</string> </value>
+            <value> <string>Artificial Task</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

@@ -16,19 +16,17 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>action_type/object_jio_action</string>
+                <string>action_type/object_view</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>category</string> </key>
-            <value> <string>object_jio_action</string> </value>
+            <value> <string>object_view</string> </value>
         </item>
         <item>
             <key> <string>condition</string> </key>
-            <value>
-              <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -42,29 +40,23 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>request_ai_assistant</string> </value>
-        </item>
-        <item>
-            <key> <string>language</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>profile</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
             <value>
               <tuple>
-                <string>Modify portal content</string>
+                <string>View</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <float>1.0</float> </value>
+            <value> <float>2.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Request AI Assistant</string> </value>
+            <value> <string>Profile</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -81,20 +73,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/ArtificialTask_requestAIAssistantDialog</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="Expression" module="Products.CMFCore.Expression"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>text</string> </key>
-            <value> <string>python: here.getSimulationState() != \'started\'</string> </value>
+            <value> <string>string:${object_url}/ArtificialTask_viewProfile</string> </value>
         </item>
       </dictionary>
     </pickle>

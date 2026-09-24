@@ -61,7 +61,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>transition_start</string> </value>
+            <value> <string>transition_restart</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -69,7 +69,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Start</string> </value>
+            <value> <string>Restart</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

@@ -16,11 +16,8 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>destination/portal_workflow/artificial_task_workflow/transition_delete</string>
-                <string>destination/portal_workflow/artificial_task_workflow/transition_delete_action</string>
-                <string>destination/portal_workflow/artificial_task_workflow/transition_complete</string>
-                <string>destination/portal_workflow/artificial_task_workflow/transition_start</string>
-                <string>destination/portal_workflow/artificial_task_workflow/transition_start_action</string>
+                <string>destination/portal_workflow/artificial_task_workflow/transition_stop</string>
+                <string>destination/portal_workflow/artificial_task_workflow/transition_stop_action</string>
               </tuple>
             </value>
         </item>
@@ -38,7 +35,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>state_planned</string> </value>
+            <value> <string>state_started</string> </value>
         </item>
         <item>
             <key> <string>index</string> </key>
@@ -64,7 +61,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Planned</string> </value>
+            <value> <string>Started</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -22,34 +22,19 @@
           return gadget_chat_ui.render(options);
         })
         .push(function () {
-          if (options.chat_state == 'planned' && false) {
-            return gadget.requestProcessTask(
-              gadget.options.jio_key,
-              {}
-            )
-            .push(function () {
-              return gadget.pollTask();
-            });
+          if (options.chat_state == 'started') {
+            return gadget.pollTask();
           }
         });
     })
     .allowPublicAcquisition('notifyCommentPosted', function () {
       return;
-      /*
-      var gadget = this;
-      return gadget.requestProcessTask(
-        gadget.options.jio_key,
-        {}
-      )
-        .push(function () {
-          return gadget.pollTask();
-        });
-      */
     })
     .declareJob('pollTask', function () {
       var gadget = this,
         gadget_chat_ui = gadget.gadget_chat_ui,
         queue_loop = gadget_chat_ui.blockEditor();
+      gadget.is_processing = true;
       function check() {
         queue_loop
           .push(function () {
@@ -93,8 +78,7 @@
       )
         .push(function (erp5_document) {
           var simulation_state = erp5_document._embedded._view.my_simulation_state['default'];
-          if (simulation_state === 'processing' && !gadget.is_processing) {
-            gadget.is_processing = true;
+          if (simulation_state === 'started' && !gadget.is_processing) {
             return gadget.pollTask();
           }
         });

@@ -23,19 +23,13 @@ for line in artifical_task.objectValues(
     and author_value.getRelativeUrl() == current_user_value.getRelativeUrl()
   )
 
-  if is_own_comment:
-    author = ""
-  elif author_value is not None:
-    author = author_value.getTitle()
-  else:
-    author = "Assistant"
-
   comment_list.append((dict(
     date=line.getCreationDate().ISO8601(),
     text=line.getTextContent(),
     tool_message_list = json.dumps(tool_message_list),
     response = not is_own_comment,
-    author = author
+    author_title = author_value.getTitle() if author_value else '',
+    author_url = author_value.getRelativeUrl() if author_value else ''
   )))
 
 return comment_list

@@ -37,20 +37,13 @@ def finalize(report_line, message_list):
   line.deliver()
   report_line.deliver()
   request_line.deliver()
-  artificial_task.complete()
+  artificial_task.stop()
 
 
-default_message_list = artificial_task.ArtificialTask_getMessageList()
-
+default_message_list = artificial_task.ArtificialTask_getMessageListForArtificialAgent(artificial_agent.getRelativeUrl())
+context.log(default_message_list)
 
 if not artificial_task_report_line_relative_url:
-  simulation_state = artificial_task.getSimulationState()
-  if simulation_state == 'draft':
-    artificial_task.plan()
-  if simulation_state != 'processing':
-    artificial_task.start()
-
-
   if not artificial_task.getDescription():
     try:
       title_response = connector.getResponseWithUsage(

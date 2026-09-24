@@ -19,7 +19,7 @@
       return gadget.jio_post({
         portal_type: 'Artificial Task',
         parent_relative_url: 'artificial_task_module',
-        state: 'planned',
+        state: 'started',
         title: form_data_json.data
       })
         .push(function (new_id) {

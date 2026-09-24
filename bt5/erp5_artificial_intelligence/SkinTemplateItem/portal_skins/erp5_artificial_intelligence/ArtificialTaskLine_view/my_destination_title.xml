@@ -10,19 +10,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>columns</string>
-                <string>list_method</string>
-                <string>page_template</string>
-                <string>portal_types</string>
-                <string>selection_name</string>
-                <string>sort</string>
+                <string>portal_type</string>
                 <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox</string> </value>
+            <value> <string>my_destination_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -78,72 +73,20 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>source_title</string>
-                          <string>Author</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_title</string>
-                          <string>Recepient</string>
-                        </tuple>
-                        <tuple>
-                          <string>creation_date</string>
-                          <string>Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>text_content</string>
-                          <string>Content</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_simulation_state_title</string>
-                          <string>State</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_listbox</string> </value>
+                    <value> <string>my_relation_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>list_method</string> </key>
-                    <value>
-                      <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>page_template</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>portal_types</string> </key>
+                    <key> <string>portal_type</string> </key>
                     <value>
                       <list>
                         <tuple>
-                          <string>Artificial Task Line</string>
-                          <string>Artificial Task Line</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>artificial_task_line_selection</string> </value>
-                </item>
-                <item>
-                    <key> <string>sort</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>creation_date</string>
-                          <string>ascending</string>
+                          <string>Person</string>
+                          <string>Person</string>
                         </tuple>
                       </list>
                     </value>
@@ -154,23 +97,10 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Artificial Task Line</string> </value>
+                    <value> <string>Recipient</string> </value>
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="Method" module="Products.Formulator.MethodField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>contentValues</string> </value>
         </item>
       </dictionary>
     </pickle>

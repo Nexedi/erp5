@@ -22,7 +22,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>interaction_Start_Task</string> </value>
+            <value> <string>interaction_start_restart_task</string> </value>
         </item>
         <item>
             <key> <string>temporary_document_disallowed</string> </key>
@@ -30,13 +30,14 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Start_Task</string> </value>
+            <value> <string>Start_Restart_Task</string> </value>
         </item>
         <item>
             <key> <string>trigger_method_id</string> </key>
             <value>
               <tuple>
                 <string>start</string>
+                <string>restart</string>
               </tuple>
             </value>
         </item>

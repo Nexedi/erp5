@@ -227,7 +227,7 @@
           return gadget_chat_ui.render(options);
         })
         .push(function () {
-          if (options.chat_state === 'planned') {
+          if (options.chat_state === 'started') {
             return gadget.processTask(200);
           }
         });

@@ -61,7 +61,7 @@
             new SimpleQuery({key: "parent_relative_url", type: "simple", value: document_id})
           ]
         }),
-        select_list: ["text_content", "int_index", "response", "tool_message_list", "author", "date"],
+        select_list: ["text_content", "int_index", "response", "tool_message_list", "author_title", "date"],
         sort_on: [["int_index", "ascending"]]
       })
         .push(function (result) {
@@ -75,7 +75,7 @@
               text: row.value.text_content,
               tool_message_list: row.value.tool_message_list || "[]",
               response: row.value.response || false,
-              author: row.value.author || ""
+              author_title: row.value.author_title || ""
             };
           });
         });
@@ -92,7 +92,7 @@
         text_content: form_data_json.data,
         int_index: int_index,
         response: false,
-        author: "",
+        author_title: "",
         date: new Date().toISOString()
       })
         .push(function () {
@@ -182,14 +182,14 @@
         text_content: body.content,
         int_index: int_index,
         response: true,
-        author: "Assistant",
+        author_title: "Assistant",
         date: new Date().toISOString(),
         trace: trace,
         tool_message_list: JSON.stringify(tool_message_list)
       })
         .push(function () {
-          if (gadget.state.doc.state === 'planned') {
-            gadget.state.doc.state = 'completed';
+          if (gadget.state.doc.state === 'started') {
+            gadget.state.doc.state = 'stopped';
             return gadget.jio_put(document_id, gadget.state.doc);
           }
         })

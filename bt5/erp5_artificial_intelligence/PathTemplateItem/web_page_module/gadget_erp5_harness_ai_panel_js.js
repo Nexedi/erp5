@@ -60,6 +60,7 @@
         visible = options.visible,
         context = this,
         group_mapping,
+        view_list,
         action_list;
 
       if (visible === undefined) {
@@ -69,13 +70,16 @@
       if (erp5_document !== undefined) {
         group_mapping = mergeGlobalActionWithRawActionList(jio_key,
           view, jump_view,
-          erp5_document._links, [[
-            "action_object_jio_action",
-            "action_object_jio_button",
-            "action_object_jio_fast_input"
-          ]], {
+          erp5_document._links, [
+            "action_object_view", [
+              "action_object_jio_action",
+              "action_object_jio_button",
+              "action_object_jio_fast_input"
+            ]
+          ], {
             "action_object_jio_action": "display_dialog_with_history"
           }, {});
+        view_list = JSON.stringify(group_mapping.action_object_view);
         action_list = JSON.stringify(group_mapping.action_object_jio_action);
       }
 
@@ -87,6 +91,7 @@
             jio_key: jio_key,
             view: view,
             jump_view: jump_view,
+            view_list: view_list,
             action_list: action_list,
             editable: editable
           });
@@ -95,6 +100,7 @@
     .onStateChange(function onStateChange(modification_dict) {
       var i,
         gadget = this,
+        view_list,
         action_list,
         queue = new RSVP.Queue();
 
@@ -178,20 +184,25 @@
                    [domsugar(null, element_list)]);
         });
 
-      if (modification_dict.hasOwnProperty("action_list")) {
+      if (modification_dict.hasOwnProperty("view_list") ||
+          modification_dict.hasOwnProperty("action_list")) {
         queue
           .push(function () {
+            view_list = gadget.state.view_list ?
+              JSON.parse(gadget.state.view_list) : [];
             action_list = gadget.state.action_list ?
               JSON.parse(gadget.state.action_list) : [];
             gadget.element.querySelector("dl").textContent = '';
-            if (!action_list.length) {
+            if (!view_list.length && !action_list.length) {
               return;
             }
             return RSVP.hash({
-              url_list: gadget.getUrlForList(action_list.map(function (action) {
-                return action.url_kw;
-              })),
-              translation_list: gadget.getTranslationList(['Actions'])
+              url_list: gadget.getUrlForList(
+                view_list.concat(action_list).map(function (action) {
+                  return action.url_kw;
+                })
+              ),
+              translation_dict: gadget.getTranslationDict(['Views', 'Actions'])
             });
           })
           .push(function (result_dict) {
@@ -200,8 +211,14 @@
               return;
             }
             dl_fragment = document.createDocumentFragment();
-            appendDt(dl_fragment, result_dict.translation_list[0], 'cogs',
-                     action_list, result_dict.url_list, 0);
+            if (view_list.length) {
+              appendDt(dl_fragment, result_dict.translation_dict.Views, 'eye',
+                       view_list, result_dict.url_list, 0);
+            }
+            if (action_list.length) {
+              appendDt(dl_fragment, result_dict.translation_dict.Actions, 'cogs',
+                       action_list, result_dict.url_list, view_list.length);
+            }
             domsugar(gadget.element.querySelector("dl"), [dl_fragment]);
           });
       }

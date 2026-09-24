@@ -30,7 +30,7 @@
       dom_list.push(domsugar("a", { href: post.attachment_link }, [post.attachment_name]));
     }
     dom_list.push(domsugar("time", { datetime: post.date, title: post.date }, [
-      post.author ? (post.author + " · " + post.date_formatted) : post.date_formatted
+      (post.response && post.author_title) ? (post.author_title + " · " + post.date_formatted) : post.date_formatted
     ]));
     return domsugar("li", {
       "class": post.response ? "post-answer" : "post-question"
@@ -255,12 +255,12 @@
           date: new Date().toISOString(),
           text: "",
           response: true,
-          author: message.author || "Assistant"
+          author_title: message.author_title || "Assistant"
         }));
         gadget.element.querySelector("#post_list").appendChild(gadget.new_message_element);
-      } else if (message.author) {
+      } else if (message.author_title) {
         time_element = gadget.new_message_element.querySelector("time");
-        time_element.textContent = message.author + " · " +
+        time_element.textContent = message.author_title + " · " +
           new Date(time_element.getAttribute("datetime")).toLocaleString();
       }
       markdown_element = gadget.new_message_element.querySelector(".post-markdown");
@@ -315,7 +315,7 @@
                 date: new Date().toISOString(),
                 text: comment_text,
                 response: false,
-                author: ""
+                author_title: ""
               };
 
               return new RSVP.Queue()
