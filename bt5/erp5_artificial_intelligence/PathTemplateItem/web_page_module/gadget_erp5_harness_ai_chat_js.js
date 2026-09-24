@@ -79,7 +79,10 @@
         .push(function (erp5_document) {
           var simulation_state = erp5_document._embedded._view.my_simulation_state['default'];
           if (simulation_state === 'started' && !gadget.is_processing) {
-            return gadget.pollTask();
+            return gadget.refreshPanel()
+              .push(function () {
+                return gadget.pollTask();
+              });
           }
         });
     }, STATE_POLL_INTERVAL);

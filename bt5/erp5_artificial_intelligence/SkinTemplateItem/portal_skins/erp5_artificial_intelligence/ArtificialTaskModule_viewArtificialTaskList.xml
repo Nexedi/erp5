@@ -71,7 +71,9 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_contributor_title_list</string>
+                      </list>
                     </value>
                 </item>
                 <item>

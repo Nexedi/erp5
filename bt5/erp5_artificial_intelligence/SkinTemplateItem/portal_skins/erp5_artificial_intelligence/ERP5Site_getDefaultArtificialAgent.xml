@@ -46,11 +46,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>data, file,**kw</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ArtificialTask_createCommentLine</string> </value>
+            <value> <string>ERP5Site_getDefaultArtificialAgent</string> </value>
         </item>
       </dictionary>
     </pickle>

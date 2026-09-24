@@ -77,6 +77,7 @@
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>my_reference</string>
                         <string>my_model</string>
                         <string>my_connector_title</string>
                       </list>

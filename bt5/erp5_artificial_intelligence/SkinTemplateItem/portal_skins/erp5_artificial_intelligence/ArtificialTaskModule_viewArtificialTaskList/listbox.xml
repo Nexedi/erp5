@@ -98,8 +98,8 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>source_title</string>
-                          <string>Author</string>
+                          <string>contributor_title_list</string>
+                          <string>Contributors</string>
                         </tuple>
                         <tuple>
                           <string>modification_date</string>

@@ -5,18 +5,21 @@ MAX_LOOP_COUNT = 50
 artificial_task = context
 portal = artificial_task.getPortalObject()
 processing_tag = 'process_%s' % artificial_task.getRelativeUrl()
-if not request_line_relative_url:
-  request_line = portal.portal_catalog.getResultValue(
-    portal_type='Artificial Task Line',
-    simulation_state='stopped',
-    parent_uid= artificial_task.getUid()
-  )
-  request_line_relative_url = request_line.getRelativeUrl()
+
+if not request_object_relative_url:
+  request_object = artificial_task
+  for x in artificial_task.objectValues(portal_type='Artificial Task Line'):
+    if x.getSimulationState() == 'stopped':
+      request_object = x
+      break
+
+  request_object_relative_url = request_object.getRelativeUrl()
 
 else:
-  request_line = artificial_task.restrictedTraverse(request_line_relative_url)
+  request_object = artificial_task.restrictedTraverse(request_object_relative_url)
 
-artificial_agent = request_line.getDestinationValue(portal_type='Artificial Agent')
+artificial_agent = request_object.getDestinationValue(portal_type='Artificial Agent')
+
 connector = artificial_agent.getConnectorValue()
 
 if portal.portal_activities.countMessageWithTag(processing_tag) > 1:
@@ -28,7 +31,6 @@ def finalize(report_line, message_list):
     portal_type='Artificial Task Line',
     text_content=content,
     source_value = artificial_agent,
-    follow_up_value = request_line
   )
   report_line.edit(
     text_content=json.dumps(message_list, indent=2),
@@ -36,30 +38,16 @@ def finalize(report_line, message_list):
   )
   line.deliver()
   report_line.deliver()
-  request_line.deliver()
   artificial_task.stop()
+  if request_object.getPortalType() == 'Artificial Task Line':
+    request_object.deliver()
+    line.edit(follow_up_value = request_object)
+
 
 
 default_message_list = artificial_task.ArtificialTask_getMessageListForArtificialAgent(artificial_agent.getRelativeUrl())
-context.log(default_message_list)
 
 if not artificial_task_report_line_relative_url:
-  if not artificial_task.getDescription():
-    try:
-      title_response = connector.getResponseWithUsage(
-        messages=[{
-          "role": "system",
-          "content": "Reply with only a short chat title (3 to 6 words, no quotes, "
-                     "no trailing punctuation) summarizing the user's request below."
-        }] + default_message_list,
-        model=artificial_task.getModel(),
-        tools=[])
-      title = (title_response.get("content") or "").strip().strip('"').strip("'").strip()
-      if title:
-        artificial_task.edit(title=title[:80], description=title)
-    except Exception:
-      pass
-
   artificial_task_report = artificial_task.getFollowUpRelatedValue(portal_type='Artificial Task Report')
   if not artificial_task_report:
     artificial_task_report = portal.artificial_task_report_module.newContent(portal_type='Artificial Task Report')
@@ -112,7 +100,7 @@ elif pending_tool_call_list:
       after_path_and_method_id=(artificial_task_report_line.getPath(), ('immediateReindexObject',))),
     script.id
   )(
-    request_line_relative_url = request_line_relative_url,
+    request_object_relative_url = request_object_relative_url,
     artificial_task_report_line_relative_url=artificial_task_report_line_relative_url,
     pending_tool_call_list=remaining_tool_call_list,
     loop_count=loop_count + 1,
@@ -160,7 +148,7 @@ else:
         after_path_and_method_id=(artificial_task_report_line.getPath(), ('immediateReindexObject',))),
       script.id
     )(
-      request_line_relative_url = request_line_relative_url,
+      request_object_relative_url = request_object_relative_url,
       artificial_task_report_line_relative_url=artificial_task_report_line_relative_url,
       pending_tool_call_list=tool_calls,
       loop_count=loop_count + 1,
