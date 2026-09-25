@@ -162,6 +162,7 @@
             date_column: options.date_column || 'modification_date',
             sort_order: options.sort_order || 'ASC',
             source_column: options.source_column || 'source_title',
+            title_column: options.title_column || '',
             attachment_column: options.attachment_column || 'Event_getAttachmentList',
             // Force line calculation in any case
             render_timestamp: new Date().getTime(),
@@ -240,12 +241,14 @@
                 var source_title = entry.value[gadget.state.source_column] || '',
                   attachment_list = entry.value[gadget.state.attachment_column] || [],
                   attachment_element_list = [],
+                  post_element_list = [],
+                  content_element_list = [],
                   j,
                   word_list = source_title.split(' '),
                   source_short_title;
 
                 if (word_list.length === 1) {
-                  source_short_title = (word_list[0][0] || '?') + (word_list[0][1] || '');
+                  source_short_title = (word_list[0][0] || '') + (word_list[0][1] || '');
                 } else {
                   source_short_title = word_list[0][0] + word_list[1][0];
                 }
@@ -265,32 +268,45 @@
                   );
                 }
 
-                return domsugar('li', [
-                  domsugar('div', {
+                // a post with no content carries its meaning in its title
+                if (gadget.state.title_column && !entry.value.asStrippedHTML) {
+                  content_element_list.push(
+                    domsugar('strong', {
+                      class: 'post_title',
+                      text: entry.value[gadget.state.title_column] || ''
+                    }),
+                    domsugar('br')
+                  );
+                }
+                content_element_list.push(
+                  domsugar('strong', {text: source_title}),
+                  " ",
+                  domsugar('time', {
+                    datetime: entry.value[gadget.state.date_column],
+                    title: entry.value[gadget.state.date_column],
+                    text: getRelativeTimeString(
+                      gadget.state.language,
+                      now,
+                      new Date(entry.value[gadget.state.date_column])
+                    )
+                  }),
+                  domsugar('br'),
+                  result_dict.viewer_list[i].element,
+                  domsugar('br'),
+                  domsugar('ul', attachment_element_list)
+                );
+
+                if (source_short_title) {
+                  post_element_list.push(domsugar('div', {
                     class: 'post_avatar',
                     text: source_short_title
-                  }),
-                  domsugar('div', {
-                    class: 'post_content'
-                  }, [
-                    domsugar('strong', {text: source_title}),
-                    " ",
-                    domsugar('time', {
-                      datetime: entry.value[gadget.state.date_column],
-                      title: entry.value[gadget.state.date_column],
-                      text: getRelativeTimeString(
-                        gadget.state.language,
-                        now,
-                        new Date(entry.value[gadget.state.date_column])
-                      )
-                    }),
-                    domsugar('br'),
-                    result_dict.viewer_list[i].element,
-                    domsugar('br'),
-                    domsugar('ul', attachment_element_list)
-                    // domsugar('hr')
-                  ])
-                ]);
+                  }));
+                }
+                post_element_list.push(
+                  domsugar('div', {class: 'post_content'}, content_element_list)
+                );
+
+                return domsugar('li', post_element_list);
               }));
             setPaginationElement(gadget, allDocs_result.data.total_rows,
                                  result_dict.url_list,
@@ -325,14 +341,19 @@
 
       var gadget = this,
         limit_options = (gadget.state.lines === 0) ? undefined
-          : [gadget.state.begin_from, gadget.state.lines + 1];
+          : [gadget.state.begin_from, gadget.state.lines + 1],
+        select_list = ['asStrippedHTML', gadget.state.date_column,
+                       gadget.state.source_column,
+                       'Event_getAttachmentList'];
+
+      if (gadget.state.title_column) {
+        select_list.push(gadget.state.title_column);
+      }
 
       return gadget.jio_allDocs({
         query: gadget.state.query_string,
         limit: limit_options,
-        select_list: ['asStrippedHTML', gadget.state.date_column,
-                      gadget.state.source_column,
-                      'Event_getAttachmentList'],
+        select_list: select_list,
         sort_on: [[gadget.state.date_column, 'ASC'], ['uid', 'ASC']]
       })
         .push(function (result) {
