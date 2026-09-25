@@ -49,9 +49,6 @@ if len(listbox) == 0:
   # and to propose a mapping interface to the user
   spreadsheets = getSpreadsheet(import_file)
 
-  # Put the result of OOo parsing in the request
-  request.set('ooo_import_spreadsheet_data', spreadsheets)
-
   # Start a session and store the content of the file
   session_id = context.browser_id_manager.getBrowserId(create=1)
   session = context.portal_sessions[session_id]
@@ -62,12 +59,13 @@ if len(listbox) == 0:
   timestamp = "%s" % DateTime.timeTime(DateTime())
   timestamp = timestamp.split('.')[0]
   temp_import_file_name = "temp_file_%s" % timestamp
-  # Put the generated file_name in the request
-  request.set('temp_import_file_name', temp_import_file_name)
   session[temp_import_file_name] = temp_file
 
-  request.set('import_file_line_script', import_file_line_script)
-  return context.Base_viewFileImportMappingDialog(REQUEST=request)
+  return context.Base_renderForm(form_id="Base_viewFileImportMappingDialog", keep_items={
+    'ooo_import_spreadsheet_data': spreadsheets,
+    'temp_import_file_name': temp_import_file_name,
+    'import_file_line_script': import_file_line_script,
+  }, REQUEST=request)
 
 else:
   # Second Step

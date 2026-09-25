@@ -46,7 +46,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>cell</string> </value>
+            <value> <string>cell, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
