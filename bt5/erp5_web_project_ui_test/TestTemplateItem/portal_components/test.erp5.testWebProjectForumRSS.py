@@ -363,6 +363,7 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     login_reference = 'rss-reader-login'
     person = self.portal.person_module.newContent(
       portal_type='Person', reference='TESTP-rss-reader')
+    person.manage_setLocalRoles(person.getUserId(), ['Auditor'])
     person.newContent(portal_type='Assignment').open()
     person.newContent(portal_type='ERP5 Login',
                       reference=login_reference).validate()
@@ -495,6 +496,7 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     login_reference = 'forum-feed-reader-login'
     person = self.portal.person_module.newContent(
       portal_type='Person', reference='TESTP-forum-feed-reader')
+    person.manage_setLocalRoles(person.getUserId(), ['Auditor'])
     person.newContent(portal_type='Assignment').open()
     person.newContent(portal_type='ERP5 Login',
                       reference=login_reference).validate()
