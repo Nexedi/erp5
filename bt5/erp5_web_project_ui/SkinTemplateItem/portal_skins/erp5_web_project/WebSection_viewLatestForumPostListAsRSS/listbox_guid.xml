@@ -116,11 +116,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-python: cell.getRelativeUrl()
-
-]]></string> </value>
+            <value> <string>python: cell.getRelativeUrl()</string> </value>
         </item>
       </dictionary>
     </pickle>
