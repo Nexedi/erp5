@@ -65,7 +65,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/ArtificialTaskModule_viewArtificialTaskListForJio</string> </value>
+            <value> <string>string:${object_url}/ArtificialTaskModule_viewForOfficeJSHarnessAI</string> </value>
         </item>
       </dictionary>
     </pickle>

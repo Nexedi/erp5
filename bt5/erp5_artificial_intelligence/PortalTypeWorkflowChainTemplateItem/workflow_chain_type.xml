@@ -9,7 +9,7 @@
  </chain>
  <chain>
   <type>Artificial Task Line</type>
-  <workflow>edit_workflow, event_simulation_workflow</workflow>
+  <workflow>artificial_task_line_interaction_workflow, edit_workflow, event_simulation_workflow</workflow>
  </chain>
  <chain>
   <type>Artificial Task Report</type>

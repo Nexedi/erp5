@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts90246534.3814328</string> </value>
+            <value> <string>ts90329693.4184434</string> </value>
         </item>
         <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
@@ -67,12 +67,12 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>0abf0ec495011692a09ff5b858bffd1e</string> </value>
+            <value> <string>2f67d0466356df96beaf0425e9f85e0d</string> </value>
         </item>
         <item>
             <key> <string>data</string> </key>
             <value> <bytes>CONFIGURATION MANIFEST\n
-# generated on Thu Sep 24 10:42:14 2026\n
+# generated on Fri Sep 25 09:48:13 2026\n
 CACHE:\n
 \n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0FydGlmaWNpYWwgVGFzaw==\n
@@ -80,7 +80,7 @@ hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0FydGlmaWNpYWwgVGFzay9vZmZpY2V
 hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfYXJ0aWZpY2lhbF9pbnRlbGxpZ2VuY2UvQXJ0aWZpY2lhbFRhc2tfdmlld0Zvck9mZmljZUpTSGFybmVzc0FJ\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0FydGlmaWNpYWwgVGFzayBNb2R1bGU=\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0FydGlmaWNpYWwgVGFzayBNb2R1bGUvb2ZmaWNlanNfaGFybmVzc19haV92aWV3\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfYXJ0aWZpY2lhbF9pbnRlbGxpZ2VuY2UvQXJ0aWZpY2lhbFRhc2tNb2R1bGVfdmlld0FydGlmaWNpYWxUYXNrTGlzdEZvckppbw==\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfYXJ0aWZpY2lhbF9pbnRlbGxpZ2VuY2UvQXJ0aWZpY2lhbFRhc2tNb2R1bGVfdmlld0Zvck9mZmljZUpTSGFybmVzc0FJ\n
 \n
 NETWORK:\n
 *</bytes> </value>
@@ -95,7 +95,7 @@ NETWORK:\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>758</int> </value>
+            <value> <int>750</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>

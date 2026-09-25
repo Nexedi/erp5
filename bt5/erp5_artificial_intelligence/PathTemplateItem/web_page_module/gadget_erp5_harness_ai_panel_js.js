@@ -83,19 +83,15 @@
         action_list = JSON.stringify(group_mapping.action_object_jio_action);
       }
 
-      return context.getUrlParameter('editable')
-        .push(function (editable) {
-          return context.changeState({
-            visible: visible,
-            global: true,
-            jio_key: jio_key,
-            view: view,
-            jump_view: jump_view,
-            view_list: view_list,
-            action_list: action_list,
-            editable: editable
-          });
-        });
+      return context.changeState({
+        visible: visible,
+        global: true,
+        jio_key: jio_key,
+        view: view,
+        jump_view: jump_view,
+        view_list: view_list,
+        action_list: action_list
+      });
     })
     .onStateChange(function onStateChange(modification_dict) {
       var i,

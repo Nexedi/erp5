@@ -1,5 +1,6 @@
 Artificial Agent | edit_workflow
 Artificial Agent | validation_workflow
+Artificial Task Line | artificial_task_line_interaction_workflow
 Artificial Task Line | edit_workflow
 Artificial Task Line | event_simulation_workflow
 Artificial Task Report Line | edit_workflow

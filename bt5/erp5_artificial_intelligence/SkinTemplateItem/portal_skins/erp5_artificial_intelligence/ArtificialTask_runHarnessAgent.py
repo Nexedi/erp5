@@ -5,6 +5,8 @@ MAX_LOOP_COUNT = 50
 artificial_task = context
 portal = artificial_task.getPortalObject()
 processing_tag = 'process_%s' % artificial_task.getRelativeUrl()
+if portal.portal_activities.countMessageWithTag(processing_tag) > 1:
+  return
 
 if not request_object_relative_url:
   request_object = artificial_task
@@ -12,18 +14,12 @@ if not request_object_relative_url:
     if x.getSimulationState() == 'stopped':
       request_object = x
       break
-
   request_object_relative_url = request_object.getRelativeUrl()
-
 else:
   request_object = artificial_task.restrictedTraverse(request_object_relative_url)
 
 artificial_agent = request_object.getDestinationValue(portal_type='Artificial Agent')
-
 connector = artificial_agent.getConnectorValue()
-
-if portal.portal_activities.countMessageWithTag(processing_tag) > 1:
-  return
 
 def finalize(report_line, message_list):
   content = '\n'.join([x.get("content") for x in message_list if x.get('role', '') != 'tool' and x.get("content", '')])
@@ -71,27 +67,26 @@ if loop_count >= MAX_LOOP_COUNT:
   finalize(artificial_task_report_line, message_list)
 
 elif pending_tool_call_list:
-  tool_call = pending_tool_call_list[0]
-  remaining_tool_call_list = pending_tool_call_list[1:]
-  function = tool_call["function"]["name"]
-  raw_arguments = tool_call["function"].get("arguments") or "{}"
-  try:
-    arguments = json.loads(raw_arguments) or {}
-  except ValueError:
-    arguments = {}
+  for tool_call in pending_tool_call_list:
+    function = tool_call["function"]["name"]
+    raw_arguments = tool_call["function"].get("arguments") or "{}"
+    try:
+      arguments = json.loads(raw_arguments) or {}
+    except ValueError:
+      arguments = {}
 
-  try:
-    result = getattr(portal.portal_callables, function)(**arguments)
-    result_content = result if isinstance(result, str) else json.dumps(result)
-  except Exception as tool_error:
-    result_content = "Error running tool \"%s\": %s" % (function, str(tool_error))
+    try:
+      result = getattr(portal.portal_callables, function)(**arguments)
+      result_content = result if isinstance(result, str) else json.dumps(result)
+    except Exception as tool_error:
+      result_content = "Error running tool \"%s\": %s" % (function, str(tool_error))
 
-  message_list.append({
-    "role": "tool",
-    "tool_call_id": tool_call.get("id"),
-    "name": function,
-    "content": result_content,
-  })
+    message_list.append({
+      "role": "tool",
+      "tool_call_id": tool_call.get("id"),
+      "name": function,
+      "content": result_content,
+    })
   artificial_task_report_line.edit(text_content=json.dumps(message_list, indent=2))
 
   getattr(
@@ -102,7 +97,7 @@ elif pending_tool_call_list:
   )(
     request_object_relative_url = request_object_relative_url,
     artificial_task_report_line_relative_url=artificial_task_report_line_relative_url,
-    pending_tool_call_list=remaining_tool_call_list,
+    pending_tool_call_list=None,
     loop_count=loop_count + 1,
   )
 

@@ -35,6 +35,10 @@
         gadget_chat_ui = gadget.gadget_chat_ui,
         queue_loop = gadget_chat_ui.blockEditor();
       gadget.is_processing = true;
+      queue_loop
+        .push(function () {
+          return gadget.refreshPanel();
+        });
       function check() {
         queue_loop
           .push(function () {
@@ -78,11 +82,8 @@
       )
         .push(function (erp5_document) {
           var simulation_state = erp5_document._embedded._view.my_simulation_state['default'];
-          if (simulation_state === 'started' && !gadget.is_processing) {
-            return gadget.refreshPanel()
-              .push(function () {
-                return gadget.pollTask();
-              });
+          if (simulation_state === 'started') {
+            return gadget.pollTask();
           }
         });
     }, STATE_POLL_INTERVAL);

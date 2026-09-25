@@ -28,7 +28,9 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string>ArtificialTask_init</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>permission</string> </key>

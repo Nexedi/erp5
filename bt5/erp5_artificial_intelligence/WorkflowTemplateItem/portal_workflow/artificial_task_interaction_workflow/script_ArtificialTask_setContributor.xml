@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+      <global name="Workflow Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -46,11 +46,21 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>tag, fixit=False, **kw</string> </value>
+            <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Alarm_runArtificialTask</string> </value>
+            <value> <string>script_ArtificialTask_setContributor</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ArtificialTask_setContributor</string> </value>
         </item>
       </dictionary>
     </pickle>
