@@ -246,8 +246,12 @@ class IndexableObjectWrapper(object):
                   group_allowed_set.add(prefix + ':' + role)
 
         # sort and freeze `allowed` principals
-        for local_roles_group_id, allowed in six.iteritems(allowed_by_local_roles_group_id):
-          allowed_by_local_roles_group_id[local_roles_group_id] = tuple(sorted(allowed))
+        for local_roles_group_id, allowed in six.iteritems(allowed_by_local_roles_group_id.copy()):
+          if len(allowed):
+            allowed_by_local_roles_group_id[local_roles_group_id] = tuple(sorted(allowed))
+          else:
+            # Remove empty tuples
+            del allowed_by_local_roles_group_id[local_roles_group_id]
 
         self.__security_parameter_cache = result = (
           allowed_by_local_roles_group_id,
