@@ -42,7 +42,6 @@
     .declareAcquiredMethod("getSettingList", "getSettingList")
     .declareAcquiredMethod("setSettingList", "setSettingList")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
-    .declareAcquiredMethod("jio_get", "jio_get")
     .declareAcquiredMethod("jio_post", "jio_post")
     .declareAcquiredMethod("jio_put", "jio_put")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
@@ -201,47 +200,19 @@
     .declareMethod('render', function (options) {
       var gadget = this;
       gadget.options = options;
-      // base_url/api_key/model/mcp_server_list live on an Artificial Agent jio
-      // document once settings have been saved at least once (only its id
-      // travels through settings) - see setLLMConfiguration/.declareService in
-      // gadget_officejs_harness_ai_setting_js.js. Fall back to the raw bridge
-      // fields for the one-time window before that migration has completed.
       return gadget.getSettingList(
-        ["hateoas_url", "agentId", "baseUrl", "apiKey", "model", "mcpServerList", "mcpOAuthTokenMap"]
+        ["hateoas_url", "baseUrl", "apiKey", "model", "mcpServerList", "mcpOAuthTokenMap"]
       )
         .push(function (setting_list) {
-          var agent_id = setting_list[1];
           gadget.hateoas_url = setting_list[0];
-          gadget.mcp_oauth_token_map = parseMcpOAuthTokenMap(setting_list[6]);
-
-          if (agent_id) {
-            return gadget.jio_get(agent_id)
-              .push(function (doc) {
-                gadget.llm_settings = {
-                  baseUrl: doc.base_url || '',
-                  apiKey: doc.api_key || '',
-                  model: doc.model || ''
-                };
-                gadget.mcp_server_list = overlayOAuthTokens(
-                  parseMcpServerList(doc.mcp_server_list || ''),
-                  gadget.mcp_oauth_token_map
-                );
-              }, function (error) {
-                if (error.status_code !== 404) {
-                  throw error;
-                }
-                gadget.llm_settings = {baseUrl: '', apiKey: '', model: ''};
-                gadget.mcp_server_list = [];
-              });
-          }
-
+          gadget.mcp_oauth_token_map = parseMcpOAuthTokenMap(setting_list[5]);
           gadget.llm_settings = {
-            baseUrl: setting_list[2] || '',
-            apiKey: setting_list[3] || '',
-            model: setting_list[4] || ''
+            baseUrl: setting_list[1] || '',
+            apiKey: setting_list[2] || '',
+            model: setting_list[3] || ''
           };
           gadget.mcp_server_list = overlayOAuthTokens(
-            parseMcpServerList(setting_list[5] || ''),
+            parseMcpServerList(setting_list[4] || ''),
             gadget.mcp_oauth_token_map
           );
         })

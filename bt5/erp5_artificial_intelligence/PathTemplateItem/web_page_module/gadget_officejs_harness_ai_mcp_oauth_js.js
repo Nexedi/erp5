@@ -5,8 +5,12 @@
 
   var CALLBACK_PAGE = "gadget_officejs_harness_ai_mcp_oauth_callback.html",
     CLIENT_NAME = "ERP5 OfficeJS Harness Agent",
-    POPUP_FEATURES = "width=480,height=640",
-    EXPIRY_SAFETY_MARGIN_MS = 30000;
+    EXPIRY_SAFETY_MARGIN_MS = 30000,
+    // Keys must match the literal strings hardcoded in
+    // gadget_officejs_harness_ai_mcp_oauth_callback_html.html (a plain static
+    // page with no access to this module).
+    PENDING_STORAGE_KEY = "erp5_mcp_oauth_pending",
+    RESULT_STORAGE_KEY = "erp5_mcp_oauth_result";
 
   function callbackUrl() {
     return new URL(CALLBACK_PAGE, document.baseURI).href;
@@ -83,58 +87,6 @@
       });
   }
 
-  // Opens the sign-in page in a popup (never an iframe - the erp5 instance's
-  // own CSP frame-src wouldn't allow embedding a foreign MCP server's login
-  // page anyway) and waits for gadget_officejs_harness_ai_mcp_oauth_callback_html.html to
-  // postMessage the resulting code back once the popup lands there.
-  function openAuthorizePopupAndWaitForCode(authorize_url, expected_state) {
-    return new RSVP.Promise(function (resolve, reject) {
-      var popup = window.open(authorize_url, "erp5_mcp_oauth", POPUP_FEATURES),
-        poll_timer,
-        cleaned = false;
-
-      function cleanup() {
-        if (cleaned) {
-          return;
-        }
-        cleaned = true;
-        window.removeEventListener("message", onMessage);
-        clearInterval(poll_timer);
-        try {
-          popup.close();
-        } catch (ignore) {
-          return;
-        }
-      }
-
-      function onMessage(event) {
-        if (event.origin !== window.location.origin || !event.data || event.data.source !== "erp5-mcp-oauth") {
-          return;
-        }
-        cleanup();
-        if (event.data.error) {
-          reject(new Error("Authorization failed: " + event.data.error));
-        } else if (event.data.state !== expected_state) {
-          reject(new Error("Authorization state mismatch - aborting for safety."));
-        } else {
-          resolve(event.data.code);
-        }
-      }
-
-      if (!popup) {
-        reject(new Error("Popup blocked - allow popups for this site and try again."));
-        return;
-      }
-      window.addEventListener("message", onMessage);
-      poll_timer = setInterval(function () {
-        if (popup.closed) {
-          cleanup();
-          reject(new Error("Sign-in window was closed before completing."));
-        }
-      }, 500);
-    });
-  }
-
   function exchangeCodeForToken(auth_metadata, client_id, code, code_verifier) {
     var body = new URLSearchParams();
     body.set("grant_type", "authorization_code");
@@ -162,41 +114,96 @@
   }
 
   // Full interactive sign-in: discover -> register (or reuse a still-valid
-  // registration from existing_state, same token_endpoint) -> PKCE -> popup
-  // authorize -> exchange. Only ever called from an explicit user action
-  // (the Settings page's "Connect" button), never automatically mid-chat.
+  // registration from existing_state, same token_endpoint) -> PKCE -> stash
+  // the pending exchange in sessionStorage -> navigate the whole page to the
+  // identity provider's sign-in page (never a popup - the erp5 instance's own
+  // CSP frame-src wouldn't allow embedding a foreign MCP server's login page
+  // in an iframe either). This promise is only ever meant to reject (on a
+  // discovery/registration error, before the redirect happens) or never
+  // settle at all (the page navigates away on success); the actual token
+  // exchange happens later, in resumeIfPending(), once
+  // gadget_officejs_harness_ai_mcp_oauth_callback_html.html has bounced the
+  // browser back here. Only ever called from an explicit user action (the
+  // Settings page's "Connect" button), never automatically mid-chat.
   function connect(server_config, existing_state) {
     var code_verifier = randomUrlSafeString(32),
-      state = randomUrlSafeString(16),
-      auth_metadata;
+      state = randomUrlSafeString(16);
     return discoverMetadata(server_config)
       .push(function (metadata) {
-        auth_metadata = metadata;
-        if (existing_state && existing_state.client_id && existing_state.token_endpoint === metadata.token_endpoint) {
-          return existing_state.client_id;
-        }
-        return registerClient(metadata);
-      })
-      .push(function (client_id) {
-        return sha256Base64Url(code_verifier)
-          .push(function (code_challenge) {
-            var authorize_url = auth_metadata.authorization_endpoint +
-              "?" + new URLSearchParams({
-                response_type: "code",
-                client_id: client_id,
-                redirect_uri: callbackUrl(),
-                state: state,
-                code_challenge: code_challenge,
-                code_challenge_method: "S256"
-              }).toString();
-            return new RSVP.Queue(openAuthorizePopupAndWaitForCode(authorize_url, state))
-              .push(function (code) {
-                return exchangeCodeForToken(auth_metadata, client_id, code, code_verifier);
-              })
-              .push(function (token_response) {
-                return tokenResponseToState(auth_metadata, client_id, token_response);
+        var client_id_promise = (existing_state && existing_state.client_id &&
+            existing_state.token_endpoint === metadata.token_endpoint) ?
+              RSVP.resolve(existing_state.client_id) : registerClient(metadata);
+        return client_id_promise
+          .push(function (client_id) {
+            return sha256Base64Url(code_verifier)
+              .push(function (code_challenge) {
+                var authorize_url = metadata.authorization_endpoint +
+                  "?" + new URLSearchParams({
+                    response_type: "code",
+                    client_id: client_id,
+                    redirect_uri: callbackUrl(),
+                    state: state,
+                    code_challenge: code_challenge,
+                    code_challenge_method: "S256"
+                  }).toString();
+                window.sessionStorage.setItem(PENDING_STORAGE_KEY, JSON.stringify({
+                  server_name: server_config.name,
+                  state: state,
+                  code_verifier: code_verifier,
+                  client_id: client_id,
+                  authorization_endpoint: metadata.authorization_endpoint,
+                  token_endpoint: metadata.token_endpoint,
+                  registration_endpoint: metadata.registration_endpoint,
+                  return_url: window.location.href
+                }));
+                window.location.assign(authorize_url);
+                return new RSVP.Promise(function () {
+                  return;
+                });
               });
           });
+      });
+  }
+
+  // Called on every load of the Settings page. If the browser just bounced
+  // back from gadget_officejs_harness_ai_mcp_oauth_callback_html.html (which
+  // wrote both the pending exchange and the authorize-server's response into
+  // sessionStorage before redirecting back to return_url), finishes the
+  // token exchange and resolves {server_name, oauth_state}. Resolves null in
+  // the (overwhelmingly common) case of a normal page load with nothing to
+  // resume. Storage keys are consumed (removed) as soon as they are read, so
+  // a stray reload never re-processes the same code twice.
+  function resumeIfPending() {
+    var pending_raw = window.sessionStorage.getItem(PENDING_STORAGE_KEY),
+      result_raw = window.sessionStorage.getItem(RESULT_STORAGE_KEY),
+      pending,
+      result;
+
+    if (!pending_raw || !result_raw) {
+      return RSVP.resolve(null);
+    }
+    window.sessionStorage.removeItem(PENDING_STORAGE_KEY);
+    window.sessionStorage.removeItem(RESULT_STORAGE_KEY);
+    try {
+      pending = JSON.parse(pending_raw);
+      result = JSON.parse(result_raw);
+    } catch (ignore) {
+      return RSVP.resolve(null);
+    }
+
+    if (result.error) {
+      return RSVP.reject(new Error("Authorization failed: " + result.error));
+    }
+    if (!result.state || result.state !== pending.state) {
+      return RSVP.reject(new Error("Authorization state mismatch - aborting for safety."));
+    }
+
+    return exchangeCodeForToken(pending, pending.client_id, result.code, pending.code_verifier)
+      .push(function (token_response) {
+        return {
+          server_name: pending.server_name,
+          oauth_state: tokenResponseToState(pending, pending.client_id, token_response)
+        };
       });
   }
 
@@ -239,6 +246,7 @@
 
   window.ChatMCPOAuth = {
     connect: connect,
+    resumeIfPending: resumeIfPending,
     refresh: refresh,
     isExpired: isExpired
   };
