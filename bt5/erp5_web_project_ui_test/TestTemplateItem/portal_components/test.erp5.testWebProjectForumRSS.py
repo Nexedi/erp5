@@ -470,6 +470,14 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     self.assertEqual(token_id_list,
                      list(self.portal.access_token_module.objectIds()))
 
+  def test_forum_feed_gadget_field_default_is_not_empty(self):
+    """WebSection_viewForumFeedProject is a form_view holding a single
+    GadgetField; with an empty default, non-editable mode drops it and the
+    link page renders blank (same workaround as the quick overview field)."""
+    field = self.portal.portal_skins.erp5_web_project \
+                .WebSection_viewForumFeedProject.rss_link_gadget
+    self.assertNotEqual('', field.get_value('default'))
+
   def test_forum_feed_rss_url_endpoint_answers_json(self):
     """Same JSON shape as the per-forum endpoint, pointing at the aggregated
     RSS form of the section."""
