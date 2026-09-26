@@ -1,0 +1,84 @@
+/*
+ Custom button to trigger panel instead of the one in header
+*/
+div[data-gadget-scope='header'] .ui-noheader > div {
+  position: absolute;
+  top: 15pt;
+  left: 15pt;
+  z-index: 2000;
+}
+
+div[data-gadget-scope='header'] .ui-noheader .ui-fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+div[data-gadget-scope='header'] .ui-noheader button,
+div[data-gadget-scope='header'] .ui-noheader a {
+  color: white;
+  background-color: rgba(32, 32, 32, 0.32);
+  font-size: 2em;
+  display: block;
+  padding: 0.2em 0.5em;
+}
+
+div[data-gadget-scope='header'] .ui-noheader > .ui-fixed button,
+div[data-gadget-scope='header'] .ui-noheader > .ui-fixed a {
+  /* make it smaller */
+  font-size: 1.7em;
+  padding: 0.1em 0.4em;
+}
+
+
+/*
+ Compensate default panel behaviour - do not show panel on wide screen
+*/
+@media only screen and (min-width: 90em) {
+  div[data-gadget-scope='panel'] {
+    /* keep the panel hidden even if there is wnough space */
+    left: -186pt; 
+    transition: transform 200ms ease-out;
+    transform: translate3d(0, 0, 0);
+  }
+
+  div[data-gadget-scope='panel'].visible {
+    /* Allow to appear again */
+    transform: translate3d(186pt, 0, 0);
+  }
+}
+
+
+@media only screen and (min-width: 90em) {
+  div[data-gadget-scope='panel'] div[data-role="header"] button[data-i18n="Close"],
+  div[data-gadget-scope='panel'] div[data-role="header"] a[data-i18n="Close"] {
+    display: initial;
+  }
+}
+
+@media only screen and (min-width: 90em) {
+  div[data-gadget-scope='header'] .ui-header {
+    margin-left: 0;
+  }
+  .gadget-content {
+    margin-left: 0;
+  }
+}
+
+/*
+ Compensate default editor behaviour
+*/
+@media only screen and (min-width: 90em) {
+  div[data-gadget-scope='editor_panel'] {
+    right: -186pt;  /* Keep it hidden right even there is enough space*/
+  }
+}
+
+/*
+ Compensate gadget-content
+*/
+@media only screen and (max-width: 90em) {
+  .gadget-content {
+    padding-top: 66pt;
+  }
+}
