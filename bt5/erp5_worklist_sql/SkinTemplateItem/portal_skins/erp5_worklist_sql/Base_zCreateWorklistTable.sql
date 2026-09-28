@@ -4,7 +4,7 @@ CREATE TABLE `worklist_cache` (
   `count` INT UNSIGNED NOT NULL,
   `owner` VARCHAR(255) binary DEFAULT '',
   `viewable_owner` VARCHAR(255) binary NOT NULL DEFAULT '',
-  `security_uid` INT UNSIGNED NOT NULL,
+  `security_uid` INT UNSIGNED,
   `portal_type` VARCHAR(255) NOT NULL,
   `validation_state` VARCHAR(255) NULL,
   `simulation_state` VARCHAR(255) NULL,
