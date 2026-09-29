@@ -162,7 +162,7 @@
             date_column: options.date_column || 'modification_date',
             sort_order: options.sort_order || 'ASC',
             source_column: options.source_column || 'source_title',
-            title_column: options.title_column || '',
+            content_column: options.content_column || 'asStrippedHTML',
             attachment_column: options.attachment_column || 'Event_getAttachmentList',
             // Force line calculation in any case
             render_timestamp: new Date().getTime(),
@@ -217,7 +217,9 @@
             }
             return gadget.declareGadget('gadget_html_viewer.html')
               .push(function (viewer) {
-                return viewer.render({value: entry.value.asStrippedHTML})
+                return viewer.render({
+                  value: entry.value[gadget.state.content_column]
+                })
                   .push(function () {
                     return viewer;
                   });
@@ -242,7 +244,6 @@
                   attachment_list = entry.value[gadget.state.attachment_column] || [],
                   attachment_element_list = [],
                   post_element_list = [],
-                  content_element_list = [],
                   j,
                   word_list = source_title.split(' '),
                   source_short_title;
@@ -268,34 +269,6 @@
                   );
                 }
 
-                // a post with no content carries its meaning in its title
-                if (gadget.state.title_column && !entry.value.asStrippedHTML) {
-                  content_element_list.push(
-                    domsugar('strong', {
-                      class: 'post_title',
-                      text: entry.value[gadget.state.title_column] || ''
-                    }),
-                    domsugar('br')
-                  );
-                }
-                content_element_list.push(
-                  domsugar('strong', {text: source_title}),
-                  " ",
-                  domsugar('time', {
-                    datetime: entry.value[gadget.state.date_column],
-                    title: entry.value[gadget.state.date_column],
-                    text: getRelativeTimeString(
-                      gadget.state.language,
-                      now,
-                      new Date(entry.value[gadget.state.date_column])
-                    )
-                  }),
-                  domsugar('br'),
-                  result_dict.viewer_list[i].element,
-                  domsugar('br'),
-                  domsugar('ul', attachment_element_list)
-                );
-
                 if (source_short_title) {
                   post_element_list.push(domsugar('div', {
                     class: 'post_avatar',
@@ -303,7 +276,23 @@
                   }));
                 }
                 post_element_list.push(
-                  domsugar('div', {class: 'post_content'}, content_element_list)
+                  domsugar('div', {class: 'post_content'}, [
+                    domsugar('strong', {text: source_title}),
+                    " ",
+                    domsugar('time', {
+                      datetime: entry.value[gadget.state.date_column],
+                      title: entry.value[gadget.state.date_column],
+                      text: getRelativeTimeString(
+                        gadget.state.language,
+                        now,
+                        new Date(entry.value[gadget.state.date_column])
+                      )
+                    }),
+                    domsugar('br'),
+                    result_dict.viewer_list[i].element,
+                    domsugar('br'),
+                    domsugar('ul', attachment_element_list)
+                  ])
                 );
 
                 return domsugar('li', post_element_list);
@@ -341,19 +330,14 @@
 
       var gadget = this,
         limit_options = (gadget.state.lines === 0) ? undefined
-          : [gadget.state.begin_from, gadget.state.lines + 1],
-        select_list = ['asStrippedHTML', gadget.state.date_column,
-                       gadget.state.source_column,
-                       'Event_getAttachmentList'];
-
-      if (gadget.state.title_column) {
-        select_list.push(gadget.state.title_column);
-      }
+          : [gadget.state.begin_from, gadget.state.lines + 1];
 
       return gadget.jio_allDocs({
         query: gadget.state.query_string,
         limit: limit_options,
-        select_list: select_list,
+        select_list: [gadget.state.content_column, gadget.state.date_column,
+                      gadget.state.source_column,
+                      'Event_getAttachmentList'],
         sort_on: [[gadget.state.date_column, 'ASC'], ['uid', 'ASC']]
       })
         .push(function (result) {
