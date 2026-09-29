@@ -50,7 +50,8 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
 
   def beforeTearDown(self):
     self.abort()
-    for module in (self.portal.discussion_thread_module,):
+    for module in (self.portal.discussion_thread_module,
+                   self.portal.bug_module):
       module.manage_delObjects(list(module.objectIds()))
     self.tic()
 
@@ -518,6 +519,37 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     self.assertIn('access_token=%s' % token.getId(), result['rss_url'])
     self.assertIn('access_token_secret=%s' % token.getReference(),
                   result['rss_url'])
+
+  def test_bug_line_without_content_shows_its_title(self):
+    """Confirming a bug without comment adds an empty text/plain Bug Line;
+    the Bug messages reader must show its title instead of a blank post."""
+    bug = self.portal.bug_module.newContent(portal_type='Bug',
+                                            reference='content-or-title')
+    bug.confirm()
+    line, = bug.contentValues(portal_type='Bug Line')
+    self.assertEqual('', line.getTextContent(''))
+    self.assertEqual('Bug content-or-title was Open', line.getTitle())
+    self.assertEqual(line.getTitle(), line.BugLine_getContentOrTitle())
+
+  def test_bug_line_title_fallback_is_html_escaped(self):
+    bug = self.portal.bug_module.newContent(portal_type='Bug')
+    line = bug.newContent(portal_type='Bug Line', title='a <b> c')
+    self.assertEqual('a &lt;b&gt; c', line.BugLine_getContentOrTitle())
+
+  def test_bug_line_with_content_shows_its_content(self):
+    bug = self.portal.bug_module.newContent(portal_type='Bug')
+    line = bug.newContent(portal_type='Bug Line', title='Line title',
+                          text_content='<p>Line body</p>',
+                          content_type='text/html')
+    result = line.BugLine_getContentOrTitle()
+    self.assertIn('Line body', result)
+    self.assertNotIn('Line title', result)
+
+  def test_bug_messages_reader_uses_content_or_title_column(self):
+    field = self.portal.portal_skins.erp5_web_project \
+                .Bug_viewProject.my_messages
+    self.assertIn('("content_column", "BugLine_getContentOrTitle")',
+                  field.get_tales('renderjs_extra')._text)
 
 def test_suite():
   suite = unittest.TestSuite()
