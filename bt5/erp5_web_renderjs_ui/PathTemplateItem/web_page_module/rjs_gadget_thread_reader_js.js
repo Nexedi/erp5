@@ -337,8 +337,9 @@
         limit: limit_options,
         select_list: [gadget.state.content_column, gadget.state.date_column,
                       gadget.state.source_column,
-                      'Event_getAttachmentList'],
-        sort_on: [[gadget.state.date_column, 'ASC'], ['uid', 'ASC']]
+                      gadget.state.attachment_column],
+        sort_on: [[gadget.state.date_column, gadget.state.sort_order],
+                  ['uid', 'ASC']]
       })
         .push(function (result) {
           return gadget.changeState({
