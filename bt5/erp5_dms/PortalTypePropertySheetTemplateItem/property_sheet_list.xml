@@ -5,6 +5,9 @@
  <portal_type id="Image">
   <item>SortIndex</item>
  </portal_type>
+ <portal_type id="Template Tool">
+  <item>TemplateToolWebPageWithDmsUpgradeConstraint</item>
+ </portal_type>
  <portal_type id="Web Illustration">
   <item>Reference</item>
   <item>SortIndex</item>

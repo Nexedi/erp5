@@ -44,11 +44,12 @@ New %s was added.
 recipient_list= bug.Bug_getRecipientValueList()
 sender = bug.Bug_getNotificationSenderValue()
 
-portal = bug.getPortalObject()
-portal.portal_notifications.sendMessage(sender=sender,
-                          recipient=recipient_list,
-                          subject="[ERP5 Bug] [New File] %s" % (bug.getTitle()),
-                          message=body)
+if recipient_list:
+  portal = bug.getPortalObject()
+  portal.portal_notifications.sendMessage(sender=sender,
+                            recipient=recipient_list,
+                            subject="[ERP5 Bug] [New File] %s" % (bug.getTitle()),
+                            message=body)
 
 # Redirect to even
 portal_status_message = translateString("New ${portal_type} added.",

@@ -85,7 +85,7 @@ form.listbox.manage_edit_xmlrpc(
 form.listbox.manage_edit_surcharged_xmlrpc(
     dict(selection_name=('_'.join(module_portal_type.split())).lower() + '_selection',
          title=module_title,
-         portal_type=[(object_portal_type, object_portal_type), ], ))
+         portal_types=[(object_portal_type, object_portal_type), ], ))
 
 
 # Create a form for the document

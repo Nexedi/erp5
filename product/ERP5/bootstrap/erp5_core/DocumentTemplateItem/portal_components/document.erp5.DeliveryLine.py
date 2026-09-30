@@ -69,6 +69,63 @@ class DeliveryLine(Movement, XMLMatrix, ImmobilisationMovement):
                     , PropertySheet.SortIndex
                     )
 
+  # ==============================================================================
+  # READ THIS BEFORE YOU TOUCH OR REFACTOR _default_before_edit_order!
+  #
+  # Let's forget about computers for a moment and think about line items.
+  # I mean line items on purchase orders, shipping slips, or invoices—
+  # which is exactly what this `DeliveryLine` class represents.
+  # A line item contains the item name, quantity, unit price, and other details.
+  #
+  # When you think about line items, what is the most important thing,
+  # and what gets decided first?
+  #
+  # Imagine when you place an order. For example, how about this?
+  # "First, let's decide on the quantity. I'm going to order four of something.
+  # I haven't decided what to order yet, nor do I know the unit price.
+  # But the only thing I know is the quantity. I just need four."
+  # Do you think this scenario makes sense? Of course not.
+  #
+  # Then, how about this next scenario?
+  # "First, let's decide on the unit price. The unit price is 100 euros.
+  # I haven't decided what or how many to buy, nor do I know,
+  # but the only thing I know is the unit price.
+  # Either way, I want to order something that costs 100 euros."
+  # This doesn't make sense either.
+  #
+  # Now, some might argue:
+  # "Wait, what if I have a fixed budget of $100, or a constraint like
+  # fitting as much as possible into a single truck?
+  # Doesn't the budget or capacity come first?"
+  #
+  # However, that is a confusion between the overall total (header)
+  # and an individual line item. A budget or a truck represents the overall container,
+  # inside of which you can include multiple types of items.
+  # On the other hand, a single line item can only describe one specific type of item.
+  #
+  # Unless you are in a scavenger hunt where the rule card explicitly says,
+  # "Bring back anything with a unit price of $100," a scenario where a line item's
+  # unit price is fixed at $100 without knowing what the item actually is
+  # simply does not exist in the real world.
+  #
+  # When we order, ship, or bill something, the very first thing we decide is
+  # "what the item is." The quantity, unit price, and other details are decided after
+  # that.
+  #
+  # This is the same in every country, and it remains unchanged whether it was
+  # 1,000 years ago or 1,000 years in the future.
+  # The first thing decided in a line item is ALWAYS "what the item is."
+  #
+  # This is precisely why `_default_before_edit_order` MUST strictly enforce
+  # the processing sequence of 'resource', 'resource_value', and variation categories
+  # FIRST, before any other properties (such as quantity or price) are processed.
+  # DO NOT change or remove `_default_before_edit_order`!
+  # ==============================================================================
+  _default_before_edit_order = ('resource',
+                                'resource_value',
+                                'variation_base_category_list',
+                                'variation_category_list')
+
   # Multiple inheritance definition
   updateRelatedContent = XMLMatrix.updateRelatedContent
 

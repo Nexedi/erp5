@@ -1297,6 +1297,14 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedTypeList('my_document')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalOOoDocumentTypeList')
+  def getPortalOOoDocumentTypeList(self):
+    """
+      Return OOo document types.
+    """
+    return self._getPortalGroupedTypeList('ooo_document')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalCrawlerIndexTypeList')
   def getPortalCrawlerIndexTypeList(self):
     """

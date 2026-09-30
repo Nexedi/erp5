@@ -36,7 +36,7 @@ CREATE TABLE `catalog` (
   `has_cell_content` bool,
   `creation_date` datetime,
   `modification_date` datetime,
-  `indexation_timestamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `indexation_timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY  (`uid`),
   KEY `security_uid` (`security_uid`),
   KEY `owner` (`owner`),

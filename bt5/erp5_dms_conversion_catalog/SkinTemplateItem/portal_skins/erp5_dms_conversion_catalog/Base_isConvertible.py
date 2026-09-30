@@ -16,5 +16,4 @@ if context.getValidationState() in ["draft", "deleted", "cancelled", "archived"]
 
 # XXX: we do check if "data" methods exists on pretending to be Document portal types
 # we need a way to do this by introspection
-return (getattr(context, "getData", None) is not None and context.getData() not in MARKER) or \
-       (getattr(context, "getBaseData", None) is not None and context.getBaseData() not in MARKER)
+return (getattr(context, "getData", None) is not None) and (context.getData() not in MARKER)

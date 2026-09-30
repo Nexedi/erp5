@@ -6,7 +6,7 @@ for brain in portal.portal_simulation.getMovementHistoryList(
     portal_type=portal.getPortalAccountingMovementTypeList(),
     grouping_reference=grouping_reference,
     node_uid=node_uid,
-    section_category=section_category,
+    section_uid=section_uid,
     mirror_section_uid=mirror_section_uid):
   line = brain.getObject()
   line.setGroupingReference(None)

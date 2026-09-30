@@ -35,7 +35,6 @@ from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Utils import publishable, non_publishable, str2bytes
 from erp5.component.document.TextDocument import TextDocument
-from erp5.component.document.File import File
 from erp5.component.mixin.MailMessageMixin import MailMessageMixin, testCharsetAndConvert
 from erp5.component.mixin.DocumentProxyMixin import DocumentProxyMixin, DocumentProxyError
 from MethodObject import Method
@@ -149,7 +148,6 @@ class EmailDocument(TextDocument, MailMessageMixin):
                     , PropertySheet.Document
                     , PropertySheet.ExternalDocument
                     , PropertySheet.Url
-                    , PropertySheet.TextDocument
                     , PropertySheet.Arrow
                     , PropertySheet.Task
                     , PropertySheet.ItemAggregation
@@ -190,9 +188,9 @@ class EmailDocument(TextDocument, MailMessageMixin):
       pass
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'isSupportBaseDataConversion')
+                            'isSupportTextConversion')
   @publishable
-  def isSupportBaseDataConversion(self):
+  def isSupportTextConversion(self):
     return False
 
   # Overriden methods
@@ -244,9 +242,9 @@ class EmailDocument(TextDocument, MailMessageMixin):
       # Return the standard text content if no file was provided
       # Or standard text content is not empty.
       if default is _MARKER:
-        return self._baseGetTextContent()
+        return TextDocument.getTextContent(self)
       else:
-        return self._baseGetTextContent(default)
+        return TextDocument.getTextContent(self, default)
 
     else:
       part = self._getMessageTextPart()
@@ -300,28 +298,11 @@ class EmailDocument(TextDocument, MailMessageMixin):
     result.extend(re.findall(self.email_parser, self.getBccRecipient('')))
     return result
 
-  # Conversion API Implementation
-  def _convertToBaseFormat(self):
-    """
-      Build a structure which can be later used
-      to extract content information from this mail
-      message.
-    """
-
   security.declareProtected(Permissions.View, 'index_html')
   index_html = TextDocument.index_html
 
   security.declareProtected(Permissions.AccessContentsInformation, 'convert')
   convert = TextDocument.convert
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'hasBaseData')
-  def hasBaseData(self):
-    """
-      Since there is no need to convert to a base format, we consider that
-      we always have the base format data if and only is we have
-      some text defined or a file.
-    """
-    return self.hasFile() or self.hasTextContent()
 
   # Methods which can be useful to prepare a reply by email to an event
   security.declareProtected(Permissions.AccessContentsInformation, 'getReplyBody')
@@ -374,8 +355,4 @@ class EmailDocument(TextDocument, MailMessageMixin):
     """
     self.MailHost.send(message)
 
-  # Because TextDocument is base_convertable and not EmailDocument.
-  # getData must be implemented like File.getData is.
-  security.declareProtected(Permissions.AccessContentsInformation, 'getData')
-  getData = File.getData
   getContentInformation = MailMessageMixin.getContentInformation

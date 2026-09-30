@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2019 Nexedi SA and Contributors. All Rights Reserved.
@@ -25,6 +26,8 @@
 #
 ##############################################################################
 
+from base64 import b64decode
+from Products.ERP5Type.Utils import unicode2str
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
 class TestWebPageConvert(ERP5TypeTestCase):
@@ -38,7 +41,8 @@ class TestWebPageConvert(ERP5TypeTestCase):
       "erp5_web",
       "erp5_ui_test_core",
       "erp5_ui_test",
-      "erp5_l10n_fr"
+      "erp5_l10n_fr",
+      "erp5_font",
     )
   def afterSetUp(self):
     base_web_page = self.portal.web_page_module.get('Test_html_convert', None)
@@ -127,3 +131,99 @@ class TestWebPageConvert(ERP5TypeTestCase):
     converted_data = self.base_web_page.Base_convertHtmlToSingleFile(data = test_data)
     expected_data ='<!DOCTYPE html><html><head> <link rel="stylesheet" href="data:text/html;base64," /> </head></html>'
     self.assertEqual(converted_data, expected_data)
+
+  def _assertEmojiInlined(self, converted, emoji):
+    if isinstance(converted, bytes):
+      converted = converted.decode("utf-8")
+    prefix = '<img class="emoji" alt="%s" src="data:image/png;base64,' % emoji
+    self.assertIn(prefix, converted)
+    encoded = converted.split(prefix, 1)[1].split('"', 1)[0]
+    self.assertTrue(b64decode(encoded).startswith(b"\x89PNG\r\n\x1a\n"))
+    return converted
+
+  def _assertWholeTextInlined(self, converted):
+    # the whole cluster became a single image and nothing was left outside
+    # of it, in particular no stray joiner or gender sign
+    self.assertEqual(converted.count(u'<img class="emoji"'), 1)
+    self.assertTrue(converted.startswith(u'<img class="emoji"'))
+    self.assertTrue(converted.endswith(u'/>'))
+
+  def test_emoji_pictograph_convert(self):
+    emoji = u"\U0001F600"
+    converted = self.base_web_page.Base_convertHtmlToSingleFile(
+      data=u"before %s after" % emoji)
+    converted = self._assertEmojiInlined(converted, emoji)
+    self.assertTrue(converted.startswith(u"before "))
+    self.assertTrue(converted.endswith(u" after"))
+
+  def test_emoji_bmp_convert(self):
+    emoji = u"✅"
+    converted = self.base_web_page.Base_convertHtmlToSingleFile(data=emoji)
+    self._assertEmojiInlined(converted, emoji)
+
+  def test_emoji_flag_convert(self):
+    emoji = u"\U0001F1EC\U0001F1E7"
+    converted = self.base_web_page.Base_convertHtmlToSingleFile(data=emoji)
+    self._assertEmojiInlined(converted, emoji)
+
+  def test_emoji_keycap_convert(self):
+    emoji = u"1️⃣"
+    converted = self.base_web_page.Base_convertHtmlToSingleFile(data=emoji)
+    self._assertEmojiInlined(converted, emoji)
+
+  def test_emoji_not_matched_passthrough(self):
+    test_data = "hello world"
+    converted = self.base_web_page.Base_convertHtmlToSingleFile(data=test_data)
+    self.assertEqual(converted, test_data)
+
+  def test_emoji_zwj_gendered_convert(self):
+    emoji = u"\U0001F3CC️‍♀️"
+    converted = self.base_web_page.Base_convertHtmlToSingleFile(data=emoji)
+    converted = self._assertEmojiInlined(converted, emoji)
+    self._assertWholeTextInlined(converted)
+
+  def test_emoji_zwj_family_convert(self):
+    emoji = u"\U0001F468‍\U0001F469‍\U0001F467"
+    converted = self.base_web_page.Base_convertHtmlToSingleFile(data=emoji)
+    converted = self._assertEmojiInlined(converted, emoji)
+    self._assertWholeTextInlined(converted)
+
+  def test_emoji_skin_tone_convert(self):
+    emoji = u"\U0001F44D\U0001F3FD"
+    converted = self.base_web_page.Base_convertHtmlToSingleFile(data=emoji)
+    self._assertEmojiInlined(converted, emoji)
+
+  def test_emoji_zwj_skin_tone_convert(self):
+    emoji = (u"\U0001F468\U0001F3FD‍\U0001F91D"
+             u"‍\U0001F468\U0001F3FB")
+    converted = self.base_web_page.Base_convertHtmlToSingleFile(data=emoji)
+    converted = self._assertEmojiInlined(converted, emoji)
+    self._assertWholeTextInlined(converted)
+
+  def test_emoji_tag_sequence_flag_convert(self):
+    emoji = (u"\U0001F3F4\U000E0067\U000E0062"
+             u"\U000E0065\U000E006E\U000E0067\U000E007F")
+    converted = self.base_web_page.Base_convertHtmlToSingleFile(data=emoji)
+    self._assertEmojiInlined(converted, emoji)
+
+  def test_emoji_outside_legacy_range_convert(self):
+    emoji = u"⭐"
+    converted = self.base_web_page.Base_convertHtmlToSingleFile(data=emoji)
+    self._assertEmojiInlined(converted, emoji)
+
+  def test_emoji_text_symbol_passthrough(self):
+    # U+00A9 has a twemoji image but defaults to text presentation
+    test_data = u"copyright \u00A9 ERP5"
+    converted = self.base_web_page.Base_convertHtmlToSingleFile(data=test_data)
+    self.assertEqual(converted, unicode2str(test_data))
+
+  def test_emoji_text_symbol_with_variation_selector_convert(self):
+    emoji = u"©️"
+    converted = self.base_web_page.Base_convertHtmlToSingleFile(data=emoji)
+    self._assertEmojiInlined(converted, emoji)
+
+  def test_emoji_unknown_sequence_passthrough(self):
+    test_data = u"\U0001F600‍\U0001F600"
+    converted = self.base_web_page.Base_convertHtmlToSingleFile(data=test_data)
+    self.assertEqual(converted, unicode2str(test_data))
+    self.assertNotIn('<img class="emoji"', converted)

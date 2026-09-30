@@ -129,7 +129,7 @@ def get_url(url, batch_start, batch_size, regex, lang, empty, **kw):
     if lang:
         params.append('lang=%s' % lang)
 
-    return url + '?' + '&amp;'.join(params)
+    return url + '?' + '&'.join(params)
 
 
 # Empty header information for PO files (UTF-8 is the default encoding)
@@ -239,7 +239,7 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
         message = REQUEST.get('manage_tabs_message')
         if message is None:
             return None
-        return six.text_type(message, 'utf-8')
+        return six.ensure_text(message, 'utf-8')
 
 
     #######################################################################
@@ -626,7 +626,9 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
             filename = '%s.po' % x
             for k, v in six.iteritems(self._messages):
                 k = to_unicode(k, encoding=charset)
-                d[k] = to_unicode(v.get(x, ""), encoding=charset)
+                t = v.get(x, None)
+                if t is not None:
+                    d[k] = to_unicode(v.get(x, ""), encoding=charset)
 
         # Generate the file
         def backslashescape(x):

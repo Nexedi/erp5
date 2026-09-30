@@ -15,10 +15,6 @@ else:
     processing = "document_url_error"
   else:
     document = portal.restrictedTraverse(document_url)
-
-  try:
-    processing = document.getExternalProcessingState()
-  except AttributeError:
     processing = 'empty'
 
 informations = { 'processing': processing,

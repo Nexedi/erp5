@@ -78,10 +78,10 @@ try:
   if synchronous_metadata_discovery:
     # we need to do all synchronously, in other case portal_contributions will do
     # this in an activity
-    if document.isSupportBaseDataConversion():
-      document.processFile()
     filename = document.getFilename()
-    merged_document = document.Document_convertToBaseFormatAndDiscoverMetadata(
+    if document.getPortalType() in portal.getPortalOOoDocumentTypeList():
+      document.updateLocalMetadataFromDocument()
+    merged_document = document.discoverMetadata(
                                   filename=filename,
                                   user_login=user_login,
                                   input_parameter_dict=document_kw)

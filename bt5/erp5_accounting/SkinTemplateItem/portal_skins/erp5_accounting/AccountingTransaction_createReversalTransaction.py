@@ -50,10 +50,7 @@ else:
 if start_date:
   reversal.setStartDate(start_date)
 
-if context.getStopDate() != context.getStartDate():
-  # stop date is currently acquire from start date.
-  # we try not to set a stop date on the reversal if it wasn't set on the
-  # original
+if context.hasStopDate():
   reversal.setStopDate(stop_date)
 
 if context.getProperty('payment_mode'):

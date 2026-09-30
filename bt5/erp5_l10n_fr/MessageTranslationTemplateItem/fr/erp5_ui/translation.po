@@ -1,7 +1,7 @@
 msgid ""
 msgstr "Project-Id-Version: ERP5 Localized Interface\n"
-"POT-Creation-Date: 2025-10-16 15:10+UTC\n"
-"PO-Revision-Date: 2025-10-16 15:10+UTC\n"
+"POT-Creation-Date: 2026-08-04 12:08+GMT\n"
+"PO-Revision-Date: 2026-08-04 12:08+GMT\n"
 "Last-Translator:  <>\n"
 "Language-Team: fr <>\n"
 "MIME-Version: 1.0\n"
@@ -728,6 +728,9 @@ msgstr "Ajouter Employé"
 
 msgid "Add Gadgets"
 msgstr "Ajouter des gadgets"
+
+msgid "Add Holiday Acquisition"
+msgstr "Ajouter un congé"
 
 msgid "Add Lines"
 msgstr "Ajouter des lignes"
@@ -3117,9 +3120,6 @@ msgstr "Convergent"
 msgid "Conversion Failed"
 msgstr ""
 
-msgid "Conversion Failed [state in processing_status_workflow]"
-msgstr ""
-
 msgid "Conversion Format for reports."
 msgstr "Format de conversion des rapports."
 
@@ -3159,16 +3159,10 @@ msgstr "Rapport d'inventaire converti"
 msgid "Converted Quantity"
 msgstr "Quantité convertie"
 
-msgid "Converted [state in processing_status_workflow]"
-msgstr "Converti"
-
 msgid "Converted quantity"
 msgstr "Quantité convertie"
 
 msgid "Converting"
-msgstr "Conversion en cours"
-
-msgid "Converting [state in processing_status_workflow]"
 msgstr "Conversion en cours"
 
 msgid "Coordinate Function"
@@ -3644,6 +3638,12 @@ msgstr "GED"
 
 msgid "DMS Preferences"
 msgstr "Préférences de la GED"
+
+msgid "DSN Change Block"
+msgstr "Bloc de changement DSN"
+
+msgid "DSN Change Blocks"
+msgstr "Blocs de changement DSN"
 
 msgid "Data Updated."
 msgstr "Données Enregistrées."
@@ -4551,6 +4551,9 @@ msgstr "Liste des documents"
 msgid "Document Module"
 msgstr "Module des documents"
 
+msgid "Document Number"
+msgstr "Numéro de document"
+
 msgid "Document Properties"
 msgstr "Propriété du document"
 
@@ -4971,6 +4974,9 @@ msgstr "Montant part salariale"
 msgid "Employee Share Rate"
 msgstr "Taux part salariale"
 
+msgid "Employee count"
+msgstr "Effectif des salariés"
+
 msgid "Employee share rate (%)"
 msgstr "Part Employé (%)"
 
@@ -4993,9 +4999,6 @@ msgid "Employer share rate (%)"
 msgstr "Part employeur (%)"
 
 msgid "Empty"
-msgstr "Vide"
-
-msgid "Empty [state in processing_status_workflow]"
 msgstr "Vide"
 
 msgid "Empty lines deleted."
@@ -5027,6 +5030,9 @@ msgstr "Date de fin"
 
 msgid "End of Month"
 msgstr "Fin de mois"
+
+msgid "End of Pay Period"
+msgstr "Date de fin de la période de paie"
 
 msgid "End of current career step"
 msgstr "Fin de carrière"
@@ -5775,6 +5781,9 @@ msgstr "Émettre"
 msgid "Generate Action"
 msgstr "Émettre (action)"
 
+msgid "Generate DSN Report"
+msgstr "Générer le rapport DSN"
+
 msgid "Generate POT File"
 msgstr "Générer un fichier POT"
 
@@ -5987,6 +5996,12 @@ msgstr "Comparaison de l'historique"
 
 msgid "History"
 msgstr "Historique"
+
+msgid "Holiday Acquisition"
+msgstr "Congé"
+
+msgid "Holiday Acquisitions"
+msgstr "Acquisition de congés"
 
 msgid "Home"
 msgstr "Accueil"
@@ -6881,6 +6896,18 @@ msgstr "Apprendre"
 
 msgid "Learn about new ERP5 releases,technical articles, events and more."
 msgstr "Restez au courant des dernières nouveautés, des événements autour d'ERP5 et bien plus."
+
+msgid "Leave Requests"
+msgstr "Demandes de congé"
+
+msgid "Leave Requests to Approve"
+msgstr "Demandes de congé à approuver"
+
+msgid "Leave Requests to Submit"
+msgstr "Demandes de congé à soumettre"
+
+msgid "Leave Requests to Validate"
+msgstr "Demandes de congé à valider"
 
 msgid "Ledger"
 msgstr "Journal"
@@ -8889,9 +8916,6 @@ msgstr "Évènements en attente"
 msgid "Pending Offers"
 msgstr "Offres en attente"
 
-msgid "Pending [state in document_staging_workflow]"
-msgstr "En attente"
-
 msgid "Pending [state in event_workflow]"
 msgstr "En attente"
 
@@ -9447,9 +9471,6 @@ msgstr "Priorité"
 msgid "Private"
 msgstr "Privé"
 
-msgid "Private [state in document_staging_workflow]"
-msgstr "Privé"
-
 msgid "Privilege"
 msgstr "Droits"
 
@@ -9680,9 +9701,6 @@ msgstr "Prototypage"
 
 msgid "Public"
 msgstr "Publique"
-
-msgid "Public [state in document_staging_workflow]"
-msgstr "Public"
 
 msgid "Public [state in external_document_publication_workflow]"
 msgstr "Public"
@@ -12369,20 +12387,11 @@ msgstr "Suspendre le ticket"
 msgid "Suspended"
 msgstr "Suspendu"
 
+msgid "Suspended Expense Validation Requests"
+msgstr "Notes de frais suspendues"
+
 msgid "Suspended Support Requests"
 msgstr "Demande d'assistance suspendues"
-
-msgid "Suspended [state in open_order_workflow]"
-msgstr "Suspendu"
-
-msgid "Suspended [state in project_workflow]"
-msgstr "Suspendu"
-
-msgid "Suspended [state in sale_opportunity_workflow]"
-msgstr ""
-
-msgid "Suspended [state in ticket_workflow]"
-msgstr "Suspendu"
 
 msgid "Symbol"
 msgstr "Symbole"
@@ -14125,9 +14134,6 @@ msgid "Upload file"
 msgstr "Transférer un fichier"
 
 msgid "Uploaded"
-msgstr "Chargé"
-
-msgid "Uploaded [state in processing_status_workflow]"
 msgstr "Chargé"
 
 msgid "Urgency Start Date"

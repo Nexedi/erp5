@@ -39,10 +39,8 @@ class DocumentMixin:
    convert must not be overloaded as it checks conversion
    format permission
 
-   isSupportBaseDataConversion can be overriden, if base_conversion
+   isSupportTextConversion can be overriden, if text conversion
    is supported (eg. OOoDocuments, TextDocument).
-
-
   """
   security = ClassSecurityInfo()
 
@@ -136,10 +134,10 @@ class DocumentMixin:
     transaction_variable[LOCK_PERMISSION_KEY] = lock_checking
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                                                 'isSupportBaseDataConversion')
-  def isSupportBaseDataConversion(self):
-    """Tell if document implement IBaseConvertable Interface.
-    By default it doens't
+                                                 'isSupportTextConversion')
+  def isSupportTextConversion(self):
+    """Tell if document implement ITextConvertable Interface.
+    By default it does not.
     """
     return False
 

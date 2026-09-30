@@ -1,0 +1,390 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+# Copyright (c) 2026 Nexedi SA and Contributors. All Rights Reserved.
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+##############################################################################
+
+"""Positive-path coverage for the project-app RSS feed deep-link.
+
+The feed form DiscussionForum_viewLatestPostListAsRSS lives in erp5_discussion,
+but its item <link> is the project-app push_history_stored_state deep-link built
+by the erp5_web_project_ui provider DiscussionPost_getAppItemRSSUrl, which
+self-derives the app base from the request (portal.absolute_url()). erp5_discussion
+deliberately does NOT depend on erp5_web_project_ui (its own test asserts the
+decoupled case), so the deep-link is exercised here, where the provider is present.
+"""
+
+import json
+import unittest
+from collections import OrderedDict
+from xml.dom.minidom import parseString
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+
+
+def getNodeContent(node):
+  return node.childNodes[0].nodeValue
+
+
+def getSubnodeContent(node, tag_name, index=0):
+  try:
+    return getNodeContent(node.getElementsByTagName(tag_name)[index])
+  except IndexError:
+    return None
+
+
+class TestWebProjectForumRSS(ERP5TypeTestCase):
+  """Project-app RSS feed deep-link (requires erp5_web_project_ui)."""
+
+  def getTitle(self):
+    return "Test Web Project Forum RSS"
+
+  def getBusinessTemplateList(self):
+    return ('erp5_web_project_ui', 'erp5_web_project_ui_test',
+            'erp5_access_token')
+
+  def beforeTearDown(self):
+    self.abort()
+    for module in (self.portal.discussion_thread_module,):
+      module.manage_delObjects(list(module.objectIds()))
+    self.tic()
+
+  def _createForumThreadWithPosts(self, n_posts=2):
+    """Published group-predicate forum + one shared thread with n_posts posts."""
+    portal = self.portal
+    existing = set(portal.discussion_thread_module.objectIds())
+    group = portal.portal_categories.group.newContent(
+      portal_type='Category', title='RSS Feed Group')
+    forum = portal.getDefaultModule("Discussion Forum").newContent(
+      portal_type="Discussion Forum")
+    forum.setMultimembershipCriterionBaseCategoryList(['group'])
+    forum.setMembershipCriterionCategoryList([group.getRelativeUrl()])
+    forum.edit(criterion_property=("portal_type",))
+    forum.setCriterion("portal_type", ["Discussion Thread"])
+    forum.publish()
+    forum.DiscussionForum_createNewDiscussionThread('rss-feed-thread', 'first post')
+    self.tic()
+    thread, = [x for x in portal.discussion_thread_module.objectValues()
+               if x.getId() not in existing]
+    for i in range(n_posts - 1):
+      thread.DiscussionThread_createNewDiscussionPost(
+        title='reply %d' % (i + 1), text_content='reply body %d' % (i + 1))
+    self.tic()
+    return forum, thread
+
+  def test_rss_feed_link_uses_push_history_stored_state(self):
+    """Each item <link> is the project-app push_history_stored_state deep-link
+    seeding the forum (p.jio_key) and targeting the thread + last_post."""
+    forum, thread = self._createForumThreadWithPosts(n_posts=2)
+    # the item <link> self-derives the app base from the request (portal.absolute_url())
+    base = self.portal.absolute_url()
+    post_count = thread.DiscussionThread_getDiscussionPostCount()
+    doc = parseString(forum.DiscussionForum_viewLatestPostListAsRSS())
+    links = [x for x in
+             (getSubnodeContent(i, 'link')
+              for i in doc.getElementsByTagName('item'))
+             if x]
+    self.assertTrue(links, 'feed items must have a project-app <link>')
+    for link in links:
+      self.assertIn('#!push_history_stored_state', link)
+      self.assertIn(base, link)
+      self.assertIn('p.jio_key=%s' % forum.getRelativeUrl(), link)
+      self.assertIn('n.jio_key=%s' % thread.getRelativeUrl(), link)
+      self.assertIn('n.last_post=%s' % post_count, link)
+
+  def test_thread_url_helper_builds_push_history_jio_key(self):
+    """ListBox_getDiscussionThreadUrl (the SPA thread-row link) returns a
+    push_history command whose jio_key is the thread relative url."""
+    _, thread = self._createForumThreadWithPosts(n_posts=2)
+    brain, = self.portal.portal_catalog(uid=thread.getUid())
+    url_dict = self.portal.ListBox_getDiscussionThreadUrl(brain, url_dict=True)
+    self.assertEqual('push_history', url_dict['command'])
+    self.assertEqual(thread.getRelativeUrl(), url_dict['options']['jio_key'])
+
+  def test_thread_last_post_url_helper_carries_post_count(self):
+    """ListBox_getDiscussionThreadLastPostUrl adds last_post == the thread post
+    count: the page the SPA/RSS deep-link jumps to. A wrong count silently
+    sends the reader to the wrong page."""
+    _, thread = self._createForumThreadWithPosts(n_posts=3)
+    brain, = self.portal.portal_catalog(uid=thread.getUid())
+    url_dict = self.portal.ListBox_getDiscussionThreadLastPostUrl(
+      brain, url_dict=True)
+    self.assertEqual(thread.getRelativeUrl(), url_dict['options']['jio_key'])
+    self.assertEqual(3, thread.DiscussionThread_getDiscussionPostCount())
+    self.assertEqual(3, url_dict['options']['last_post'])
+
+  def test_last_post_widget_helpers_resolve_post_and_author(self):
+    """The last-post / author SPA widgets are thin wrappers over
+    DiscussionThread_getLastPost and DiscussionPost_getAuthorDict; assert those
+    resolve a Discussion Post in the thread and an author dict with its keys."""
+    _, thread = self._createForumThreadWithPosts(n_posts=2)
+    last_post = thread.DiscussionThread_getLastPost()
+    self.assertNotEqual(None, last_post)
+    self.assertEqual('Discussion Post', last_post.getPortalType())
+    self.assertEqual(thread.getRelativeUrl(),
+                     last_post.getParentValue().getRelativeUrl())
+    author_dict = last_post.DiscussionPost_getAuthorDict()
+    for key in ('author_title', 'author_url', 'author_signature',
+                'author_thumbnail_url'):
+      self.assertIn(key, author_dict)
+    self.assertTrue(author_dict['author_title'])
+
+  def test_filter_project_actions_promotes_project_view_regardless_of_order(self):
+    """Base_filterProjectActions must expose the project_view actions as
+    object_view even when object_view is iterated AFTER project_view: the
+    dict-order case that blanked the SPA (empty _links.view) before the fix."""
+    project_view_action_list = [
+      {'id': 'project_view', 'title': 'Discussion Threads'}]
+    # OrderedDict forces the previously-crashing order: object_view inserted last.
+    actions = OrderedDict()
+    actions['project_view'] = project_view_action_list
+    actions['object_view'] = [{'id': 'view', 'title': 'View'},
+                              {'id': 'view_rss', 'title': 'RSS'}]
+    result = self.portal.Base_filterProjectActions(actions=actions)
+    self.assertEqual([{'id': 'view', 'title': 'Discussion Threads'}],
+                     result['object_view'])
+    self.assertNotIn('project_view', result)
+
+  def test_filter_project_actions_merges_project_view_named_object_view(self):
+    """object_view actions whose id contains 'project_view' are kept alongside
+    the project_view category actions, not dropped by it - and the merge is the
+    same in both iteration orders."""
+    project_view_action_list = [{'id': 'project_view', 'title': 'View'}]
+    object_view_action_list = [{'id': 'view', 'title': 'Standard'},
+                               {'id': 'project_view_extra', 'title': 'Extra'}]
+    expected_id_list = ['project_view_extra', 'view']
+    for category_name_list in (('project_view', 'object_view'),
+                               ('object_view', 'project_view')):
+      actions = OrderedDict()
+      for category_name in category_name_list:
+        actions[category_name] = (project_view_action_list
+                                  if category_name == 'project_view'
+                                  else object_view_action_list)
+      result = self.portal.Base_filterProjectActions(actions=actions)
+      self.assertEqual(
+        expected_id_list,
+        sorted(action['id'] for action in result['object_view']),
+        'wrong object_view for iteration order %r' % (category_name_list,))
+      self.assertNotIn('project_view', result)
+
+  def test_filter_project_actions_renames_project_view_to_view(self):
+    """The app default view action must reach the client as 'view': the panel
+    highlights on name === 'view' and Base_redirect hardcodes that form id. The
+    standard ERP5 'view' action must not survive next to it."""
+    actions = {'project_view': [{'id': 'project_view', 'title': 'Threads'}],
+               'object_view': [{'id': 'view', 'title': 'Standard'},
+                               {'id': 'view_rss', 'title': 'RSS'}]}
+    result = self.portal.Base_filterProjectActions(actions=actions)
+    self.assertEqual([{'id': 'view', 'title': 'Threads'}],
+                     result['object_view'])
+
+  def test_filter_project_actions_rename_does_not_mutate_source_action(self):
+    """The rename must work on a copy: the action dicts belong to the caller
+    (listFilteredActionsFor), so renaming them in place would be a side effect
+    on the input rather than on the filtered result."""
+    project_view_action = {'id': 'project_view', 'title': 'Threads'}
+    actions = {'project_view': [project_view_action]}
+    result = self.portal.Base_filterProjectActions(actions=actions)
+    self.assertEqual('view', result['object_view'][0]['id'])
+    self.assertEqual('project_view', project_view_action['id'])
+
+  def test_filter_project_actions_rename_keeps_project_view_editor(self):
+    """Only the exact id project_view is renamed: project_view_editor is
+    resolved by name from _links.view by the project page gadget."""
+    actions = {'project_view': [{'id': 'project_view'},
+                                {'id': 'project_view_editor'}]}
+    result = self.portal.Base_filterProjectActions(actions=actions)
+    self.assertEqual(['view', 'project_view_editor'],
+                     [action['id'] for action in result['object_view']])
+
+  def test_filter_project_actions_rename_deduplicates_object_view(self):
+    """Two project_view actions merged from both categories collapse into one
+    'view'. Base_filterDuplicateActions must not be relied on for this: it only
+    runs when hasDuplicateActions fires and is cached per (portal_type, user)."""
+    actions = OrderedDict()
+    actions['object_view'] = [{'id': 'project_view', 'title': 'From object'},
+                              {'id': 'view'}]
+    actions['project_view'] = [{'id': 'project_view', 'title': 'From project'}]
+    result = self.portal.Base_filterProjectActions(actions=actions)
+    self.assertEqual([{'id': 'view', 'title': 'From object'}],
+                     result['object_view'])
+
+  def test_project_extra_view_actions_are_registered(self):
+    """The project page resolves its milestone / document / activity views by
+    name from _links.view instead of building hateoas URLs by hand, so these
+    actions must exist on the Project portal type, in the project_view category
+    (the filter script merges it into object_view) and with ids that survive the
+    project_view -> view rename."""
+    action_dict = dict(
+      (action.getReference(), action.getActionType())
+      for action in self.portal.portal_types.Project.getActionInformationList())
+    for action_id in ('project_view_milestone_list',
+                      'project_view_document_list',
+                      'project_view_activity_list'):
+      self.assertIn(action_id, action_dict)
+      self.assertEqual('project_view', action_dict[action_id])
+
+  def test_quick_overview_gadget_field_default_is_not_empty(self):
+    """Project_viewQuickOverview holds a single GadgetField, and in non-editable
+    mode isNonEmptyNonEditableField drops every field with an empty default -
+    which renders the whole project page blank. The non-empty default is the
+    workaround (same as DiscussionThread_viewPostList/my_posts), so guard it."""
+    field = self.portal.portal_skins.erp5_web_project \
+                .Project_viewQuickOverview.my_info_gadget_field
+    self.assertNotEqual('', field.get_value('default'))
+
+  def test_project_management_default_view_action_reference_is_view(self):
+    """Half of the fix lives in the site configuration: the client sends this
+    value as _view= on every jio_getAttachment(id, 'view'), so it must match the
+    renamed action id or no form is embedded."""
+    self.assertEqual(
+      'view',
+      self.portal.web_site_module.project_management.getLayoutProperty(
+        'configuration_default_view_action_reference'))
+
+  def test_filter_project_actions_without_project_view_falls_back_to_view(self):
+    """A portal type contributing no project_view action (Person is one) must
+    keep the standard 'view' action: an empty object_view leaves _links.view
+    unset and the form gadget crashes on ensureArray(_links.view)[0].href."""
+    standard_view_action = {'id': 'view'}
+    actions = {'object_view': [standard_view_action, {'id': 'view_rss'}]}
+    result = self.portal.Base_filterProjectActions(actions=actions)
+    self.assertEqual([standard_view_action], result['object_view'])
+
+  def test_filter_project_actions_fallback_ignores_empty_project_view(self):
+    """The fallback keys off the merged object_view being empty, not off the
+    project_view category being absent, so an empty project_view still falls
+    back - and it is order-insensitive like the merge itself."""
+    standard_view_action = {'id': 'view'}
+    for category_name_list in (('project_view', 'object_view'),
+                               ('object_view', 'project_view')):
+      actions = OrderedDict()
+      for category_name in category_name_list:
+        actions[category_name] = ([]
+                                  if category_name == 'project_view'
+                                  else [standard_view_action])
+      result = self.portal.Base_filterProjectActions(actions=actions)
+      self.assertEqual(
+        [standard_view_action], result['object_view'],
+        'wrong object_view for iteration order %r' % (category_name_list,))
+
+  def test_filter_project_actions_fallback_needs_a_standard_view_action(self):
+    """The fallback only restores the action whose id is exactly 'view'; with
+    no such action object_view stays empty, as before this fix."""
+    actions = {'object_view': [{'id': 'view_rss'}, {'id': 'view_history'}]}
+    result = self.portal.Base_filterProjectActions(actions=actions)
+    self.assertEqual([], result['object_view'])
+
+  def test_generate_rss_link_action_is_registered(self):
+    """The action is how a reader gets the personal feed URL to paste in a feed
+    reader; the panel builds its Actions section from action_object_jio_action,
+    so a wrong category makes it unreachable in the app."""
+    action_dict = dict(
+      (action.getReference(), action.getActionType())
+      for action in self.portal.portal_types['Discussion Forum']
+                        .getActionInformationList())
+    self.assertEqual('object_jio_action', action_dict['generate_rss_link'])
+
+  def test_filter_project_actions_keeps_generate_rss_link(self):
+    """Base_filterProjectActions drops some jio actions by id; the new one must
+    survive, otherwise the panel never shows it in the app."""
+    generate_action = {'id': 'generate_rss_link'}
+    actions = {'object_jio_action': [generate_action, {'id': 'post_query'}]}
+    result = self.portal.Base_filterProjectActions(actions=actions)
+    self.assertEqual([generate_action], result['object_jio_action'])
+
+  def test_rss_link_gadget_is_served_by_the_app(self):
+    """The browser resolves the GadgetField url against the app root, so each
+    file the gadget links has to be reachable as a web page reference the way
+    every other gadget of this bt5 is - a rename or a missing publication makes
+    the field render an empty box with no server-side error. The gadget reuses
+    the app stylesheet instead of shipping its own. Both the forum view and the
+    action dialog embed the same gadget."""
+    skin_folder = self.portal.portal_skins.erp5_web_project
+    for form in (skin_folder.DiscussionForum_viewGenerateRssLinkDialog,
+                 skin_folder.DiscussionForum_viewThreadProject):
+      self.assertEqual('gadget_project_rss_link.html',
+                       form.rss_link_gadget.get_value('gadget_url'),
+                       form.getId())
+    web_site = self.portal.web_site_module.project_management
+    for reference in ('gadget_project_rss_link.html',
+                      'gadget_project_rss_link.js',
+                      'gadget_erp5_page_project.css'):
+      self.assertNotEqual(None, web_site.getDocumentValue(reference), reference)
+
+  def test_rss_link_gadget_is_in_the_precache_manifest(self):
+    """The manifest is what gets precached, and it is also the list
+    Base_getTranslationSourceFileList feeds the data-i18n extraction from - a
+    prerequisite for translating the gadget labels, though not enough on its own:
+    project_management sets no configuration_translation_gadget_url, so the app
+    has no translation data script of its own to update (plan doc, Task 7)."""
+    url_list = self.portal.WebSection_getWebProjectPrecacheManifestList()
+    for url in ('gadget_project_rss_link.html',
+                'gadget_project_rss_link.js'):
+      self.assertIn(url, url_list)
+
+  def test_forum_view_does_not_generate_an_access_token(self):
+    """Minting a Restricted Access Token is a write, and it happens only on the
+    reader's click, like the old forum's generate button. Rendering the forum
+    view must only hand the gadget the jio_key it calls on click: evaluating the
+    field creates nothing and runs no token query."""
+    forum, _ = self._createForumThreadWithPosts(n_posts=1)
+    token_id_list = list(self.portal.access_token_module.objectIds())
+    field = forum.DiscussionForum_viewThreadProject.rss_link_gadget
+    self.assertEqual([('jio_key', forum.getRelativeUrl())],
+                     field.get_value('renderjs_extra'))
+    self.assertEqual(token_id_list,
+                     list(self.portal.access_token_module.objectIds()))
+
+  def test_rss_url_endpoint_answers_json(self):
+    """The gadget's click handler reads {"rss_url": ...} out of
+    DiscussionForum_getRssAccessUrlAsJSON; the wrapper must keep that shape on
+    both branches of DiscussionForum_getRssAccessUrl (token or plain url)."""
+    forum, _ = self._createForumThreadWithPosts(n_posts=1)
+    result = json.loads(forum.DiscussionForum_getRssAccessUrlAsJSON())
+    self.assertIn('DiscussionForum_viewLatestPostListAsRSS',
+                  result['rss_url'])
+
+  def test_rss_access_url_for_non_manager_reader(self):
+    """A reader is only Owner of the token it mints, and validation_workflow's
+    validated state drops Owner from 'Access contents information' (it does not
+    acquire either), so reading the token id after validate() raises
+    Unauthorized: the feed URL has to be built while the token is still draft.
+    Only a Manager gets through the wrong order, which is why the other tests
+    here never saw it."""
+    forum, _ = self._createForumThreadWithPosts(n_posts=1)
+    token_module = self.portal.access_token_module
+    existing_token_id_list = list(token_module.objectIds())
+    login_reference = 'rss-reader-login'
+    person = self.portal.person_module.newContent(
+      portal_type='Person', reference='TESTP-rss-reader')
+    person.newContent(portal_type='Assignment').open()
+    person.newContent(portal_type='ERP5 Login',
+                      reference=login_reference).validate()
+    # in production this Author comes from the access_token_module local roles
+    token_module.manage_addLocalRoles(person.getUserId(), ['Author'])
+    self.tic()
+
+    self.loginByUserName(login_reference)
+    try:
+      result = json.loads(forum.DiscussionForum_getRssAccessUrlAsJSON())
+    finally:
+      self.login()
+
+    rss_url = result['rss_url']
+    token, = [x for x in token_module.objectValues()
+              if x.getId() not in existing_token_id_list]
+    self.assertEqual('validated', token.getValidationState())
+    self.assertIn('access_token=%s' % token.getId(), rss_url)
+    self.assertIn('access_token_secret=%s' % token.getReference(), rss_url)
+
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(
+    unittest.defaultTestLoader.loadTestsFromTestCase(TestWebProjectForumRSS))
+  return suite

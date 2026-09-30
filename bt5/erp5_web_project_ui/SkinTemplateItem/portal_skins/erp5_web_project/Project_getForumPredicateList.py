@@ -26,7 +26,9 @@ predicate_list = [x.getRelativeUrl() for x in domain_tool.searchPredicateList(
   tested_base_category_list=['follow_up']
 )]
 
-follow_up_list = [x.getRelativeUrl() for x in project.getFollowUpRelatedValueList(portal_type = "Discussion Forum") if x.getValidationState()
-                  in ('published', 'published_alive', 'released', 'released_alive', 'shared', 'shared_alive')]
+follow_up_list = [x.getRelativeUrl() for x in portal.portal_catalog(
+  portal_type="Discussion Forum",
+  follow_up__uid=project.getUid(),
+  validation_state=('published', 'published_alive', 'released', 'released_alive', 'shared', 'shared_alive'))]
 
 return list(set(predicate_list + follow_up_list))
