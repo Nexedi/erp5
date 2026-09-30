@@ -58,6 +58,7 @@ class TestXHTMLMixin(ERP5TypeTestCase):
                                             'erp5_discussion/DiscusionThread_viewContentListAsRSS',
                                             'erp5_discussion/WebSection_viewLatestDiscussionPostListAsRSS',
                                             'erp5_discussion/DiscussionForum_viewLatestPostListAsRSS',
+                                            'erp5_web_project/WebSection_viewLatestForumPostListAsRSS',
                                             'erp5_core/Base_viewHistoricalComparisonDiff',
                                             'erp5_diff/ERP5Site_viewDiffTwoObjectDialog',]
 
