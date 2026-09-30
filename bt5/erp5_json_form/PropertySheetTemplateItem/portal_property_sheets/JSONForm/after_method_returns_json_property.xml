@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Standard Property" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>elementary_type/boolean</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Indicates whether the called method returns an object (unchecked) or serialized JSON (checked).\n
+\n
+Legacy code always returned serialized JSON, but there are use cases where JSON Schema validation is required without serialization. This flag was introduced to support these use cases.\n
+\n
+It is not possible to determine this programmatically in an unambiguous way, since a string is a valid object that can be serialized.</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>after_method_returns_json_property</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Standard Property</string> </value>
+        </item>
+        <item>
+            <key> <string>property_default</string> </key>
+            <value> <string>python: True</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
