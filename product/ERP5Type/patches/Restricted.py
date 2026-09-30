@@ -411,6 +411,14 @@ if six.PY2:
     'quote', 'unquote',
     'quote_plus', 'unquote_plus',
   )
+else:
+  allow_module('urllib.parse')
+  ModuleSecurityInfo('urllib.parse').declarePublic(
+    'urlencode',
+    'quote', 'unquote',
+    'quote_plus', 'unquote_plus',
+  )
+
 import six.moves.urllib.parse
 allow_module('six.moves.urllib.parse')
 allow_type(six.moves.urllib.parse.ParseResult)
