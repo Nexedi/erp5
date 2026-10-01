@@ -324,6 +324,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
         # This give some time between messages
         if call_count % 10 == 0:
           portal_activities.timeShift(3 * VALIDATION_ERROR_DELAY)
+          transaction.commit()
       if verbose:
         ZopeTestCase._print(' done (%.3fs)\n' % (time.time() - start))
     self.abort()
