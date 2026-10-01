@@ -22,4 +22,4 @@ return [
     }),
     x.getUid(),
   )
-  for x in context.objectValues()]
+  for x in sorted(context.objectValues(), key=lambda x: x.getStopDate())]
