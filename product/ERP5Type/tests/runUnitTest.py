@@ -707,6 +707,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
     transaction.abort()
     raise
   finally:
+    ProcessingNodeTestCase.save_coverage()
     ProcessingNodeTestCase.unregisterNode()
     ProcessingNodeTestCase.stopHTTPServer()
     db_factory.close()
