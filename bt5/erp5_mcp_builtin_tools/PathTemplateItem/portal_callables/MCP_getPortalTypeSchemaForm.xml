@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="JSON Form" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>MCP_getPortalTypeSchemaForm</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>MCP_getPortalTypeSchemaForm</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>JSON Form</string> </value>
+        </item>
+        <item>
+            <key> <string>response_schema</string> </key>
+            <value> <string>{\n
+  "$schema": "http://json-schema.org/draft-07/schema#",\n
+  "type": "object",\n
+  "description": "Schema information for a portal type, including all available columns and their properties",\n
+  "properties": {\n
+    "portal_type": {\n
+      "type": "string",\n
+      "description": "The portal type ID that this schema applies to"\n
+    },\n
+    "columns": {\n
+      "type": "object",\n
+      "description": "Dictionary mapping column titles to their properties",\n
+      "patternProperties": {\n
+        "^.*$": {\n
+          "type": "object",\n
+          "description": "Properties for a specific column",\n
+          "properties": {\n
+            "default": {\n
+              "type": "boolean",\n
+              "description": "Whether this column appears by default in listings"\n
+            },\n
+            "filterable": {\n
+              "type": "boolean",\n
+              "description": "Whether this column can be used for filtering and sorting"\n
+            }\n
+          },\n
+          "additionalProperties": true\n
+        }\n
+      }\n
+    }\n
+  },\n
+  "required": ["portal_type", "columns"],\n
+  "additionalProperties": false\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>{\n
+  "additionalProperties": false,\n
+  "required": [\n
+    "portal_type_id"\n
+  ],\n
+  "type": "object",\n
+  "properties": {\n
+    "portal_type_id": {\n
+      "type": "string",\n
+      "description": "The ID/name of the portal type to get schema for.\\n\\nUse MCP_listPortalTypes first to see all available portal type IDs and their descriptions.\\n\\nExamples: \'Task Report\', \'Sale Order\', \'Person\'."\n
+    }\n
+  }\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
