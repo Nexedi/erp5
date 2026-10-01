@@ -166,6 +166,7 @@
                 {command: 'display_stored_state', options: {jio_key: "document_module"}},
                 {command: 'display_stored_state', options: {jio_key: "bug_module"}},
                 {command: 'display_stored_state', options: {jio_key: "test_result_module"}},
+                {command: 'display', options: {jio_key: "web_site_module/project_management/forum_feed"}},
                 {command: 'display', options: {page: "logout"}}
               ]),
               context.getTranslationList([
@@ -177,6 +178,7 @@
                 'Documents',
                 'Bugs',
                 'Tests',
+                'Forum Feed',
                 'Logout'
               ]),
               context.getDeclaredGadget("erp5_checkbox")
@@ -196,6 +198,7 @@
                 'files-o', null,
                 'bug', null,
                 'checkbox-on', null,
+                'rss', null,
                 'power-off', null
               ],
               ul_element = context.element.querySelector("ul");
