@@ -512,6 +512,46 @@ class TestPython3PickleMigration(unittest.TestCase):
     self.assertEqual(
       self._get_state_from_pickle(pickle_data), {'data': [b'Hello']})
 
+  def test_PyPDF2_ByteStringObject_protocol_1_with_dt_reconstructor_non_ascii(self):
+    # pickle with protocol 1 for
+    # persistent.list.PersistentList([PyPDF2.generic.ByteStringObject(b'H\xe9llo')])
+    # when the monkey patch of _copy_reg was applied in
+    # https://github.com/zopefoundation/DateTime/blob/2.12.7/src/DateTime/DateTime.py#L1863-L1874
+    pickle_data = (
+      #     0: c    GLOBAL     'persistent.list PersistentList'
+      #    32: q    BINPUT     1
+      #    34: .    STOP
+      # highest protocol among opcodes = 1
+      b'cpersistent.list\nPersistentList\nq\x01.'
+      #    35: }    EMPTY_DICT
+      #    36: q    BINPUT     2
+      #    38: U    SHORT_BINSTRING 'data'
+      #    44: q    BINPUT     3
+      #    46: ]    EMPTY_LIST
+      #    47: q    BINPUT     4
+      #    49: c    GLOBAL     'DateTime.DateTime _dt_reconstructor'
+      #    86: q    BINPUT     5
+      #    88: (    MARK
+      #    89: c        GLOBAL     'PyPDF2.generic ByteStringObject'
+      #   122: q        BINPUT     6
+      #   124: c        GLOBAL     '__builtin__ str'
+      #   141: q        BINPUT     7
+      #   143: U        SHORT_BINSTRING 'H\xe9llo'
+      #   150: q        BINPUT     8
+      #   152: t        TUPLE      (MARK at 88)
+      #   153: R    REDUCE
+      #   154: q    BINPUT     9
+      #   156: a    APPEND
+      #   157: s    SETITEM
+      #   158: .    STOP
+      # highest protocol among opcodes = 1
+      b'}q\x02U\x04dataq\x03]q\x04cDateTi'
+      b'me.DateTime\n_dt_reconstructor\nq\x05(cPyPDF2.generic\nByteStringObjec'
+      b't\nq\x06c__builtin__\nstr\nq\x07U\x05H\xe9lloq\x08tRq\tas.'
+    )
+    self.assertEqual(
+      self._get_state_from_pickle(pickle_data), {'data': [b'H\xe9llo']})
+
   def test_PyPDF2_ByteStringObject_protocol_3(self):
     # pickle with protocol 3 for
     # persistent.list.PersistentList([PyPDF2.generic.ByteStringObject(b'Hello')])
