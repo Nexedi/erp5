@@ -34,6 +34,7 @@ import pickle
 import six
 import unittest
 import ZODB.serialize
+import Zope2.App.ClassFactory
 
 
 if six.PY3:
@@ -429,10 +430,9 @@ class TestUpgradeInstanceWithOldDataFs(OldDataFsSetup):
 class TestPython3PickleMigration(unittest.TestCase):
 
   def _get_state_from_pickle(self, pickle_data):
-    _find_class = pickle.Unpickler(io.BytesIO()).find_class
-    def _factory(conn, modulename, name):
-      return _find_class(modulename, name)
-    return ZODB.serialize.ObjectReader(factory=_factory).getState(pickle_data)
+    return ZODB.serialize.ObjectReader(
+      factory=Zope2.App.ClassFactory.ClassFactory
+    ).getState(pickle_data)
 
   def test_PyPDF2_ByteStringObject_protocol_1(self):
     # pickle with protocol 1 for
@@ -554,3 +554,16 @@ class TestPython3PickleMigration(unittest.TestCase):
     self.assertIn(
       b'ccopy_reg\n_reconstructor\n',
       pickle.dumps(DateTime('2001/01/01 UTC'), 1))
+
+  def test_legacy_Products_ERP5Type_patches_DCWorkflow_ValidationFailed(self):
+    # pickle with protocol 3 for
+    # persistent.list.PersistentList([Products.ERP5Type.patches.DCWorkflow.ValidationFailed(b'message')])
+    pickle_data = (
+      b'\x80\x03cpersistent.list\nPersistentList\nq\x00.'
+      b'\x80\x03}q\x01X\x04\x00\x00\x00dataq\x02]q\x03cProducts.ERP5Type.patches.DCWorkflow\n'
+      b'ValidationFailed\nq\x04X\x07\x00\x00\x00messageq\x05\x85q\x06Rq\x07}q\x08X\x03\x00\x00\x00msgq\th\x05sbas.'
+    )
+    state = self._get_state_from_pickle(pickle_data)
+    validation_failed, = state['data']
+    from Products.ERP5Type.Core.Workflow import ValidationFailed
+    self.assertIsInstance(validation_failed, ValidationFailed)
