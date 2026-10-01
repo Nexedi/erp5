@@ -31,7 +31,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5Type.Utils import deprecated, publishable
+from Products.ERP5Type.Utils import deprecated, publishable, non_publishable
 from erp5.component.document.Coordinate import Coordinate
 from erp5.component.mixin.UrlMixin import UrlMixin
 
@@ -111,6 +111,24 @@ class Url(Coordinate, UrlMixin):
   @publishable
   def isDetailed(self):
     return self.hasUrlString()
+
+  @publishable
+  def publishable_missing_secu(self):
+    return 'ooops'
+
+  def docstring_missing_secu(self):
+    """oops"""
+    return 'ooops'
+
+  @non_publishable
+  def non_publishable_missing_secu(self):
+    return 'ok'
+
+  class secu_as_roles:
+    "doc"
+    @staticmethod
+    def __roles__(*args):
+      return 'ok'
 
   security.declareProtected(Permissions.UseMailhostServices, 'send')
   @deprecated
