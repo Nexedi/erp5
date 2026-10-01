@@ -27,22 +27,8 @@
 import six
 from Products.ERP5Type.Utils import bytes2str
 
-def sqlquote(value):
-  # See MySQL documentation of string literals.
-  # XXX: should use sql_quote__ on actual connector
-  # (ex: ZMySQLDA.DA.Connection.sql_quote__).
-  # Duplicating such code is error-prone, and makes us rely on a specific SQL
-  # dialect...
-  if six.PY3 and isinstance(value, bytes):
-    value = bytes2str(value)
-  return "'" + (value
-    .replace('\x5c', r'\\')
-    .replace('\x00', r'\0')
-    .replace('\x08', r'\b')
-    .replace('\x09', r'\t')
-    .replace('\x0a', r'\n')
-    .replace('\x0d', r'\r')
-    .replace('\x1a', r'\Z')
-    .replace('\x22', r'\"')
-    .replace('\x27', r"\'")
-  ) + "'"
+def sqlquote(value, renderer):
+  result = renderer(value)
+  if isinstance(result, bytes):
+    return bytes2str(result)
+  return result
