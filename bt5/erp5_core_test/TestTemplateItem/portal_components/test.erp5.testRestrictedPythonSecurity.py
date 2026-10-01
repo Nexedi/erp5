@@ -163,6 +163,46 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
         expected=[('q', 's')]
     )
 
+  @unittest.skipIf(six.PY2, "only py3")
+  def test_urllib_urlparse(self):
+    self.createAndRunScript('''
+        import urllib.parse
+        return urllib.parse.urlparse("http://example.com/pa/th/?q=s").path
+        ''',
+        expected='/pa/th/'
+    )
+    # access computed attributes (property) is also OK
+    self.createAndRunScript('''
+        import urllib.parse
+        return urllib.parse.urlparse("http://example.com/pa/th/?q=s").hostname
+        ''',
+        expected='example.com'
+    )
+    self.createAndRunScript('''
+        import urllib.parse
+        return urllib.parse.urlsplit("http://example.com/pa/th/?q=s").path
+        ''',
+        expected='/pa/th/'
+    )
+    self.createAndRunScript('''
+        import urllib.parse
+        return urllib.parse.urldefrag("http://example.com/#frag")[1]
+        ''',
+        expected='frag'
+    )
+    self.createAndRunScript('''
+        import urllib.parse
+        return urllib.parse.parse_qs("q=s")
+        ''',
+        expected={'q': ['s']}
+    )
+    self.createAndRunScript('''
+        import urllib.parse
+        return urllib.parse.parse_qsl("q=s")
+        ''',
+        expected=[('q', 's')]
+    )
+
   def testRandom(self):
     self.createAndRunScript('''
         import random
