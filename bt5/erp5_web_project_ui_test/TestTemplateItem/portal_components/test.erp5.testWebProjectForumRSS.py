@@ -551,6 +551,19 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     self.assertIn('("content_column", "BugLine_getContentOrTitle")',
                   field.get_tales('renderjs_extra')._text)
 
+  def test_bug_view_validates_on_save(self):
+    bug = self.portal.bug_module.newContent(portal_type='Bug', title='Saved')
+    self.portal.REQUEST.other.update(dict(
+      field_my_title='Saved',
+      field_my_description='edited',
+      field_my_source_project_title='',
+      field_my_source_title='',
+      field_my_bug_severity='',
+      field_my_bug_priority='',
+    ))
+    bug.Bug_viewProject.validate_all_to_request(self.portal.REQUEST)
+    self.assertEqual('edited', self.portal.REQUEST.get('my_description'))
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(
