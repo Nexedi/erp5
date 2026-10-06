@@ -1,6 +1,6 @@
 ##############################################################################
 # coding:utf-8
-# Copyright (c) 2023 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2023-2026 Nexedi SA and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -54,7 +54,9 @@ from erp5.component.document.OpenAPITypeInformation import (
 )
 from erp5.component.document.OpenAPIService import OpenAPIService
 from erp5.component.module.JsonUtils import loadJson
-import jsonschema
+from erp5.component.document.JSONForm import (
+  InputSchemaValidationError, OutputSchemaValidationError
+)
 
 
 class JsonRpcAPIError(OpenAPIError):
@@ -72,6 +74,10 @@ class JsonRpcAPIInvalidJsonDictContent(JsonRpcAPIError):
   type = "invalid-json-object-content"
   status = 400
 
+class JsonRpcAPIInvalidResponseContent(JsonRpcAPIError):
+  type = "invalid-response-content"
+  status = 500
+
 class JsonRpcAPINotAllowedHttpMethod(JsonRpcAPIError):
   type = "not-allowed-http-method"
   status = 405
@@ -85,6 +91,7 @@ ModuleSecurityInfo(__name__).declarePublic(
   JsonRpcAPINotParsableJsonContent.__name__,
   JsonRpcAPINotJsonDictContent.__name__,
   JsonRpcAPIInvalidJsonDictContent.__name__,
+  JsonRpcAPIInvalidResponseContent.__name__,
   JsonRpcAPINotAllowedHttpMethod.__name__,
   JsonRpcAPIBadContentType.__name__,
 )
@@ -242,33 +249,20 @@ class JsonRpcAPIService(OpenAPIService):
     if not isinstance(json_data, dict):
       raise JsonRpcAPINotJsonDictContent("Did not received a JSON Object")
 
+    # result = json_form(json_data=json_data, list_error=False)#**parameters)
     try:
       result = json_form(json_data=json_data, list_error=False)#**parameters)
-    except jsonschema.exceptions.ValidationError as e:
+    except InputSchemaValidationError as e:
       raise JsonRpcAPIInvalidJsonDictContent(str(e))
+    except OutputSchemaValidationError as e:
+      raise JsonRpcAPIInvalidResponseContent(str(e))
     response = request.RESPONSE
-    output_schema = json_form.getResponseSchema()
     # XXX Hardcoded JSONForm behaviour
     if (result == "Nothing to do") or (not result):
-      # If there is no output, ensure no output schema is defined
-      if output_schema:
-        raise ValueError('%s has an output schema but response is empty' % operation)
       result = {
         'status': 200,
         'type': 'success-type',
         'title': 'query completed'
       }
-    else:
-      if not output_schema:
-        raise ValueError('%s does not have an output schema but response is not empty' % operation)
-      # Ensure the response matches the output schema
-      try:
-        jsonschema.validate(
-          result,
-          loadJson(output_schema),
-          format_checker=jsonschema.FormatChecker()
-        )
-      except jsonschema.exceptions.ValidationError as e:
-        raise ValueError(e.message)
     response.setHeader("Content-Type", "application/json")
     return json.dumps(result).encode()
