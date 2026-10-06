@@ -156,6 +156,7 @@ SEPARATELY_EXPORTED_PROPERTY_DICT = {
   "OOoTemplate":         ("oot",  1, "_text",        True ),
   "MailTemplate":        ("mt",   1, "_text",        True ),
   "Mixin Component":     ("py",   0, "text_content", True ),
+  "MCP Tool":            ("py",   0, "_body",        True ),
   "Module Component":    ("py",   0, "text_content", True ),
   "PDF":                 ("pdf",  0, "data",         False),
   "PyData Script":       ("py",   0, "_body",        True ),
