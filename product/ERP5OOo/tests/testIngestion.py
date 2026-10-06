@@ -2257,6 +2257,42 @@ class Base_contributeMixin:
     self.tic()
     self.assertEqual(contributed_document.getValidationState(), 'published')
 
+  def test_Base_contribute_cloudooo_error_retried_with_base_data(self):
+    with mock.patch(
+        'erp5.component.document.OOoDocument.DocumentConversionServerProxy.run_getmetadata',
+        create=True,
+        side_effect=[
+          (400, {}, "Error !"),
+          (200, {"meta": {"title": "Test Document"}}, "Success !"),
+        ]
+      ) as run_getmetadata:
+      contributed_document = self.portal.person_module.Base_contribute(
+        file=self.makeFileUpload('TEST-en-002.doc'),
+        synchronous_metadata_discovery=True,
+      )
+    self.assertEqual('Text', contributed_document.getPortalType())
+    self.assertEqual('Test Document', contributed_document.getTitle())
+    self.assertEqual(run_getmetadata.call_count, 2)
+    # second call is made with base data, not data. Here we simply check they are different.
+    self.assertNotEqual(
+      run_getmetadata.call_args_list[0][0][1],
+      run_getmetadata.call_args_list[1][0][1],
+    )
+
+  def test_Base_contribute_cloudooo_error_retried_only_once(self):
+    from erp5.component.document.Document import ConversionError
+    with mock.patch(
+        'erp5.component.document.OOoDocument.DocumentConversionServerProxy.run_getmetadata',
+        create=True,
+        return_value=(400, {}, "Error !"),
+      ) as run_getmetadata, \
+      self.assertRaises(ConversionError):  #  not a RecursionError
+      self.portal.person_module.Base_contribute(
+        file=self.makeFileUpload('TEST-en-002.doc'),
+        synchronous_metadata_discovery=True,
+      )
+    self.assertEqual(run_getmetadata.call_count, 2)
+
 
 class TestBase_contribute(IngestionTestCase, Base_contributeMixin):
   """Base_contribute tests as Manager (ie. without security restrictions)
