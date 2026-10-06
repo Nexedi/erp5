@@ -197,11 +197,21 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>default_params</string> </key>
+                    <key> <string>default_display_style</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>default_params</string> </key>
+                    <value>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>display_style_list</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -233,7 +243,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>global_search_column</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>hide_rows_on_no_search_criterion</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -253,6 +271,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>page_navigation_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>page_template</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -266,6 +288,10 @@
                 </item>
                 <item>
                     <key> <string>report_tree</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>row_css_method</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -301,7 +327,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>style_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>untranslatable_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -454,7 +488,7 @@
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <bytes encoding="base64">AAAAAAAAAAI=</bytes> </persistent>
+                      <persistent> <bytes encoding="base64">AAAAAAAAAAM=</bytes> </persistent>
                     </value>
                 </item>
                 <item>
@@ -583,6 +617,19 @@
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: [(x, request.get(x)) for x in [\'ooo_import_spreadsheet_data\', \'temp_import_file_name\', \'import_file_line_script\']]</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
         <global name="Method" module="Products.Formulator.MethodField"/>
