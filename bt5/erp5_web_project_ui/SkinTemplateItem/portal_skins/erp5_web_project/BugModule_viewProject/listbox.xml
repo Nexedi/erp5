@@ -105,20 +105,12 @@
                           <string>Difficulty</string>
                         </tuple>
                         <tuple>
-                          <string>destination_person_title</string>
-                          <string>Requester</string>
-                        </tuple>
-                        <tuple>
                           <string>creation_date</string>
                           <string>Creation Date</string>
                         </tuple>
                         <tuple>
                           <string>modification_date</string>
                           <string>Modification Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_project_title</string>
-                          <string>Requested Project</string>
                         </tuple>
                         <tuple>
                           <string>source_decision_title</string>
@@ -135,10 +127,6 @@
                         <tuple>
                           <string>follow_up_title</string>
                           <string>Follow-up</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_title</string>
-                          <string>Requester</string>
                         </tuple>
                       </list>
                     </value>
@@ -186,7 +174,7 @@
                       <list>
                         <tuple>
                           <string>source_project</string>
-                          <string>Bug Group</string>
+                          <string>Project</string>
                         </tuple>
                         <tuple>
                           <string>bug_priority</string>
@@ -251,10 +239,6 @@
                           <string>Assignee</string>
                         </tuple>
                         <tuple>
-                          <string>destination_person_title</string>
-                          <string>Requester</string>
-                        </tuple>
-                        <tuple>
                           <string>delivery.start_date</string>
                           <string>Date</string>
                         </tuple>
@@ -288,11 +272,7 @@
                         </tuple>
                         <tuple>
                           <string>source_project_title</string>
-                          <string>Handled Project</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_project_title</string>
-                          <string>Requested Project</string>
+                          <string>Project</string>
                         </tuple>
                         <tuple>
                           <string>source_decision_title</string>
@@ -309,10 +289,6 @@
                         <tuple>
                           <string>follow_up_title</string>
                           <string>Follow-up</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_title</string>
-                          <string>Requester</string>
                         </tuple>
                       </list>
                     </value>
@@ -353,10 +329,6 @@
                           <string>Assignee</string>
                         </tuple>
                         <tuple>
-                          <string>destination_person_title</string>
-                          <string>Requester</string>
-                        </tuple>
-                        <tuple>
                           <string>delivery.start_date</string>
                           <string>Date</string>
                         </tuple>
@@ -390,11 +362,7 @@
                         </tuple>
                         <tuple>
                           <string>source_project_title</string>
-                          <string>Handled Project</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_project_title</string>
-                          <string>Requested Project</string>
+                          <string>Project</string>
                         </tuple>
                         <tuple>
                           <string>source_decision_title</string>
@@ -411,10 +379,6 @@
                         <tuple>
                           <string>follow_up_title</string>
                           <string>Follow-up</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_title</string>
-                          <string>Requester</string>
                         </tuple>
                       </list>
                     </value>
