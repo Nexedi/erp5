@@ -333,12 +333,15 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     """Minting a Restricted Access Token is a write, and it happens only on the
     reader's click, like the old forum's generate button. Rendering the forum
     view must only hand the gadget the jio_key it calls on click: evaluating the
-    field creates nothing and runs no token query."""
+    field creates nothing and runs no token query. The forum page offers the
+    all-forums feed of the forum_feed section, not a per-forum one."""
     forum, _ = self._createForumThreadWithPosts(n_posts=1)
     token_id_list = list(self.portal.access_token_module.objectIds())
     field = forum.DiscussionForum_viewThreadProject.rss_link_gadget
-    self.assertEqual([('jio_key', forum.getRelativeUrl())],
-                     field.get_value('renderjs_extra'))
+    self.assertEqual(
+      [('jio_key', self._getForumFeedSection().getRelativeUrl()),
+       ('url_script', 'WebSection_getForumFeedRssAccessUrlAsJSON')],
+      field.get_value('renderjs_extra'))
     self.assertEqual(token_id_list,
                      list(self.portal.access_token_module.objectIds()))
 
@@ -446,17 +449,18 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
       self.assertIn('#!push_history_stored_state', link)
       self.assertIn('p.jio_key=%s&' % forum.getRelativeUrl(), link)
 
-  def test_forum_feed_section_is_wired_to_panel_and_link_page(self):
-    """The panel entry and the Web Section project_view action both name the
-    section by its relative url; a rename on either side breaks the link
+  def test_forum_feed_section_is_wired_to_forum_page_and_link_page(self):
+    """The forum view field and the Web Section project_view action both name
+    the section by its relative url; a rename on either side breaks the link
     silently, and the link page must hand the gadget the aggregated endpoint
     without minting a token on render."""
     section = self._getForumFeedSection()
     relative_url = 'web_site_module/project_management/forum_feed'
     self.assertEqual(relative_url, section.getRelativeUrl())
     self.assertEqual('Web Section', section.getPortalType())
-    panel_js = self.portal.web_page_module.project_gadget_erp5_panel_js
-    self.assertIn('jio_key: "%s"' % relative_url, panel_js.getTextContent())
+    forum_field = self.portal.DiscussionForum_viewThreadProject.rss_link_gadget
+    self.assertIn(('jio_key', relative_url),
+                  forum_field.get_value('renderjs_extra'))
     action, = [x for x in self.portal.portal_types['Web Section']
                                    .getActionInformationList()
                if x.getReference() == 'project_view']
