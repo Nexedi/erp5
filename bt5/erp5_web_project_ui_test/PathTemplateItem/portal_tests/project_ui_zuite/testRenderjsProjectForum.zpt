@@ -235,6 +235,17 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
 <tr>
   <td>open</td>
+  <td>${base_url}/portal_skins/erp5_web_project_test/ERP5Site_addTestForumPostAttachment?thread_title=Thread%201&amp;attachment_title=test-attachment.txt</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Attachment Added</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+<tr>
+  <td>open</td>
   <td>${base_url}/web_site_module/project_management/</td>
   <td></td>
 </tr>
@@ -306,6 +317,11 @@
 <tr>
   <td>assertElementPresent</td>
   <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_thread_reader.html']//ol//li//p[text()='Post 1']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_thread_reader.html']//ol//li//ul//li//a[text()='test-attachment.txt']</td>
   <td></td>
 </tr>
 <tr>
