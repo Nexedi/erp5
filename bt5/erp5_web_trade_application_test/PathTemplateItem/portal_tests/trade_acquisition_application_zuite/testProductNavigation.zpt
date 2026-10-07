@@ -1,0 +1,144 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test trade Acquisition Application: Product</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test trade Acquisition Application: Product</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/trade_application/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Menu</td>
+  <td></td>
+</tr>
+
+
+
+<!-- Go to product module -->
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='header']//button[text()='Menu' and @type='submit']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Product</td>
+  <td></td>
+<tr>
+
+<tr>
+  <td>click</td>
+  <td>link=Product</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>New</td>
+  <td></td>
+</tr>
+
+
+<!-- Create new record -->
+<tr>
+  <td>click</td>
+  <td>link=New</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Add</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>5000</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>name=product_title</td>
+  <td>Nexedi product</td>
+</tr>
+
+<tr>
+  <td>select</td>
+  <td>name=product_line</td>
+  <td>Material/Starch</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>name=quantity_unit</td>
+  <td>Weight/Ton</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>name=product_reference</td>
+  <td>123456</td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='header']//button[text()='Add' and @type='submit']</td>
+  <td></td>
+</tr>
+
+
+
+<!-- Check record data -->
+
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Nexedi product</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>link=Nexedi product</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Product Title</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>5000</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>name=product_title</td>
+  <td>Nexedi product</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//select[@name='product_line']/option[@selected='selected']</td>
+  <td>Material/Starch</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//select[@name='quantity_unit']/option[@selected='selected']</td>
+  <td>Weight/Ton</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>name=product_reference</td>
+  <td>123456</td>
+</tr>
+</tbody></table>
+</body>
+</html>
