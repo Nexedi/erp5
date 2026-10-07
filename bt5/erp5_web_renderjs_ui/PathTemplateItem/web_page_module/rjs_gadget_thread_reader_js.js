@@ -249,7 +249,7 @@
                   source_short_title;
 
                 if (word_list.length === 1) {
-                  source_short_title = (word_list[0][0] || '') + (word_list[0][1] || '');
+                  source_short_title = (word_list[0][0] || ' ') + (word_list[0][1] || '');
                 } else {
                   source_short_title = word_list[0][0] + word_list[1][0];
                 }
