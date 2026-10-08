@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Workflow State" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>destination/portal_workflow/electronic_invoice_workflow/transition_acknowledge</string>
+                <string>destination/portal_workflow/electronic_invoice_workflow/transition_reject</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>comment</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Invoice dispatched to PDP or with active Invoice document, to be tracked by follow-up alarm.</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>state_confirmed</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Confirmed</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
