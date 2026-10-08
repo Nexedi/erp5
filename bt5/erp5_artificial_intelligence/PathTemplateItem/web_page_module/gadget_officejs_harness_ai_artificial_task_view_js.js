@@ -21,9 +21,6 @@
   }
 
 
-  // Fold one OpenAI-style streamed chunk's `delta` into the accumulator.
-  // Returns true when the visible text actually grew, so the caller can
-  // skip firing on_delta for role-only/usage-only/tool-call-only chunks.
   function applyStreamChunk(json, state) {
     var choice = json.choices && json.choices[0], delta, content_grew = false;
     if (json.error) {
@@ -68,13 +65,6 @@
     return content_grew;
   }
 
-
-  // Read an OpenAI-compatible `text/event-stream` response body
-  // (`data: {...}\n\n`, terminated by `data: [DONE]`) and resolve with the
-  // same shape requestProcessTask has always returned: {content, tool_calls}
-  // once any tool call was seen, otherwise {content, model, usage}.
-  // `on_delta`, if given, is called with {content} as the text grows, so the
-  // caller can show the answer live instead of waiting for the full stream.
   function consumeOpenAIStream(response, on_delta) {
     var reader = response.body.getReader(),
       decoder = new TextDecoder(),
@@ -104,7 +94,7 @@
     }
 
     function pump() {
-      return reader.read().then(function (step) {
+      return new RSVP.Queue(reader.read()).push(function (step) {
         var split;
         if (step.done) {
           if (buffer) {
@@ -141,11 +131,6 @@
         }
         return {content: state.content, model: state.model, usage: state.usage};
       });
-  }
-
-
-  function parseMcpServerList(text) {
-    return window.ChatMCP.parseServerListText(text).value || [];
   }
 
 
@@ -271,10 +256,6 @@
         };
       }
 
-      // With a Server URL configured, relay through it instead of calling the
-      // provider directly - same forwarder protocol as ai-agent-harness's
-      // server.py (POST /proxy, target carried in X-Target-* headers), which
-      // both sidesteps CORS and lets the streamed response come back verbatim.
       if (settings.proxy_server_url) {
         fetch_url = settings.proxy_server_url.replace(/\/+$/, '') + "/proxy";
         fetch_options = {
@@ -304,29 +285,26 @@
         };
       }
 
-      return new RSVP.Queue(new RSVP.Promise(function (resolve, reject) {
-        fetch(fetch_url, fetch_options).then(resolve, reject);
+      return new RSVP.Promise(function (resolve, reject) {
+        new RSVP.Queue(fetch(fetch_url, fetch_options))
+          .push(function (response) {
+            if (!response.ok) {
+              return new RSVP.Queue(response.text()).push(function (text) {
+                throw new Error("LLM " + response.status + " error: " + text.slice(0, 1000));
+              });
+            }
+            return consumeOpenAIStream(
+              response,
+              (body.is_subagent || body.compact_message_list !== undefined) ? undefined :
+                function onDelta(partial) {
+                  return gadget.chat_gadget.showStreamingDelta(partial);
+                }
+            );
+          })
+          .push(resolve, reject);
       }, function canceller() {
         controller.abort();
-      }))
-        .push(function (response) {
-          if (!response.ok) {
-            return response.text().then(function (text) {
-              throw new Error("LLM " + response.status + " error: " + text.slice(0, 1000));
-            });
-          }
-          // Only the main agent loop (neither a subagent call nor a background
-          // compaction call) streams live into the chat UI - call the method
-          // declared on the "gadget_chat" gadget directly instead of threading
-          // a callback function through this acquisition call.
-          return consumeOpenAIStream(
-            response,
-            (body.is_subagent || body.compact_message_list !== undefined) ? undefined :
-              function onDelta(partial) {
-                return gadget.chat_gadget.showStreamingDelta(partial);
-              }
-          );
-        });
+      });
     })
     .allowPublicAcquisition('requestHttp', function (argument_list) {
       // Generic fetch for the http_request tool: unlike requestProcessTask,
@@ -372,14 +350,14 @@
       }
 
       return new RSVP.Queue(new RSVP.Promise(function (resolve, reject) {
-        fetch(fetch_url, fetch_options).then(resolve, reject);
+        new RSVP.Queue(fetch(fetch_url, fetch_options)).push(resolve, reject);
       }, function canceller() {
         controller.abort();
       }))
         .push(function (response) {
           var content_type = response.headers.get("content-type") || "",
             status = response.status;
-          return response.text().then(function (text) {
+          return new RSVP.Queue(response.text()).push(function (text) {
             return {
               status: status,
               content_type: content_type,
@@ -441,7 +419,7 @@
             endpoint: setting_list[5] || 'chat/completions'
           };
           gadget.mcp_server_list = overlayOAuthTokens(
-            parseMcpServerList(setting_list[6] || ''),
+            window.ChatMCP.parseServerListText(setting_list[6] || '').value || [],
             gadget.mcp_oauth_token_map
           );
         })
