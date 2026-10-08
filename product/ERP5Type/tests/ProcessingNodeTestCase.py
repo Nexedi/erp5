@@ -8,6 +8,7 @@ if six.PY2:
   from UserDict import IterableUserDict as UserDict
 else:
   from collections import UserDict
+import coverage
 import transaction
 from Testing import ZopeTestCase
 from zope.globalrequest import setRequest
@@ -151,6 +152,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
   should be processed.
   """
   _server_address = None # (host, port) of the http server if it was started, None otherwise
+  _coverage_upload_url = None
 
   @staticmethod
   def startHTTPServer(verbose=False):
@@ -249,6 +251,23 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
       self.app = self._app()
       self._registerNode(distributing=0, processing=0)
       transaction.commit()
+      self._close()
+
+  @classmethod
+  def save_coverage(cls):
+    coverage_process = coverage.Coverage.current()
+    if coverage_process is not None:
+      self = cls('save_coverage')
+      # objectValues will call ERP5Site.__of__, which will populate setSite and make
+      # it possible to import components
+      self._app().objectValues()
+      coverage_process.save()
+      if cls._coverage_upload_url:
+        import Products.ERP5Type.tests.coverage_report
+        Products.ERP5Type.tests.coverage_report.upload(
+          cls._coverage_data_file,
+          cls._coverage_upload_url,
+          cls._coverage_test_name)
       self._close()
 
   def assertNoPendingMessage(self):
