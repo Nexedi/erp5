@@ -323,7 +323,7 @@
         fetch_options;
 
       if (!target) {
-        return RSVP.resolve({error: "missing url"});
+        return {error: "missing url"};
       }
 
       if (settings.proxy_server_url) {
@@ -349,27 +349,27 @@
         };
       }
 
-      return new RSVP.Queue(new RSVP.Promise(function (resolve, reject) {
-        new RSVP.Queue(fetch(fetch_url, fetch_options)).push(resolve, reject);
+      return new RSVP.Promise(function (resolve, reject) {
+        new RSVP.Queue(fetch(fetch_url, fetch_options))
+          .push(function (response) {
+            var content_type = response.headers.get("content-type") || "",
+              status = response.status;
+            return new RSVP.Queue(response.text()).push(function (text) {
+              return {
+                status: status,
+                content_type: content_type,
+                // a generous, fixed safety cap - the tool itself applies the
+                // caller-chosen max_chars on top of this
+                text: text.length > 200000 ? text.slice(0, 200000) + "\n...[truncated]" : text
+              };
+            });
+          })
+          .push(resolve, function (error) {
+            resolve({error: error && error.message ? error.message : String(error)});
+          });
       }, function canceller() {
         controller.abort();
-      }))
-        .push(function (response) {
-          var content_type = response.headers.get("content-type") || "",
-            status = response.status;
-          return new RSVP.Queue(response.text()).push(function (text) {
-            return {
-              status: status,
-              content_type: content_type,
-              // a generous, fixed safety cap - the tool itself applies the
-              // caller-chosen max_chars on top of this
-              text: text.length > 200000 ? text.slice(0, 200000) + "\n...[truncated]" : text
-            };
-          });
-        })
-        .push(undefined, function (error) {
-          return {error: error && error.message ? error.message : String(error)};
-        });
+      });
     })
     .allowPublicAcquisition('storeTaskResult', function (argument_list) {
       var gadget = this,
