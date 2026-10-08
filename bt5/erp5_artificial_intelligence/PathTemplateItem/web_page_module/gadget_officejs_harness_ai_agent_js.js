@@ -231,7 +231,7 @@
         })
         .push(function (gadget_chat_ui) {
           gadget.gadget_chat_ui = gadget_chat_ui;
-          return gadget_chat_ui.render(options);
+          return gadget_chat_ui.render(Object.assign({}, options, {enable_cancel: true}));
         })
         .push(function () {
           if (options.chat_state === 'started') {
@@ -241,6 +241,16 @@
     })
     .allowPublicAcquisition('notifyCommentPosted', function () {
       return this.processTask(200000);
+    })
+    .allowPublicAcquisition('notifyCancelRequested', function () {
+      return this.cancelProcessing();
+    })
+    .declareMethod('cancelProcessing', function () {
+      var gadget = this;
+      if (gadget.processing_queue) {
+        gadget.cancel_requested = true;
+        gadget.processing_queue.cancel("Cancelled by user");
+      }
     })
     .declareMethod('compactMessageList', function (message_list) {
       var gadget = this,
@@ -302,11 +312,34 @@
           return { type: "function", "function": tool.definition };
         });
       gadget.tool_message_list = [];
+      gadget.processing_queue = queue_loop;
 
       function loop_call(loop_count, message_list, pending_tool_call_list) {
         var has_tool_call = Boolean(
             pending_tool_call_list && pending_tool_call_list.length
           );
+
+        function loopError(e) {
+          var cancelled = Boolean(gadget.cancel_requested),
+            error_text = cancelled ?
+                "_Cancelled by user._" :
+                ("Error: " + (e && e.message ? e.message : String(e)));
+          gadget.cancel_requested = false;
+          gadget.processing_queue = null;
+          return RSVP.all([
+            gadget.gadget_chat_ui.showMessage({ content: error_text, tool_message_list: gadget.tool_message_list }),
+            gadget.notifySubmitted({message: cancelled ? 'Cancelled' : 'Error', status: cancelled ? "success" : "error"}),
+            gadget.gadget_chat_ui.resetEditor(),
+            gadget.storeTaskResult(
+              gadget.options.jio_key,
+              {
+                message_list: JSON.stringify([]),
+                content: cancelled ? "[Cancelled by user]" : ("[Error: " + (e && e.message ? e.message : String(e)) + "]")
+              }
+            )
+          ]);
+        }
+
         if (loop_count >= max_loop_count) {
           throw new Error("processTask: too many iterations");
         }
@@ -349,7 +382,8 @@
                 resulit_list[0],
                 null
               );
-            });
+            })
+            .push(undefined, loopError);
           return;
         }
 
@@ -383,6 +417,7 @@
                 );
               });
             }
+            gadget.processing_queue = null;
             return RSVP.all([
               gadget.gadget_chat_ui.showMessage({ content: result.content , tool_message_list: gadget.tool_message_list }),
               gadget.notifySubmitted({message: 'Completed', status: "success"}),
@@ -395,7 +430,8 @@
                 }
               )
             ]);
-          });
+          })
+          .push(undefined, loopError);
       }
 
       queue_loop

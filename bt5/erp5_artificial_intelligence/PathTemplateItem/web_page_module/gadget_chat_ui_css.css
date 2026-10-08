@@ -265,3 +265,21 @@ hr#post_item {
   color: var(--chat-text-muted);
   cursor: not-allowed;
 }
+
+.chat-cancel-button {
+  border: 1px solid #D64545;
+  border-radius: 999px;
+  background: #fff;
+  color: #D64545;
+  font-weight: 600;
+  padding: 0.5em 1.4em;
+  cursor: pointer;
+  margin-top: 0px;
+  margin-right: 0.5em;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.chat-cancel-button:hover {
+  background: #D64545;
+  color: #fff;
+}

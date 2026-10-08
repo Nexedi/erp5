@@ -104,6 +104,7 @@
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("notifyCommentPosted", "notifyCommentPosted")
+    .declareAcquiredMethod("notifyCancelRequested", "notifyCancelRequested")
     .declareAcquiredMethod("getCommentPostList", "getCommentPostList")
     .declareAcquiredMethod("postComment", "postComment")
 
@@ -134,13 +135,16 @@
       var gadget = this,
         queue = new RSVP.Queue();
       if (modification_dict.hasOwnProperty("allow_submit")) {
-        var submitButton = gadget.element.querySelector("input[type=submit]");
+        var submitButton = gadget.element.querySelector("input[type=submit]"),
+          cancelButton = gadget.element.querySelector("#cancel_button");
         if (modification_dict.allow_submit) {
           submitButton.disabled = false;
           submitButton.classList.remove("ui-disabled");
+          cancelButton.style.display = "none";
         } else {
           submitButton.disabled = true;
           submitButton.classList.add("ui-disabled");
+          cancelButton.style.display = gadget.options.enable_cancel ? "inline-block" : "none";
         }
       }
       if (modification_dict.hasOwnProperty("editor_state")) {
@@ -378,5 +382,11 @@
     })
     .onEvent('submit', function () {
       return this.submitPostComment();
+    })
+    .onEvent('click', function (evt) {
+      if (!evt.target || evt.target.id !== 'cancel_button') {
+        return;
+      }
+      return this.notifyCancelRequested();
     });
 }(window, rJS, RSVP, marked));
