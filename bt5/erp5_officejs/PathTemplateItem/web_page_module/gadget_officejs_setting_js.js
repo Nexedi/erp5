@@ -5,13 +5,18 @@
 
   rJS(window)
 
+    .declareAcquiredMethod("getIndexedDBPrefix", "getIndexedDBPrefix")
+
     .ready(function (gadget) {
       // Initialize the gadget local parameters
       gadget.state_parameter_dict = {};
-      gadget.state_parameter_dict.jio_storage = jIO.createJIO({
-        type: "indexeddb",
-        database: "global-setting"
-      });
+      return gadget.getIndexedDBPrefix()
+        .push(function (prefix) {
+          gadget.state_parameter_dict.jio_storage = jIO.createJIO({
+            type: "indexeddb",
+            database: prefix + "global-setting"
+          });
+        });
     })
 
     .declareMethod('getSetting', function (key, default_value) {
