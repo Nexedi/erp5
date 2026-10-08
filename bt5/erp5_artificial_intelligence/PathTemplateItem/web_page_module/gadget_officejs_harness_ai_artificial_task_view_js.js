@@ -286,10 +286,10 @@
       }
 
       return new RSVP.Promise(function (resolve, reject) {
-        new RSVP.Queue(fetch(fetch_url, fetch_options))
-          .push(function (response) {
+        fetch(fetch_url, fetch_options)
+          .then(function (response) {
             if (!response.ok) {
-              return new RSVP.Queue(response.text()).push(function (text) {
+              return response.text().then(function (text) {
                 throw new Error("LLM " + response.status + " error: " + text.slice(0, 1000));
               });
             }
@@ -301,7 +301,7 @@
                 }
             );
           })
-          .push(resolve, reject);
+          .then(resolve, reject);
       }, function canceller() {
         controller.abort();
       });
@@ -350,11 +350,11 @@
       }
 
       return new RSVP.Promise(function (resolve, reject) {
-        new RSVP.Queue(fetch(fetch_url, fetch_options))
-          .push(function (response) {
+        fetch(fetch_url, fetch_options)
+          .then(function (response) {
             var content_type = response.headers.get("content-type") || "",
               status = response.status;
-            return new RSVP.Queue(response.text()).push(function (text) {
+            return response.text().then(function (text) {
               return {
                 status: status,
                 content_type: content_type,
@@ -364,7 +364,7 @@
               };
             });
           })
-          .push(resolve, function (error) {
+          .then(resolve, function (error) {
             resolve({error: error && error.message ? error.message : String(error)});
           });
       }, function canceller() {
