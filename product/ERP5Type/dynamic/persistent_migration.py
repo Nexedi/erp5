@@ -420,7 +420,8 @@ def enable_zodbupdate_load_monkey_patch():
     def _reconstructor(cls, base, state):
         if cls is ByteStringObject and base is str:
             base = bytes
-            state = state.encode('utf-8')
+            if isinstance(state, str):
+                state = state.encode('utf-8')
         return _reconstructor_orig(cls, base, state)
     # Make sure we do not change copyreg._reconstructore name when we monkey patching,
     # not to re-create the DateTime.DateTime _dt_reconstructor problem, although it's
