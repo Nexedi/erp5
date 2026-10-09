@@ -21,10 +21,13 @@ decoupled case), so the deep-link is exercised here, where the provider is prese
 """
 
 import json
+import os
 import unittest
 from collections import OrderedDict
 from xml.dom.minidom import parseString
+import Products.ERP5.tests
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import FileUpload
 
 
 def getNodeContent(node):
@@ -567,6 +570,96 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     ))
     bug.Bug_viewProject.validate_all_to_request(self.portal.REQUEST)
     self.assertEqual('edited', self.portal.REQUEST.get('my_description'))
+
+  def _makeUpload(self, path_list, content_type):
+    file_upload = FileUpload(os.path.join(
+      os.path.dirname(Products.ERP5.tests.__file__), 'test_data', *path_list))
+    file_upload.headers['Content-Type'] = content_type
+    return file_upload
+
+  def test_add_file_puts_image_in_default_bug_line(self):
+    bug = self.portal.bug_module.newContent(portal_type='Bug')
+    bug.Bug_addFileProject(
+      file=self._makeUpload(['images', 'erp5_logo_small.png'], 'image/png'),
+      description='Screenshot')
+    line = bug.default_bug_line
+    document, = line.contentValues()
+    self.assertEqual('Image', document.getPortalType())
+    self.assertEqual('erp5_logo_small.png', document.getTitle())
+    self.assertEqual('Screenshot', document.getDescription())
+
+  def test_add_file_reuses_default_bug_line_and_stores_non_image_as_file(self):
+    bug = self.portal.bug_module.newContent(portal_type='Bug')
+    bug.Bug_addFileProject(
+      file=self._makeUpload(['images', 'erp5_logo_small.png'], 'image/png'))
+    bug.Bug_addFileProject(
+      file=self._makeUpload(['TEST-en-002.txt'], 'text/plain'))
+    line, = bug.contentValues(portal_type='Bug Line')
+    self.assertEqual(['File', 'Image'],
+                     sorted(x.getPortalType() for x in line.contentValues()))
+
+  def test_add_file_without_file_raises(self):
+    bug = self.portal.bug_module.newContent(portal_type='Bug')
+    self.assertRaises(ValueError, bug.Bug_addFileProject, file=None)
+    self.assertEqual([], bug.contentValues(portal_type='Bug Line'))
+
+  def test_bug_line_attachment_list_lists_files_and_images(self):
+    bug = self.portal.bug_module.newContent(portal_type='Bug')
+    bug.Bug_addFileProject(
+      file=self._makeUpload(['images', 'erp5_logo_small.png'], 'image/png'))
+    line = bug.default_bug_line
+    image, = line.contentValues()
+    self.assertEqual([{'title': 'erp5_logo_small.png',
+                       'url': image.File_getDownloadUrl(),
+                       'content_type': 'Image'}],
+                     line.BugLine_getAttachmentList())
+
+  def test_bug_messages_reader_uses_attachment_column(self):
+    field = self.portal.portal_skins.erp5_web_project \
+                .Bug_viewProject.my_messages
+    self.assertIn('("attachment_column", "BugLine_getAttachmentList")',
+                  field.get_tales('renderjs_extra')._text)
+
+  def test_project_jio_actions_are_registered(self):
+    """App-only dialogs live in the project_jio_action category, which only
+    Base_filterProjectActions reads: object_jio_action would also show them in
+    the classic and generic RenderJS UIs."""
+    portal_types = self.portal.portal_types
+    add_file, = [action for action in portal_types.Bug.getActionInformationList()
+                 if action.getReference() == 'add_file_project']
+    self.assertEqual('project_jio_action', add_file.getActionType())
+    self.assertEqual(['Add portal content'], add_file.getActionPermissionList())
+    new_bug, = [action for action in portal_types.Project.getActionInformationList()
+                if action.getReference() == 'project_new_bug']
+    self.assertEqual('project_jio_action', new_bug.getActionType())
+
+  def test_add_file_dialog_posts_the_upload_to_its_script(self):
+    form = self.portal.portal_skins.erp5_web_project.Bug_viewAddFileDialogProject
+    self.assertEqual('Bug_addFileProject', form.action)
+    self.assertEqual('multipart/form-data', form.enctype)
+    self.assertEqual(['your_file', 'your_description'],
+                     [field.getId() for field in form.get_fields()])
+    self.assertFalse(form.your_description.get_value('required'))
+
+  def test_filter_project_actions_merges_project_jio_action(self):
+    """project_jio_action is merged into object_jio_action whatever the dict
+    order, and the forge new_file action is replaced by the app dialog."""
+    add_file_action = {'id': 'add_file_project'}
+    edit_action = {'id': 'edit'}
+    for category_name_list in (('project_jio_action', 'object_jio_action'),
+                               ('object_jio_action', 'project_jio_action')):
+      actions = OrderedDict()
+      for category_name in category_name_list:
+        if category_name == 'project_jio_action':
+          actions[category_name] = [add_file_action]
+        else:
+          actions[category_name] = [edit_action, {'id': 'new_file'}]
+      result = self.portal.Base_filterProjectActions(actions=actions)
+      self.assertEqual(sorted([add_file_action, edit_action],
+                              key=lambda x: x['id']),
+                       sorted(result['object_jio_action'],
+                              key=lambda x: x['id']))
+      self.assertNotIn('project_jio_action', result)
 
 def test_suite():
   suite = unittest.TestSuite()
