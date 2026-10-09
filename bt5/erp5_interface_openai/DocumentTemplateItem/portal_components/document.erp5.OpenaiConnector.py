@@ -111,7 +111,7 @@ class OpenaiConnector(XMLObject):
         continue
       if role == "assistant" and message.get("tool_calls"):
         if content:
-          input_list.append({"role": "assistant", "content": content})
+          input_list.append({"type": "message", "role": "assistant", "content": content})
         for tool_call in message["tool_calls"]:
           function = tool_call.get("function") or {}
           input_list.append({
@@ -122,7 +122,7 @@ class OpenaiConnector(XMLObject):
           })
         continue
       if content:
-        input_list.append({"role": role or "user",
+        input_list.append({"type": "message", "role": role or "user",
                            "content": self._buildResponsesContent(content)})
     return input_list
 
