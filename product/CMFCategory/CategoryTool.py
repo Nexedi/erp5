@@ -1229,7 +1229,10 @@ class CategoryTool(BaseTool):
             pass
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getAcquiredCategoryList' )
-    def getAcquiredCategoryList(self, context, base_category=None):
+    def getAcquiredCategoryList(self, context=None, base_category=None):
+      if context is None:
+        # When portal_categories.getAcquiredCategoryList() is called during indexation
+        return []
       result = self.getAcquiredCategoryMembershipList(context,
                      base_category=base_category or self.getBaseCategoryList(context=context))
       for c in self._getCategoryList(context):
