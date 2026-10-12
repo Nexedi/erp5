@@ -434,8 +434,7 @@
             getUrlParameterDict('bug_module',
                                 "view",
                                 [["delivery.start_date", "descending"]],
-                                ["title", "description", "source_person_title", "destination_person_title",
-                                 "delivery.start_date", "translated_simulation_state_title"],
+                                null,
                                 createProjectQuery(project_list[i].id,
                                                    [["selection_domain_state_bug_domain", "open"]]))
           );
