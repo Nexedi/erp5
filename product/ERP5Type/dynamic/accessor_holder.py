@@ -399,8 +399,14 @@ def getAccessorHolderList(site, portal_type_name, property_sheet_value_list):
         expression_context = createExpressionContext(site)
 
       # Generate the accessor holder as it has not been done yet
-      accessor_holder_class = property_sheet.createAccessorHolder(
-        expression_context, site)
+      try:
+        accessor_holder_class = property_sheet.createAccessorHolder(
+          expression_context, site)
+      except RuntimeError:
+        LOG("ERP5Type.dynamic", WARNING,
+            "Could not generate accessor holder for %s" % property_sheet_name,
+            error=True)
+        continue
 
       accessor_holder_module.registerAccessorHolder(accessor_holder_class)
       accessor_holder_list.append(accessor_holder_class)
