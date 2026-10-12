@@ -1,0 +1,33 @@
+<dtml-var manage_page_header>
+
+<main class="container-fluid">
+<dtml-var "manage_form_title(this(), _,
+           form_title='Add ERP5 Page Template',
+           )">
+
+<p class="form-help">
+ERP5 Page Templates are Zope Page Templates integrated in ERP5 Interface
+</p>
+
+<form action="addPageTemplateThroughZMI" method="POST">
+  <div class="form-group row">
+    <label for="id" class="form-label col-sm-3 col-md-2">Id</label>
+    <div class="col-sm-9 col-md-10">
+      <input id="id" class="form-control code" type="text" name="id" />
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="title" class="form-label col-sm-3 col-md-2">Title</label>
+    <div class="col-sm-9 col-md-10">
+      <input id="title" class="form-control" type="text" name="title" />
+    </div>
+  </div>
+  <div class="zmi-controls">
+    <input class="btn btn-primary" type="submit" name="submit" value="Add" />
+    <input class="btn btn-primary" type="submit" name="submit_add_and_edit" value="Add and Edit" />
+  </div>
+
+</form>
+</main>
+
+<dtml-var manage_page_footer>
