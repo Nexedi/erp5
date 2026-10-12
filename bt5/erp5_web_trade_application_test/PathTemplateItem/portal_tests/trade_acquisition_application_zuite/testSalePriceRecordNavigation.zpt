@@ -1,0 +1,264 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test trade Acquisition Application: Sale Price Record</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test trade Acquisition Application: Sale Price Record</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/trade_application/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Menu</td>
+  <td></td>
+</tr>
+
+
+
+<!-- Go to sale price record module -->
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='header']//button[text()='Menu' and @type='submit']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Sale</td>
+  <td></td>
+<tr>
+
+<tr>
+  <td>click</td>
+  <td>link=Sale Price Record</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>New</td>
+  <td></td>
+</tr>
+
+
+<!-- Create new record -->
+<tr>
+  <td>click</td>
+  <td>link=New</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Add</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>5000</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>name=product</td>
+  <td>Nexedi Product</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>name=next_owner</td>
+  <td>Nexedi</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>name=previous_owner</td>
+  <td>Nexedi1</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>name=previous_location</td>
+  <td>Marcq-en-Barœul</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>name=base_price</td>
+  <td>33.56</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>name=price_currency</td>
+  <td>RMB</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>name=priced_quantity</td>
+  <td>66</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>name=quantity_unit</td>
+  <td>Weight/Kilogram</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>name=contract_no</td>
+  <td>123456</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>name=comment</td>
+  <td>A great record</td>
+</tr>
+
+<tr>
+  <td>pause</td>
+  <td>1000</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>name=next_owner_title</td>
+  <td>Nexedi</td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>name=next_owner_reference</td>
+  <td>Nexedi</td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>name=default_address_city</td>
+  <td>Marcq-en-Barœul</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>name=default_address_region</td>
+  <td>Europe</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>name=default_address_street_address</td>
+  <td>270 Bd Clemenceau</td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='header']//button[text()='Add' and @type='submit']</td>
+  <td></td>
+</tr>
+
+
+
+<!-- Check record data -->
+
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Nexedi Product</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>link=Nexedi Product</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Product Title</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>5000</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>name=product</td>
+  <td>Nexedi Product</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>name=next_owner</td>
+  <td>Nexedi</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>name=previous_owner</td>
+  <td>Nexedi1</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>name=previous_location</td>
+  <td>Marcq-en-Barœul</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>name=base_price</td>
+  <td>33.56</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//select[@name='price_currency']/option[@selected='selected']</td>
+  <td>RMB</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>name=priced_quantity</td>
+  <td>66</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//select[@name='quantity_unit']/option[@selected='selected']</td>
+  <td>Weight/Kilogram</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>name=contract_no</td>
+  <td>123456</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>name=comment</td>
+  <td>A great record</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>name=next_owner_title</td>
+  <td>Nexedi</td>
+</tr>
+
+<tr>
+  <td>verifyValue</td>
+  <td>name=next_owner_reference</td>
+  <td>Nexedi</td>
+</tr>
+
+<tr>
+  <td>verifyValue</td>
+  <td>name=default_address_city</td>
+  <td>Marcq-en-Barœul</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//select[@name='default_address_region']/option[@selected='selected']</td>
+  <td>Europe</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>name=default_address_street_address</td>
+  <td>270 Bd Clemenceau</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
