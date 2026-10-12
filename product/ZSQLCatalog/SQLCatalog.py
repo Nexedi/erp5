@@ -274,7 +274,7 @@ class LazyIndexationParameterList(tuple):
             'Failed to call method %s on %r' % (attribute, document),
             error=True,
           )
-          value = None
+          raise
       self._global_cache[global_cache_key] = value
     return value
 
