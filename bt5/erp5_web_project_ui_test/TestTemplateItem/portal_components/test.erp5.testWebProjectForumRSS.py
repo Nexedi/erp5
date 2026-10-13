@@ -633,6 +633,21 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     self.assertIn('("attachment_column", "BugLine_getAttachmentList")',
                   field.get_tales('renderjs_extra')._text)
 
+  def test_bug_line_app_view_lists_attachments_above_its_text(self):
+    """The forge BugLine_view has no attachments. The app view lists them above
+    the text with objectValues: the line a first upload lands on is not indexed."""
+    action, = [x for x in self.portal.portal_types['Bug Line']
+                                   .getActionInformationList()
+               if x.getReference() == 'project_view']
+    self.assertIn('BugLine_viewProject', action.getActionText())
+    form = self.portal.portal_skins.erp5_web_project.BugLine_viewProject
+    self.assertEqual(['listbox', 'my_text_content'],
+                     [field.getId() for field in form.get_fields_in_group('bottom')])
+    self.assertEqual('objectValues',
+                     form.listbox.get_value('list_method').getMethodName())
+    self.assertEqual(['File', 'Image'],
+                     [x[0] for x in form.listbox.get_value('portal_types')])
+
   def test_project_jio_actions_are_registered(self):
     """App-only dialogs live in the project_jio_action category, which only
     Base_filterProjectActions reads: object_jio_action would also show them in
