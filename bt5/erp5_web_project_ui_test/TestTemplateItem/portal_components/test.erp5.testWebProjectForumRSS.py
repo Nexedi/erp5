@@ -21,10 +21,13 @@ decoupled case), so the deep-link is exercised here, where the provider is prese
 """
 
 import json
+import os
 import unittest
 from collections import OrderedDict
 from xml.dom.minidom import parseString
+import Products.ERP5.tests
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import FileUpload
 
 
 def getNodeContent(node):
@@ -50,7 +53,8 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
 
   def beforeTearDown(self):
     self.abort()
-    for module in (self.portal.discussion_thread_module,):
+    for module in (self.portal.discussion_thread_module,
+                   self.portal.bug_module):
       module.manage_delObjects(list(module.objectIds()))
     self.tic()
 
@@ -332,12 +336,15 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     """Minting a Restricted Access Token is a write, and it happens only on the
     reader's click, like the old forum's generate button. Rendering the forum
     view must only hand the gadget the jio_key it calls on click: evaluating the
-    field creates nothing and runs no token query."""
+    field creates nothing and runs no token query. The forum page offers the
+    all-forums feed of the forum_feed section, not a per-forum one."""
     forum, _ = self._createForumThreadWithPosts(n_posts=1)
     token_id_list = list(self.portal.access_token_module.objectIds())
     field = forum.DiscussionForum_viewThreadProject.rss_link_gadget
-    self.assertEqual([('jio_key', forum.getRelativeUrl())],
-                     field.get_value('renderjs_extra'))
+    self.assertEqual(
+      [('jio_key', self._getForumFeedSection().getRelativeUrl()),
+       ('url_script', 'WebSection_getForumFeedRssAccessUrlAsJSON')],
+      field.get_value('renderjs_extra'))
     self.assertEqual(token_id_list,
                      list(self.portal.access_token_module.objectIds()))
 
@@ -363,6 +370,7 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     login_reference = 'rss-reader-login'
     person = self.portal.person_module.newContent(
       portal_type='Person', reference='TESTP-rss-reader')
+    person.manage_setLocalRoles(person.getUserId(), ['Auditor'])
     person.newContent(portal_type='Assignment').open()
     person.newContent(portal_type='ERP5 Login',
                       reference=login_reference).validate()
@@ -382,6 +390,315 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     self.assertEqual('validated', token.getValidationState())
     self.assertIn('access_token=%s' % token.getId(), rss_url)
     self.assertIn('access_token_secret=%s' % token.getReference(), rss_url)
+
+  def _getForumFeedSection(self):
+    return self.portal.web_site_module.project_management.forum_feed
+
+  def _createDraftThreadWithPost(self):
+    thread = self.portal.discussion_thread_module.newContent(
+      portal_type='Discussion Thread', title='draft thread')
+    post = thread.newContent(portal_type='Discussion Post', title='draft post')
+    self.tic()
+    self.assertEqual('draft', thread.getValidationState())
+    return post
+
+  def test_forum_feed_list_covers_every_forum(self):
+    """The aggregated feed is not scoped to one forum: posts of threads from
+    two different forums come back together, newest first."""
+    _, thread_a = self._createForumThreadWithPosts(n_posts=2)
+    _, thread_b = self._createForumThreadWithPosts(n_posts=1)
+    post_list = self._getForumFeedSection().WebSection_getLatestForumPostList()
+    self.assertEqual(
+      sorted(x.getRelativeUrl() for x in
+             thread_a.objectValues() + thread_b.objectValues()),
+      sorted(x.getRelativeUrl() for x in post_list))
+    date_list = [x.getObject().getModificationDate() for x in post_list]
+    self.assertEqual(sorted(date_list, reverse=True), date_list)
+
+  def test_forum_feed_list_skips_posts_of_unlisted_threads(self):
+    """Discussion Post has no workflow of its own, so the thread state is
+    applied by the second query: a post of a draft thread must not appear."""
+    _, thread = self._createForumThreadWithPosts(n_posts=1)
+    draft_post = self._createDraftThreadWithPost()
+    url_list = [x.getRelativeUrl() for x in
+                self._getForumFeedSection().WebSection_getLatestForumPostList()]
+    self.assertNotIn(draft_post.getRelativeUrl(), url_list)
+    self.assertEqual([x.getRelativeUrl() for x in thread.objectValues()],
+                     url_list)
+
+  def test_forum_feed_list_limit_and_size_accept_strings(self):
+    """The listbox passes limit and size from the URL, so they arrive as
+    strings; the smaller of the two wins."""
+    self._createForumThreadWithPosts(n_posts=3)
+    section = self._getForumFeedSection()
+    self.assertEqual(3, len(section.WebSection_getLatestForumPostList()))
+    self.assertEqual(2, len(section.WebSection_getLatestForumPostList(limit='2')))
+    self.assertEqual(
+      1, len(section.WebSection_getLatestForumPostList(limit='2', size='1')))
+
+  def test_forum_feed_rss_links_open_each_post_in_its_own_forum(self):
+    """Items come from several forums; each <link> must seed the history with
+    the forum of that post (p.jio_key) so the top bar leads back to it."""
+    forum_a, thread_a = self._createForumThreadWithPosts(n_posts=1)
+    forum_b, thread_b = self._createForumThreadWithPosts(n_posts=1)
+    doc = parseString(
+      self._getForumFeedSection().WebSection_viewLatestForumPostListAsRSS())
+    link_list = [getSubnodeContent(x, 'link')
+                 for x in doc.getElementsByTagName('item')]
+    self.assertEqual(2, len(link_list))
+    for forum, thread in ((forum_a, thread_a), (forum_b, thread_b)):
+      link, = [x for x in link_list
+               if 'n.jio_key=%s&' % thread.getRelativeUrl() in x]
+      self.assertIn('#!push_history_stored_state', link)
+      self.assertIn('p.jio_key=%s&' % forum.getRelativeUrl(), link)
+
+  def test_forum_feed_section_is_wired_to_forum_page_and_link_page(self):
+    """The forum view field and the Web Section project_view action both name
+    the section by its relative url; a rename on either side breaks the link
+    silently, and the link page must hand the gadget the aggregated endpoint
+    without minting a token on render."""
+    section = self._getForumFeedSection()
+    relative_url = 'web_site_module/project_management/forum_feed'
+    self.assertEqual(relative_url, section.getRelativeUrl())
+    self.assertEqual('Web Section', section.getPortalType())
+    forum_field = self.portal.DiscussionForum_viewThreadProject.rss_link_gadget
+    self.assertIn(('jio_key', relative_url),
+                  forum_field.get_value('renderjs_extra'))
+    action, = [x for x in self.portal.portal_types['Web Section']
+                                   .getActionInformationList()
+               if x.getReference() == 'project_view']
+    self.assertIn(relative_url, action.getConditionText())
+    self.assertIn('WebSection_viewForumFeedProject', action.getActionText())
+    token_id_list = list(self.portal.access_token_module.objectIds())
+    field = section.WebSection_viewForumFeedProject.rss_link_gadget
+    self.assertEqual('gadget_project_rss_link.html', field.get_value('gadget_url'))
+    self.assertEqual(
+      [('jio_key', relative_url),
+       ('url_script', 'WebSection_getForumFeedRssAccessUrlAsJSON')],
+      field.get_value('renderjs_extra'))
+    self.assertEqual(token_id_list,
+                     list(self.portal.access_token_module.objectIds()))
+
+  def test_forum_feed_gadget_field_default_is_not_empty(self):
+    """WebSection_viewForumFeedProject is a form_view holding a single
+    GadgetField; with an empty default, non-editable mode drops it and the
+    link page renders blank (same workaround as the quick overview field)."""
+    field = self.portal.portal_skins.erp5_web_project \
+                .WebSection_viewForumFeedProject.rss_link_gadget
+    self.assertNotEqual('', field.get_value('default'))
+
+  def test_forum_feed_rss_url_endpoint_answers_json(self):
+    """Same JSON shape as the per-forum endpoint, pointing at the aggregated
+    RSS form of the section."""
+    result = json.loads(
+      self._getForumFeedSection().WebSection_getForumFeedRssAccessUrlAsJSON())
+    self.assertIn(
+      'forum_feed/WebSection_viewLatestForumPostListAsRSS?', result['rss_url'])
+
+  def test_forum_feed_rss_access_url_for_non_manager_reader(self):
+    """Base_getRssAccessUrl is shared with the forum action; a reader's token
+    must bind to the aggregated feed url and be read before validate()."""
+    section = self._getForumFeedSection()
+    token_module = self.portal.access_token_module
+    existing_token_id_list = list(token_module.objectIds())
+    login_reference = 'forum-feed-reader-login'
+    person = self.portal.person_module.newContent(
+      portal_type='Person', reference='TESTP-forum-feed-reader')
+    person.manage_setLocalRoles(person.getUserId(), ['Auditor'])
+    person.newContent(portal_type='Assignment').open()
+    person.newContent(portal_type='ERP5 Login',
+                      reference=login_reference).validate()
+    token_module.manage_addLocalRoles(person.getUserId(), ['Author'])
+    self.tic()
+
+    self.loginByUserName(login_reference)
+    try:
+      result = json.loads(section.WebSection_getForumFeedRssAccessUrlAsJSON())
+    finally:
+      self.login()
+
+    token, = [x for x in token_module.objectValues()
+              if x.getId() not in existing_token_id_list]
+    self.assertEqual('validated', token.getValidationState())
+    self.assertEqual(
+      '%s/WebSection_viewLatestForumPostListAsRSS' % section.absolute_url(),
+      token.getUrlString())
+    self.assertIn('access_token=%s' % token.getId(), result['rss_url'])
+    self.assertIn('access_token_secret=%s' % token.getReference(),
+                  result['rss_url'])
+
+  def test_bug_line_without_content_shows_its_title(self):
+    """Confirming a bug without comment adds an empty text/plain Bug Line;
+    the Bug messages reader must show its title instead of a blank post."""
+    bug = self.portal.bug_module.newContent(portal_type='Bug',
+                                            reference='content-or-title')
+    bug.confirm()
+    line, = bug.contentValues(portal_type='Bug Line')
+    self.assertEqual('', line.getTextContent(''))
+    self.assertEqual('Bug content-or-title was Open', line.getTitle())
+    self.assertEqual(line.getTitle(), line.BugLine_getContentOrTitle())
+
+  def test_bug_line_title_fallback_is_html_escaped(self):
+    bug = self.portal.bug_module.newContent(portal_type='Bug')
+    line = bug.newContent(portal_type='Bug Line', title='a <b> c')
+    self.assertEqual('a &lt;b&gt; c', line.BugLine_getContentOrTitle())
+
+  def test_bug_line_with_content_shows_its_content(self):
+    bug = self.portal.bug_module.newContent(portal_type='Bug')
+    line = bug.newContent(portal_type='Bug Line', title='Line title',
+                          text_content='<p>Line body</p>',
+                          content_type='text/html')
+    result = line.BugLine_getContentOrTitle()
+    self.assertIn('Line body', result)
+    self.assertNotIn('Line title', result)
+
+  def test_bug_messages_reader_uses_content_or_title_column(self):
+    field = self.portal.portal_skins.erp5_web_project \
+                .Bug_viewProject.my_messages
+    self.assertIn('("content_column", "BugLine_getContentOrTitle")',
+                  field.get_tales('renderjs_extra')._text)
+
+  def test_bug_view_validates_on_save(self):
+    bug = self.portal.bug_module.newContent(portal_type='Bug', title='Saved')
+    self.portal.REQUEST.other.update(dict(
+      field_my_title='Saved',
+      field_my_description='edited',
+      field_my_source_project_title='',
+      field_my_source_title='',
+      field_my_bug_severity='',
+      field_my_bug_priority='',
+    ))
+    bug.Bug_viewProject.validate_all_to_request(self.portal.REQUEST)
+    self.assertEqual('edited', self.portal.REQUEST.get('my_description'))
+
+  def _makeUpload(self, path_list, content_type):
+    file_upload = FileUpload(os.path.join(
+      os.path.dirname(Products.ERP5.tests.__file__), 'test_data', *path_list))
+    file_upload.headers['Content-Type'] = content_type
+    return file_upload
+
+  def test_add_file_puts_image_in_default_bug_line(self):
+    bug = self.portal.bug_module.newContent(portal_type='Bug')
+    bug.Bug_addFileProject(
+      file=self._makeUpload(['images', 'erp5_logo_small.png'], 'image/png'),
+      description='Screenshot')
+    line = bug.default_bug_line
+    document, = line.contentValues()
+    self.assertEqual('Image', document.getPortalType())
+    self.assertEqual('erp5_logo_small.png', document.getTitle())
+    self.assertEqual('Screenshot', document.getDescription())
+
+  def test_add_file_reuses_default_bug_line_and_stores_non_image_as_file(self):
+    bug = self.portal.bug_module.newContent(portal_type='Bug')
+    bug.Bug_addFileProject(
+      file=self._makeUpload(['images', 'erp5_logo_small.png'], 'image/png'))
+    bug.Bug_addFileProject(
+      file=self._makeUpload(['TEST-en-002.txt'], 'text/plain'))
+    line, = bug.contentValues(portal_type='Bug Line')
+    self.assertEqual(['File', 'Image'],
+                     sorted(x.getPortalType() for x in line.contentValues()))
+
+  def test_add_file_redirects_to_new_bug_line_then_to_bug(self):
+    """The bug messages list bug lines from the catalog, so the first upload,
+    which creates the line, lands on that line; later ones go back to the bug."""
+    bug = self.portal.bug_module.newContent(portal_type='Bug')
+    redirect_url = bug.Bug_addFileProject(
+      file=self._makeUpload(['images', 'erp5_logo_small.png'], 'image/png'))
+    self.assertTrue(redirect_url.startswith(
+      '%s/view' % bug.default_bug_line.absolute_url()), redirect_url)
+    redirect_url = bug.Bug_addFileProject(
+      file=self._makeUpload(['TEST-en-002.txt'], 'text/plain'))
+    self.assertTrue(redirect_url.startswith(
+      '%s/view' % bug.absolute_url()), redirect_url)
+
+  def test_add_file_without_file_raises(self):
+    bug = self.portal.bug_module.newContent(portal_type='Bug')
+    self.assertRaises(ValueError, bug.Bug_addFileProject, file=None)
+    self.assertEqual([], bug.contentValues(portal_type='Bug Line'))
+
+  def test_bug_line_attachment_list_lists_files_and_images(self):
+    bug = self.portal.bug_module.newContent(portal_type='Bug')
+    bug.Bug_addFileProject(
+      file=self._makeUpload(['images', 'erp5_logo_small.png'], 'image/png'))
+    line = bug.default_bug_line
+    image, = line.contentValues()
+    self.assertEqual([{'title': 'erp5_logo_small.png',
+                       'url': image.File_getDownloadUrl(),
+                       'content_type': 'Image'}],
+                     line.BugLine_getAttachmentList())
+
+  def test_bug_messages_reader_uses_attachment_column(self):
+    field = self.portal.portal_skins.erp5_web_project \
+                .Bug_viewProject.my_messages
+    self.assertIn('("attachment_column", "BugLine_getAttachmentList")',
+                  field.get_tales('renderjs_extra')._text)
+
+  def test_project_jio_actions_are_registered(self):
+    """App-only dialogs live in the project_jio_action category, which only
+    Base_filterProjectActions reads: object_jio_action would also show them in
+    the classic and generic RenderJS UIs."""
+    portal_types = self.portal.portal_types
+    add_file, = [action for action in portal_types.Bug.getActionInformationList()
+                 if action.getReference() == 'add_file_project']
+    self.assertEqual('project_jio_action', add_file.getActionType())
+    self.assertEqual(['Add portal content'], add_file.getActionPermissionList())
+    new_bug, = [action for action in portal_types.Project.getActionInformationList()
+                if action.getReference() == 'project_new_bug']
+    self.assertEqual('project_jio_action', new_bug.getActionType())
+
+  def test_add_file_dialog_posts_the_upload_to_its_script(self):
+    form = self.portal.portal_skins.erp5_web_project.Bug_viewAddFileDialogProject
+    self.assertEqual('Bug_addFileProject', form.action)
+    self.assertEqual('multipart/form-data', form.enctype)
+    self.assertEqual(['your_file', 'your_description'],
+                     [field.getId() for field in form.get_fields()])
+    self.assertFalse(form.your_description.get_value('required'))
+
+  def test_filter_project_actions_merges_project_jio_action(self):
+    """project_jio_action is merged into object_jio_action whatever the dict
+    order, and the forge new_file action is replaced by the app dialog."""
+    add_file_action = {'id': 'add_file_project'}
+    edit_action = {'id': 'edit'}
+    for category_name_list in (('project_jio_action', 'object_jio_action'),
+                               ('object_jio_action', 'project_jio_action')):
+      actions = OrderedDict()
+      for category_name in category_name_list:
+        if category_name == 'project_jio_action':
+          actions[category_name] = [add_file_action]
+        else:
+          actions[category_name] = [edit_action, {'id': 'new_file'}]
+      result = self.portal.Base_filterProjectActions(actions=actions)
+      self.assertEqual(sorted([add_file_action, edit_action],
+                              key=lambda x: x['id']),
+                       sorted(result['object_jio_action'],
+                              key=lambda x: x['id']))
+      self.assertNotIn('project_jio_action', result)
+
+  def test_filter_project_actions_drops_workflow_on_discussion_documents(self):
+    """The app hides the publication transitions of forums and threads; the
+    document is the one HAL renders, read from relative_url in the request."""
+    for portal_type in ('Discussion Forum', 'Discussion Thread'):
+      document = self.portal.getDefaultModule(portal_type).newContent(
+        portal_type=portal_type)
+      self.portal.REQUEST.form['relative_url'] = document.getRelativeUrl()
+      actions = {'workflow': [{'id': 'release_action'}]}
+      result = self.portal.Base_filterProjectActions(actions=actions)
+      self.assertNotIn('workflow', result, portal_type)
+
+  def test_filter_project_actions_keeps_workflow_on_other_documents(self):
+    bug = self.portal.bug_module.newContent(portal_type='Bug')
+    self.portal.REQUEST.form['relative_url'] = bug.getRelativeUrl()
+    workflow_action_list = [{'id': 'open_action'}]
+    result = self.portal.Base_filterProjectActions(
+      actions={'workflow': workflow_action_list})
+    self.assertEqual(workflow_action_list, result['workflow'])
+
+  def test_filter_project_actions_keeps_workflow_without_relative_url(self):
+    self.assertNotIn('relative_url', self.portal.REQUEST.form)
+    workflow_action_list = [{'id': 'release_action'}]
+    result = self.portal.Base_filterProjectActions(
+      actions={'workflow': workflow_action_list})
+    self.assertEqual(workflow_action_list, result['workflow'])
 
 def test_suite():
   suite = unittest.TestSuite()
