@@ -661,6 +661,32 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
                               key=lambda x: x['id']))
       self.assertNotIn('project_jio_action', result)
 
+  def test_filter_project_actions_drops_workflow_on_discussion_documents(self):
+    """The app hides the publication transitions of forums and threads; the
+    document is the one HAL renders, read from relative_url in the request."""
+    for portal_type in ('Discussion Forum', 'Discussion Thread'):
+      document = self.portal.getDefaultModule(portal_type).newContent(
+        portal_type=portal_type)
+      self.portal.REQUEST.form['relative_url'] = document.getRelativeUrl()
+      actions = {'workflow': [{'id': 'release_action'}]}
+      result = self.portal.Base_filterProjectActions(actions=actions)
+      self.assertNotIn('workflow', result, portal_type)
+
+  def test_filter_project_actions_keeps_workflow_on_other_documents(self):
+    bug = self.portal.bug_module.newContent(portal_type='Bug')
+    self.portal.REQUEST.form['relative_url'] = bug.getRelativeUrl()
+    workflow_action_list = [{'id': 'open_action'}]
+    result = self.portal.Base_filterProjectActions(
+      actions={'workflow': workflow_action_list})
+    self.assertEqual(workflow_action_list, result['workflow'])
+
+  def test_filter_project_actions_keeps_workflow_without_relative_url(self):
+    self.assertNotIn('relative_url', self.portal.REQUEST.form)
+    workflow_action_list = [{'id': 'release_action'}]
+    result = self.portal.Base_filterProjectActions(
+      actions={'workflow': workflow_action_list})
+    self.assertEqual(workflow_action_list, result['workflow'])
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(
