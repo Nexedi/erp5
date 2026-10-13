@@ -598,6 +598,19 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     self.assertEqual(['File', 'Image'],
                      sorted(x.getPortalType() for x in line.contentValues()))
 
+  def test_add_file_redirects_to_new_bug_line_then_to_bug(self):
+    """The bug messages list bug lines from the catalog, so the first upload,
+    which creates the line, lands on that line; later ones go back to the bug."""
+    bug = self.portal.bug_module.newContent(portal_type='Bug')
+    redirect_url = bug.Bug_addFileProject(
+      file=self._makeUpload(['images', 'erp5_logo_small.png'], 'image/png'))
+    self.assertTrue(redirect_url.startswith(
+      '%s/view' % bug.default_bug_line.absolute_url()), redirect_url)
+    redirect_url = bug.Bug_addFileProject(
+      file=self._makeUpload(['TEST-en-002.txt'], 'text/plain'))
+    self.assertTrue(redirect_url.startswith(
+      '%s/view' % bug.absolute_url()), redirect_url)
+
   def test_add_file_without_file_raises(self):
     bug = self.portal.bug_module.newContent(portal_type='Bug')
     self.assertRaises(ValueError, bug.Bug_addFileProject, file=None)
