@@ -231,7 +231,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>rss_link_gadget</string> </value>
+                    <value> <string>RSS feed of all your forums</string> </value>
                 </item>
                 <item>
                     <key> <string>validator_field_id</string> </key>
@@ -255,7 +255,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [("jio_key", here.getRelativeUrl())]</string> </value>
+            <value> <string>python: [("jio_key", "web_site_module/project_management/forum_feed"), ("url_script", "WebSection_getForumFeedRssAccessUrlAsJSON")]</string> </value>
         </item>
       </dictionary>
     </pickle>

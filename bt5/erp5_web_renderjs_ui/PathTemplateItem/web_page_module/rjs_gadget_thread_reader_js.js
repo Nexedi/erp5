@@ -162,7 +162,9 @@
             date_column: options.date_column || 'modification_date',
             sort_order: options.sort_order || 'ASC',
             source_column: options.source_column || 'source_title',
+            content_column: options.content_column || 'asStrippedHTML',
             attachment_column: options.attachment_column || 'Event_getAttachmentList',
+            post_link: options.post_link || false,
             // Force line calculation in any case
             render_timestamp: new Date().getTime(),
             first_render: true,
@@ -216,7 +218,9 @@
             }
             return gadget.declareGadget('gadget_html_viewer.html')
               .push(function (viewer) {
-                return viewer.render({value: entry.value.asStrippedHTML})
+                return viewer.render({
+                  value: entry.value[gadget.state.content_column]
+                })
                   .push(function () {
                     return viewer;
                   });
@@ -226,7 +230,23 @@
             {command: 'change', options: first_param},
             {command: 'change', options: prev_param},
             {command: 'change', options: next_param}
-          ])
+          ]),
+          // Same link as a listbox line, so the post page can browse its siblings
+          post_url_list: gadget.state.post_link ? gadget.getUrlForList(
+            allDocs_result.data.rows.map(function (entry, i) {
+              return {
+                command: 'index',
+                options: {
+                  jio_key: entry.id,
+                  uid: entry.value.uid,
+                  selection_index: gadget.state.begin_from + i,
+                  query: gadget.state.query_string,
+                  "sort_list:json": [[gadget.state.date_column, gadget.state.sort_order],
+                                     ['uid', 'ASC']]
+                }
+              };
+            })
+          ) : []
         }))
           .push(function (result_dict) {
             var now = new Date();
@@ -240,12 +260,28 @@
                 var source_title = entry.value[gadget.state.source_column] || '',
                   attachment_list = entry.value[gadget.state.attachment_column] || [],
                   attachment_element_list = [],
+                  post_element_list = [],
                   j,
                   word_list = source_title.split(' '),
-                  source_short_title;
+                  source_short_title,
+                  time_element = domsugar('time', {
+                    datetime: entry.value[gadget.state.date_column],
+                    title: entry.value[gadget.state.date_column],
+                    text: getRelativeTimeString(
+                      gadget.state.language,
+                      now,
+                      new Date(entry.value[gadget.state.date_column])
+                    )
+                  });
+
+                if (gadget.state.post_link) {
+                  time_element = domsugar('a', {
+                    href: result_dict.post_url_list[i]
+                  }, [time_element]);
+                }
 
                 if (word_list.length === 1) {
-                  source_short_title = (word_list[0][0] || '?') + (word_list[0][1] || '');
+                  source_short_title = (word_list[0][0] || ' ') + (word_list[0][1] || '');
                 } else {
                   source_short_title = word_list[0][0] + word_list[1][0];
                 }
@@ -265,32 +301,25 @@
                   );
                 }
 
-                return domsugar('li', [
-                  domsugar('div', {
+                if (source_short_title) {
+                  post_element_list.push(domsugar('div', {
                     class: 'post_avatar',
                     text: source_short_title
-                  }),
-                  domsugar('div', {
-                    class: 'post_content'
-                  }, [
+                  }));
+                }
+                post_element_list.push(
+                  domsugar('div', {class: 'post_content'}, [
                     domsugar('strong', {text: source_title}),
                     " ",
-                    domsugar('time', {
-                      datetime: entry.value[gadget.state.date_column],
-                      title: entry.value[gadget.state.date_column],
-                      text: getRelativeTimeString(
-                        gadget.state.language,
-                        now,
-                        new Date(entry.value[gadget.state.date_column])
-                      )
-                    }),
+                    time_element,
                     domsugar('br'),
                     result_dict.viewer_list[i].element,
                     domsugar('br'),
                     domsugar('ul', attachment_element_list)
-                    // domsugar('hr')
                   ])
-                ]);
+                );
+
+                return domsugar('li', post_element_list);
               }));
             setPaginationElement(gadget, allDocs_result.data.total_rows,
                                  result_dict.url_list,
@@ -303,7 +332,7 @@
       // update relative time
       var now = new Date(),
         gadget = this;
-      this.element.querySelectorAll("div.post_content > time").forEach(
+      this.element.querySelectorAll("div.post_content time").forEach(
         function (element) {
           element.textContent = getRelativeTimeString(
             gadget.state.language,
@@ -325,15 +354,20 @@
 
       var gadget = this,
         limit_options = (gadget.state.lines === 0) ? undefined
-          : [gadget.state.begin_from, gadget.state.lines + 1];
+          : [gadget.state.begin_from, gadget.state.lines + 1],
+        select_list = [gadget.state.content_column, gadget.state.date_column,
+                       gadget.state.source_column,
+                       gadget.state.attachment_column];
 
+      if (gadget.state.post_link) {
+        select_list.push('uid');
+      }
       return gadget.jio_allDocs({
         query: gadget.state.query_string,
         limit: limit_options,
-        select_list: ['asStrippedHTML', gadget.state.date_column,
-                      gadget.state.source_column,
-                      'Event_getAttachmentList'],
-        sort_on: [[gadget.state.date_column, 'ASC'], ['uid', 'ASC']]
+        select_list: select_list,
+        sort_on: [[gadget.state.date_column, gadget.state.sort_order],
+                  ['uid', 'ASC']]
       })
         .push(function (result) {
           return gadget.changeState({
