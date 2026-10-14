@@ -563,15 +563,11 @@ NOTE: logos will disappear in wkhtmltopdf if they go beyond the available space
 }
 
 /* === list formatting === */
-.ci-book ol {
-  list-style-position: inside;
-}
 .ci-book ul {
   list-style: none;
   list-style-position: inside;
 }
-.ci-book ul li,
-.ci-book ol li {
+.ci-book ul li{
   padding-left: 16px;
   text-indent: -24px;
 }
@@ -579,6 +575,27 @@ NOTE: logos will disappear in wkhtmltopdf if they go beyond the available space
   content: "•";
   padding-right: 16px;
   margin-top: 2px;
+}
+
+
+.ci-book ol {
+  list-style: none;
+  counter-reset: item;
+}
+.ci-book ol > li {
+  counter-increment: item;
+  padding-left: 20px;
+  text-indent: -24px;
+}
+.ci-book ol > li:before {
+  content: counter(item) ".";
+  display: inline-block;
+  width: 24px;
+  text-indent: 0;
+}
+
+.ci-book .ci-book-table-of-content li:before {
+  content: none;
 }
 
 /* === header auto-numbering 1.2.3.4. === */
