@@ -5,7 +5,7 @@
 
   var COPY_LABEL = "Copy to Clipboard",
     COPIED_LABEL = "Copied",
-    GENERATE_LABEL = "Get RSS access link",
+    GENERATE_LABEL = "RSS feed of all your forums",
     LOADING_LABEL = "Loading RSS link...",
     ERROR_LABEL = "Fail to load RSS link. Please try again later.",
     LABEL_LIST = [COPY_LABEL, COPIED_LABEL, GENERATE_LABEL, LOADING_LABEL,
@@ -33,7 +33,7 @@
       .push(function (hateoas_url) {
         return gadget.jio_getAttachment(
           "erp5",
-          hateoas_url + gadget.state.jio_key + "/" + RSS_URL_SCRIPT,
+          hateoas_url + gadget.state.jio_key + "/" + gadget.state.url_script,
           {format: "json"}
         );
       })
@@ -73,6 +73,7 @@
           return gadget.changeState({
             rss_url: options.rss_url || "",
             jio_key: options.jio_key || "",
+            url_script: options.url_script || RSS_URL_SCRIPT,
             status: "",
             translation_dict: translation_dict
           });
