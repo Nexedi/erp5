@@ -1631,6 +1631,24 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         % (anchor_id, info["page_number"], info))
 
   @changeSkin('Book')
+  def test_PdfBookOlTag(self):
+    """
+      Test Ol tag
+    """
+    self.runPdfTestPattern(
+      "template_test_book_ol_tag_en_html",
+      "template_test_image_source_pdf",
+      **dict(
+        use_skin="Book",
+        test_method="WebPage_exportAsBook",
+        page_number=1,
+        format="pdf",
+        override_revision=1
+      )
+    )
+
+
+  @changeSkin('Book')
   def test_PdfBookTranslation(self):
     """
       Test:
