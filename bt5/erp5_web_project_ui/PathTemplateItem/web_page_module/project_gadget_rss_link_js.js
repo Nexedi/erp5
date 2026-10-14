@@ -5,7 +5,7 @@
 
   var COPY_LABEL = "Copy to Clipboard",
     COPIED_LABEL = "Copied",
-    GENERATE_LABEL = "Get RSS access link",
+    GENERATE_LABEL = "RSS feed of all your forums",
     LOADING_LABEL = "Loading RSS link...",
     ERROR_LABEL = "Fail to load RSS link. Please try again later.",
     LABEL_LIST = [COPY_LABEL, COPIED_LABEL, GENERATE_LABEL, LOADING_LABEL,
