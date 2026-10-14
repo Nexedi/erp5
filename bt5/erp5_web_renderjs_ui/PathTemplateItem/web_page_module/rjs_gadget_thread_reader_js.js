@@ -29,10 +29,6 @@
     });
   }
 
-  function getSortList(state) {
-    return [[state.date_column, state.sort_order], ['uid', 'ASC']];
-  }
-
   function getRelativeTimeString(language, current_date, date) {
     var diff,
       abs,
@@ -245,7 +241,8 @@
                   uid: entry.value.uid,
                   selection_index: gadget.state.begin_from + i,
                   query: gadget.state.query_string,
-                  "sort_list:json": getSortList(gadget.state)
+                  "sort_list:json": [[gadget.state.date_column, gadget.state.sort_order],
+                                     ['uid', 'ASC']]
                 }
               };
             })
@@ -369,7 +366,8 @@
         query: gadget.state.query_string,
         limit: limit_options,
         select_list: select_list,
-        sort_on: getSortList(gadget.state)
+        sort_on: [[gadget.state.date_column, gadget.state.sort_order],
+                  ['uid', 'ASC']]
       })
         .push(function (result) {
           return gadget.changeState({
