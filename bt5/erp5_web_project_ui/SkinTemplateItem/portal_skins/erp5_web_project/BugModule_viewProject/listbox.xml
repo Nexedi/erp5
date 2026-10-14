@@ -173,10 +173,6 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>source_project</string>
-                          <string>Project</string>
-                        </tuple>
-                        <tuple>
                           <string>bug_priority</string>
                           <string>Bug Priority</string>
                         </tuple>
