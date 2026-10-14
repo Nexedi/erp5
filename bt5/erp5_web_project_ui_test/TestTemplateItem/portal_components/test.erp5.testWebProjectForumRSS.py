@@ -644,6 +644,15 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
                      .DiscussionThread_viewPostList.my_posts
     self.assertNotIn('post_link', post_field.get_tales('renderjs_extra')._text)
 
+  def test_bug_module_list_filter_offers_project_once(self):
+    """The search panel lists search columns then domains: a source_project
+    domain titled "Project" would show next to the "Project" column."""
+    listbox = self.portal.portal_skins.erp5_web_project \
+                  .BugModule_viewProject.listbox
+    title_list = ([x[1] for x in listbox.get_value('search_columns')] +
+                  [x[1] for x in listbox.get_value('domain_root_list')])
+    self.assertEqual(1, title_list.count('Project'))
+
   def test_bug_line_app_view_lists_attachments_above_its_text(self):
     """The forge BugLine_view has no attachments. The app view lists them above
     the text with objectValues: the line a first upload lands on is not indexed."""
