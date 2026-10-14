@@ -1094,6 +1094,12 @@ li a ::before,
 p a::before {
   content: "\00a0";
 }
+
+.ci-book p a[href^="#"]::before,
+.ci-book li a[href^="#"]::before {
+  content: none;
+}
+
 img.emoji {
   display: inline;
   height: 1em;
