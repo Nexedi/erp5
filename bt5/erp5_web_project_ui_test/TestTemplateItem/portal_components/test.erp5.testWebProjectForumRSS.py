@@ -633,6 +633,17 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     self.assertIn('("attachment_column", "BugLine_getAttachmentList")',
                   field.get_tales('renderjs_extra')._text)
 
+  def test_only_bug_messages_reader_links_each_post(self):
+    """The bug messages link each line like the bug line listbox does; forum
+    thread posts keep no link."""
+    bug_field = self.portal.portal_skins.erp5_web_project \
+                    .Bug_viewProject.my_messages
+    self.assertIn('("post_link", True)',
+                  bug_field.get_tales('renderjs_extra')._text)
+    post_field = self.portal.portal_skins.erp5_discussion \
+                     .DiscussionThread_viewPostList.my_posts
+    self.assertNotIn('post_link', post_field.get_tales('renderjs_extra')._text)
+
   def test_bug_line_app_view_lists_attachments_above_its_text(self):
     """The forge BugLine_view has no attachments. The app view lists them above
     the text with objectValues: the line a first upload lands on is not indexed."""
