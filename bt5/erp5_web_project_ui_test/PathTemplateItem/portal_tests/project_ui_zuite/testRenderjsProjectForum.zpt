@@ -170,12 +170,12 @@
 <!-- the feed url is minted on click, so the field renders a button and no token -->
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_rss_link.html']//button[text()='Get RSS access link']</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_rss_link.html']//button[text()='RSS feed of all your forums']</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_rss_link.html']//button[text()='Get RSS access link']</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_rss_link.html']//button[text()='RSS feed of all your forums']</td>
   <td></td>
 </tr>
 <tr>
