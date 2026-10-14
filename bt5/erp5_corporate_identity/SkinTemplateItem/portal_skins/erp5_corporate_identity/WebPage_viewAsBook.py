@@ -68,7 +68,7 @@ override_batch_mode = kw.get('batch_mode')
 # -------------------------- Document Parameters  ------------------------------
 book_relative_url = book.getRelativeUrl()
 book_prefix = pref.getPreferredCorporateIdentityTemplateBookDocumentPrefix() or "Book."
-book_rendering_fix = book.WebPage_getPdfOutputRenderingFix() or blank
+book_rendering_fix = blank
 book_content = book.getTextContent()
 if not book_content:
   return

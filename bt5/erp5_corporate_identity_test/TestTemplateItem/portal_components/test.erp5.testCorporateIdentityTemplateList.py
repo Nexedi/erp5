@@ -1521,6 +1521,134 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     )
 
   @changeSkin('Book')
+  def test_pdfBookReferenceTableInternalLinks(self):
+    """
+      Test #AD-n / #RD-n / #AB-n / #Figure-n / #Table-n internal link
+    """
+    import PyPDF2
+
+    test_page = self.portal.web_page_module.template_test_book_input_001_en_html
+    kw = dict(
+      format="pdf",
+      use_skin="Book",
+      test_method="WebPage_exportAsBook",
+      include_content_table=1,
+      include_reference_table=1,
+      override_document_description="foobar",
+      override_document_title="Couscous",
+      override_document_short_title="Cous",
+      override_document_reference="P-XYZ-Foobar",
+      override_logo_reference="Template.Test.Image.Erp5.Logo",
+      override_source_organisation_title="Test Organisation",
+      override_source_person_title="Test Sender",
+      override_document_version="333",
+      reverse_short_title_title=1,
+      override_revision=1,
+    )
+    pdf_kw = dict(
+      reference=test_page.getReference(),
+      target_language="en",
+    )
+
+    pdf_data = self.call(
+      self.callWithNewRequestAcceptLanguage,
+      self.callWithNewRequestForm,
+      pdf_kw,
+      test_page.WebPage_exportAsBook,
+      **kw
+    )
+
+    reader = PyPDF2.PdfFileReader(io.BytesIO(bytes(pdf_data)))
+    import re
+    hex_escape_re = re.compile(r"#([0-9A-Fa-f]{2})")
+    def decodePdfName(name):
+      text = name[1:] if name.startswith("/") else name
+      return hex_escape_re.sub(lambda m: chr(int(m.group(1), 16)), text)
+
+    # name -> {"page_number", "type", "left", "top", "page_ref"}
+    destination_info_by_name = {}
+    catalog = reader.trailer["/Root"]
+    dests_entry = catalog.get("/Dests")
+    if dests_entry is not None:
+      dests_dict = dests_entry.getObject() if hasattr(dests_entry, "getObject") else dests_entry
+      if "/Kids" not in dests_dict and "/Names" not in dests_dict:
+        for raw_name, raw_destination in dests_dict.items():
+          destination = (
+            raw_destination.getObject()
+            if hasattr(raw_destination, "getObject") else raw_destination)
+          if isinstance(destination, PyPDF2.generic.DictionaryObject) and "/D" in destination:
+            destination = destination["/D"]
+          page_ref = destination[0]
+          if hasattr(page_ref, "idnum"):
+            # standard, spec-conformant case: an indirect reference to
+            # the actual page object.
+            page_number = reader._getPageNumberByIndirect(page_ref)
+          else:
+            page_number = int(page_ref)
+          destination_info_by_name[decodePdfName(raw_name)] = dict(
+            page_number=page_number,
+            type=destination[1] if len(destination) > 1 else None,
+            left=destination[2] if len(destination) > 2 else None,
+            top=destination[3] if len(destination) > 3 else None,
+            page_ref=page_ref,
+          )
+    for name, destination in reader.getNamedDestinations().items():
+      destination_info_by_name.setdefault(decodePdfName(name), dict(
+        page_number=reader.getDestinationPageNumber(destination),
+        type=destination.get("/Type"),
+        left=destination.get("/Left"),
+        top=destination.get("/Top"),
+        page_ref=None,
+      ))
+
+    def getDestinationInfoForAnchor(anchor_id):
+      suffix = "#" + anchor_id
+      matching_name_list = [
+        name for name in destination_info_by_name
+        if name.endswith(suffix)
+      ]
+      self.assertEqual(
+        len(matching_name_list), 1,
+        "expected exactly one named destination ending in %r, found %s\n"
+        "-- DIAGNOSTIC: %s named destination(s) in this PDF: %s"
+        % (
+          suffix,
+          matching_name_list,
+          len(destination_info_by_name),
+          sorted(destination_info_by_name),
+        ))
+      return destination_info_by_name[matching_name_list[0]]
+
+    for anchor_id in ["AD-1", "AD-2", "RD-1", "AB-1", "Figure-1", "Table-1"]:
+      info = getDestinationInfoForAnchor(anchor_id)
+      self.assertGreaterEqual(
+        info["page_number"], 0,
+        "#%s destination page could not be resolved: %s" % (anchor_id, info))
+      self.assertFalse(
+        info["left"] == 0 and info["top"] == 0,
+        "#%s destination has a degenerate (left=0, top=0) position on "
+        "page %s %s"
+        % (anchor_id, info["page_number"], info))
+
+  @changeSkin('Book')
+  def test_PdfBookOlTag(self):
+    """
+      Test Ol tag
+    """
+    self.runPdfTestPattern(
+      "template_test_book_ol_tag_en_html",
+      "template_test_image_source_pdf",
+      **dict(
+        use_skin="Book",
+        test_method="WebPage_exportAsBook",
+        page_number=1,
+        format="pdf",
+        override_revision=1
+      )
+    )
+
+
+  @changeSkin('Book')
   def test_PdfBookTranslation(self):
     """
       Test:
