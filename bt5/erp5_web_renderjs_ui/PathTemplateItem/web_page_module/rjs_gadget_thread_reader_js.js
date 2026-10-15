@@ -162,6 +162,7 @@
             date_column: options.date_column || 'modification_date',
             sort_order: options.sort_order || 'ASC',
             source_column: options.source_column || 'source_title',
+            content_column: options.content_column || 'asStrippedHTML',
             attachment_column: options.attachment_column || 'Event_getAttachmentList',
             // Force line calculation in any case
             render_timestamp: new Date().getTime(),
@@ -216,7 +217,9 @@
             }
             return gadget.declareGadget('gadget_html_viewer.html')
               .push(function (viewer) {
-                return viewer.render({value: entry.value.asStrippedHTML})
+                return viewer.render({
+                  value: entry.value[gadget.state.content_column]
+                })
                   .push(function () {
                     return viewer;
                   });
@@ -330,7 +333,7 @@
       return gadget.jio_allDocs({
         query: gadget.state.query_string,
         limit: limit_options,
-        select_list: ['asStrippedHTML', gadget.state.date_column,
+        select_list: [gadget.state.content_column, gadget.state.date_column,
                       gadget.state.source_column,
                       gadget.state.attachment_column],
         sort_on: [[gadget.state.date_column, gadget.state.sort_order],
