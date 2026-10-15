@@ -558,6 +558,28 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     self.assertIn('("content_column", "BugLine_getContentOrTitle")',
                   field.get_tales('renderjs_extra')._text)
 
+  def test_bug_line_without_source_shows_a_blank_source(self):
+    """A workflow Bug Line has no source: the thread reader draws '?' for an
+    empty source title, and a blank avatar for a non-breaking space."""
+    bug = self.portal.bug_module.newContent(portal_type='Bug')
+    bug.confirm()
+    line, = bug.contentValues(portal_type='Bug Line')
+    self.assertEqual(None, line.getSourceValue())
+    self.assertEqual(u'\xa0', line.BugLine_getSourceTitleOrBlank())
+
+  def test_bug_line_with_source_shows_its_source_title(self):
+    person = self.portal.person_module.newContent(
+      portal_type='Person', first_name='Jane', last_name='Doe')
+    bug = self.portal.bug_module.newContent(portal_type='Bug')
+    line = bug.newContent(portal_type='Bug Line', source_value=person)
+    self.assertEqual('Jane Doe', line.BugLine_getSourceTitleOrBlank())
+
+  def test_bug_messages_reader_uses_source_title_or_blank_column(self):
+    field = self.portal.portal_skins.erp5_web_project \
+                .Bug_viewProject.my_messages
+    self.assertIn('("source_column", "BugLine_getSourceTitleOrBlank")',
+                  field.get_tales('renderjs_extra')._text)
+
   def test_bug_view_validates_on_save(self):
     bug = self.portal.bug_module.newContent(portal_type='Bug', title='Saved')
     self.portal.REQUEST.other.update(dict(
