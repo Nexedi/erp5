@@ -42,4 +42,10 @@ if filtered_actions.get('object_view'):
 elif standard_view_action_list:
   # A portal type contributing no project_view action keeps the standard view action
   filtered_actions['object_view'] = standard_view_action_list
+# relative_url is the document rendered by the HAL traverse request
+relative_url = container.REQUEST.form.get('relative_url')
+if relative_url:
+  document = context.getPortalObject().restrictedTraverse(relative_url)
+  if document.getPortalType() in ('Discussion Forum', 'Discussion Thread'):
+    filtered_actions.pop('workflow', None)
 return filtered_actions
