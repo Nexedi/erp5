@@ -333,7 +333,8 @@
         select_list: ['asStrippedHTML', gadget.state.date_column,
                       gadget.state.source_column,
                       gadget.state.attachment_column],
-        sort_on: [[gadget.state.date_column, 'ASC'], ['uid', 'ASC']]
+        sort_on: [[gadget.state.date_column, gadget.state.sort_order],
+                  ['uid', 'ASC']]
       })
         .push(function (result) {
           return gadget.changeState({
