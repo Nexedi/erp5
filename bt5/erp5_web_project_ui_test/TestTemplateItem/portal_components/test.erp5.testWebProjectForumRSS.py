@@ -682,7 +682,7 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     self.assertEqual('project_jio_action', new_bug.getActionType())
 
   def test_add_file_dialog_posts_the_upload_to_its_script(self):
-    form = self.portal.portal_skins.erp5_web_project.Bug_viewAddFileDialogProject
+    form = self.portal.portal_skins.erp5_web_project.Bug_viewAddFileProjectDialog
     self.assertEqual('Bug_addFileProject', form.action)
     self.assertEqual('multipart/form-data', form.enctype)
     self.assertEqual(['your_file', 'your_description'],
