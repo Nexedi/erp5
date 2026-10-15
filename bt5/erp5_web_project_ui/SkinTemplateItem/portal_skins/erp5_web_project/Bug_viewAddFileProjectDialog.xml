@@ -109,7 +109,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Bug_viewAddFileDialogProject</string> </value>
+            <value> <string>Bug_viewAddFileProjectDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -117,7 +117,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Bug_viewAddFileDialogProject</string> </value>
+            <value> <string>Bug_viewAddFileProjectDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
