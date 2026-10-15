@@ -138,6 +138,11 @@
 </tr>
 <tr>
  <td>assertElementPresent</td>
+ <td>//a[text()='Report a Bug']</td>
+ <td></td>
+</tr>
+<tr>
+ <td>assertElementPresent</td>
  <td>//a[text()='Ongoing Tasks']</td>
  <td></td>
 </tr>
