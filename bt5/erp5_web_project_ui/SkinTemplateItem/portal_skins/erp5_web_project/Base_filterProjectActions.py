@@ -9,7 +9,14 @@ for action_category_name, action_list in actions.items():
     filtered_actions[action_category_name].extend([action for action in action_list if 'project_view' in action['id']])
     standard_view_action_list = [action for action in action_list if action['id'] == 'view']
   elif (action_category_name == 'object_jio_action'):
-    filtered_actions[action_category_name] = [action for action in action_list if action['id'] not in ['post_query']]
+    if action_category_name not in filtered_actions:
+      filtered_actions[action_category_name] = []
+    filtered_actions[action_category_name].extend([action for action in action_list if action['id'] not in ['post_query', 'new_file']])
+  elif (action_category_name == 'project_jio_action'):
+    # Merged into object_jio_action only: other UIs ignore this category
+    if 'object_jio_action' not in filtered_actions:
+      filtered_actions['object_jio_action'] = []
+    filtered_actions['object_jio_action'].extend(action_list)
   elif (action_category_name == 'project_view'):
     # Merged into object_view only: nothing consumes a project_view category client side
     if 'object_view' not in filtered_actions:
