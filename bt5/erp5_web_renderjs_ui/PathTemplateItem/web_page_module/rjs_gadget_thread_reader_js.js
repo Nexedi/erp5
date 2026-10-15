@@ -260,7 +260,6 @@
                 var source_title = entry.value[gadget.state.source_column] || '',
                   attachment_list = entry.value[gadget.state.attachment_column] || [],
                   attachment_element_list = [],
-                  post_element_list = [],
                   j,
                   word_list = source_title.split(' '),
                   source_short_title,
@@ -281,7 +280,7 @@
                 }
 
                 if (word_list.length === 1) {
-                  source_short_title = (word_list[0][0] || ' ') + (word_list[0][1] || '');
+                  source_short_title = (word_list[0][0] || '?') + (word_list[0][1] || '');
                 } else {
                   source_short_title = word_list[0][0] + word_list[1][0];
                 }
@@ -301,14 +300,14 @@
                   );
                 }
 
-                if (source_short_title) {
-                  post_element_list.push(domsugar('div', {
+                return domsugar('li', [
+                  domsugar('div', {
                     class: 'post_avatar',
                     text: source_short_title
-                  }));
-                }
-                post_element_list.push(
-                  domsugar('div', {class: 'post_content'}, [
+                  }),
+                  domsugar('div', {
+                    class: 'post_content'
+                  }, [
                     domsugar('strong', {text: source_title}),
                     " ",
                     time_element,
@@ -316,10 +315,9 @@
                     result_dict.viewer_list[i].element,
                     domsugar('br'),
                     domsugar('ul', attachment_element_list)
+                    // domsugar('hr')
                   ])
-                );
-
-                return domsugar('li', post_element_list);
+                ]);
               }));
             setPaginationElement(gadget, allDocs_result.data.total_rows,
                                  result_dict.url_list,
