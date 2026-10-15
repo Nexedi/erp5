@@ -332,7 +332,7 @@
         limit: limit_options,
         select_list: ['asStrippedHTML', gadget.state.date_column,
                       gadget.state.source_column,
-                      'Event_getAttachmentList'],
+                      gadget.state.attachment_column],
         sort_on: [[gadget.state.date_column, 'ASC'], ['uid', 'ASC']]
       })
         .push(function (result) {
