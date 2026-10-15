@@ -30,11 +30,6 @@
     }
   }
 
-  function isDiscussionDocument(erp5_document) {
-    return erp5_document._links.hasOwnProperty('type') &&
-      /\/Discussion (Forum|Thread|Post)$/.test(erp5_document._links.type.href);
-  }
-
   rJS(window)
     .setState({
       visible: false
@@ -82,9 +77,6 @@
         display_workflow_list = true;
       } else {
         display_workflow_list = asBoolean(options.display_workflow_list);
-      }
-      if ((erp5_document !== undefined) && isDiscussionDocument(erp5_document)) {
-        display_workflow_list = false;
       }
 
       if ((erp5_document !== undefined) && (jio_key !== undefined)) {
@@ -299,7 +291,7 @@
 
               appendDt(dl_fragment, result_list[1][0], 'eye',
                        view_list, result_list[0], 0);
-              if (gadget.state.display_workflow_list) {
+              if (gadget.state.display_workflow_list && workflow_list.length) {
                 // show Workflows only on document
                 appendDt(dl_fragment, result_list[1][1], 'random',
                   workflow_list, result_list[0], view_list.length);
