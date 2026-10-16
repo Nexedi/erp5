@@ -10,7 +10,7 @@ attachment = portal.getDefaultModule('File').newContent(
   portal_type='File',
   title=attachment_title,
   content_type='text/plain',
-  data='test attachment')
+  data=b'test attachment')
 post.setSuccessorValueList([attachment])
 print("Attachment Added")
 return printed
