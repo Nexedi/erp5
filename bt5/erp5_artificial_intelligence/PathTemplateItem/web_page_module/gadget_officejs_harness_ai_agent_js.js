@@ -5,11 +5,7 @@
 
   var COMPACT_THRESHOLD = 5000,
     KEEP_RECENT = 2000,
-    MAX_TOOL_OUTPUT_LINES = 20000,
-    SUBAGENT_DEFAULT_MAX_LOOP_COUNT = 2000,
-    SUBAGENT_MAX_LOOP_COUNT_CAP = 5000,
     RATE_LIMIT_RETRY_DELAY_MS = 120000,
-    SUBAGENT_EXCLUDED_TOOL_NAME_LIST = ["spawn_subagent", "execution_plan"],
     STATIC_TOOL_SCOPE_LIST = [
       "tool_execute_javascript",
       "tool_run_wasm",
@@ -18,84 +14,12 @@
       "tool_execution_plan",
       "tool_define_tool",
       "tool_list_defined_tools",
-      "tool_undefine_tool"
+      "tool_undefine_tool",
+      "tool_spawn_subagent"
     ];
 
   function isRateLimitError(e) {
     return Boolean(e && e.message && (/^LLM 429 /).test(e.message));
-  }
-
-  function truncateToolOutput(content) {
-    var text = typeof content === "string" ? content : JSON.stringify(content),
-      lines = text.split("\n"),
-      kept;
-    if (lines.length <= MAX_TOOL_OUTPUT_LINES) {
-      return text;
-    }
-    kept = lines.slice(-MAX_TOOL_OUTPUT_LINES).join("\n");
-    return "[output truncated: showing last " + MAX_TOOL_OUTPUT_LINES + " of " +
-      lines.length + " lines - full output is visible in the tool call panel]\n" + kept;
-  }
-
-  function toolDefinitionList(tool_list) {
-    return tool_list.map(function (tool) {
-      return { type: "function", "function": tool.definition };
-    });
-  }
-
-  function findClientTool(name, tool_list) {
-    var i;
-    for (i = 0; i < tool_list.length; i += 1) {
-      if (tool_list[i].definition.name === name) {
-        return tool_list[i];
-      }
-    }
-    return null;
-  }
-
-  function runClientToolCall(tool_call, tool_list) {
-    var tool = findClientTool(tool_call.function.name, tool_list),
-      args = {},
-      result;
-    try {
-      args = tool_call.function.arguments ?
-        JSON.parse(tool_call.function.arguments) : {};
-    } catch (ignore) {
-      args = {};
-    }
-    if (!tool) {
-      result = "Error: no such client tool \"" + tool_call.function.name + "\"";
-      return {
-        tool_call_id: tool_call.id,
-        name: tool_call.function.name,
-        content: typeof result === "string" ? result : JSON.stringify(result)
-      };
-    }
-    return new RSVP.Queue()
-      .push(function () {
-        return tool.gadget ? tool.gadget.execute(args) : tool.execute(args);
-      })
-      .push(function (result) {
-
-        var is_structured_result = Boolean(result && typeof result === "object" && result.hasOwnProperty("content")),
-          message_list = is_structured_result ? result.message_list : undefined,
-          execution_plan = is_structured_result ? result.execution_plan : undefined,
-          content = is_structured_result ? result.content : result;
-        return {
-          tool_call_id: tool_call.id,
-          name: tool_call.function.name,
-          content: typeof content === "string" ? content : JSON.stringify(content),
-          message_list: message_list,
-          execution_plan: execution_plan
-        };
-      }, function (e) {
-      result = "Error running tool \"" + tool_call.function.name + "\": " + JSON.stringify(e, Object.getOwnPropertyNames(e));
-      return {
-        tool_call_id: tool_call.id,
-        name: tool_call.function.name,
-        content: result
-      };
-    });
   }
 
   rJS(window)
@@ -105,100 +29,6 @@
     .declareAcquiredMethod("refreshMcpServerAuth", "refreshMcpServerAuth")
     .declareAcquiredMethod("getDefinedToolList", "getDefinedToolList")
     .declareAcquiredMethod("storeDefinedTool", "storeDefinedTool")
-
-    .declareMethod('runSubagentTask', function (task, max_turns) {
-      var gadget = this,
-        queue_loop = new RSVP.Queue(),
-        document_id = gadget.options.jio_key,
-        max_loop_count = Math.min(Math.max(Number(max_turns) || SUBAGENT_DEFAULT_MAX_LOOP_COUNT, 1), SUBAGENT_MAX_LOOP_COUNT_CAP);
-
-      function subagentToolDefinitionList() {
-        return toolDefinitionList(gadget.tool_list.filter(function (tool) {
-          return SUBAGENT_EXCLUDED_TOOL_NAME_LIST.indexOf(tool.definition.name) === -1;
-        }));
-      }
-
-      function subagentLoopCall(loop_count, message_list, pending_tool_call_list) {
-        var has_tool_call = Boolean(pending_tool_call_list && pending_tool_call_list.length);
-
-        function subagentError(e) {
-          return {
-            content: "Error running sub-agent: " + JSON.stringify(e, Object.getOwnPropertyNames(e)),
-            message_list: message_list
-          };
-        }
-        console.log('**************subagentLoopCall ' + loop_count);
-        if (loop_count >= max_loop_count) {
-          return new RSVP.Queue().push(function () {
-            return {
-              content: "[subagent stopped: exceeded " + max_loop_count + " turns without a final answer]",
-              message_list: message_list
-            };
-          });
-        }
-
-        if (has_tool_call) {
-          queue_loop
-            .push(function () {
-              return RSVP.all(pending_tool_call_list.map(function (tool_call) {
-                return runClientToolCall(tool_call, gadget.tool_list);
-              }));
-            })
-            .push(function (client_tool_result_list) {
-              var next_message_list = message_list, i, tool_call, client_tool_result;
-              for (i = 0; i < pending_tool_call_list.length; i += 1) {
-                tool_call = pending_tool_call_list[i];
-                client_tool_result = client_tool_result_list[i];
-                next_message_list = next_message_list.concat([{
-                  role: "tool",
-                  tool_call_id: tool_call.id,
-                  name: tool_call.function.name,
-                  content: truncateToolOutput('args:' + (tool_call.function.arguments ? tool_call.function.arguments : '') + '\n' + 'result:' + client_tool_result.content)
-                }]);
-              }
-              return subagentLoopCall(
-                loop_count + 1,
-                next_message_list,
-                null
-              );
-            })
-            .push(undefined, subagentError);
-          return;
-        }
-
-        queue_loop
-          .push(function () {
-            return gadget.requestProcessTask(
-              document_id,
-              {
-                message_list: JSON.stringify(message_list),
-                tool_definition_list: JSON.stringify(subagentToolDefinitionList())
-              }
-            );
-          })
-          .push(function (result) {
-            if (result.tool_calls && result.tool_calls.length) {
-              return subagentLoopCall(
-                loop_count + 1,
-                message_list.concat([{
-                  role: "assistant",
-                  content: result.content,
-                  tool_calls: result.tool_calls
-                }]),
-                result.tool_calls
-              );
-            }
-            return {
-              content: result.content,
-              message_list: message_list.concat([{ role: "assistant", content: result.content }])
-            };
-          })
-          .push(undefined, subagentError);
-      }
-
-      subagentLoopCall(0, [{ role: "user", content: task }]);
-      return queue_loop;
-    })
 
     .declareMethod('render', function (options) {
       var gadget = this;
@@ -238,43 +68,11 @@
             });
         })
         .push(function () {
-          gadget.tool_list.push({
-            definition: {
-              name: "spawn_subagent",
-              description: "Delegate a self-contained sub-task to a fresh, independent instance of this " +
-                "same agent - same tools (everything except spawn_subagent itself, to prevent runaway " +
-                "recursion), but its own separate conversation that starts empty (it has NO access to this " +
-                "conversation's history - give it a full, self-contained task description). Runs to " +
-                "completion (its own multi-turn tool-calling loop) before this call returns; only its final " +
-                "answer comes back - none of its intermediate searches/reads/retries appear in this " +
-                "conversation. USE THIS WHEN: a piece of the current task is large or noisy enough to " +
-                "isolate (e.g. \"research X and summarize\", \"go create and populate these 5 documents, " +
-                "report back what was done\"). DO NOT USE THIS for a trivial one-tool-call task - just call " +
-                "that tool directly.",
-              parameters: {
-                type: "object",
-                properties: {
-                  task: {
-                    type: "string",
-                    description: "Full, self-contained description of what the sub-agent should do."
-                  },
-                  max_turns: {
-                    type: "integer",
-                    description: "Cap on the sub-agent's own turn count (default 20, max 50)."
-                  }
-                },
-                required: ["task"]
-              }
-            },
-            execute: function (args) {
-              return gadget.runSubagentTask(args.task, args.max_turns);
-            }
-          });
           return gadget.getDefinedToolList();
         })
         .push(function (spec_list) {
           return RSVP.all(spec_list.filter(function (spec) {
-            return !findClientTool(spec.name, gadget.tool_list);
+            return !window.ChatToolCommon.findClientTool(spec.name, gadget.tool_list);
           }).map(function (spec) {
             return gadget.createDynamicToolEntry(spec);
           }));
@@ -315,6 +113,9 @@
             });
         });
     })
+    .allowPublicAcquisition('getToolList', function () {
+      return this.tool_list;
+    })
     .allowPublicAcquisition('isToolNameTaken', function (argument_list) {
       var name = argument_list[0];
       return this.tool_list.some(function (tool) { return tool.definition.name === name; });
@@ -322,7 +123,7 @@
     .allowPublicAcquisition('persistAndRegisterDynamicTool', function (argument_list) {
       var gadget = this,
         spec = argument_list[0];
-      return new RSVP.Queue(gadget.storeDefinedTool(spec))
+      return gadget.storeDefinedTool(spec)
         .push(function () {
           return gadget.createDynamicToolEntry(spec);
         })
@@ -497,7 +298,7 @@
           queue_loop
             .push(function () {
               return RSVP.all(pending_tool_call_list.map(function (tool_call) {
-                return runClientToolCall(tool_call, gadget.tool_list);
+                return window.ChatToolCommon.runClientToolCall(tool_call, gadget.tool_list);
               }));
             })
             .push(function (client_tool_result_list) {
@@ -544,7 +345,7 @@
               gadget.options.jio_key,
               {
                 message_list: JSON.stringify(message_list),
-                tool_definition_list: JSON.stringify(toolDefinitionList(gadget.tool_list))
+                tool_definition_list: JSON.stringify(window.ChatToolCommon.toolDefinitionList(gadget.tool_list))
               }
             );
           })

@@ -18,7 +18,7 @@
     })
     .declareMethod('execute', function () {
       var gadget = this;
-      return new RSVP.Queue(gadget.listDynamicToolSpecs())
+      return gadget.listDynamicToolSpecs()
         .push(function (spec_list) {
           if (!spec_list.length) {
             return "(no tools defined yet)";

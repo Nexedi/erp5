@@ -48,9 +48,9 @@
       var gadget = this,
         name = String(args.name || "").trim();
       if (!name) {
-        return RSVP.resolve("ERROR: a tool name is required.");
+        return "ERROR: a tool name is required.";
       }
-      return new RSVP.Queue(gadget.isToolNameTaken(name))
+      return gadget.isToolNameTaken(name)
         .push(function (taken) {
           if (taken) {
             return "ERROR: a tool named \"" + name + "\" already exists (built-in, MCP, or " +
@@ -63,7 +63,7 @@
                 throw new Error(result.error);
               }
               spec = { name: name, description: args.description || "", parameters: args.parameters, code: args.code, libraries: args.libraries };
-              return new RSVP.Queue(gadget.persistAndRegisterDynamicTool(spec))
+              return gadget.persistAndRegisterDynamicTool(spec)
                 .push(function () {
                   return "Defined tool \"" + name + "\": " + (args.description || "") +
                     "\nparameters: " + JSON.stringify(spec.parameters || {});

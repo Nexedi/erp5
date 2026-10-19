@@ -23,7 +23,7 @@
     })
     .declareMethod('execute', function (args) {
       var gadget = this;
-      return new RSVP.Queue(gadget.undefineDynamicTool(args.name))
+      return gadget.undefineDynamicTool(args.name)
         .push(function (result) {
           if (result === "not_found") {
             return "ERROR: no such defined tool \"" + args.name + "\".";
@@ -31,7 +31,7 @@
           if (result === "not_dynamic") {
             return "ERROR: \"" + args.name + "\" is a built-in tool and cannot be removed.";
           }
-          return new RSVP.Queue(gadget.removeDefinedTool(args.name))
+          return gadget.removeDefinedTool(args.name)
             .push(function () {
               return "Removed tool \"" + args.name + "\".";
             }, function (err) {
