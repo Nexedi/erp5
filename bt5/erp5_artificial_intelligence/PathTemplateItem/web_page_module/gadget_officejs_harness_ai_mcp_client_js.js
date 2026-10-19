@@ -310,13 +310,13 @@
   }
 
   // Never rejects: an unreachable/misbehaving server contributes zero tools
-  // (reported via onServerError) rather than breaking discovery for every
+  // (logged via console.warn) rather than breaking discovery for every
   // other configured server, or for the local, per-tool gadgets
   // (gadget_officejs_harness_ai_tool_*.html) this is merged with in
   // gadget_officejs_harness_ai_agent_js.js. onAuthExpired is optional - a server
   // authenticated with a plain static token (no OAuth) simply never
   // triggers it (a 401 there just fails discovery for that server normally).
-  function buildToolList(mcp_server_list, element, onServerError, onAuthExpired) {
+  function buildToolList(mcp_server_list, onAuthExpired) {
     if (!mcp_server_list || !mcp_server_list.length) {
       return RSVP.resolve([]);
     }
@@ -326,8 +326,11 @@
           return wrapServerTools(server_config, discovery, onAuthExpired);
         })
         .push(undefined, function (error) {
-          if (onServerError) {
-            onServerError(server_config, error);
+          if (window.console && window.console.warn) {
+            window.console.warn(
+              "MCP server \"" + (server_config && server_config.name) + "\" unavailable: " +
+                (error && error.message ? error.message : error)
+            );
           }
           return [];
         });
