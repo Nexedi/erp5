@@ -4,9 +4,17 @@
   "use strict";
 
   function setjIODAVConfiguration(gadget, options) {
-    return gadget.getSetting("portal_type", "Web Page")
-      .push(function (portal_type) {
-        var configuration = {
+    return new RSVP.Queue()
+      .push(function () {
+        return RSVP.all([
+          gadget.getSetting("portal_type", "Web Page"),
+          gadget.getIndexedDBPrefix()
+        ]);
+      })
+      .push(function (result) {
+        var portal_type = result[0],
+          prefix = result[1],
+          configuration = {
           type: "replicate",
           // XXX This drop the signature lists...
           query: {
@@ -35,7 +43,7 @@
                 type: "uuid",
                 sub_storage: {
                   type: "indexeddb",
-                  database: "officejs-dav"
+                  database: prefix + "officejs-dav"
                 }
               }
             }
@@ -98,6 +106,7 @@
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("setSetting", "setSetting")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
+    .declareAcquiredMethod("getIndexedDBPrefix", "getIndexedDBPrefix")
     .declareMethod("getGlobalSetting", function (key) {
       var gadget = this;
       return gadget.getDeclaredGadget("global_setting_gadget")
