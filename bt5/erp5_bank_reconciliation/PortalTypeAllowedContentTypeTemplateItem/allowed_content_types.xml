@@ -14,6 +14,9 @@
   <item>String Divergence Tester</item>
   <item>Variation Divergence Tester</item>
  </portal_type>
+ <portal_type id="Delivery Builder">
+  <item>Bank Reconciliation Causality Movement Group</item>
+ </portal_type>
  <portal_type id="Rule Tool">
   <item>Bank Reconciliation Root Simulation Rule</item>
  </portal_type>
