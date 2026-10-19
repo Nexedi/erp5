@@ -172,8 +172,7 @@
               document_id,
               {
                 message_list: JSON.stringify(message_list),
-                tool_definition_list: JSON.stringify(subagentToolDefinitionList()),
-                is_subagent: "1"
+                tool_definition_list: JSON.stringify(subagentToolDefinitionList())
               }
             );
           })
@@ -230,15 +229,6 @@
           }
           return new RSVP.Queue(window.ChatMCP.buildToolList(
               options.mcp_server_list,
-              gadget.element,
-              function onMcpServerError(server_config, error) {
-                if (window.console && window.console.warn) {
-                  window.console.warn(
-                    "MCP server \"" + (server_config && server_config.name) + "\" unavailable: " +
-                      (error && error.message ? error.message : error)
-                  );
-                }
-              },
               function onMcpAuthExpired(server_config) {
                 return gadget.refreshMcpServerAuth(server_config);
               }
@@ -511,23 +501,21 @@
               }));
             })
             .push(function (client_tool_result_list) {
-              var next_message_list = message_list, i, tool_call, client_tool_result, result_content;
+              var next_message_list = message_list, i, tool_call, client_tool_result;
               for (i = 0; i < pending_tool_call_list.length; i += 1) {
                 tool_call = pending_tool_call_list[i];
                 client_tool_result = client_tool_result_list[i];
-                result_content = 'args:' + (tool_call.function.arguments ? tool_call.function.arguments : '') + '\n' + 'result:' + client_tool_result.content;
                 next_message_list = next_message_list.concat([{
                   role: "tool",
                   tool_call_id: tool_call.id,
                   name: tool_call.function.name,
-                  content: truncateToolOutput(result_content),
-                  sub_message_list: client_tool_result.message_list
+                  content: client_tool_result.content
                 }]);
                 gadget.tool_message_list.push({
                   name: tool_call.function.name,
-                  content: result_content,
+                  content: 'args:' + (tool_call.function.arguments ? tool_call.function.arguments : '') + '\n' + 'result:' + client_tool_result.content,
                   sub_message_list: client_tool_result.message_list,
-                  'role': 'tole'
+                  'role': "tool"
                 });
                 if (client_tool_result.execution_plan !== undefined) {
                   gadget.execution_plan = client_tool_result.execution_plan;
@@ -542,7 +530,8 @@
               return loop_call(
                 loop_count + 1,
                 resulit_list[0],
-                null
+                null,
+                is_rate_limit_retry
               );
             })
             .push(undefined, loopError);
@@ -555,8 +544,7 @@
               gadget.options.jio_key,
               {
                 message_list: JSON.stringify(message_list),
-                tool_definition_list: JSON.stringify(toolDefinitionList(gadget.tool_list)),
-                initial_message_length: gadget.current_initial_message_length
+                tool_definition_list: JSON.stringify(toolDefinitionList(gadget.tool_list))
               }
             );
           })
@@ -576,7 +564,8 @@
                     content: result.content,
                     tool_calls: result.tool_calls
                   }]),
-                  result.tool_calls
+                  result.tool_calls,
+                  is_rate_limit_retry
                 );
               });
             }
@@ -626,7 +615,7 @@
         })
         .push(function (message_list) {
           return RSVP.all([
-            gadget.gadget_chat_ui.showMessage({ execution_plan: gadget.execution_plan }),
+            gadget.gadget_chat_ui.showMessage({}),
             gadget.compactMessageList(message_list)
           ]);
         })

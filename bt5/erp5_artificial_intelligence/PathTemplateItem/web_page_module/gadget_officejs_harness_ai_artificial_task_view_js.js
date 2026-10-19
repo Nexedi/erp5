@@ -134,29 +134,6 @@
   }
 
 
-  function parseMcpOAuthTokenMap(json_text) {
-    var parsed;
-    if (!json_text) {
-      return {};
-    }
-    try {
-      parsed = JSON.parse(json_text);
-    } catch (ignore) {
-      return {};
-    }
-    return (parsed && typeof parsed === "object" && !Array.isArray(parsed)) ? parsed : {};
-  }
-
-
-  function overlayOAuthTokens(mcp_server_list, mcp_oauth_token_map) {
-    mcp_server_list.forEach(function (server_config) {
-      var oauth_state = mcp_oauth_token_map[server_config.name];
-      if (!server_config.token && oauth_state && oauth_state.access_token) {
-        server_config.token = oauth_state.access_token;
-      }
-    });
-    return mcp_server_list;
-  }
 
   rJS(window)
     .declareAcquiredMethod("updateHeader", "updateHeader")
@@ -510,7 +487,7 @@
       )
         .push(function (setting_list) {
           gadget.hateoas_url = setting_list[0];
-          gadget.mcp_oauth_token_map = parseMcpOAuthTokenMap(setting_list[7]);
+          gadget.mcp_oauth_token_map = setting_list[7] ? JSON.parse(setting_list[7]) : {};
           gadget.llm_settings = {
             baseUrl: setting_list[1] || '',
             apiKey: setting_list[2] || '',
@@ -518,10 +495,13 @@
             proxy_server_url: setting_list[4] || '',
             endpoint: setting_list[5] || 'chat/completions'
           };
-          gadget.mcp_server_list = overlayOAuthTokens(
-            window.ChatMCP.parseServerListText(setting_list[6] || '').value || [],
-            gadget.mcp_oauth_token_map
-          );
+          gadget.mcp_server_list = window.ChatMCP.parseServerListText(setting_list[6] || '').value || [];
+          gadget.mcp_server_list.forEach(function (server_config) {
+            var oauth_state = gadget.mcp_oauth_token_map[server_config.name];
+            if (!server_config.token && oauth_state && oauth_state.access_token) {
+              server_config.token = oauth_state.access_token;
+            }
+          });
         })
         .push(function () {
           return gadget.changeState({
