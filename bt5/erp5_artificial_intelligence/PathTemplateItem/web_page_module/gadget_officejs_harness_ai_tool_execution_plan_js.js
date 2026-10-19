@@ -54,35 +54,32 @@
       return;
     })
     .declareMethod('execute', function (args) {
-      var gadget = this, plan, step;
+      var gadget = this, step;
       if (args.command === "set") {
-        plan = {
+        gadget.execution_plan = {
           goal: args.goal || "",
           step_list: (args.step_list || []).map(function (step_spec) {
             return { title: step_spec.title, status: "pending", note: "" };
           })
         };
-        gadget.execution_plan = plan;
-        return { content: window.ChatToolCommon.renderPlanText(plan), execution_plan: plan };
+        return { content: window.ChatToolCommon.renderPlanText(gadget.execution_plan), execution_plan: gadget.execution_plan };
       }
       if (args.command === "update_step") {
-        plan = gadget.execution_plan;
-        if (!plan) {
+        if (!gadget.execution_plan) {
           return "ERROR: no execution plan has been set yet - call execution_plan with command \"set\" first.";
         }
-        step = plan.step_list[args.index];
+        step = gadget.execution_plan.step_list[args.index];
         if (!step) {
           return "ERROR: no step at index " + args.index + " in the execution plan that is " +
-            "CURRENTLY active (it has " + plan.step_list.length + " step(s), valid indices " +
-            "0-" + (plan.step_list.length - 1) + "). If you did not expect this, it is likely " +
+            "CURRENTLY active (it has " + gadget.execution_plan.step_list.length + " step(s), valid indices " +
+            "0-" + (gadget.execution_plan.step_list.length - 1) + "). If you did not expect this, it is likely " +
             "because \"set\" was called again since you last checked (e.g. to test the tool) and " +
             "replaced the plan you meant to update - here is what is actually active right now, " +
-            "re-sync your step indices against it:\n" + window.ChatToolCommon.renderPlanText(plan);
+            "re-sync your step indices against it:\n" + window.ChatToolCommon.renderPlanText(gadget.execution_plan);
         }
         step.status = args.status;
         step.note = args.note || "";
-        gadget.execution_plan = plan;
-        return { content: window.ChatToolCommon.renderPlanText(plan), execution_plan: plan };
+        return { content: window.ChatToolCommon.renderPlanText(gadget.execution_plan), execution_plan: gadget.execution_plan };
       }
       return "ERROR: unknown command \"" + args.command + "\" - must be \"set\" or \"update_step\".";
     });
