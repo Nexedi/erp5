@@ -341,10 +341,12 @@ class SlapOSControler(object):
     # "all testnodes uses all CPU available", because the total utilisation
     # will exceed the number of CPUs. Make allow fine tuning of its job server,
     # so we configure it to use all CPUs, unless the load is >= CPUs count.
-    # numpy and rake does not expose such flexibility, so we just tell them to
-    # use the number of CPUs this testnode instance was configured to use.
+    # cargo, numpy and rake does not expose such flexibility, so we just tell
+    # them to use the number of CPUs this testnode instance was configured to
+    # use.
     cpu_count = str(os.sysconf("SC_NPROCESSORS_ONLN"))
     os.environ['MAKEFLAGS'] = '-j%s -l%s' % ( cpu_count, cpu_count)
+    os.environ['CARGO_BUILD_JOBS'] = config['node_quantity']
     os.environ['NPY_NUM_BUILD_JOBS'] = config['node_quantity']
     os.environ['BUNDLE_JOBS'] = config['node_quantity']
     os.environ['PATH'] = environment['PATH']
