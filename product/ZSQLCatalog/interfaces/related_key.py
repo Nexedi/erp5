@@ -51,7 +51,7 @@ class IRelatedKey(ISearchKey):
           This list must have the exact same length as the list of tables
     """
 
-  def buildSQLExpression(sql_catalog, column_map, only_group_columns, group):
+  def buildSQLExpression(sql_catalog, column_map, only_group_columns, group, renderer):
     """
       operator and value parameters are useless, since this type of SearhKey
       does not compare a value to any column, but uses a ZSQLMethod.
