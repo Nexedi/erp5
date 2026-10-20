@@ -1,6 +1,14 @@
 Changes
 =======
 
+0.4.83 (2026-10-20)
+-------------------
+
+  * testnode:
+    - set ``CARGO_BUILD_JOBS`` when building software, to limit
+      load when multiple testnodes are building rust components.
+
+
 0.4.82 (2026-05-12)
 -------------------
 
