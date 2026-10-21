@@ -46,7 +46,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>select_dialog, dialog_category, form_id, cancel_url, object_path, **kw</string> </value>
+            <value> <string>select_dialog, dialog_category, form_id, cancel_url, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
