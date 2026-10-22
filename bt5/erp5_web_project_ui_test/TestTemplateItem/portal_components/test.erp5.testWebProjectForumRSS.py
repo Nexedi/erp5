@@ -698,10 +698,39 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     add_file, = [action for action in portal_types.Bug.getActionInformationList()
                  if action.getReference() == 'add_file_project']
     self.assertEqual('project_jio_action', add_file.getActionType())
-    self.assertEqual(['Add portal content'], add_file.getActionPermissionList())
+    self.assertEqual(['View'], add_file.getActionPermissionList())
     new_bug, = [action for action in portal_types.Project.getActionInformationList()
                 if action.getReference() == 'project_new_bug']
     self.assertEqual('project_jio_action', new_bug.getActionType())
+
+  def test_add_file_action_follows_the_add_permission_on_the_bug(self):
+    """A project_jio_action permission is checked on the portal, not on the bug:
+    the action checks Add portal content on the bug in its condition, so a
+    project member (not Manager) sees it, and a reader does not."""
+    bug = self.portal.bug_module.newContent(portal_type='Bug',
+                                            title='Add file visibility')
+    login_reference_by_role = {}
+    for role in ('Assignee', 'Auditor'):
+      login_reference = 'add-file-%s-login' % role.lower()
+      person = self.portal.person_module.newContent(
+        portal_type='Person', reference='TESTP-add-file-%s' % role.lower())
+      person.newContent(portal_type='Assignment').open()
+      person.newContent(portal_type='ERP5 Login',
+                        reference=login_reference).validate()
+      bug.manage_setLocalRoles(person.getUserId(), [role])
+      login_reference_by_role[role] = login_reference
+    self.tic()
+
+    def getActionIdList(role):
+      self.loginByUserName(login_reference_by_role[role])
+      try:
+        action_dict = self.portal.portal_actions.listFilteredActionsFor(bug)
+      finally:
+        self.login()
+      return [x['id'] for x in action_dict.get('project_jio_action', [])]
+
+    self.assertIn('add_file_project', getActionIdList('Assignee'))
+    self.assertNotIn('add_file_project', getActionIdList('Auditor'))
 
   def test_add_file_dialog_posts_the_upload_to_its_script(self):
     form = self.portal.portal_skins.erp5_web_project.Bug_viewAddFileProjectDialog
