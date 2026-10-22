@@ -79,6 +79,16 @@
     return estimateTokensForMessages(message_list);
   }
 
+  function addUsageToTotals(gadget, usage) {
+    if (!usage) {
+      return;
+    }
+    gadget.usage_totals.call_count += 1;
+    gadget.usage_totals.prompt_tokens += usage.prompt_tokens || 0;
+    gadget.usage_totals.completion_tokens += usage.completion_tokens || 0;
+    gadget.usage_totals.total_tokens += usage.total_tokens || ((usage.prompt_tokens || 0) + (usage.completion_tokens || 0));
+  }
+
   rJS(window)
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
     .declareAcquiredMethod("requestProcessTask", "requestProcessTask")
@@ -179,6 +189,9 @@
     .allowPublicAcquisition('summarizeToolOutput', function (argument_list) {
       return this.summarizeToolOutput(argument_list[0]);
     })
+    .allowPublicAcquisition('addUsageToTotals', function (argument_list) {
+      addUsageToTotals(this, argument_list[0]);
+    })
     .allowPublicAcquisition('isToolNameTaken', function (argument_list) {
       var name = argument_list[0];
       return this.tool_list.some(function (tool) { return tool.definition.name === name; });
@@ -226,24 +239,12 @@
     .declareMethod('cancelProcessing', function () {
       var gadget = this,
         queue_loop = gadget.processing_queue,
-        message_list = gadget.current_message_list || [],
-        pending_tool_call_list = gadget.current_pending_tool_call_list || [],
-        initial_message_length = gadget.current_initial_message_length || 0,
         execution_plan;
       if (!queue_loop) {
         return;
       }
       gadget.processing_queue = null;
       queue_loop.cancel("Cancelled by user");
-
-      pending_tool_call_list.forEach(function (tool_call) {
-        message_list = message_list.concat([{
-          role: "tool",
-          tool_call_id: tool_call.id,
-          name: tool_call.function.name,
-          content: "Cancelled by user"
-        }]);
-      });
 
       execution_plan = gadget.execution_plan;
       gadget.execution_plan = null;
@@ -255,9 +256,7 @@
         gadget.storeTaskResult(
           gadget.options.jio_key,
           {
-            message_list: JSON.stringify(
-              message_list.slice(initial_message_length).concat([{content: "Cancelled by user"}])
-            ),
+            tool_message_list: JSON.stringify(gadget.tool_message_list),
             content: "Cancelled by user",
             execution_plan: execution_plan ? JSON.stringify(execution_plan) : ""
           }
@@ -298,18 +297,31 @@
         return message_list;
       }
 
-      return gadget.requestProcessTask(
-        gadget.options.jio_key,
-        {
-          message_list: JSON.stringify([
-            { role: "system", content: SUMMARIZATION_PROMPT },
-            { role: "user", content: "<conversation>\n" + serializeMessageListForSummary(old_message_list) + "\n</conversation>" }
-          ]),
-          tool_definition_list: JSON.stringify([]),
-          is_background: "1"
-        }
-      )
+      gadget.tool_message_list.push({
+        role: "tool",
+        name: "compact_history",
+        content: "Conversation getting long - summarizing " + old_message_list.length +
+          " older message(s) to free up context..."
+      });
+      return gadget.gadget_chat_ui.showMessage({
+        tool_message_list: gadget.tool_message_list,
+        execution_plan: gadget.execution_plan
+      })
+        .push(function () {
+          return gadget.requestProcessTask(
+            gadget.options.jio_key,
+            {
+              message_list: JSON.stringify([
+                { role: "system", content: SUMMARIZATION_PROMPT },
+                { role: "user", content: "<conversation>\n" + serializeMessageListForSummary(old_message_list) + "\n</conversation>" }
+              ]),
+              tool_definition_list: JSON.stringify([]),
+              is_background: "1"
+            }
+          );
+        })
         .push(function (result) {
+          addUsageToTotals(gadget, result.usage);
           if (!result.content) {
             throw new Error("compactMessageList: empty summary");
           }
@@ -338,6 +350,18 @@
       chunk_list.forEach(function (chunk, index) {
         queue
           .push(function () {
+            gadget.tool_message_list.push({
+              role: "tool",
+              name: "summarize_tool_output",
+              content: "Tool result too large to send as-is - summarizing part " + (index + 1) +
+                " of " + chunk_list.length + "..."
+            });
+            return gadget.gadget_chat_ui.showMessage({
+              tool_message_list: gadget.tool_message_list,
+              execution_plan: gadget.execution_plan
+            });
+          })
+          .push(function () {
             return gadget.requestProcessTask(
               gadget.options.jio_key,
               {
@@ -351,8 +375,20 @@
             );
           })
           .push(function (result) {
-            summary_list.push("[Summary of chunk " + (index + 1) + " of " + chunk_list.length +
-              " of a truncated tool output]\n" + (result.content || "(empty summary)"));
+            var summary_text;
+            addUsageToTotals(gadget, result.usage);
+            summary_text = "[Summary of chunk " + (index + 1) + " of " + chunk_list.length +
+              " of a truncated tool output]\n" + (result.content || "(empty summary)");
+            summary_list.push(summary_text);
+            gadget.tool_message_list.push({
+              role: "tool",
+              name: "summarize_tool_output_result",
+              content: summary_text
+            });
+            return gadget.gadget_chat_ui.showMessage({
+              tool_message_list: gadget.tool_message_list,
+              execution_plan: gadget.execution_plan
+            });
           });
       });
       return queue.push(function () {
@@ -372,17 +408,13 @@
         queue_loop = new RSVP.Queue();
       gadget.tool_message_list = [];
       gadget.processing_queue = queue_loop;
-      gadget.current_message_list = [];
-      gadget.current_pending_tool_call_list = null;
-      gadget.current_initial_message_length = 0;
       gadget.last_usage_anchor = null;
+      gadget.usage_totals = { call_count: 0, prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 };
 
       function loop_call(loop_count, message_list, pending_tool_call_list, is_retry) {
         var has_tool_call = Boolean(
             pending_tool_call_list && pending_tool_call_list.length
           );
-        gadget.current_message_list = message_list;
-        gadget.current_pending_tool_call_list = pending_tool_call_list;
 
         function loopError(e) {
           var error_text = "Error: " + (e && e.message ? e.message : String(e)),
@@ -396,9 +428,7 @@
             gadget.storeTaskResult(
               gadget.options.jio_key,
               {
-                message_list: JSON.stringify(
-                  message_list.slice(gadget.current_initial_message_length).concat([{content: error_text}])
-                ),
+                tool_message_list: JSON.stringify(gadget.tool_message_list),
                 content: error_text,
                 execution_plan: execution_plan ? JSON.stringify(execution_plan) : ""
               }
@@ -416,6 +446,26 @@
               return window.ChatToolCommon.runClientToolCallList(pending_tool_call_list, message_list, gadget.tool_list);
             })
             .push(function (client_tool_result_list) {
+              var i, tool_call, client_tool_result;
+              for (i = 0; i < pending_tool_call_list.length; i += 1) {
+                tool_call = pending_tool_call_list[i];
+                client_tool_result = client_tool_result_list[i];
+                gadget.tool_message_list.push({
+                  name: tool_call.function.name,
+                  content: 'args:' + (tool_call.function.arguments ? tool_call.function.arguments : '') + '\n' + 'result:' + client_tool_result.content,
+                  sub_message_list: client_tool_result.message_list,
+                  'role': "tool"
+                });
+                if (client_tool_result.execution_plan !== undefined) {
+                  gadget.execution_plan = client_tool_result.execution_plan;
+                }
+              }
+              return gadget.gadget_chat_ui.showMessage({tool_message_list: gadget.tool_message_list, execution_plan: gadget.execution_plan })
+                .push(function () {
+                  return client_tool_result_list;
+                });
+            })
+            .push(function (client_tool_result_list) {
               var summarize_queue = new RSVP.Queue(),
                 summarized_content_list = [];
               client_tool_result_list.forEach(function (client_tool_result, i) {
@@ -428,41 +478,23 @@
                   });
               });
               return summarize_queue.push(function () {
-                return [client_tool_result_list, summarized_content_list];
+                var next_message_list = message_list, i, tool_call;
+                for (i = 0; i < pending_tool_call_list.length; i += 1) {
+                  tool_call = pending_tool_call_list[i];
+                  next_message_list = next_message_list.concat([{
+                    role: "tool",
+                    tool_call_id: tool_call.id,
+                    name: tool_call.function.name,
+                    content: summarized_content_list[i]
+                  }]);
+                }
+                return next_message_list;
               });
             })
-            .push(function (result_pair) {
-              var client_tool_result_list = result_pair[0],
-                summarized_content_list = result_pair[1],
-                next_message_list = message_list, i, tool_call, client_tool_result;
-              for (i = 0; i < pending_tool_call_list.length; i += 1) {
-                tool_call = pending_tool_call_list[i];
-                client_tool_result = client_tool_result_list[i];
-                next_message_list = next_message_list.concat([{
-                  role: "tool",
-                  tool_call_id: tool_call.id,
-                  name: tool_call.function.name,
-                  content: summarized_content_list[i]
-                }]);
-                gadget.tool_message_list.push({
-                  name: tool_call.function.name,
-                  content: 'args:' + (tool_call.function.arguments ? tool_call.function.arguments : '') + '\n' + 'result:' + client_tool_result.content,
-                  sub_message_list: client_tool_result.message_list,
-                  'role': "tool"
-                });
-                if (client_tool_result.execution_plan !== undefined) {
-                  gadget.execution_plan = client_tool_result.execution_plan;
-                }
-              }
-              return RSVP.all([
-                next_message_list,
-                gadget.gadget_chat_ui.showMessage({tool_message_list: gadget.tool_message_list, execution_plan: gadget.execution_plan })
-              ]);
-            })
-            .push(function (resulit_list) {
+            .push(function (next_message_list) {
               return loop_call(
                 loop_count + 1,
-                resulit_list[0],
+                next_message_list,
                 null,
                 is_retry
               );
@@ -477,7 +509,6 @@
           })
           .push(function (compacted_message_list) {
             var shrunk_by = message_list.length - compacted_message_list.length;
-            gadget.current_initial_message_length = Math.max(0, gadget.current_initial_message_length - shrunk_by);
             if (gadget.last_usage_anchor) {
               gadget.last_usage_anchor.message_count = Math.max(0, gadget.last_usage_anchor.message_count - shrunk_by);
             }
@@ -492,6 +523,7 @@
           })
           .push(function (result) {
             var execution_plan;
+            addUsageToTotals(gadget, result.usage);
             if (result.usage && result.usage.prompt_tokens) {
               gadget.last_usage_anchor = { prompt_tokens: result.usage.prompt_tokens, message_count: message_list.length };
             }
@@ -521,6 +553,13 @@
             execution_plan = gadget.execution_plan;
             gadget.processing_queue = null;
             gadget.execution_plan = null;
+            gadget.tool_message_list.push({
+              role: "tool",
+              name: "usage_totals",
+              content: "Task usage: " + gadget.usage_totals.call_count + " LLM call(s), " +
+                gadget.usage_totals.prompt_tokens + " prompt + " + gadget.usage_totals.completion_tokens +
+                " completion = " + gadget.usage_totals.total_tokens + " token(s) total."
+            });
             return RSVP.all([
               gadget.gadget_chat_ui.showMessage({ content: result.content , tool_message_list: gadget.tool_message_list, execution_plan: execution_plan }),
               gadget.notifySubmitted({message: 'Completed', status: "success"}),
@@ -528,7 +567,7 @@
               gadget.storeTaskResult(
                 gadget.options.jio_key,
                 {
-                  message_list: JSON.stringify(message_list.slice(gadget.current_initial_message_length).concat([result])),
+                  tool_message_list: JSON.stringify(gadget.tool_message_list),
                   content: result.content,
                   execution_plan: execution_plan ? JSON.stringify(execution_plan) : ""
                 }
@@ -537,19 +576,35 @@
           })
           .push(undefined, function (e) {
             if (!is_retry && isRateLimitError(e)) {
-              if (window.console && window.console.warn) {
-                window.console.warn(e.message + " - retrying once in " + (RATE_LIMIT_RETRY_DELAY_MS / 1000) + "s");
-              }
-              return new RSVP.Queue(RSVP.delay(RATE_LIMIT_RETRY_DELAY_MS))
+              gadget.tool_message_list.push({
+                role: "tool",
+                name: "rate_limit_retry",
+                content: e.message + " - retrying once in " + (RATE_LIMIT_RETRY_DELAY_MS / 1000) + "s"
+              });
+              return gadget.gadget_chat_ui.showMessage({
+                tool_message_list: gadget.tool_message_list,
+                execution_plan: gadget.execution_plan
+              })
                 .push(function () {
-                  return loop_call(loop_count, message_list, pending_tool_call_list, true);
+                  return new RSVP.Queue(RSVP.delay(RATE_LIMIT_RETRY_DELAY_MS))
+                    .push(function () {
+                      return loop_call(loop_count, message_list, pending_tool_call_list, true);
+                    });
                 });
             }
             if (!is_retry && isContextOverflowError(e)) {
-              if (window.console && window.console.warn) {
-                window.console.warn(e.message + " - the proactive estimate missed this, compacting harder and retrying once");
-              }
-              return gadget.compactMessageList(message_list, PANIC_KEEP_RECENT_TOKEN_BUDGET)
+              gadget.tool_message_list.push({
+                role: "tool",
+                name: "context_overflow_retry",
+                content: e.message + " - the proactive estimate missed this, compacting harder and retrying once"
+              });
+              return gadget.gadget_chat_ui.showMessage({
+                tool_message_list: gadget.tool_message_list,
+                execution_plan: gadget.execution_plan
+              })
+                .push(function () {
+                  return gadget.compactMessageList(message_list, PANIC_KEEP_RECENT_TOKEN_BUDGET);
+                })
                 .push(function (compacted_message_list) {
                   if (compacted_message_list.length >= message_list.length) {
                     throw e;
@@ -558,16 +613,32 @@
                 });
             }
             if (!is_retry && isEmptyResponseError(e)) {
-              if (window.console && window.console.warn) {
-                window.console.warn(e.message + " - retrying once");
-              }
-              return loop_call(loop_count, message_list, pending_tool_call_list, false);
+              gadget.tool_message_list.push({
+                role: "tool",
+                name: "empty_response_retry",
+                content: e.message + " - retrying once"
+              });
+              return gadget.gadget_chat_ui.showMessage({
+                tool_message_list: gadget.tool_message_list,
+                execution_plan: gadget.execution_plan
+              })
+                .push(function () {
+                  return loop_call(loop_count, message_list, pending_tool_call_list, false);
+                });
             }
             if (!is_retry && isNetworkError(e)) {
-              if (window.console && window.console.warn) {
-                window.console.warn(e.message + " - the connection to the LLM server dropped mid-request, retrying once");
-              }
-              return loop_call(loop_count, message_list, pending_tool_call_list, false);
+              gadget.tool_message_list.push({
+                role: "tool",
+                name: "network_error_retry",
+                content: e.message + " - the connection to the LLM server dropped mid-request, retrying once"
+              });
+              return gadget.gadget_chat_ui.showMessage({
+                tool_message_list: gadget.tool_message_list,
+                execution_plan: gadget.execution_plan
+              })
+                .push(function () {
+                  return loop_call(loop_count, message_list, pending_tool_call_list, false);
+                });
             }
             return loopError(e);
           });
@@ -597,7 +668,6 @@
             { role: "system", content: window.ChatToolCommon.ENVIRONMENT_SYSTEM_PROMPT },
             { role: "system", content: window.ChatToolCommon.TOOL_CALL_REPEAT_SYSTEM_PROMPT }
           ].concat(skill_message_list, message_list);
-          gadget.current_initial_message_length = message_list.length;
           return loop_call(0, message_list);
         });
       return queue_loop;
