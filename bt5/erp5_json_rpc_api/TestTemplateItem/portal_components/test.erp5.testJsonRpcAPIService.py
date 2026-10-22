@@ -1,6 +1,6 @@
 ##############################################################################
 # coding: utf-8
-# Copyright (c) 2002-2023 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2002-2026 Nexedi SA and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsibility of assessing all potential
@@ -518,8 +518,9 @@ error.handling.callable | JsonRpcService_testExample'''
     self.assertEqual(response.getHeader('content-type'), 'application/json')
     self.assertEqual(
       loadJson(response.getBody()), {
-        "type": "unknown-error",
-        "title": "ValueError: 2 is not of type 'string'"
+        "status": 500,
+        "type": "invalid-response-content",
+        "title": "2 is not of type 'string'"
       })
     self.assertNotEqual(self.portal.getTitle(), "ooops")
 
