@@ -3,8 +3,6 @@
 (function (window, rJS, RSVP) {
   "use strict";
 
-  var HTTP_FETCH_LIMIT = 200000;
-
   // JSON with every non-ASCII code point escaped, so it stays valid in an
   // HTTP header (ported from ai-agent-harness's js/util.js asciiJSON).
   function asciiJSON(value) {
@@ -38,7 +36,9 @@
             headers: { type: "object", description: "Extra request headers." },
             body: { type: "string" },
             raw: { type: "boolean", description: "Return the body verbatim instead of extracted text." },
-            max_chars: { type: "integer", description: "Truncation limit (default 20000)." }
+            max_chars: { type: "integer", description: "Optional: truncate the returned text to this many " +
+              "characters. If omitted, the full text is returned (and automatically summarized if it's too " +
+              "large to send as-is)." }
           },
           required: ["url"]
         }
@@ -90,8 +90,7 @@
               return {
                 status: status,
                 content_type: content_type,
-                // a generous, fixed safety cap - max_chars below is applied on top
-                text: text.length > HTTP_FETCH_LIMIT ? text.slice(0, HTTP_FETCH_LIMIT) + "\n...[truncated]" : text
+                text: text
               };
             });
           })
@@ -108,7 +107,7 @@
           if (result.error) {
             return "ERROR: " + result.error;
           }
-          text = window.ChatToolCommon.truncate(result.text || "", HTTP_FETCH_LIMIT);
+          text = result.text || "";
 
           is_html = /html/i.test(result.content_type || "") ||
             /<(!doctype\s+html|html|head)[\s>]/i.test(text.slice(0, 2000));
@@ -116,8 +115,10 @@
           if (!args.raw && is_html) {
             text = window.ChatToolCommon.htmlToText(text);
           }
-          return "HTTP " + result.status + " " + (result.content_type || "") + "\n\n" +
-            window.ChatToolCommon.truncate(text, Math.min(args.max_chars || 20000, HTTP_FETCH_LIMIT));
+          if (args.max_chars && text.length > args.max_chars) {
+            text = text.slice(0, args.max_chars) + "\n... [truncated at " + args.max_chars + " chars]";
+          }
+          return "HTTP " + result.status + " " + (result.content_type || "") + "\n\n" + text;
         });
     });
 }(window, rJS, RSVP));

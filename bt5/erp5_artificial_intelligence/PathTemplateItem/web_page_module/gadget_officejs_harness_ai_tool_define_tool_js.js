@@ -9,6 +9,7 @@
     .declareMethod('getDefinition', function () {
       return {
         name: "define_tool",
+        executionMode: "sequential",
         description: "Define a new, named tool for yourself, available to call (by name, with its own " +
           "argument schema) for the rest of this conversation, including by any sub-agent you spawn " +
           "afterwards, and persisted so it is still there next time you open this task. The " +
