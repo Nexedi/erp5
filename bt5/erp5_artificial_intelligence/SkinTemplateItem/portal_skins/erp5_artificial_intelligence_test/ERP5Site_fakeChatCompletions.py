@@ -329,6 +329,17 @@ else:
 if chunk_list is None:
   chunk_list = [chunk]
 
+# Real OpenAI-compatible streaming (with stream_options.include_usage, which
+# requestProcessTask always sets) ends with one extra frame carrying only
+# "usage" and an empty/absent "choices" - added here so every response this
+# script returns exercises gadget_officejs_harness_ai_agent_js.js's usage
+# accumulation (gadget.usage_totals) the same way a real backend would.
+chunk_list = chunk_list + [{'choices': [], 'usage': {
+    'prompt_tokens': 500,
+    'completion_tokens': 50,
+    'total_tokens': 550,
+}}]
+
 body_text = ''.join('data: %s\n\n' % json.dumps(c) for c in chunk_list) + 'data: [DONE]\n\n'
 
 response = request.RESPONSE

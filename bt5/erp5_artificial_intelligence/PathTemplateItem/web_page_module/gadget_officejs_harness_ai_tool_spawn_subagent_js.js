@@ -12,6 +12,7 @@
     .declareAcquiredMethod("getToolList", "getToolList")
     .declareAcquiredMethod("compactMessageList", "compactMessageList")
     .declareAcquiredMethod("summarizeToolOutput", "summarizeToolOutput")
+    .declareAcquiredMethod("addUsageToTotals", "addUsageToTotals")
     .declareMethod('render', function (options) {
       this.jio_key = options.jio_key;
     })
@@ -144,6 +145,7 @@
             );
           })
           .push(function (result) {
+            gadget.addUsageToTotals(result.usage);
             if (result.usage && result.usage.prompt_tokens) {
               last_usage_anchor = { prompt_tokens: result.usage.prompt_tokens, message_count: message_list.length };
             }

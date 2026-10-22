@@ -7,6 +7,7 @@
     .declareMethod('getDefinition', function () {
       return {
         name: "execution_plan",
+        executionMode: "sequential",
         description: "Create, replace or update your execution plan: an ordered checklist of steps " +
           "working towards a stated goal, shown to the user as a live checklist right in your current " +
           "chat message. Two commands: \"set\" (create or completely replace the plan - call this first " +

@@ -9,6 +9,7 @@
     .declareMethod('getDefinition', function () {
       return {
         name: "undefine_tool",
+        executionMode: "sequential",
         description: "Remove a tool you previously created with define_tool, including its persisted " +
           "copy. Built-in and MCP tools cannot be removed.",
         parameters: {

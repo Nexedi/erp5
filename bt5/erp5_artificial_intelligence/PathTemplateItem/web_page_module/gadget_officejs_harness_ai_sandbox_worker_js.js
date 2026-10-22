@@ -143,8 +143,8 @@
     return value;
   }
 
-  /** Structured-clone-safe, size-bounded rendering of an arbitrary JS value. */
-  function describe(value, maxLen = 4000) {
+  /** Structured-clone-safe rendering of an arbitrary JS value. */
+  function describe(value) {
     let text;
     try {
       text = typeof value === 'string' ? value : JSON.stringify(value, jsonSafe, 2);
@@ -152,7 +152,7 @@
       text = String(value);
     }
     if (text === undefined) text = String(value);
-    return text.length > maxLen ? text.slice(0, maxLen) + `\n… [truncated, ${text.length} chars total]` : text;
+    return text;
   }
 
   const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
@@ -176,7 +176,7 @@
   async function execJS(code, args = null, libraryNames = []) {
     const logs = [];
     const record = (level) => (...parts) => {
-      logs.push(`[${level}] ${parts.map((p) => describe(p, 2000)).join(' ')}`);
+      logs.push(`[${level}] ${parts.map((p) => describe(p)).join(' ')}`);
     };
     const sandboxConsole = {
       log: record('log'), info: record('info'), warn: record('warn'),

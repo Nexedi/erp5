@@ -17,12 +17,6 @@
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 <tr>
-  <td>waitForTextPresent</td>
-  <td>Artificial Tasks</td>
-  <td></td>
-</tr>
-
-<tr>
   <td>waitForElementPresent</td>
   <td>//button[@data-i18n='Menu']</td>
   <td></td>
@@ -42,7 +36,6 @@
   <td>//a[text()='Setting']</td>
   <td></td>
 </tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
   <td>waitForElementPresent</td>
   <td>//input[@name='base_url']</td>
@@ -78,8 +71,12 @@
   <td>//button[@data-i18n='Proceed']</td>
   <td></td>
 </tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//h1[text()='Hello! How can I help you today?']</td>
+  <td></td>
+</tr>
 <tr>
   <td>waitForElementPresent</td>
   <td>//button[@data-i18n='Menu']</td>
@@ -126,7 +123,6 @@
   <td>//a[text()='Artificial Task Module']</td>
   <td></td>
 </tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
   <td>waitForTextPresent</td>
   <td>Artificial Tasks</td>
@@ -153,7 +149,6 @@
   <td>//a[text()='Setting']</td>
   <td></td>
 </tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
   <td>waitForElementPresent</td>
   <td>//input[@name='base_url']</td>
@@ -169,7 +164,6 @@
   <td>//a[@data-i18n='Setting']</td>
   <td></td>
 </tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
   <td>waitForTextPresent</td>
   <td>Artificial Tasks</td>
@@ -196,7 +190,6 @@
   <td>//a[text()='External service']</td>
   <td></td>
 </tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
   <td>waitForTextPresent</td>
   <td>MCP Server Connections</td>
@@ -212,7 +205,6 @@
   <td>//a[@data-i18n='External Service']</td>
   <td></td>
 </tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
   <td>waitForTextPresent</td>
   <td>Artificial Tasks</td>

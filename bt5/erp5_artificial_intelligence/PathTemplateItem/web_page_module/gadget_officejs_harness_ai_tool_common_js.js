@@ -20,13 +20,6 @@
       "tools out of JS code, spawn_subagent for delegating sub-tasks, and whatever MCP tools are " +
       "configured. Do not assume access to anything beyond these.";
 
-  function truncate(text, max_len) {
-    if (typeof text !== "string") {
-      text = String(text);
-    }
-    return text.length > max_len ? text.slice(0, max_len) + "\n... [truncated at " + max_len + " chars]" : text;
-  }
-
   function htmlToText(html) {
     var body_match = /<body[^>]*>([\s\S]*)<\/body>/i.exec(html);
     if (body_match) {
@@ -114,7 +107,14 @@
 
   function toolDefinitionList(tool_list) {
     return tool_list.map(function (tool) {
-      return { type: "function", "function": tool.definition };
+      return {
+        type: "function",
+        "function": {
+          name: tool.definition.name,
+          description: tool.definition.description,
+          parameters: tool.definition.parameters
+        }
+      };
     });
   }
 
@@ -189,25 +189,56 @@
     return count;
   }
 
+  function runOneClientToolCall(tool_call, message_list, tool_list) {
+    var repeat_count = countPriorIdenticalToolCalls(message_list, tool_call);
+    if (repeat_count >= TOOL_CALL_REPEAT_LIMIT) {
+      return {
+        tool_call_id: tool_call.id,
+        name: tool_call.function.name,
+        content: "You already called this exact tool with these exact same arguments " + repeat_count +
+          " time(s) before in this conversation, and it did not help - repeating it again will not " +
+          "produce a different result. Stop retrying this exact call: try different arguments, a " +
+          "different tool, or report the failure and move on."
+      };
+    }
+    return runClientToolCall(tool_call, tool_list);
+  }
+
+  function isSequentialToolCall(tool_call, tool_list) {
+    var tool = findClientTool(tool_call.function.name, tool_list);
+    return Boolean(tool && tool.definition && tool.definition.executionMode === "sequential");
+  }
+
   function runClientToolCallList(tool_call_list, message_list, tool_list) {
-    return RSVP.all(tool_call_list.map(function (tool_call) {
-      var repeat_count = countPriorIdenticalToolCalls(message_list, tool_call);
-      if (repeat_count >= TOOL_CALL_REPEAT_LIMIT) {
-        return {
-          tool_call_id: tool_call.id,
-          name: tool_call.function.name,
-          content: "You already called this exact tool with these exact same arguments " + repeat_count +
-            " time(s) before in this conversation, and it did not help - repeating it again will not " +
-            "produce a different result. Stop retrying this exact call: try different arguments, a " +
-            "different tool, or report the failure and move on."
-        };
-      }
-      return runClientToolCall(tool_call, tool_list);
-    }));
+    var queue, result_list;
+
+    if (!tool_call_list.some(function (tool_call) { return isSequentialToolCall(tool_call, tool_list); })) {
+      return RSVP.all(tool_call_list.map(function (tool_call) {
+        return runOneClientToolCall(tool_call, message_list, tool_list);
+      }));
+    }
+
+    // At least one call in this round targets a tool that mutates shared
+    // gadget state (e.g. execution_plan, define_tool/undefine_tool) - run
+    // the whole round one at a time instead of in parallel, so two such
+    // calls in the same round can never race each other.
+    queue = new RSVP.Queue();
+    result_list = [];
+    tool_call_list.forEach(function (tool_call, i) {
+      queue
+        .push(function () {
+          return runOneClientToolCall(tool_call, message_list, tool_list);
+        })
+        .push(function (result) {
+          result_list[i] = result;
+        });
+    });
+    return queue.push(function () {
+      return result_list;
+    });
   }
 
   window.ChatToolCommon = {
-    truncate: truncate,
     htmlToText: htmlToText,
     runSandboxJob: runSandboxJob,
     renderPlanText: renderPlanText,
