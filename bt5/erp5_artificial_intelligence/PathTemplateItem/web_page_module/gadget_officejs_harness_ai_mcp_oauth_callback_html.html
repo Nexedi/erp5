@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Connecting to MCP server</title>
+  </head>
+  <body>
+    <p>Completing sign-in...</p>
+    <script type="text/javascript">
+      (function () {
+        "use strict";
+        // Keys must match PENDING_STORAGE_KEY/RESULT_STORAGE_KEY in
+        // gadget_officejs_harness_ai_mcp_oauth_js.js - this is a plain static
+        // page (registered as the OAuth redirect_uri) with no access to that
+        // module, so the literal strings are duplicated here on purpose.
+        var params = new URLSearchParams(window.location.search),
+          pending_raw = window.sessionStorage.getItem("erp5_mcp_oauth_pending"),
+          pending = null,
+          return_url;
+        window.sessionStorage.setItem("erp5_mcp_oauth_result", JSON.stringify({
+          code: params.get("code"),
+          state: params.get("state"),
+          error: params.get("error") || params.get("error_description")
+        }));
+        try {
+          pending = pending_raw ? JSON.parse(pending_raw) : null;
+        } catch (ignore) {
+          pending = null;
+        }
+        return_url = pending && pending.return_url;
+        if (return_url) {
+          window.location.replace(return_url);
+        } else {
+          document.body.textContent =
+            "Sign-in complete, but the application window could not be found automatically. " +
+            "Please return to the application to finish connecting.";
+        }
+      }());
+    </script>
+  </body>
+</html>
