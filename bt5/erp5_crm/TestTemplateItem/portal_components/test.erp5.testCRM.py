@@ -1464,6 +1464,49 @@ class TestCRMMailSend(BaseTestCRM):
         part = i
     self.assertEqual(part.get_payload(decode=True), bytes(document.getData()))
 
+  def test_MailAttachmentEmbeddedImageInline(self):
+    filename = 'sample_attachment.gif'
+    file_object = self.makeFileUpload(filename)
+    ticket = self.portal.campaign_module.newContent(
+      portal_type='Campaign',
+      title='Advertisement',
+    )
+    ticket.Ticket_newEvent(
+      portal_type='Mail Message',
+      title='Our new product',
+      text_content='Buy this now!',
+      event_workflow_action='plan',
+    )
+    event, = self.portal.event_module.objectValues()
+    attached_image = event.newContent(portal_type='Embedded File', file=file_object)
+    event.edit(
+      source='person_module/me',
+      destination='person_module/recipient',
+      content_type='text/html',
+      text_content='This is an advertisement mail, with an image <img src="%s">.' % attached_image.getRelativeUrl(),
+      aggregate_value_list=[attached_image],
+    )
+
+    mail_text = event.send(download=True)
+    message = message_from_bytes(six.ensure_binary(mail_text))
+    html_part = image_part = None
+    cid = None
+    for i in message.get_payload():
+      if i.get_content_type() == 'text/html':
+        html_part = i
+      if i.get_filename() == filename:
+        image_part = i
+
+    self.assertTrue(image_part)
+    self.assertEqual(image_part.get_payload(decode=True), bytes(attached_image.getData()))
+    self.assertEqual(image_part.get_content_type(), 'image/gif')
+    cid = image_part['Content-Id'].replace('<', '').replace('>', '')
+
+    self.assertTrue(html_part)
+    self.assertEqual(
+      bytes2str(html_part.get_payload(decode=True)),
+      '<html><body>This is an advertisement mail, with an image <img src="cid:%s">.</body></html>' % cid)
+
   def test_MailAttachmentWebPage(self):
     """
     Make sure that webpage document is correctly attached in email
