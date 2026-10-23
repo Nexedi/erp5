@@ -1,0 +1,6 @@
+<property_sheet_list>
+ <portal_type id="SuperPDP Invoicing Connector">
+  <item>OAuth2ClientSecret</item>
+  <item>SocketClient</item>
+ </portal_type>
+</property_sheet_list>
