@@ -10,7 +10,8 @@
         return RSVP.all([
           gadget.getSetting("portal_type", "Web Page"),
           gadget.getSetting("erp5_attachment_synchro", ""),
-          gadget.getSetting("default_view_reference", 'jio_view')
+          gadget.getSetting("default_view_reference", 'jio_view'),
+          gadget.getIndexedDBPrefix()
         ]);
       })
       .push(function (result) {
@@ -19,6 +20,7 @@
           attachment_synchro = result[1] !== "",
           extended_attachment_url = result[1],
           portal_type = result[0].split(','),
+          prefix = result[3],
           query = '',
           i,
           // https://bugs.chromium.org/p/chromium/issues/detail?id=375297
@@ -74,7 +76,7 @@
               type: "uuid",
               sub_storage: {
                 type: "indexeddb",
-                database: "officejs-erp5-hash"
+                database: prefix + "officejs-erp5-hash"
               }
             }
           },
@@ -85,7 +87,7 @@
               type: "uuid",
               sub_storage: {
                 type: "indexeddb",
-                database: "officejs-erp5"
+                database: prefix + "officejs-erp5"
               }
             }
           },
@@ -153,6 +155,7 @@
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("setSetting", "setSetting")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
+    .declareAcquiredMethod("getIndexedDBPrefix", "getIndexedDBPrefix")
     .declareMethod("getGlobalSetting", function (key) {
       var gadget = this;
       return gadget.getDeclaredGadget("global_setting_gadget")
