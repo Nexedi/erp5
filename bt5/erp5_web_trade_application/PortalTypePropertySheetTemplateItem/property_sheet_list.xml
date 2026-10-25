@@ -1,0 +1,8 @@
+<property_sheet_list>
+ <portal_type id="Purchase Price Record">
+  <item>SupplyLine</item>
+ </portal_type>
+ <portal_type id="Sale Price Record">
+  <item>SupplyLine</item>
+ </portal_type>
+</property_sheet_list>
