@@ -1,0 +1,27 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test ERP5 Harness AI - Tool Call</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test ERP5 Harness AI - Tool Call</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForErp5HarnessAI/macros/open_fixture_task" />
+<tr>
+  <td>getEval</td>
+  <td>window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror.setValue('Please run the fake_tool test')</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForErp5HarnessAI/macros/post_comment_and_wait_for_activities" />
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Tool result: iPhone invoice created: quantity=10</td>
+  <td></td>
+</tr>
+</tbody></table>
+</body>
+</html>

@@ -1,4 +1,6 @@
 portal_alarms/run_artificial_task_alarm
+portal_tests/erp5_harness_ai_ui_zuite
+portal_tests/erp5_harness_ai_ui_zuite/**
 portal_tests/officejs_harness_ai_ui_zuite
 portal_tests/officejs_harness_ai_ui_zuite/**
 portal_types/Artificial Task Module/officejs_harness_ai_view
