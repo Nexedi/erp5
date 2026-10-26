@@ -210,6 +210,36 @@ hr#post_item {
   font-weight: 600;
 }
 
+/* ---- Sub-agent trace ------------------------------------------------------- */
+
+#post_list li.post-tool .post-tool-sub-list {
+  --subagent-accent: #7C4DFF;
+  margin-top: 0.5em;
+  padding: 0.5em 0.75em 0.15em;
+  background: var(--chat-surface);
+  border: 1px dashed var(--subagent-accent);
+  border-left: 3px solid var(--subagent-accent);
+  border-radius: 0.5rem;
+}
+
+#post_list li.post-tool .post-tool-sub-list summary {
+  color: var(--subagent-accent);
+}
+
+#post_list li.post-tool .post-tool-sub-list summary::before {
+  content: "\1F916";
+}
+
+#post_list li.post-tool .post-tool-sub-entry {
+  padding-left: 0.6em;
+  border-top-color: var(--subagent-accent);
+  opacity: 0.85;
+}
+
+#post_list li.post-tool .post-tool-sub-entry strong {
+  color: var(--subagent-accent);
+}
+
 /* ---- Execution plan checklist ---------------------------------------------- */
 
 .execution-plan {
