@@ -156,6 +156,12 @@
   <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_erp5_project_panel.html']//dd[@class='document-listview']//a[text()='Discussion Threads' and @class='active']</td>
   <td></td>
 </tr>
+<!-- forum pages hide the publication workflow transitions -->
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_erp5_project_panel.html']//dt[text()='Workflows']</td>
+  <td></td>
+</tr>
 <tr>
   <td>assertElementPresent</td>
   <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_erp5_project_panel.html']//a[text()='New Thread' and contains(@href, '#!display_dialog_with_history')]</td>
@@ -164,12 +170,12 @@
 <!-- the feed url is minted on click, so the field renders a button and no token -->
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_rss_link.html']//button[text()='Get RSS access link']</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_rss_link.html']//button[text()='RSS feed of all your forums']</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_rss_link.html']//button[text()='Get RSS access link']</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_rss_link.html']//button[text()='RSS feed of all your forums']</td>
   <td></td>
 </tr>
 <tr>
@@ -230,6 +236,17 @@
 <tr>
   <td>waitForTextPresent</td>
   <td>Discussion Threads</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/portal_skins/erp5_web_project_test/ERP5Site_addTestForumPostAttachment?thread_title=Thread%201&amp;attachment_title=test-attachment.txt</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Attachment Added</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
@@ -304,8 +321,18 @@
   <td></td>
 </tr>
 <tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_erp5_project_panel.html']//dt[text()='Workflows']</td>
+  <td></td>
+</tr>
+<tr>
   <td>assertElementPresent</td>
   <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_thread_reader.html']//ol//li//p[text()='Post 1']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_thread_reader.html']//ol//li//ul//li//a[text()='test-attachment.txt']</td>
   <td></td>
 </tr>
 <tr>
