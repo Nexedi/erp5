@@ -1,0 +1,130 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal">
+
+  <tal:block metal:define-macro="load_setting_page">
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//button[@data-i18n='Menu']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//button[@data-i18n='Menu']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//a[text()='External service']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a[text()='External service']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>MCP Server Connections</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//button[@data-i18n='Menu']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//button[@data-i18n='Menu']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//a[text()='Setting']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a[text()='Setting']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//input[@name='base_url']</td>
+      <td></td>
+    </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="fill_setting_and_proceed">
+    <tr>
+      <td>type</td>
+      <td>//input[@name='base_url']</td>
+      <td>${base_url}/ERP5Site_fakeChatCompletions</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>//input[@name='api_key']</td>
+      <td>test-api-key</td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//select[@id='model']/option</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>select</td>
+      <td>id=model</td>
+      <td>index=0</td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//button[@data-i18n='Proceed']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//button[@data-i18n='Proceed']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//h1[text()='Hello! How can I help you today?']</td>
+      <td></td>
+    </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="goto_new_artificial_task">
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//button[@data-i18n='Menu']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//button[@data-i18n='Menu']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//a[text()='New Artificial Task']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a[text()='New Artificial Task']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>css=div.CodeMirror</td>
+      <td></td>
+    </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="setup_fake_llm_and_new_task">
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForHarnessAI/macros/load_setting_page" />
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForHarnessAI/macros/fill_setting_and_proceed" />
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForHarnessAI/macros/goto_new_artificial_task" />
+  </tal:block>
+
+</tal:block>

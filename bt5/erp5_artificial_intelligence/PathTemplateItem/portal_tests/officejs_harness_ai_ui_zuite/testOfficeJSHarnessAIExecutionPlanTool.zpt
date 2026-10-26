@@ -1,0 +1,181 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test OfficeJS Harness AI - execution_plan Tool</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test OfficeJS Harness AI - execution_plan Tool</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/officejs_harness_ai/</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForHarnessAI/macros/setup_fake_llm_and_new_task" />
+<tr>
+  <td>getEval</td>
+  <td>window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror.setValue('Please run the execution plan tool test')</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Dry run: step looks safe, marking done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class='execution-plan']//strong[contains(text(),'Prove the execution-plan checklist works end-to-end.')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//li[contains(@class,'execution-plan-step-done')]//span[@class='execution-plan-step-title' and text()='Check something']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//li[contains(@class,'execution-plan-step-done')]//div[@class='execution-plan-step-note' and text()='Dry run: step looks safe, marking done.']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//li[contains(@class,'execution-plan-step-pending')]//span[@class='execution-plan-step-title' and text()='Do the thing']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>getEval</td>
+  <td>window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror.setValue('Please run the archive plan tool test')</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class='execution-plan']//strong[contains(text(),'Second goal: prove the old plan is not erased by a new one.')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//li[contains(@class,'execution-plan-step-done')]//span[@class='execution-plan-step-title' and text()='Second plan step']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class='execution-plan']//strong[contains(text(),'Prove the execution-plan checklist works end-to-end.')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//li[contains(@class,'execution-plan-step-done')]//span[@class='execution-plan-step-title' and text()='Check something']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//li[contains(@class,'execution-plan-step-pending')]//span[@class='execution-plan-step-title' and text()='Do the thing']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>getEval</td>
+  <td>window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror.setValue('Just say hi, nothing else needed.')</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Hello from the fake LLM!</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>//li[@class='post-answer'][last()]//div[@class='execution-plan']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class='execution-plan']//strong[contains(text(),'Second goal: prove the old plan is not erased by a new one.')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class='execution-plan']//strong[contains(text(),'Prove the execution-plan checklist works end-to-end.')]</td>
+  <td></td>
+</tr>
+</tbody></table>
+</body>
+</html>
