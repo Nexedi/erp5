@@ -79,16 +79,6 @@
     return estimateTokensForMessages(message_list);
   }
 
-  function addUsageToTotals(gadget, usage) {
-    if (!usage) {
-      return;
-    }
-    gadget.usage_totals.call_count += 1;
-    gadget.usage_totals.prompt_tokens += usage.prompt_tokens || 0;
-    gadget.usage_totals.completion_tokens += usage.completion_tokens || 0;
-    gadget.usage_totals.total_tokens += usage.total_tokens || ((usage.prompt_tokens || 0) + (usage.completion_tokens || 0));
-  }
-
   rJS(window)
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
     .declareAcquiredMethod("requestProcessTask", "requestProcessTask")
@@ -100,6 +90,7 @@
     .declareMethod('render', function (options) {
       var gadget = this;
       gadget.options = options;
+      gadget.jio_key = options.jio_key;
       gadget.execution_plan = null;
       return new RSVP.Queue(RSVP.all(STATIC_TOOL_SCOPE_LIST.map(function (scope) {
           return gadget.getDeclaredGadget(scope);
@@ -184,13 +175,26 @@
       return this.tool_list;
     })
     .allowPublicAcquisition('compactMessageList', function (argument_list) {
-      return this.compactMessageList(argument_list[0], argument_list[1], argument_list[2]);
+      return this.compactMessageList.apply(argument_list[0], argument_list);
     })
     .allowPublicAcquisition('summarizeToolOutput', function (argument_list) {
-      return this.summarizeToolOutput(argument_list[0]);
+      return this.summarizeToolOutput.apply(argument_list[0], argument_list);
     })
-    .allowPublicAcquisition('addUsageToTotals', function (argument_list) {
-      addUsageToTotals(this, argument_list[0]);
+    .declareMethod('requestProcessTaskWithUsage', function (gadget, document_id, request_options) {
+      return gadget.requestProcessTask(document_id, request_options)
+        .push(function (result) {
+          var usage = result.usage;
+          if (usage && gadget.usage_totals) {
+            gadget.usage_totals.call_count += 1;
+            gadget.usage_totals.prompt_tokens += usage.prompt_tokens || 0;
+            gadget.usage_totals.completion_tokens += usage.completion_tokens || 0;
+            gadget.usage_totals.total_tokens += usage.total_tokens || ((usage.prompt_tokens || 0) + (usage.completion_tokens || 0));
+          }
+          return result;
+        });
+    })
+    .allowPublicAcquisition('requestProcessTaskWithUsage', function (argument_list) {
+      return this.requestProcessTaskWithUsage.apply(argument_list[0], argument_list);
     })
     .allowPublicAcquisition('isToolNameTaken', function (argument_list) {
       var name = argument_list[0];
@@ -263,9 +267,8 @@
         )
       ]);
     })
-    .declareMethod('compactMessageList', function (message_list, keep_recent_override, last_usage_anchor) {
-      var gadget = this,
-        keep_recent_budget = keep_recent_override || KEEP_RECENT_TOKEN_BUDGET,
+    .declareMethod('compactMessageList', function (gadget, message_list, keep_recent_override, last_usage_anchor) {
+      var keep_recent_budget = keep_recent_override || KEEP_RECENT_TOKEN_BUDGET,
         leading_system_count = 0,
         cut_index,
         recent_token_count = 0,
@@ -297,19 +300,25 @@
         return message_list;
       }
 
-      gadget.tool_message_list.push({
-        role: "tool",
-        name: "compact_history",
-        content: "Conversation getting long - summarizing " + old_message_list.length +
-          " older message(s) to free up context..."
-      });
-      return gadget.gadget_chat_ui.showMessage({
-        tool_message_list: gadget.tool_message_list,
-        execution_plan: gadget.execution_plan
-      })
+      if (gadget.tool_message_list) {
+        gadget.tool_message_list.push({
+          role: "tool",
+          name: "compact_history",
+          content: "Conversation getting long - summarizing " + old_message_list.length +
+            " older message(s) to free up context..."
+        });
+      }
+      return new RSVP.Queue()
         .push(function () {
-          return gadget.requestProcessTask(
-            gadget.options.jio_key,
+          return gadget.gadget_chat_ui && gadget.gadget_chat_ui.showMessage({
+            tool_message_list: gadget.tool_message_list,
+            execution_plan: gadget.execution_plan
+          });
+        })
+        .push(function () {
+          return gadget.requestProcessTaskWithUsage(
+            gadget,
+            gadget.jio_key,
             {
               message_list: JSON.stringify([
                 { role: "system", content: SUMMARIZATION_PROMPT },
@@ -321,7 +330,6 @@
           );
         })
         .push(function (result) {
-          addUsageToTotals(gadget, result.usage);
           if (!result.content) {
             throw new Error("compactMessageList: empty summary");
           }
@@ -334,9 +342,8 @@
           return message_list;
         });
     })
-    .declareMethod('summarizeToolOutput', function (content) {
-      var gadget = this,
-        text = typeof content === "string" ? content : JSON.stringify(content),
+    .declareMethod('summarizeToolOutput', function (gadget, content) {
+      var text = typeof content === "string" ? content : JSON.stringify(content),
         chunk_list = [],
         start,
         queue = new RSVP.Queue(),
@@ -350,20 +357,23 @@
       chunk_list.forEach(function (chunk, index) {
         queue
           .push(function () {
-            gadget.tool_message_list.push({
-              role: "tool",
-              name: "summarize_tool_output",
-              content: "Tool result too large to send as-is - summarizing part " + (index + 1) +
-                " of " + chunk_list.length + "..."
-            });
-            return gadget.gadget_chat_ui.showMessage({
+            if (gadget.tool_message_list) {
+              gadget.tool_message_list.push({
+                role: "tool",
+                name: "summarize_tool_output",
+                content: "Tool result too large to send as-is - summarizing part " + (index + 1) +
+                  " of " + chunk_list.length + "..."
+              });
+            }
+            return gadget.gadget_chat_ui && gadget.gadget_chat_ui.showMessage({
               tool_message_list: gadget.tool_message_list,
               execution_plan: gadget.execution_plan
             });
           })
           .push(function () {
-            return gadget.requestProcessTask(
-              gadget.options.jio_key,
+            return gadget.requestProcessTaskWithUsage(
+              gadget,
+              gadget.jio_key,
               {
                 message_list: JSON.stringify([
                   { role: "system", content: SUMMARY_PROMPT },
@@ -376,16 +386,17 @@
           })
           .push(function (result) {
             var summary_text;
-            addUsageToTotals(gadget, result.usage);
             summary_text = "[Summary of chunk " + (index + 1) + " of " + chunk_list.length +
               " of a truncated tool output]\n" + (result.content || "(empty summary)");
             summary_list.push(summary_text);
-            gadget.tool_message_list.push({
-              role: "tool",
-              name: "summarize_tool_output_result",
-              content: summary_text
-            });
-            return gadget.gadget_chat_ui.showMessage({
+            if (gadget.tool_message_list) {
+              gadget.tool_message_list.push({
+                role: "tool",
+                name: "summarize_tool_output_result",
+                content: summary_text
+              });
+            }
+            return gadget.gadget_chat_ui && gadget.gadget_chat_ui.showMessage({
               tool_message_list: gadget.tool_message_list,
               execution_plan: gadget.execution_plan
             });
@@ -443,6 +454,18 @@
         if (has_tool_call) {
           queue_loop
             .push(function () {
+              var i, tool_call;
+              for (i = 0; i < pending_tool_call_list.length; i += 1) {
+                tool_call = pending_tool_call_list[i];
+                gadget.tool_message_list.push({
+                  name: tool_call.function.name + " (call " + tool_call.id + ")",
+                  content: 'args:' + (tool_call.function.arguments ? tool_call.function.arguments : ''),
+                  'role': "tool"
+                });
+              }
+              return gadget.gadget_chat_ui.showMessage({tool_message_list: gadget.tool_message_list, execution_plan: gadget.execution_plan });
+            })
+            .push(function () {
               return window.ChatToolCommon.runClientToolCallList(pending_tool_call_list, message_list, gadget.tool_list);
             })
             .push(function (client_tool_result_list) {
@@ -451,13 +474,19 @@
                 tool_call = pending_tool_call_list[i];
                 client_tool_result = client_tool_result_list[i];
                 gadget.tool_message_list.push({
-                  name: tool_call.function.name,
-                  content: 'args:' + (tool_call.function.arguments ? tool_call.function.arguments : '') + '\n' + 'result:' + client_tool_result.content,
+                  name: tool_call.function.name + " (result " + tool_call.id + ")",
+                  content: 'result:' + client_tool_result.content,
                   sub_message_list: client_tool_result.message_list,
                   'role': "tool"
                 });
                 if (client_tool_result.execution_plan !== undefined) {
                   gadget.execution_plan = client_tool_result.execution_plan;
+                }
+                if (client_tool_result.usage_totals) {
+                  gadget.usage_totals.call_count += client_tool_result.usage_totals.call_count;
+                  gadget.usage_totals.prompt_tokens += client_tool_result.usage_totals.prompt_tokens;
+                  gadget.usage_totals.completion_tokens += client_tool_result.usage_totals.completion_tokens;
+                  gadget.usage_totals.total_tokens += client_tool_result.usage_totals.total_tokens;
                 }
               }
               return gadget.gadget_chat_ui.showMessage({tool_message_list: gadget.tool_message_list, execution_plan: gadget.execution_plan })
@@ -471,7 +500,7 @@
               client_tool_result_list.forEach(function (client_tool_result, i) {
                 summarize_queue
                   .push(function () {
-                    return gadget.summarizeToolOutput(client_tool_result.content);
+                    return gadget.summarizeToolOutput(gadget, client_tool_result.content);
                   })
                   .push(function (summarized_content) {
                     summarized_content_list[i] = summarized_content;
@@ -505,7 +534,7 @@
 
         queue_loop
           .push(function () {
-            return gadget.compactMessageList(message_list, undefined, gadget.last_usage_anchor);
+            return gadget.compactMessageList(gadget, message_list, undefined, gadget.last_usage_anchor);
           })
           .push(function (compacted_message_list) {
             var shrunk_by = message_list.length - compacted_message_list.length;
@@ -513,8 +542,9 @@
               gadget.last_usage_anchor.message_count = Math.max(0, gadget.last_usage_anchor.message_count - shrunk_by);
             }
             message_list = compacted_message_list;
-            return gadget.requestProcessTask(
-              gadget.options.jio_key,
+            return gadget.requestProcessTaskWithUsage(
+              gadget,
+              gadget.jio_key,
               {
                 message_list: JSON.stringify(message_list),
                 tool_definition_list: JSON.stringify(window.ChatToolCommon.toolDefinitionList(gadget.tool_list))
@@ -523,7 +553,6 @@
           })
           .push(function (result) {
             var execution_plan;
-            addUsageToTotals(gadget, result.usage);
             if (result.usage && result.usage.prompt_tokens) {
               gadget.last_usage_anchor = { prompt_tokens: result.usage.prompt_tokens, message_count: message_list.length };
             }
@@ -603,7 +632,7 @@
                 execution_plan: gadget.execution_plan
               })
                 .push(function () {
-                  return gadget.compactMessageList(message_list, PANIC_KEEP_RECENT_TOKEN_BUDGET);
+                  return gadget.compactMessageList(gadget, message_list, PANIC_KEEP_RECENT_TOKEN_BUDGET);
                 })
                 .push(function (compacted_message_list) {
                   if (compacted_message_list.length >= message_list.length) {
