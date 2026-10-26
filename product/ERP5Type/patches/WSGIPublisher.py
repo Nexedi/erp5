@@ -36,6 +36,7 @@ from Acquisition import aq_acquire
 from Acquisition import aq_inner
 from Acquisition import aq_parent
 from Products.ERP5Type.Timeout import getPublisherDeadlineValue
+from Products.ERP5Type.Utils import IZODBStreamIterator
 from transaction.interfaces import TransientError
 from zExceptions import Redirect
 from zExceptions import Unauthorized
@@ -43,7 +44,9 @@ from zExceptions import upgradeException
 from zope.component import queryMultiAdapter
 from zope.event import notify
 from zope.globalrequest import clearRequest
+from zope.globalrequest import getRequest
 from zope.globalrequest import setRequest
+from zope.interface import implementer
 from zope.publisher.skinnable import setDefaultSkin
 from zope.security.management import endInteraction
 from zope.security.management import newInteraction
@@ -74,8 +77,8 @@ from ZPublisher.WSGIPublisher import (
     _exc_view_created_response,
     transaction_pubevents,
     publish as _original_publish,
-    load_app,
-    publish_module
+    load_app as _original_load_app,
+    publish_module as _original_publish_module,
 )
 
 
@@ -150,9 +153,85 @@ def publish(request, module_info):
         return _original_publish(request, module_info)
 
 
-assert publish_module.__defaults__[0] is _original_publish
-publish_module.__defaults__ = (publish, ) + publish_module.__defaults__[1:]
+assert _original_publish_module.__defaults__[0] is _original_publish
+_original_publish_module.__defaults__ = (
+  (publish, ) + _original_publish_module.__defaults__[1:])
 
+
+# Streaming of ZODB data
+#
+# The upstream publisher closes the ZODB connection of the request before the
+# WSGI server iterates on the response body. A body that provides
+# IZODBStreamIterator must load ZODB objects while the server sends it, so the
+# connection stays open until the server calls close() on the body. The WSGI
+# server iterates on the body and calls close() in the thread of the request.
+
+@implementer(IUnboundStreamIterator)
+class ConnectionClosingIterator(object):
+    """Response body that closes a ZODB connection when it is closed.
+    """
+    def __init__(self, body, connection):
+        self._body = body
+        self._iterator = iter(body)
+        self._connection = connection
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        return next(self._iterator)
+
+    next = __next__ # BBB Python 2
+
+    def close(self):
+        connection = self._connection
+        if connection is not None:
+            self._connection = None
+            try:
+                close = getattr(self._body, 'close', None)
+                if close is not None:
+                    close()
+            finally:
+                connection.close()
+
+
+@contextmanager
+def load_app(module_info):
+    app_wrapper, realm, debug_mode = module_info
+    # Loads the 'OFS.Application' from ZODB.
+    app = app_wrapper()
+    response = None
+    try:
+        yield (app, realm, debug_mode)
+        # No exception: the transaction of the request is finished.
+        request = getRequest()
+        if request is not None and \
+           IZODBStreamIterator.providedBy(request.response.body):
+            response = request.response
+            if request.method == 'HEAD':
+                # The WSGI server sends the body even for a HEAD request.
+                close = getattr(response.body, 'close', None)
+                response.body = b''
+                response = None
+                if close is not None:
+                    close()
+    finally:
+        if transaction.manager.manager._txn is not None:
+            # Only abort a transaction, if one exists. Otherwise the
+            # abort creates a new transaction just to abort it.
+            transaction.abort()
+        if response is None:
+            app._p_jar.close()
+        else:
+            body = response.body
+            if response.getHeader('Content-Length') is None and \
+               IStreamIterator.providedBy(body):
+                response.setHeader('Content-Length', len(body))
+            response.body = ConnectionClosingIterator(body, app._p_jar)
+
+assert _original_publish_module.__globals__['load_app'] is _original_load_app
+_original_publish_module.__globals__['load_app'] = load_app
+publish_module = _original_publish_module
 
 
 sys.modules['ZPublisher.WSGIPublisher'] = sys.modules[__name__]
