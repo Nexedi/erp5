@@ -112,6 +112,18 @@ message's role/content picks the branch:
                                              echoes that notice back as the
                                              final answer
                                              (testOfficeJSHarnessAIRepeatedToolCallGuard.zpt)
+- content "repeated list_defined_tools
+  tool test"                              -> calls list_defined_tools (marked with a
+                                             "repeat_test" argument, silently ignored by the
+                                             real tool) three times in a row - one more than
+                                             TOOL_CALL_REPEAT_LIMIT - proving its allow_repeat
+                                             flag (gadget_officejs_harness_ai_tool_list_defined_tools_js.js)
+                                             exempts it from the client-side guard entirely:
+                                             unlike the http_request case above, every one of
+                                             the three calls reaches the real tool and returns
+                                             its genuine result, so the guard's canned "you
+                                             already called this" notice must never appear
+                                             (testOfficeJSHarnessAIAllowRepeatTool.zpt)
 - content "check for skill injection"    -> reports back (as plain text) whether any role-"system"
                                              message in the request already carries the
                                              create_html_report skill's instructions - this skill is
@@ -198,6 +210,24 @@ def is_repeat_test_tool_call(assistant_message):
   return bool(arguments.get('repeat_test'))
 
 
+def list_defined_tools_repeat_args():
+  return {'repeat_test': True}
+
+
+def is_list_defined_tools_repeat_test_call(assistant_message):
+  tool_call_list = assistant_message.get('tool_calls') or []
+  if not tool_call_list:
+    return False
+  function = tool_call_list[0].get('function') or {}
+  if function.get('name') != 'list_defined_tools':
+    return False
+  try:
+    arguments = json.loads(function.get('arguments') or '{}')
+  except ValueError:
+    return False
+  return bool(arguments.get('repeat_test'))
+
+
 def count_matching_assistant_tool_calls(msgs, name, arguments_json):
   count = 0
   for m in msgs:
@@ -239,6 +269,14 @@ elif (last_message.get('role') == 'tool' and len(message_list) >= 2
   # Re-issue the exact same call once - see the "repeated http_request tool
   # test" docstring entry above for why this stops after one re-issue.
   chunk = tool_call_chunk('http_request', repeat_test_args())
+elif (last_message.get('role') == 'tool' and len(message_list) >= 2
+      and is_list_defined_tools_repeat_test_call(message_list[-2])
+      and count_matching_assistant_tool_calls(
+          message_list, 'list_defined_tools', json.dumps(list_defined_tools_repeat_args())) < 3):
+  # Re-issue twice more (3 calls total) - see the "repeated list_defined_tools
+  # tool test" docstring entry above: allow_repeat means none of these ever
+  # get intercepted by the guard, unlike the http_request case.
+  chunk = tool_call_chunk('list_defined_tools', list_defined_tools_repeat_args())
 elif last_message.get('role') == 'tool':
   chunk = {'choices': [{'delta': {
       'content': 'Tool result: %s' % last_content,
@@ -273,6 +311,8 @@ elif 'library_inspect tool test' in last_content_lower:
   })
 elif 'repeated http_request tool test' in last_content_lower:
   chunk = tool_call_chunk('http_request', repeat_test_args())
+elif 'repeated list_defined_tools tool test' in last_content_lower:
+  chunk = tool_call_chunk('list_defined_tools', list_defined_tools_repeat_args())
 elif 'http_request tool test' in last_content_lower:
   chunk = tool_call_chunk('http_request', {
       'url': portal_url + '/ERP5Site_fakeHttpEndpoint',

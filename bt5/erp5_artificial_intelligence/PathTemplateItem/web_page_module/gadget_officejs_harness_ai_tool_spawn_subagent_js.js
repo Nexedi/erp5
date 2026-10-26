@@ -9,10 +9,10 @@
 
   rJS(window)
     .declareAcquiredMethod("requestProcessTask", "requestProcessTask")
+    .declareAcquiredMethod("requestProcessTaskWithUsage", "requestProcessTaskWithUsage")
     .declareAcquiredMethod("getToolList", "getToolList")
     .declareAcquiredMethod("compactMessageList", "compactMessageList")
     .declareAcquiredMethod("summarizeToolOutput", "summarizeToolOutput")
-    .declareAcquiredMethod("addUsageToTotals", "addUsageToTotals")
     .declareMethod('render', function (options) {
       this.jio_key = options.jio_key;
     })
@@ -67,6 +67,8 @@
         tool_definition_list_json,
         last_usage_anchor;
 
+      gadget.usage_totals = { call_count: 0, prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 };
+
       function subagentLoopCall(loop_count, message_list, pending_tool_call_list) {
         console.log('************call sub agent: ' + loop_count);
 
@@ -75,14 +77,16 @@
         function subagentError(e) {
           return {
             content: "Error running sub-agent: " + JSON.stringify(e, Object.getOwnPropertyNames(e)),
-            message_list: message_list
+            message_list: message_list,
+            usage_totals: gadget.usage_totals
           };
         }
         if (loop_count >= max_loop_count) {
           return new RSVP.Queue().push(function () {
             return {
               content: "[subagent stopped: exceeded " + max_loop_count + " turns without a final answer]",
-              message_list: message_list
+              message_list: message_list,
+              usage_totals: gadget.usage_totals
             };
           });
         }
@@ -98,7 +102,7 @@
               client_tool_result_list.forEach(function (client_tool_result, i) {
                 summarize_queue
                   .push(function () {
-                    return gadget.summarizeToolOutput(client_tool_result.content);
+                    return gadget.summarizeToolOutput(gadget, client_tool_result.content);
                   })
                   .push(function (summarized_content) {
                     summarized_content_list[i] = summarized_content;
@@ -131,11 +135,12 @@
 
         queue_loop
           .push(function () {
-            return gadget.compactMessageList(message_list, undefined, last_usage_anchor);
+            return gadget.compactMessageList(gadget, message_list, undefined, last_usage_anchor);
           })
           .push(function (compacted_message_list) {
             message_list = compacted_message_list;
-            return gadget.requestProcessTask(
+            return gadget.requestProcessTaskWithUsage(
+              gadget,
               document_id,
               {
                 message_list: JSON.stringify(message_list),
@@ -145,7 +150,6 @@
             );
           })
           .push(function (result) {
-            gadget.addUsageToTotals(result.usage);
             if (result.usage && result.usage.prompt_tokens) {
               last_usage_anchor = { prompt_tokens: result.usage.prompt_tokens, message_count: message_list.length };
             }
@@ -162,7 +166,8 @@
             }
             return {
               content: result.content,
-              message_list: message_list.concat([{ role: "assistant", content: result.content }])
+              message_list: message_list.concat([{ role: "assistant", content: result.content }]),
+              usage_totals: gadget.usage_totals
             };
           })
           .push(undefined, subagentError);

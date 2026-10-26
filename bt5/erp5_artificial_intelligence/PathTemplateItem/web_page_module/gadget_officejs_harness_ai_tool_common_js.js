@@ -154,6 +154,7 @@
         var is_structured_result = Boolean(result && typeof result === "object" && result.hasOwnProperty("content")),
           message_list = is_structured_result ? result.message_list : undefined,
           execution_plan = is_structured_result ? result.execution_plan : undefined,
+          usage_totals = is_structured_result ? result.usage_totals : undefined,
           content = is_structured_result ? result.content : result,
           content_text = typeof content === "string" ? content : JSON.stringify(content);
         return {
@@ -161,7 +162,8 @@
           name: tool_call.function.name,
           content: content_text,
           message_list: message_list,
-          execution_plan: execution_plan
+          execution_plan: execution_plan,
+          usage_totals: usage_totals
         };
       }, function (e) {
       result = "Error running tool \"" + tool_call.function.name + "\": " + JSON.stringify(e, Object.getOwnPropertyNames(e));
@@ -189,8 +191,17 @@
     return count;
   }
 
+  function isRepeatAllowedTool(tool_call, tool_list) {
+    var tool = findClientTool(tool_call.function.name, tool_list);
+    return Boolean(tool && tool.definition && tool.definition.allow_repeat);
+  }
+
   function runOneClientToolCall(tool_call, message_list, tool_list) {
-    var repeat_count = countPriorIdenticalToolCalls(message_list, tool_call);
+    var repeat_count;
+    if (isRepeatAllowedTool(tool_call, tool_list)) {
+      return runClientToolCall(tool_call, tool_list);
+    }
+    repeat_count = countPriorIdenticalToolCalls(message_list, tool_call);
     if (repeat_count >= TOOL_CALL_REPEAT_LIMIT) {
       return {
         tool_call_id: tool_call.id,

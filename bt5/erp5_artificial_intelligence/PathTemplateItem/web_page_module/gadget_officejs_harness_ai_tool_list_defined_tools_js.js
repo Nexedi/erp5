@@ -10,6 +10,7 @@
         name: "list_defined_tools",
         description: "List the tools you have defined for yourself with define_tool in this " +
           "conversation, with their description, parameters and source code.",
+        allow_repeat: true,
         parameters: { type: "object", properties: {} }
       };
     })

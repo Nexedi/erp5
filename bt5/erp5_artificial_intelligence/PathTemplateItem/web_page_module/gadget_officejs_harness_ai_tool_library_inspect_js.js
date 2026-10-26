@@ -12,6 +12,7 @@
           "writing code against it instead of guessing. Accepts any https:// URL to a UMD/IIFE script or " +
           "an .mjs ES module (the requesting website must allow cross-origin fetches, e.g. most CDNs do " +
           "- there is no proxy to work around one that doesn't).",
+        allow_repeat: true,
         parameters: {
           type: "object",
           properties: {
