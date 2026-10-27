@@ -376,7 +376,13 @@
       }
       self.postMessage({ id, ok: true, result });
     } catch (err) {
-      self.postMessage({ id, ok: false, error: `${err.name}: ${err.message}` });
+      const isError = err instanceof Error;
+      self.postMessage({
+        id,
+        ok: false,
+        error: isError ? `${err.name}: ${err.message}` : `non-Error thrown: ${describe(err)}`,
+        stack: isError ? String(err.stack || '').split('\n').slice(0, 10).join('\n') : undefined,
+      });
     }
   };
 }(self));

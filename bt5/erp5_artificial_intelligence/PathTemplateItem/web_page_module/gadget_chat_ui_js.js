@@ -6,7 +6,64 @@
 
   marked.setOptions({breaks: true});
 
-  var COMMENT_POLL_INTERVAL = 3000;
+  var COMMENT_POLL_INTERVAL = 3000,
+    ATTACHMENT_TEXT_MAX_LENGTH = 5 * 1024 * 1024,
+    ATTACHMENT_IMAGE_MAX_BYTES = 5 * 1024 * 1024;
+
+  function parseDataUri(data_uri) {
+    var match = /^data:([^;,]*)(?:;[^,]*)?,([\s\S]*)$/.exec(data_uri || "");
+    return match ? { mime: match[1], base64: match[2] } : null;
+  }
+
+  function isImageMimeType(mime) {
+    return (/^image\//).test(mime || "");
+  }
+
+  function isTextMimeType(mime) {
+    return (/^text\//).test(mime || "") ||
+      (/^application\/(json|xml|javascript|x-sh)$/).test(mime || "");
+  }
+
+  function base64ByteLength(base64) {
+    var padding = (/={1,2}$/.exec(base64 || "") || [""])[0].length;
+    return Math.floor((base64 || "").length * 3 / 4) - padding;
+  }
+
+  function decodeBase64ToText(base64) {
+    var binary = window.atob(base64), bytes = new Uint8Array(binary.length), i;
+    for (i = 0; i < binary.length; i += 1) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+    return new window.TextDecoder("utf-8", { fatal: false }).decode(bytes);
+  }
+
+  function getAttachmentContentPart(attachment_name, data_uri) {
+    var parsed = parseDataUri(data_uri), text, truncated;
+    if (!parsed) {
+      return null;
+    }
+    if (isImageMimeType(parsed.mime)) {
+      if (base64ByteLength(parsed.base64) > ATTACHMENT_IMAGE_MAX_BYTES) {
+        return { type: "text", skipped: true, text: "[Attachment: " + attachment_name +
+          " - image too large to send (" +
+          Math.round(base64ByteLength(parsed.base64) / 1024) + "KB), skipped]" };
+      }
+      return { type: "image_url", image_url: { url: data_uri } };
+    }
+    if (isTextMimeType(parsed.mime)) {
+      text = decodeBase64ToText(parsed.base64);
+      truncated = text.length > ATTACHMENT_TEXT_MAX_LENGTH;
+      return { type: "text", text: "[Attachment: " + attachment_name + "]\n" +
+        text.slice(0, ATTACHMENT_TEXT_MAX_LENGTH) + (truncated ? "\n[... truncated ...]" : "") };
+    }
+    if (parsed.mime === "application/pdf") {
+      return { type: "text", skipped: true, text: "[Attachment: " + attachment_name +
+        " - a PDF, not sent inline. Call the pdf_to_text tool with file_name=\"" + attachment_name +
+        "\" to read its text content]" };
+    }
+    return { type: "text", skipped: true, text: "[Attachment: " + attachment_name + " (" +
+      (parsed.mime || "unknown type") + ") - not shown, unsupported type]" };
+  }
 
   function formatPost(post) {
     var date = new Date(post.date);
@@ -15,7 +72,7 @@
     return post;
   }
 
-  function getPostDom(post, translationAttachment) {
+  function getPostDom(post) {
     var content_element = post.response ?
         domsugar("div", [
         domsugar("div", { "class": "post-markdown", html: marked.parse(post.text) }),
@@ -24,10 +81,18 @@
         domsugar("div", [domsugar("pre", [post.text])]),
         dom_list = [
         content_element
-      ];
+      ],
+      attachment_children,
+      attachment_part;
     if (post.attachment_link) {
-      dom_list.push(domsugar("strong", [translationAttachment]));
-      dom_list.push(domsugar("a", { href: post.attachment_link }, [post.attachment_name]));
+      attachment_children = [
+        domsugar("a", { href: post.attachment_link, download: post.attachment_name }, [post.attachment_name])
+      ];
+      attachment_part = getAttachmentContentPart(post.attachment_name, post.attachment_link);
+      if (attachment_part && attachment_part.skipped) {
+        attachment_children.push(domsugar("span", { "class": "post-attachment-warning" }, [attachment_part.text]));
+      }
+      dom_list.push(domsugar("div", { "class": "post-attachment" }, attachment_children));
     }
     dom_list.push(domsugar("time", { datetime: post.date, title: post.date }, [
       (post.response && post.author_title) ? (post.author_title + " · " + post.date_formatted) : post.date_formatted
@@ -49,7 +114,7 @@
     return domsugar("div", { "class": "post-tool-entry post-assistant-entry" }, [
       domsugar("strong", ["Assistant"]),
       domsugar("br"),
-      assistant_message.content || ""
+      domsugar("div", { "class": "post-tool-content" }, [assistant_message.content || ""])
     ]);
   }
 
@@ -60,7 +125,7 @@
     return domsugar("div", { "class": "post-tool-entry post-tool-sub-entry" }, [
       domsugar("strong", [label]),
       domsugar("br"),
-      domsugar("div", { "class": "post-markdown", html: marked.parse(sub_message.content || "") })
+      domsugar("div", { "class": "post-markdown post-tool-content", html: marked.parse(sub_message.content || "") })
     ]);
   }
 
@@ -68,7 +133,7 @@
     var dom_list = [
       domsugar("strong", ["Tool: " + tool_message.name]),
       domsugar("br"),
-      domsugar("div", { "class": "post-markdown", html: marked.parse(tool_message.content || "") })
+      domsugar("div", { "class": "post-markdown post-tool-content", html: marked.parse(tool_message.content || "") })
     ];
     if (tool_message.sub_message_list && tool_message.sub_message_list.length) {
       dom_list.push(domsugar("details", { "class": "post-tool-sub-list" }, [
@@ -119,11 +184,6 @@
     ]);
   }
 
-  // Each Artificial Task Line (post) carries its own execution-plan snapshot
-  // (set when it was stored - see gadget_officejs_harness_ai_artificial_task_view_js.js's
-  // storeTaskResult) rather than a single, mutable, floating plan: scrolling
-  // up through the conversation shows each past turn's plan exactly as it
-  // stood then, nothing is ever overwritten.
   function appendPlanAndToolDom(post_dom, post) {
     var plan_dom = getExecutionPlanDom(post.execution_plan ? JSON.parse(post.execution_plan) : null),
       tool_call_dom = getToolCallDom(JSON.parse(post.tool_message_list || "[]"), false);
@@ -153,11 +213,13 @@
   }
 
   function getToolCallDom(tool_message_list, details_open) {
+    var details_attr;
     if (!tool_message_list || !tool_message_list.length) {
       return;
     }
+    details_attr = details_open ? { open: "open", "class": "post-tool-pending" } : {};
     return domsugar("li", { "class": "post-tool" }, [
-      domsugar("details", details_open ? { open: "open" } : {}, [
+      domsugar("details", details_attr, [
         domsugar("summary", [getToolCallSummaryText(tool_message_list.length)])
       ].concat(tool_message_list.map(getAgentMessageDiv)))
     ]);
@@ -225,17 +287,12 @@
       if (modification_dict.hasOwnProperty("render_comment") && modification_dict.render_comment) {
         queue
           .push(function () {
-            return RSVP.all([
-              gadget.getCommentPostList(gadget.options.jio_key),
-              gadget.translate("Attachment:")
-            ]);
+            return gadget.getCommentPostList(gadget.options.jio_key);
           })
           .push(
-            function (post_list_and_translation) {
-              var post_list = post_list_and_translation[0].map(formatPost),
-                translationAttachment = post_list_and_translation[1][1];
-              return post_list.map(function (post) {
-                return appendPlanAndToolDom(getPostDom(post, translationAttachment), post);
+            function (post_list) {
+              return post_list.map(formatPost).map(function (post) {
+                return appendPlanAndToolDom(getPostDom(post), post);
               });
             })
           .push(function (dom_list) {
@@ -251,6 +308,9 @@
     })
     .onLoop(function () {
       var gadget = this;
+      if (gadget.options.disable_comment_poll) {
+        return;
+      }
       return gadget.getCommentPostList(gadget.options.jio_key)
         .push(function (post_list) {
           return gadget.getMessageList()
@@ -276,13 +336,22 @@
           "#post_list li.post-question, #post_list li.post-answer"
         ),
         message_list = [],
-        i, li, content_element;
+        i, li, content_element, attachment_element, content, attachment_part;
       for (i = 0; i < li_list.length; i += 1) {
         li = li_list[i];
         content_element = li.querySelector('pre.chat-hidden-field') || li.querySelector('pre');
+        content = content_element ? content_element.textContent : "";
+        attachment_element = li.querySelector('.post-attachment a');
+        attachment_part = attachment_element ?
+          getAttachmentContentPart(attachment_element.textContent, attachment_element.getAttribute('href')) :
+          null;
         message_list.push({
           role: li.classList.contains("post-answer") ? "assistant" : "user",
-          content: content_element ? content_element.textContent : ""
+          content: attachment_part ?
+            (attachment_part.type === "image_url" ?
+              [{ type: "text", text: content }, attachment_part] :
+              content + "\n\n" + attachment_part.text) :
+            content
         });
       }
       return message_list;
@@ -350,6 +419,7 @@
             gadget.rendered_tool_message_count = tool_message_list.length;
           }
           details_element.open = details_open;
+          details_element.classList.toggle('post-tool-pending', details_open);
         }
       }
       if (message.hasOwnProperty('execution_plan')) {
@@ -394,9 +464,6 @@
 
               return new RSVP.Queue()
                 .push(function () {
-                  return gadget.appendPost(post);
-                })
-                .push(function () {
                   if (file_blob) {
                     return jIO.util.readBlobAsDataURL(file_blob);
                   }
@@ -407,7 +474,12 @@
                       url: data_url_evt.target.result,
                       file_name: file_blob.name
                     };
+                    post.attachment_link = data_url_evt.target.result;
+                    post.attachment_name = file_blob.name;
                   }
+                  return gadget.appendPost(post);
+                })
+                .push(function () {
                   return gadget.postComment(
                     gadget.options.jio_key,
                     form_data_json

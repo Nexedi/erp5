@@ -19,6 +19,7 @@
       "tool_run_wasm",
       "tool_library_inspect",
       "tool_http_request",
+      "tool_pdf_to_text",
       "tool_execution_plan",
       "tool_define_tool",
       "tool_list_defined_tools",
@@ -58,17 +59,26 @@
     return Math.ceil(JSON.stringify(message_list).length / CHARS_PER_TOKEN);
   }
 
+  function messageContentToText(content) {
+    if (typeof content === "string" || !content) {
+      return content || "";
+    }
+    return content.map(function (part) {
+      return part.type === "text" ? part.text : "[image attachment]";
+    }).join("\n");
+  }
+
   function serializeMessageListForSummary(message_list) {
     return message_list.map(function (message) {
       if (message.role === "assistant" && message.tool_calls && message.tool_calls.length) {
-        return "Assistant: " + (message.content || "") + "\n" + message.tool_calls.map(function (tool_call) {
+        return "Assistant: " + messageContentToText(message.content) + "\n" + message.tool_calls.map(function (tool_call) {
           return "  calls " + tool_call.function.name + "(" + (tool_call.function.arguments || "") + ")";
         }).join("\n");
       }
       if (message.role === "tool") {
-        return "Tool result [" + message.name + "]: " + message.content;
+        return "Tool result [" + message.name + "]: " + messageContentToText(message.content);
       }
-      return message.role + ": " + message.content;
+      return message.role + ": " + messageContentToText(message.content);
     }).join("\n\n");
   }
 

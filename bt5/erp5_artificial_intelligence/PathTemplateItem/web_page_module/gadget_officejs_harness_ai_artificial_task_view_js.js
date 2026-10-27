@@ -181,7 +181,14 @@
               operator: "AND",
               type: "complex",
               query_list: [
-                new SimpleQuery({key: "portal_type", type: "simple", value: "Artificial Task Execution Plan"}),
+                new ComplexQuery({
+                  operator: "OR",
+                  type: "complex",
+                  query_list: [
+                    new SimpleQuery({key: "portal_type", type: "simple", value: "Artificial Task Execution Plan"}),
+                    new SimpleQuery({key: "portal_type", type: "simple", value: "Document"})
+                  ]
+                }),
                 new ComplexQuery({
                   operator: "OR",
                   type: "complex",
@@ -191,19 +198,31 @@
                 })
               ]
             }),
-            select_list: ["follow_up_relative_url"]
+            select_list: ["follow_up_relative_url", "portal_type", "url", "file_name"]
           });
         })
-        .push(function (plan_result) {
-          var plan_id_by_task_line_id = {},
+        .push(function (follow_up_result) {
+          var attachment_by_task_line_id = {},
+            plan_id_by_task_line_id = {},
             own_plan_id_list = [];
-          (plan_result.data.rows || []).forEach(function (row) {
+          (follow_up_result.data.rows || []).forEach(function (row) {
             var task_line_id = row.value.follow_up_relative_url;
-            plan_id_by_task_line_id[task_line_id] = row.id;
-            own_plan_id_list.push(row.id);
+            if (row.value.portal_type === "Document") {
+              attachment_by_task_line_id[task_line_id] = {
+                link: row.value.url,
+                name: row.value.file_name || row.id
+              };
+            } else {
+              plan_id_by_task_line_id[task_line_id] = row.id;
+              own_plan_id_list.push(row.id);
+            }
           });
           if (!own_plan_id_list.length) {
-            return {plan_id_by_task_line_id: plan_id_by_task_line_id, line_result: {data: {rows: []}}};
+            return {
+              plan_id_by_task_line_id: plan_id_by_task_line_id,
+              attachment_by_task_line_id: attachment_by_task_line_id,
+              line_result: {data: {rows: []}}
+            };
           }
           return gadget.jio_allDocs({
             query: new ComplexQuery({
@@ -217,11 +236,16 @@
             sort_on: [["int_index", "ascending"]]
           })
             .push(function (line_result) {
-              return {plan_id_by_task_line_id: plan_id_by_task_line_id, line_result: line_result};
+              return {
+                plan_id_by_task_line_id: plan_id_by_task_line_id,
+                attachment_by_task_line_id: attachment_by_task_line_id,
+                line_result: line_result
+              };
             });
         })
         .push(function (joined) {
           var plan_id_by_task_line_id = joined.plan_id_by_task_line_id,
+            attachment_by_task_line_id = joined.attachment_by_task_line_id,
             step_row_list_by_plan_id = {},
             plan_json_by_task_line_id = {};
           (joined.line_result.data.rows || []).forEach(function (row) {
@@ -250,13 +274,16 @@
             }
           });
           return task_line_row_list.map(function (row) {
+            var attachment = attachment_by_task_line_id[row.id];
             return {
               date: row.value.date || new Date().toISOString(),
               text: row.value.text_content,
               tool_message_list: row.value.tool_message_list || "[]",
               response: row.value.response || false,
               author_title: row.value.author_title || "",
-              execution_plan: plan_json_by_task_line_id[row.id] || ""
+              execution_plan: plan_json_by_task_line_id[row.id] || "",
+              attachment_link: attachment ? attachment.link : null,
+              attachment_name: attachment ? attachment.name : null
             };
           });
         });
@@ -323,6 +350,7 @@
       var gadget = this,
         document_id = argument_list[0],
         form_data_json = argument_list[1],
+        file = form_data_json.file,
         int_index = gadget.next_int_index || 0;
       gadget.next_int_index = int_index + 1;
       return gadget.jio_post({
@@ -334,6 +362,19 @@
         author_title: "",
         date: new Date().toISOString()
       })
+        .push(function (task_line_id) {
+          if (file && file.url) {
+            return gadget.jio_post({
+              portal_type: 'Document',
+              parent_relative_url: 'document_module',
+              title: file.file_name,
+              url: file.url,
+              file_name: file.file_name,
+              follow_up_relative_url: task_line_id,
+              date: new Date().toISOString()
+            });
+          }
+        })
         .push(function () {
           return fakeXhrEvent();
         });
@@ -528,6 +569,7 @@
             'jio_key': gadget.state.jio_key,
             'mcp_server_list': gadget.mcp_server_list,
             'proxy_server_url': gadget.llm_settings.proxy_server_url,
+            'disable_comment_poll': true,
             'editor_options': {
               editor: 'gadget_editor.html',
               options: {

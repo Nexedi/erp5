@@ -1,3 +1,4 @@
+image_module/gadget_wendelin_panel_png
 portal_alarms/run_artificial_task_alarm
 portal_tests/erp5_harness_ai_ui_zuite
 portal_tests/erp5_harness_ai_ui_zuite/**

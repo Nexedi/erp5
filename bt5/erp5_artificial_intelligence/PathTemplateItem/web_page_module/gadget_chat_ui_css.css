@@ -90,6 +90,17 @@ hr#post_item {
   order: 3;
 }
 
+#post_list li.post-question > .post-attachment,
+#post_list li.post-answer > .post-attachment {
+  order: 3;
+}
+
+.post-attachment-warning {
+  display: block;
+  color: #D64545;
+  font-size: 0.82em;
+}
+
 #post_list li.post-question > time,
 #post_list li.post-answer > time {
   order: 4;
@@ -208,6 +219,40 @@ hr#post_item {
 #post_list li.post-tool strong {
   color: var(--chat-accent);
   font-weight: 600;
+}
+
+/* ---- Trim in-progress traces: while a turn is still running (the LLM call
+   for it hasn't produced its final answer yet - gadget_chat_ui_js.js's
+   showMessage/getToolCallDom tag that <details> with .post-tool-pending for
+   exactly as long as that's true), only the last 4 entries are shown, and
+   nth-last-of-type recomputes live as more entries stream in so "last 4"
+   always tracks the newest ones. Once the turn finishes, .post-tool-pending
+   is removed (or never added, for a historical post rendered from storage),
+   so nothing is hidden any more and clicking the summary reveals the full
+   trace. Older entries stay in the DOM throughout (so
+   gadget_officejs_harness_ai_agent_js.js's incremental appendChild logic and
+   getMessageList don't need to know about this), only CSS display is
+   affected. ------------------------------------------------------------- */
+
+#post_list li.post-tool details.post-tool-pending > .post-tool-entry:nth-last-of-type(n+5) {
+  display: none;
+}
+
+#post_list li.post-tool details.post-tool-pending .post-tool-sub-list > .post-tool-sub-entry:nth-last-of-type(n+5) {
+  display: none;
+}
+
+/* While pending, also clamp each entry's own body (the args/result text,
+   which can be an arbitrarily long single-line JSON dump) to a few lines
+   with a fade-out, instead of dumping the whole thing - the full text is
+   still in the DOM and becomes fully visible once the turn finishes and
+   .post-tool-pending is removed. */
+
+#post_list li.post-tool details.post-tool-pending .post-tool-content {
+  max-height: 4.5em;
+  overflow: hidden;
+  mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
 }
 
 /* ---- Sub-agent trace ------------------------------------------------------- */
