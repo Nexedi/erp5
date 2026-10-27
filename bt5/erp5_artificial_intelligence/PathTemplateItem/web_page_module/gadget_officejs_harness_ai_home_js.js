@@ -16,6 +16,7 @@
     .allowPublicAcquisition('postComment', function (argument_list) {
       var gadget = this,
         form_data_json = argument_list[1],
+        file = form_data_json.file,
         artificial_task_id;
       return gadget.jio_post({
         portal_type: 'Artificial Task',
@@ -31,6 +32,19 @@
             text_content: form_data_json.data,
             int_index: 0
           });
+        })
+        .push(function (task_line_id) {
+          if (file && file.url) {
+            return gadget.jio_post({
+              portal_type: 'Document',
+              parent_relative_url: 'document_module',
+              title: file.file_name,
+              url: file.url,
+              file_name: file.file_name,
+              follow_up_relative_url: task_line_id,
+              date: new Date().toISOString()
+            });
+          }
         })
         .push(function () {
           return {target: {getResponseHeader: function (name) {
@@ -76,6 +90,7 @@
           return chat.render({
             'hateoas_url': gadget.hateoas_url,
             'jio_key': gadget.options.jio_key,
+            'disable_comment_poll': true,
             'editor_options': {
               editor: 'gadget_editor.html',
               options: {

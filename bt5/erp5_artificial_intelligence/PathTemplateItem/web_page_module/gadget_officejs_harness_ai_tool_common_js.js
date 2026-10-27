@@ -68,10 +68,21 @@
       }, budget);
       worker.onmessage = function (event) {
         var data = event.data;
-        finish(data.ok ? data.result : { ok: false, error: data.error });
+        // A loaded library (eg. pdf.js, when it detects it is itself
+        // running inside a Worker rather than a real main thread) can post
+        // its own, unrelated messages on this same channel - only react to
+        // a reply that actually matches the job this handler is waiting on.
+        if (!data || data.id !== "run_wasm") {
+          return;
+        }
+        finish(data.ok ? data.result : { ok: false, error: data.error, stack: data.stack });
       };
       worker.onerror = function (event) {
-        finish({ ok: false, error: "worker error: " + (event.message || "unknown") });
+        finish({
+          ok: false,
+          error: "worker error: " + (event.message || "unknown") +
+            (event.filename ? " at " + event.filename + ":" + event.lineno + ":" + event.colno : "")
+        });
       };
       worker.postMessage({ id: "run_wasm", kind: kind, payload: payload });
     }, function canceller() {

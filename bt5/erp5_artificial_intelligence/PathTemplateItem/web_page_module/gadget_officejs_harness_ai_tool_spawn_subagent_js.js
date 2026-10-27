@@ -70,7 +70,6 @@
       gadget.usage_totals = { call_count: 0, prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 };
 
       function subagentLoopCall(loop_count, message_list, pending_tool_call_list) {
-        console.log('************call sub agent: ' + loop_count);
 
         var has_tool_call = Boolean(pending_tool_call_list && pending_tool_call_list.length);
 
