@@ -194,6 +194,11 @@ def runwsgi():
       type=type_registry.get('byte-size'),
       default=type_registry.get('byte-size')("10MB"))
     parser.add_argument(
+      '--max-request-body-size',
+      help='Requests with a body bigger than this size in bytes get a 413 '
+      'error. The default is the waitress default (1GB).',
+      type=type_registry.get('byte-size'))
+    parser.add_argument(
       '--with-max-rlimit-nofile',
       help='Set soft limit of file descriptors erp5 can open to hard limit',
       action="store_true")
@@ -301,6 +306,8 @@ def runwsgi():
         asyncore_use_poll=True,
         # Prevent waitress from adding its own Via and Server response headers.
         ident=None,
+        **({} if args.max_request_body_size is None else
+           {'max_request_body_size': args.max_request_body_size})
     )
     logger = logging.getLogger(__name__)
 
