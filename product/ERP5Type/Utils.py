@@ -65,6 +65,9 @@ from Products.PageTemplates.Expressions import getEngine
 from Products.PageTemplates.Expressions import SecureModuleImporter
 from ZTUtils.Lazy import LazyMap
 
+from zope.interface import implementer
+from ZPublisher.Iterators import IStreamIterator, IUnboundStreamIterator
+
 try:
   import chardet
 except ImportError:
@@ -1980,3 +1983,44 @@ def formatRFC822Headers(headers):
         vallines = linesplit.split(str(value))
       munged.append('%s: %s' % (key, '\r\n  '.join(vallines)))
   return '\r\n'.join(munged)
+
+#####################################################
+# Streaming of ZODB data by the publisher
+#####################################################
+
+class IZODBStreamIterator(IUnboundStreamIterator):
+  """Response body that loads ZODB objects while the publisher sends it.
+
+  The publisher keeps the ZODB connection of the request open until the WSGI
+  server calls close() on the response body. The iterator can thus load
+  objects a bit at a time, and the server sends each chunk before the next
+  one is loaded. The transaction of the request is already finished when the
+  iteration starts, so the iterator must not modify objects.
+  """
+
+@implementer(IStreamIterator, IZODBStreamIterator)
+class IterableAsStreamIterator(object):
+  """Response body made of an iterable of bytes of known total length.
+
+  The class has no 'read' method: the publisher gives a body with a 'read'
+  method to wsgi.file_wrapper, which can read it in another thread.
+  """
+  def __init__(self, iterable, content_length):
+    self._iterator = iter(iterable)
+    self._content_length = content_length
+
+  def __iter__(self):
+    return self
+
+  def __len__(self):
+    return self._content_length
+
+  def __next__(self):
+    return next(self._iterator)
+
+  next = __next__ # BBB Python 2
+
+  def close(self):
+    close = getattr(self._iterator, 'close', None)
+    if close is not None:
+      close()
