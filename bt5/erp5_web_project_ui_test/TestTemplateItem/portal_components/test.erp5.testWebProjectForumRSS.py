@@ -412,7 +412,9 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
       sorted(x.getRelativeUrl() for x in
              thread_a.objectValues() + thread_b.objectValues()),
       sorted(x.getRelativeUrl() for x in post_list))
-    date_list = [x.getObject().getModificationDate() for x in post_list]
+    # catalog modification_date has second precision: posts of one second tie
+    date_list = [int(x.getObject().getModificationDate().timeTime())
+                 for x in post_list]
     self.assertEqual(sorted(date_list, reverse=True), date_list)
 
   def test_forum_feed_list_skips_posts_of_unlisted_threads(self):
