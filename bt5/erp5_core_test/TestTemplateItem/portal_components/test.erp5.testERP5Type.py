@@ -55,6 +55,7 @@ from AccessControl.ZopeGuards import guarded_getattr, guarded_hasattr
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.tests.utils import removeZODBPythonScript
 from Products.ERP5Type import Permissions
+from zope.interface import implementer
 from DateTime import DateTime
 
 class PropertySheetTestCase(ERP5TypeTestCase):
@@ -3379,6 +3380,113 @@ class TestLongRequestLogger(ERP5TypeTestCase):
     self.assertNotIn("large response body", long_request_log)
 
 
+class TestZODBStreaming(ERP5TypeTestCase):
+  """The publisher sends an IZODBStreamIterator body a bit at a time, and keeps
+  the ZODB connection of the request open until the body is closed.
+  """
+  chunk_count = 20
+
+  def afterSetUp(self):
+    from OFS.Image import Pdata
+    self.chunk_list = [(b'%05d' % i) * 1000 for i in range(self.chunk_count)]
+    data = None
+    for chunk in reversed(self.chunk_list):
+      pdata = Pdata(chunk)
+      pdata.next = data
+      data = pdata
+    self.portal._zodb_streaming_test_data = data
+    self.loaded_list = []
+    self.stream_path = '/%s/ERP5Site_streamTestData' % self.portal.getId()
+    self.basic = '%s:%s' % (self.manager_username, self.manager_password)
+    transaction.commit()
+
+    test = self
+    def ERP5Site_streamTestData(self, stream_iterator=True):
+      """Return the test data, as a stream iterator"""
+      from Products.ERP5Type.Utils import IterableAsStreamIterator
+      data = self._zodb_streaming_test_data
+      def iterate(data):
+        while data is not None:
+          test.loaded_list.append(data._p_jar)
+          yield data.data
+          data = data.next
+      if stream_iterator:
+        return IterableAsStreamIterator(iterate(data),
+                                        len(b''.join(test.chunk_list)))
+      from ZPublisher.Iterators import IStreamIterator
+      @implementer(IStreamIterator)
+      class PlainStreamIterator(object):
+        def __init__(self):
+          self._iterator = iter(test.chunk_list)
+        def __iter__(self):
+          return self
+        def __next__(self):
+          return next(self._iterator)
+        next = __next__
+        def __len__(self):
+          return len(b''.join(test.chunk_list))
+      return PlainStreamIterator()
+    ERP5Site_streamTestData.__roles__ = None
+    portal_class = self.portal.__class__
+    portal_class.ERP5Site_streamTestData = ERP5Site_streamTestData
+    self.addCleanup(delattr, portal_class, 'ERP5Site_streamTestData')
+
+  def beforeTearDown(self):
+    del self.portal._zodb_streaming_test_data
+    transaction.commit()
+
+  def _publishWithoutReading(self, path, request_method='GET'):
+    # Publish like Testing.ZopeTestCase.Functional does, without the read of
+    # the body by ERP5TypeTestCaseMixin.publish
+    from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCaseMixin
+    return super(ERP5TypeTestCaseMixin, self).publish(
+      path, basic=self.basic, request_method=request_method)
+
+  def test_body_is_read_a_bit_at_a_time(self):
+    response = self._publishWithoutReading(self.stream_path)
+    self.assertEqual(response.getStatus(), 200)
+    self.assertEqual(response.getHeader('Content-Length'),
+                     str(len(b''.join(self.chunk_list))))
+    result = response._wsgi_result
+    # Nothing is loaded before the WSGI server reads the body
+    self.assertEqual(self.loaded_list, [])
+    self.assertEqual(next(result), self.chunk_list[0])
+    self.assertEqual(next(result), self.chunk_list[1])
+    self.assertEqual(len(self.loaded_list), 2)
+    connection, = set(self.loaded_list)
+    self.assertIsNotNone(connection.opened)
+    # The WSGI server closes the body when the client disconnects
+    result.close()
+    self.assertIsNone(connection.opened)
+    result.close()
+
+  def test_full_body(self):
+    response = self.publish(self.stream_path, basic=self.basic)
+    self.assertEqual(response.getStatus(), 200)
+    self.assertEqual(response.getBody(), b''.join(self.chunk_list))
+    self.assertEqual(len(self.loaded_list), self.chunk_count)
+    connection, = set(self.loaded_list)
+    self.assertIsNone(connection.opened)
+
+  def test_head(self):
+    response = self._publishWithoutReading(self.stream_path, 'HEAD')
+    self.assertEqual(response.getBody(), b'')
+    self.assertEqual(self.loaded_list, [])
+
+  def test_plain_stream_iterator(self):
+    # A body that is an IStreamIterator but not an IZODBStreamIterator is not
+    # changed: the publisher closes the connection before it is read.
+    from ZPublisher.Iterators import IStreamIterator
+    from Products.ERP5Type.patches.WSGIPublisher import \
+      ConnectionClosingIterator
+    response = self._publishWithoutReading(
+      self.stream_path + '?stream_iterator:int=0')
+    result = response._wsgi_result
+    self.assertTrue(IStreamIterator.providedBy(result))
+    self.assertNotIsInstance(result, ConnectionClosingIterator)
+    self.assertEqual(b''.join(result), b''.join(self.chunk_list))
+
+
 def add_tests(suite, module):
   if hasattr(module, 'test_suite'):
     return suite.addTest(module.test_suite())
@@ -3392,6 +3500,7 @@ def test_suite():
   suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestERP5Type))
   suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestAccessControl))
   suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestLongRequestLogger))
+  suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestZODBStreaming))
 
   # run tests for monkey patched ZPublisher modules
   import ZPublisher.tests.testBaseRequest
