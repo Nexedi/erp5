@@ -9,7 +9,7 @@
     CONTEXT_RESERVE_TOKENS = 16384,
     PANIC_KEEP_RECENT_TOKEN_BUDGET = 8000,
     RATE_LIMIT_RETRY_DELAY_MS = 120000,
-    MAX_LOOP_COUNT = 200000,
+    MAX_LOOP_COUNT = 500,
     SUMMARY_CHUNK_CHARS = 100000,
     SUMMARY_PROMPT = "The text below is one chunk of a larger tool result that was too large to return " +
       "as-is. Summarize it concisely, but preserve exact facts, numbers, names, dates, code, and any " +

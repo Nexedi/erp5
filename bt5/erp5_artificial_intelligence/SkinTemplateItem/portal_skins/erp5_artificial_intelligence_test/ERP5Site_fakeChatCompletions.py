@@ -133,6 +133,14 @@ message's role/content picks the branch:
                                              3rd call and ends the task with an error before
                                              the 5th LLM request
                                              (testOfficeJSHarnessAIRepeatedToolCallStop.zpt)
+- content "stuck run_wasm streak test" -> calls run_wasm with a new constant on every turn,
+                                             forever, even once run_wasm has been dropped from
+                                             the request's tools - a model that keeps calling one
+                                             tool with different arguments. The client adds a
+                                             notice from the 16th turn, disables the tool at the
+                                             24th and ends the task with an error before the
+                                             33rd LLM request
+                                             (testOfficeJSHarnessAIToolCallStreakStop.zpt)
 - content "check for skill injection"    -> reports back (as plain text) whether any role-"system"
                                              message in the request already carries the lightweight
                                              <available_skills> name+description listing for the
@@ -316,6 +324,20 @@ def is_stuck_test_tool_call(assistant_message):
   return bool(arguments.get('stuck_test'))
 
 
+def streak_test_args(step):
+  return {'wat': '(module (func (export "streak_test") (result i32) (i32.const %d)))' % step,
+          'calls': [{'name': 'streak_test'}]}
+
+
+def is_streak_test_call(message):
+  tool_call_list = message.get('tool_calls') or []
+  if not tool_call_list:
+    return False
+  function = tool_call_list[0].get('function') or {}
+  return (function.get('name') == 'run_wasm'
+          and '"streak_test"' in (function.get('arguments') or ''))
+
+
 def compaction_test_args(step):
   return {'code': 'return "compaction-step-%d " + "x".repeat(5000);' % step}
 
@@ -419,6 +441,11 @@ elif (last_message.get('role') == 'tool' and len(message_list) >= 2
   # test" docstring entry above for why this stops after one re-issue.
   chunk = tool_call_chunk('http_request', repeat_test_args())
 elif (last_message.get('role') == 'tool' and len(message_list) >= 2
+      and is_streak_test_call(message_list[-2])):
+  # Never gives up - see the "stuck run_wasm streak test" docstring entry.
+  chunk = tool_call_chunk('run_wasm', streak_test_args(
+      len([m for m in message_list if is_streak_test_call(m)]) + 1))
+elif (last_message.get('role') == 'tool' and len(message_list) >= 2
       and is_stuck_test_tool_call(message_list[-2])):
   # Never gives up - see the "stuck http_request tool test" docstring entry.
   chunk = tool_call_chunk('http_request', stuck_test_args())
@@ -464,6 +491,8 @@ elif 'library_inspect tool test' in last_content_lower:
   })
 elif 'repeated http_request tool test' in last_content_lower:
   chunk = tool_call_chunk('http_request', repeat_test_args())
+elif 'stuck run_wasm streak test' in last_content_lower:
+  chunk = tool_call_chunk('run_wasm', streak_test_args(1))
 elif 'stuck http_request tool test' in last_content_lower:
   chunk = tool_call_chunk('http_request', stuck_test_args())
 elif 'repeated list_defined_tools tool test' in last_content_lower:
