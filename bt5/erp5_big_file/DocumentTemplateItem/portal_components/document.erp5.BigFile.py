@@ -17,6 +17,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Base import removeIContentishInterface
+from Products.ERP5Type.Utils import IterableAsStreamIterator
 from erp5.component.document.File import File, _MARKER
 from erp5.component.module.BTreeData import BTreeData
 from ZPublisher.HTTPRequest import FileUpload
@@ -167,8 +168,8 @@ class BigFile(File):
     return mtime
 
   def _range_request_handler(self, REQUEST, RESPONSE):
-    # HTTP Range header handling: return True if we've served a range
-    # chunk out of our data.
+    # HTTP Range header handling: return the response body if we serve a
+    # range chunk out of our data, or None otherwise.
     range_ = REQUEST.get_header('Range', None)
     request_range = REQUEST.get_header('Request-Range', None)
     if request_range is not None:
@@ -223,7 +224,7 @@ class BigFile(File):
           RESPONSE.setHeader('Content-Type', self.content_type)
           RESPONSE.setHeader('Content-Length', self.getSize())
           RESPONSE.setStatus(416)
-          return True
+          return b''
 
         ranges = HTTPRangeSupport.expandRanges(ranges, self.getSize())
 
@@ -242,19 +243,17 @@ class BigFile(File):
 
           # NOTE data cannot be None here (if it is - ranges are not satisfiable)
           if isinstance(data, bytes):
-            RESPONSE.write(data[start:end])
-            return True
-          for chunk in data.iterate(start, end-start):
-            RESPONSE.write(chunk)
-          return True
+            return data[start:end]
+          return IterableAsStreamIterator(data.iterate(start, size), size)
 
         else:
           boundary = choose_boundary()
+          content_type = '%s' % self.content_type
 
           # Calculate the content length
           size = (8 + len(boundary) + # End marker length
               len(ranges) * (         # Constant lenght per set
-                  49 + len(boundary) + len(self.content_type) +
+                  49 + len(boundary) + len(content_type) +
                   len('%d' % self.getSize())))
           for start, end in ranges:
             # Variable length per set
@@ -275,33 +274,34 @@ class BigFile(File):
                   draftprefix, boundary))
           RESPONSE.setStatus(206) # Partial content
 
-          for start, end in ranges:
-            RESPONSE.write(b'\r\n--%s\r\n' % boundary)
-            RESPONSE.write(b'Content-Type: %s\r\n' %
-                self.content_type)
-            RESPONSE.write(
-                b'Content-Range: bytes %d-%d/%d\r\n\r\n' % (
-                    start, end - 1, self.getSize()))
+          total_size = self.getSize()
+          def generator():
+            for start, end in ranges:
+              yield ('\r\n--%s\r\n'
+                     'Content-Type: %s\r\n'
+                     'Content-Range: bytes %d-%d/%d\r\n\r\n' % (
+                       boundary, content_type,
+                       start, end - 1, total_size)).encode('latin-1')
 
-            # NOTE data cannot be None here (if it is - ranges are not satisfiable)
-            if isinstance(data, bytes):
-              RESPONSE.write(data[start:end])
+              # NOTE data cannot be None here (if it is - ranges are not satisfiable)
+              if isinstance(data, bytes):
+                yield data[start:end]
+              else:
+                for chunk in data.iterate(start, end - start):
+                  yield chunk
 
-            else:
-              for chunk in data.iterate(start, end-start):
-                RESPONSE.write(chunk)
-
-          RESPONSE.write(b'\r\n--%s--\r\n' % boundary)
-          return True
+            yield ('\r\n--%s--\r\n' % boundary).encode('latin-1')
+          return IterableAsStreamIterator(generator(), size)
 
   security.declareProtected(Permissions.View, 'index_html')
   def index_html(self, REQUEST, RESPONSE, format=_MARKER, inline=_MARKER, **kw): # pylint: disable=redefined-builtin
     """
       Support streaming
     """
-    if self._range_request_handler(REQUEST, RESPONSE):
-      # we served a chunk of content in response to a range request.
-      return b''
+    range_body = self._range_request_handler(REQUEST, RESPONSE)
+    if range_body is not None:
+      # we serve a chunk of content in response to a range request.
+      return range_body
 
     web_cache_kw = kw.copy()
     if format is not _MARKER:
@@ -336,9 +336,7 @@ class BigFile(File):
     if isinstance(data, bytes):
       RESPONSE.setBase(None)
       return data
-    for chunk in data.iterate():
-      RESPONSE.write(chunk)
-    return b''
+    return IterableAsStreamIterator(data.iterate(), len(data))
 
   security.declareProtected(Permissions.ModifyPortalContent,'PUT')
   def PUT(self, REQUEST, RESPONSE):
