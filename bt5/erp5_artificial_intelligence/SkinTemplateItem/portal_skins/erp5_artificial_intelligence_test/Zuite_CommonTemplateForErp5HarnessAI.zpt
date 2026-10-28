@@ -1,0 +1,59 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal">
+
+  <tal:block metal:define-macro="open_fixture_task">
+    <tr>
+      <td>openAndWait</td>
+      <td>${base_url}/ERP5Site_setupHarnessAITestFixture</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>storeEval</td>
+      <td>selenium.browserbot.getCurrentWindow().document.body.textContent.trim()</td>
+      <td>task_relative_url</td>
+    </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+    <tr>
+      <td>open</td>
+      <td>${base_url}/web_site_module/erp5_harness_ai/#/${task_relative_url}</td>
+      <td></td>
+    </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>css=div.CodeMirror</td>
+      <td></td>
+    </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="post_comment_and_wait_for_activities">
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//input[@data-i18n='[value]Post Comment'][@disabled]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+      <td></td>
+    </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+    <tr>
+      <td>open</td>
+      <td>${base_url}/web_site_module/erp5_harness_ai/#/${task_relative_url}</td>
+      <td></td>
+    </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+  </tal:block>
+
+</tal:block>
