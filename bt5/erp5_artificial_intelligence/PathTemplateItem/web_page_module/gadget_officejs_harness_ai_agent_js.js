@@ -13,19 +13,7 @@
     SUMMARY_PROMPT = "The text below is one chunk of a larger tool result that was too large to return " +
       "as-is. Summarize it concisely, but preserve exact facts, numbers, names, dates, code, and any " +
       "other concrete detail that may be needed later - this summary is the ONLY part of this chunk " +
-      "that will remain visible; anything you omit is permanently lost to the rest of this conversation.",
-    STATIC_TOOL_SCOPE_LIST = [
-      "tool_execute_javascript",
-      "tool_run_wasm",
-      "tool_library_inspect",
-      "tool_http_request",
-      "tool_pdf_to_text",
-      "tool_execution_plan",
-      "tool_define_tool",
-      "tool_list_defined_tools",
-      "tool_undefine_tool",
-      "tool_spawn_subagent"
-    ];
+      "that will remain visible; anything you omit is permanently lost to the rest of this conversation.";
 
   function isRateLimitError(e) {
     return Boolean(e && e.message && (/^LLM 429 /).test(e.message));
@@ -93,62 +81,25 @@
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
     .declareAcquiredMethod("requestProcessTask", "requestProcessTask")
     .declareAcquiredMethod("storeTaskResult", "storeTaskResult")
-    .declareAcquiredMethod("refreshMcpServerAuth", "refreshMcpServerAuth")
-    .declareAcquiredMethod("getDefinedToolList", "getDefinedToolList")
-    .declareAcquiredMethod("storeDefinedTool", "storeDefinedTool")
 
     .declareMethod('render', function (options) {
       var gadget = this;
       gadget.options = options;
       gadget.jio_key = options.jio_key;
       gadget.execution_plan = null;
-      return new RSVP.Queue(RSVP.all(STATIC_TOOL_SCOPE_LIST.map(function (scope) {
-          return gadget.getDeclaredGadget(scope);
-        })))
-        .push(function (tool_gadget_list) {
-          return new RSVP.Queue(RSVP.all(tool_gadget_list.map(function (tool_gadget) {
-              return tool_gadget.render(options);
-            })))
-            .push(function () {
-              return new RSVP.Queue(RSVP.all(tool_gadget_list.map(function (tool_gadget) {
-                  return tool_gadget.getDefinition();
-                })))
-                .push(function (definition_list) {
-                  return tool_gadget_list.map(function (tool_gadget, i) {
-                    return { gadget: tool_gadget, definition: definition_list[i] };
-                  });
-                });
-            });
-        })
-        .push(function (static_tool_list) {
-          gadget.tool_list = static_tool_list;
-          if (!options.mcp_server_list || !options.mcp_server_list.length) {
-            return;
-          }
-          return new RSVP.Queue(window.ChatMCP.buildToolList(
-              options.mcp_server_list,
-              function onMcpAuthExpired(server_config) {
-                return gadget.refreshMcpServerAuth(server_config);
-              }
-            ))
-            .push(function (mcp_tool_list) {
-              gadget.tool_list = gadget.tool_list.concat(mcp_tool_list);
-            });
+      return new RSVP.Queue(RSVP.all([
+          gadget.getDeclaredGadget('tool_manager'),
+          gadget.getDeclaredGadget('skill_manager')
+        ]))
+        .push(function (manager_list) {
+          gadget.tool_manager = manager_list[0];
+          gadget.skill_manager = manager_list[1];
+          return RSVP.all([
+            gadget.tool_manager.render(options),
+            gadget.skill_manager.render(options)
+          ]);
         })
         .push(function () {
-          return gadget.getDefinedToolList();
-        })
-        .push(function (spec_list) {
-          return RSVP.all(spec_list.filter(function (spec) {
-            return !window.ChatToolCommon.findClientTool(spec.name, gadget.tool_list);
-          }).map(function (spec) {
-            return gadget.createDynamicToolEntry(spec);
-          }));
-        })
-        .push(function (entry_list) {
-          entry_list.forEach(function (entry) {
-            gadget.tool_list.push(entry);
-          });
           return gadget.getDeclaredGadget("gadget_chat_ui");
         })
         .push(function (gadget_chat_ui) {
@@ -161,28 +112,8 @@
           }
         });
     })
-    .declareMethod('createDynamicToolEntry', function (spec) {
-      var gadget = this,
-        scope = "tool_dynamic_" + spec.name;
-      return gadget.declareGadget("gadget_officejs_harness_ai_tool_dynamic.html", { scope: scope })
-        .push(function (tool_gadget) {
-          return tool_gadget.setDefinition(spec)
-            .push(function () {
-              return tool_gadget.render(gadget.options);
-            })
-            .push(function () {
-              return {
-                gadget: tool_gadget,
-                definition: { name: spec.name, description: spec.description, parameters: spec.parameters || { type: "object", properties: {} } },
-                dynamic: true,
-                spec: spec,
-                scope: scope
-              };
-            });
-        });
-    })
-    .allowPublicAcquisition('getToolList', function () {
-      return this.tool_list;
+    .allowPublicAcquisition('getSkillByName', function (argument_list) {
+      return this.skill_manager.getSkillByName(argument_list[0]);
     })
     .allowPublicAcquisition('compactMessageList', function (argument_list) {
       return this.compactMessageList.apply(argument_list[0], argument_list);
@@ -205,44 +136,6 @@
     })
     .allowPublicAcquisition('requestProcessTaskWithUsage', function (argument_list) {
       return this.requestProcessTaskWithUsage.apply(argument_list[0], argument_list);
-    })
-    .allowPublicAcquisition('isToolNameTaken', function (argument_list) {
-      var name = argument_list[0];
-      return this.tool_list.some(function (tool) { return tool.definition.name === name; });
-    })
-    .allowPublicAcquisition('persistAndRegisterDynamicTool', function (argument_list) {
-      var gadget = this,
-        spec = argument_list[0];
-      return gadget.storeDefinedTool(spec)
-        .push(function () {
-          return gadget.createDynamicToolEntry(spec);
-        })
-        .push(function (entry) {
-          gadget.tool_list.push(entry);
-        });
-    })
-    .allowPublicAcquisition('listDynamicToolSpecs', function () {
-      return this.tool_list.filter(function (tool) {
-        return tool.dynamic;
-      }).map(function (tool) {
-        return tool.spec;
-      });
-    })
-    .allowPublicAcquisition('undefineDynamicTool', function (argument_list) {
-      var gadget = this,
-        name = argument_list[0],
-        i;
-      for (i = 0; i < gadget.tool_list.length; i += 1) {
-        if (gadget.tool_list[i].definition.name === name) {
-          if (!gadget.tool_list[i].dynamic) {
-            return "not_dynamic";
-          }
-          gadget.dropGadget(gadget.tool_list[i].scope);
-          gadget.tool_list.splice(i, 1);
-          return "removed";
-        }
-      }
-      return "not_found";
     })
     .allowPublicAcquisition('notifyCommentPosted', function () {
       return this.processTask(MAX_LOOP_COUNT);
@@ -476,7 +369,10 @@
               return gadget.gadget_chat_ui.showMessage({tool_message_list: gadget.tool_message_list, execution_plan: gadget.execution_plan });
             })
             .push(function () {
-              return window.ChatToolCommon.runClientToolCallList(pending_tool_call_list, message_list, gadget.tool_list);
+              return gadget.tool_manager.getToolList();
+            })
+            .push(function (tool_list) {
+              return window.ChatToolCommon.runClientToolCallList(pending_tool_call_list, message_list, tool_list);
             })
             .push(function (client_tool_result_list) {
               var i, tool_call, client_tool_result;
@@ -552,12 +448,15 @@
               gadget.last_usage_anchor.message_count = Math.max(0, gadget.last_usage_anchor.message_count - shrunk_by);
             }
             message_list = compacted_message_list;
+            return gadget.tool_manager.getToolList();
+          })
+          .push(function (tool_list) {
             return gadget.requestProcessTaskWithUsage(
               gadget,
               gadget.jio_key,
               {
                 message_list: JSON.stringify(message_list),
-                tool_definition_list: JSON.stringify(window.ChatToolCommon.toolDefinitionList(gadget.tool_list))
+                tool_definition_list: JSON.stringify(window.ChatToolCommon.toolDefinitionList(tool_list))
               }
             );
           })
@@ -700,14 +599,17 @@
             });
         })
         .push(function (message_list) {
-          var skill_message_list = window.ChatSkills.SKILL_LIST.map(function (skill) {
-            return { role: "system", content: skill.instructions };
-          });
-          message_list = [
-            { role: "system", content: window.ChatToolCommon.ENVIRONMENT_SYSTEM_PROMPT },
-            { role: "system", content: window.ChatToolCommon.TOOL_CALL_REPEAT_SYSTEM_PROMPT }
-          ].concat(skill_message_list, message_list);
-          return loop_call(0, message_list);
+          return gadget.skill_manager.formatSkillListForPrompt()
+            .push(function (skill_list_prompt) {
+              var system_message_list = [
+                { role: "system", content: window.ChatToolCommon.ENVIRONMENT_SYSTEM_PROMPT },
+                { role: "system", content: window.ChatToolCommon.TOOL_CALL_REPEAT_SYSTEM_PROMPT }
+              ];
+              if (skill_list_prompt) {
+                system_message_list.push({ role: "system", content: skill_list_prompt });
+              }
+              return loop_call(0, system_message_list.concat(message_list));
+            });
         });
       return queue_loop;
     });

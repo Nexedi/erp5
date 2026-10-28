@@ -33,7 +33,8 @@
         visible = context.state.visible;
       }
       return context.changeState({
-        visible: visible
+        visible: visible,
+        globle: true
       });
     })
     .onStateChange(function onStateChange(modification_dict) {

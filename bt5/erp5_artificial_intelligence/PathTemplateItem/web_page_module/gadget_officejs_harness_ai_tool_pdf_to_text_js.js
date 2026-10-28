@@ -6,7 +6,7 @@
 
   var PDFJS_SCRIPT_URL = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.mjs",
     PDFJS_WORKER_URL = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.mjs",
-    PDF_TEXT_DEFAULT_MAX_CHARS = 100000,
+    PDF_TEXT_DEFAULT_WINDOW_CHARS = 100000,
     PDF_EXTRACT_SANDBOX_CODE = [
       "var pdfjsLib = lib[" + JSON.stringify(PDFJS_SCRIPT_URL) + "];",
       "pdfjsLib.GlobalWorkerOptions.workerSrc = " + JSON.stringify(PDFJS_WORKER_URL) + ";",
@@ -17,9 +17,13 @@
       "  content = await page.getTextContent();",
       "  text_list.push(content.items.map(function (item) { return item.str; }).join(' '));",
       "}",
-      "var text = text_list.join('\\n\\n'), truncated = text.length > args.max_chars;",
-      "return 'PDF: ' + args.file_name + ' (' + pdf.numPages + ' page' + (pdf.numPages === 1 ? '' : 's') + ')\\n\\n' +",
-      "  text.slice(0, args.max_chars) + (truncated ? '\\n... [truncated at ' + args.max_chars + ' chars]' : '');"
+      "var text = text_list.join('\\n\\n');",
+      "var min_chars = Math.max(0, Math.min(args.min_chars, text.length));",
+      "var max_chars = Math.max(min_chars, Math.min(args.max_chars, text.length));",
+      "var partial = min_chars > 0 || max_chars < text.length;",
+      "return 'PDF: ' + args.file_name + ' (' + pdf.numPages + ' page' + (pdf.numPages === 1 ? '' : 's') + ', ' +",
+      "  text.length + ' chars total)\\n\\n' + text.slice(min_chars, max_chars) +",
+      "  (partial ? '\\n... [showing chars ' + min_chars + '-' + max_chars + ' of ' + text.length + ']' : '');"
     ].join('\n');
 
   // The attachment link is a "data:<mime>[;base64],<payload>" URI (see
@@ -47,8 +51,11 @@
           properties: {
             file_name: { type: "string", description: "Exact attachment file name. Optional - " +
               "defaults to the most recently uploaded PDF." },
-            max_chars: { type: "integer", description: "Truncate the returned text to this many " +
-              "characters (default " + PDF_TEXT_DEFAULT_MAX_CHARS + ")." },
+            min_chars: { type: "integer", description: "Start reading from this character offset " +
+              "(default 0)." },
+            max_chars: { type: "integer", description: "Stop reading at this character offset, " +
+              "exclusive (default min_chars + " + PDF_TEXT_DEFAULT_WINDOW_CHARS + "). Use min_chars " +
+              "together with max_chars to page through a long PDF in multiple calls." },
             timeout_ms: { type: "integer", description: "Deadline in ms (default 30000, max 120000)." }
           }
         }
@@ -63,19 +70,25 @@
                 (!args.file_name || post.attachment_name === args.file_name);
             }),
             post,
-            parsed;
+            parsed,
+            min_chars,
+            max_chars;
           if (!candidate_list.length) {
             return "ERROR: no PDF attachment" + (args.file_name ? " named \"" + args.file_name + "\"" : "") +
               " found in this conversation.";
           }
           post = candidate_list[candidate_list.length - 1];
           parsed = parseDataUri(post.attachment_link);
+          min_chars = Math.max(0, Number(args.min_chars) || 0);
+          max_chars = args.max_chars === undefined || args.max_chars === null ?
+            min_chars + PDF_TEXT_DEFAULT_WINDOW_CHARS : Number(args.max_chars);
           return new RSVP.Queue(window.ChatToolCommon.runSandboxJob("js", {
             code: PDF_EXTRACT_SANDBOX_CODE,
             args: {
               base64: parsed.base64,
               file_name: post.attachment_name,
-              max_chars: args.max_chars || PDF_TEXT_DEFAULT_MAX_CHARS
+              min_chars: min_chars,
+              max_chars: max_chars
             },
             libraries: [PDFJS_SCRIPT_URL]
           }, args.timeout_ms || 30000))

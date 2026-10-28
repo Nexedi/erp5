@@ -38,7 +38,7 @@
 </tr>
 <tr>
   <td>waitForTextPresent</td>
-  <td>Skill detected: True</td>
+  <td>Skill listing detected: True, full instructions leaked: False</td>
   <td></td>
 </tr>
 </tbody></table>

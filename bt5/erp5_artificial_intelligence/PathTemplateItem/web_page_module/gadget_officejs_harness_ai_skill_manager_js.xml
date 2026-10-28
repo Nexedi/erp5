@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts90068632.211043</string> </value>
+            <value> <string>ts93117130.670507</string> </value>
         </item>
         <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
@@ -67,7 +67,7 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>efe2d7765eed8635e17f5a5ba4b08eb4</string> </value>
+            <value> <string>3dccf57631ce9f90185eea18ba091857</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -77,7 +77,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_harness_ai_skills.js</string> </value>
+            <value> <string>gadget_officejs_harness_ai_skill_manager.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -87,11 +87,15 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_harness_ai_skills_js</string> </value>
+            <value> <string>gadget_officejs_harness_ai_skill_manager_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
             <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -101,7 +105,11 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>2806</int> </value>
+            <value> <int>1935</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Gadget OfficeJS Harness AI Skill Manager JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -181,7 +189,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1786089135.142394</float>
+                              <float>1791400000.0</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -230,7 +238,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1035.37941.10104.32221</string> </value>
+                      <value> <string>1036.40540.47289.19729</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -246,7 +254,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1790068632.221183</float>
+                              <float>1793117130.67494</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

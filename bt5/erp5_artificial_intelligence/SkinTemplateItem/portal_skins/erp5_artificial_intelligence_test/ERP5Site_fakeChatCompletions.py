@@ -125,13 +125,17 @@ message's role/content picks the branch:
                                              already called this" notice must never appear
                                              (testOfficeJSHarnessAIAllowRepeatTool.zpt)
 - content "check for skill injection"    -> reports back (as plain text) whether any role-"system"
-                                             message in the request already carries the
-                                             create_html_report skill's instructions - this skill is
-                                             unconditionally prepended to every task's message_list by
-                                             gadget_officejs_harness_ai_agent_js.js (window.ChatSkills.
-                                             SKILL_LIST), regardless of what the user asked, so this
-                                             must be true even though nothing in the user's message
-                                             mentions HTML, CSS or reports
+                                             message in the request already carries the lightweight
+                                             <available_skills> name+description listing for the
+                                             create_html_report skill - gadget_officejs_harness_ai_
+                                             agent_js.js unconditionally prepends this short listing
+                                             (built by skill_manager's formatSkillListForPrompt()) to
+                                             every task's message_list regardless of what the user
+                                             asked, so this must be true even though nothing in the
+                                             user's message mentions HTML, CSS or reports - but the
+                                             skill's full instructions must NOT also be there: those
+                                             are only loaded on demand, via the load_skill tool
+                                             (gadget_officejs_harness_ai_tool_load_skill_js.js)
                                              (testOfficeJSHarnessAISkillInjection.zpt)
 - content "please confirm text
   attachment" + the message also
@@ -399,12 +403,18 @@ elif 'archive plan tool test' in last_content_lower:
 elif 'define' in last_content_lower:
   chunk = define_tool_chunk('double')
 elif 'check for skill injection' in last_content_lower:
-  skill_system_message_found = any(
+  skill_listing_found = any(
+      m.get('role') == 'system' and '<available_skills>' in (m.get('content') or '')
+      and 'create_html_report' in (m.get('content') or '')
+      for m in message_list
+  )
+  full_instructions_leaked = any(
       m.get('role') == 'system' and 'Do not add CSS' in (m.get('content') or '')
       for m in message_list
   )
   chunk = {'choices': [{'delta': {
-      'content': 'Skill detected: %s' % skill_system_message_found,
+      'content': 'Skill listing detected: %s, full instructions leaked: %s' % (
+          skill_listing_found, full_instructions_leaked),
   }}]}
 elif ('please confirm text attachment' in last_content_lower
       and 'hello attachment world' in last_content_lower):

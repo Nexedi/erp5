@@ -1,9 +1,9 @@
-/*global window */
+/*global window, rJS */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window) {
+(function (window, rJS) {
   "use strict";
 
-  var CREATE_HTML_REPORT_INSTRUCTIONS = "# Guide: Writing HTML Report Content\n\n" +
+  var INSTRUCTIONS = "# Guide: Writing HTML Report Content\n\n" +
     "Follow these conventions when writing HTML content for a report that will be rendered as a " +
     "formatted, paginated document (table of contents, numbered figures/tables, page breaks).\n\n" +
     "Do not add CSS: no `<style>` blocks, no `style=\"...\"` attributes, and no classes added purely " +
@@ -42,14 +42,17 @@
     "- Tables, images and `<pre><code>` blocks are kept on a single page (never split across a page " +
     "boundary).";
 
-  var SKILL_LIST = [
-    {
-      name: "create_html_report",
-      instructions: CREATE_HTML_REPORT_INSTRUCTIONS
-    }
-  ];
-
-  window.ChatSkills = {
-    SKILL_LIST: SKILL_LIST
-  };
-}(window));
+  rJS(window)
+    .declareMethod('getDefinition', function () {
+      return {
+        name: "create_html_report",
+        description: "Writing HTML content for a report that will be rendered as a paginated " +
+          "document (table of contents, numbered figures/tables, page breaks). Use when asked to " +
+          "write or generate a report, or any HTML that will be converted to such a document.",
+        instructions: INSTRUCTIONS
+      };
+    })
+    .declareMethod('render', function () {
+      return;
+    });
+}(window, rJS));
