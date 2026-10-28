@@ -82,16 +82,11 @@
         dom_list = [
         content_element
       ],
-      attachment_children,
-      attachment_part;
+      attachment_children;
     if (post.attachment_link) {
       attachment_children = [
         domsugar("a", { href: post.attachment_link, download: post.attachment_name }, [post.attachment_name])
       ];
-      attachment_part = getAttachmentContentPart(post.attachment_name, post.attachment_link);
-      if (attachment_part && attachment_part.skipped) {
-        attachment_children.push(domsugar("span", { "class": "post-attachment-warning" }, [attachment_part.text]));
-      }
       dom_list.push(domsugar("div", { "class": "post-attachment" }, attachment_children));
     }
     dom_list.push(domsugar("time", { datetime: post.date, title: post.date }, [

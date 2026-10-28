@@ -133,6 +133,29 @@ message's role/content picks the branch:
                                              must be true even though nothing in the user's message
                                              mentions HTML, CSS or reports
                                              (testOfficeJSHarnessAISkillInjection.zpt)
+- content "please confirm text
+  attachment" + the message also
+  contains the known fixture text        -> confirms a text/* attachment's DECODED content really
+                                             reached this script (getAttachmentContentPart in
+                                             gadget_chat_ui_js.js inlines it as plain text onto the
+                                             message's string content) - the branch only matches if
+                                             the fixture text is actually present, so this is a real
+                                             end-to-end check, not just a trigger-phrase match
+                                             (testOfficeJSHarnessAITextAttachmentUpload.zpt)
+- content "please confirm image
+  attachment" + the message's content
+  is a list with an image_url part       -> confirms an image/* attachment became a real structured
+                                             multimodal content part (not flattened text) - message_text()/
+                                             message_has_image() below handle the "content" field being
+                                             a list of parts (see note above their definitions)
+                                             (testOfficeJSHarnessAIImageAttachmentUpload.zpt)
+- content "please confirm pdf
+  attachment" + the message also
+  mentions "pdf_to_text"                 -> confirms a PDF attachment produced the "call pdf_to_text"
+                                             skip-placeholder text (PDF content itself is never inlined -
+                                             see getAttachmentContentPart) - this does NOT exercise the
+                                             real pdf_to_text tool/pdf.js/CDN, only the placeholder text
+                                             (testOfficeJSHarnessAIPdfAttachmentUpload.zpt)
 - otherwise                              -> a fixed, plain-text reply
 
 Setting's "Model" field (gadget_officejs_harness_ai_setting_js.js's
@@ -154,7 +177,27 @@ if traverse_subpath and traverse_subpath[0] == 'models':
 body = json.loads(request.get('BODY', '') or '{}')
 message_list = body.get('messages') or []
 last_message = message_list[-1] if message_list else {}
-last_content = last_message.get('content') or ''
+
+
+def message_text(message):
+  # A user message's "content" is a plain string, UNLESS it carries an image
+  # attachment (getMessageList in gadget_chat_ui_js.js then builds an array
+  # of {type:"text"|"image_url", ...} parts instead) - extract just the text
+  # parts here so every existing phrase-matching branch below keeps working
+  # unchanged for both shapes.
+  content = message.get('content')
+  if isinstance(content, list):
+    return ' '.join(part.get('text', '') for part in content if part.get('type') == 'text')
+  return content or ''
+
+
+def message_has_image(message):
+  content = message.get('content')
+  return isinstance(content, list) and any(
+      part.get('type') == 'image_url' for part in content)
+
+
+last_content = message_text(last_message)
 last_content_lower = last_content.lower()
 
 portal_url = context.getPortalObject().absolute_url()
@@ -362,6 +405,21 @@ elif 'check for skill injection' in last_content_lower:
   )
   chunk = {'choices': [{'delta': {
       'content': 'Skill detected: %s' % skill_system_message_found,
+  }}]}
+elif ('please confirm text attachment' in last_content_lower
+      and 'hello attachment world' in last_content_lower):
+  chunk = {'choices': [{'delta': {
+      'content': 'I can see the attachment text: Hello attachment world',
+  }}]}
+elif ('please confirm image attachment' in last_content_lower
+      and message_has_image(last_message)):
+  chunk = {'choices': [{'delta': {
+      'content': 'I can see an image attachment.',
+  }}]}
+elif ('please confirm pdf attachment' in last_content_lower
+      and 'pdf_to_text' in last_content_lower):
+  chunk = {'choices': [{'delta': {
+      'content': 'I see a PDF attachment - I should call pdf_to_text to read it.',
   }}]}
 else:
   chunk = {'choices': [{'delta': {'content': 'Hello from the fake LLM!'}}]}

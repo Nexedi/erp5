@@ -32,14 +32,9 @@
       if (visible === undefined) {
         visible = context.state.visible;
       }
-      return context.getUrlParameter('editable')
-        .push(function (editable) {
-          return context.changeState({
-            visible: visible,
-            global: true,
-            editable: editable
-          });
-        });
+      return context.changeState({
+        visible: visible
+      });
     })
     .onStateChange(function onStateChange(modification_dict) {
       var i,
@@ -58,47 +53,45 @@
         }
       }
 
-      if (modification_dict.hasOwnProperty("editable")) {
-        queue
-          .push(function () {
-            return RSVP.hash({
-              url_list: gadget.getUrlForList([
-                {command: 'display', options: {page: "ojs_harness_ai_homepage"}},
-                {command: 'display'},
-                {command: 'display', options: {page: "ojs_harness_ai_setting"}},
-                {command: 'display', options: {page: "ojs_harness_ai_external_service"}}
-              ]),
-              translation_list: gadget.getTranslationList([
-                'New Artificial Task',
-                'Artificial Task Module',
-                'Setting',
-                'External service'
-              ])
-            });
-          })
-          .push(function (result_dict) {
-            var element_list = [],
-              icon_and_key_list = [
-                'home', null,
-                'clipboard', null,
-                'sliders', 's',
-                'external-link', null
-              ];
-
-            for (i = 0; i < result_dict.url_list.length; i += 1) {
-              element_list.push(domsugar('li', [
-                domsugar('a', {
-                  href: result_dict.url_list[i],
-                  'class': 'ui-btn-icon-left ui-icon-' + icon_and_key_list[2 * i],
-                  accesskey: icon_and_key_list[2 * i + 1],
-                  text: result_dict.translation_list[i]
-                })
-              ]));
-            }
-            domsugar(gadget.element.querySelector("ul"),
-                     [domsugar(null, element_list)]);
+      queue
+        .push(function () {
+          return RSVP.hash({
+            url_list: gadget.getUrlForList([
+              {command: 'display', options: {page: "ojs_harness_ai_homepage"}},
+              {command: 'display'},
+              {command: 'display', options: {page: "ojs_harness_ai_setting"}},
+              {command: 'display', options: {page: "ojs_harness_ai_external_service"}}
+            ]),
+            translation_list: gadget.getTranslationList([
+              'New Artificial Task',
+              'Artificial Task Module',
+              'Setting',
+              'External service'
+            ])
           });
-      }
+        })
+        .push(function (result_dict) {
+          var element_list = [],
+            icon_and_key_list = [
+              'home', null,
+              'clipboard', null,
+              'sliders', 's',
+              'external-link', null
+            ];
+
+          for (i = 0; i < result_dict.url_list.length; i += 1) {
+            element_list.push(domsugar('li', [
+              domsugar('a', {
+                href: result_dict.url_list[i],
+                'class': 'ui-btn-icon-left ui-icon-' + icon_and_key_list[2 * i],
+                accesskey: icon_and_key_list[2 * i + 1],
+                text: result_dict.translation_list[i]
+              })
+            ]));
+          }
+          domsugar(gadget.element.querySelector("ul"),
+                   [domsugar(null, element_list)]);
+        });
 
       return queue;
     })

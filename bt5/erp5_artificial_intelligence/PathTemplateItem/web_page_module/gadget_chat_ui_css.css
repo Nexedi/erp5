@@ -95,12 +95,6 @@ hr#post_item {
   order: 3;
 }
 
-.post-attachment-warning {
-  display: block;
-  color: #D64545;
-  font-size: 0.82em;
-}
-
 #post_list li.post-question > time,
 #post_list li.post-answer > time {
   order: 4;
