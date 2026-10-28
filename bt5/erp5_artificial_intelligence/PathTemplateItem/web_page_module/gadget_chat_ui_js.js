@@ -5,6 +5,17 @@
 
 
   marked.setOptions({breaks: true});
+  // Message and tool result text is untrusted (eg. an http_request result is a
+  // whole fetched web page): show raw HTML as text instead of injecting it into
+  // the page, where a <base href> would re-point every relative URL (worker,
+  // gadgets) and <script>/<img onerror> would run in this origin.
+  marked.use({
+    renderer: {
+      html: function (token) {
+        return token.text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      }
+    }
+  });
 
   var COMMENT_POLL_INTERVAL = 3000,
     ATTACHMENT_TEXT_MAX_LENGTH = 5 * 1024 * 1024,
@@ -392,7 +403,7 @@
       if (message.hasOwnProperty('content') && message.content) {
         details_open = false;
         markdown_element.innerHTML = marked.parse(message.content);
-        gadget.new_message_element.querySelector('pre.chat-hidden-field').innerHTML = message.content;
+        gadget.new_message_element.querySelector('pre.chat-hidden-field').textContent = message.content;
       } else {
         details_open = true;
         markdown_element.innerHTML = "";

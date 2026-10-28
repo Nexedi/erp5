@@ -3,7 +3,11 @@
 (function (window, document, RSVP) {
   "use strict";
 
-  var CALLBACK_PAGE = "gadget_officejs_harness_ai_mcp_oauth_callback.html",
+  // Resolved once against this script's own URL, see tool_common.js.
+  var CALLBACK_URL = new URL(
+      "gadget_officejs_harness_ai_mcp_oauth_callback.html",
+      (document.currentScript && document.currentScript.src) || document.baseURI
+    ).href,
     CLIENT_NAME = "ERP5 OfficeJS Harness Agent",
     EXPIRY_SAFETY_MARGIN_MS = 30000,
     // Keys must match the literal strings hardcoded in
@@ -13,7 +17,7 @@
     RESULT_STORAGE_KEY = "erp5_mcp_oauth_result";
 
   function callbackUrl() {
-    return new URL(CALLBACK_PAGE, document.baseURI).href;
+    return CALLBACK_URL;
   }
 
   function base64UrlEncode(buffer) {

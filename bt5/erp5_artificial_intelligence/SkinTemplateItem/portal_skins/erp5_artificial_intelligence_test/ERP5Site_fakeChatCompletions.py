@@ -97,7 +97,7 @@ message's role/content picks the branch:
                                              giving a final answer - the
                                              client-side guard in
                                              runClientToolCallList
-                                             (gadget_officejs_harness_ai_tool_common_js.js)
+                                             (gadget_officejs_harness_ai_tool_manager_js.js)
                                              short-circuits that second,
                                              identical call itself (never
                                              reaching ERP5Site_fakeHttpEndpoint
@@ -124,6 +124,15 @@ message's role/content picks the branch:
                                              its genuine result, so the guard's canned "you
                                              already called this" notice must never appear
                                              (testOfficeJSHarnessAIAllowRepeatTool.zpt)
+- content "stuck http_request tool test" -> calls http_request with a marked ("stuck_test")
+                                             argument set, then keeps re-issuing that exact
+                                             call after every result, even once http_request
+                                             has been dropped from the request's tools - a
+                                             model that ignores the guard notice. The client
+                                             must stop on its own: it hides the tool after the
+                                             3rd call and ends the task with an error before
+                                             the 5th LLM request
+                                             (testOfficeJSHarnessAIRepeatedToolCallStop.zpt)
 - content "check for skill injection"    -> reports back (as plain text) whether any role-"system"
                                              message in the request already carries the lightweight
                                              <available_skills> name+description listing for the
@@ -160,23 +169,55 @@ message's role/content picks the branch:
                                              see getAttachmentContentPart) - this does NOT exercise the
                                              real pdf_to_text tool/pdf.js/CDN, only the placeholder text
                                              (testOfficeJSHarnessAIPdfAttachmentUpload.zpt)
+- content "spawn_subagent tool test"     -> calls spawn_subagent with a task that is itself the
+                                             "http_request tool test" phrase, so the sub-agent's own
+                                             loop (driven by this same script) runs http_request and
+                                             echoes its result back; the parent then echoes the
+                                             sub-agent's answer, giving a final reply that starts with
+                                             "Tool result: Tool result:" only when the result really
+                                             went through the sub-agent
+                                             (testOfficeJSHarnessAISpawnSubagentTool.zpt)
+- content "compaction context test"      -> only meaningful with SMALL_CONTEXT_MODEL selected (its
+                                             tiny context window makes the client compact after two
+                                             tool rounds): keeps calling execute_javascript, each
+                                             call returning ~5000 characters, until the history
+                                             carries SUMMARY-TWO, then gives a final answer
+                                             (testOfficeJSHarnessAICompaction.zpt)
+- first message is the compaction
+  SUMMARIZATION_PROMPT                   -> a summary request from compactMessageList: answers
+                                             SUMMARY-ONE, but only when the long tool results were
+                                             truncated in the request (else SUMMARY-UNTRUNCATED)
+- first message is the compaction
+  UPDATE_SUMMARIZATION_PROMPT            -> answers SUMMARY-TWO, but only when SUMMARY-ONE was passed
+                                             in <previous-summary> tags (else SUMMARY-BAD)
 - otherwise                              -> a fixed, plain-text reply
 
 Setting's "Model" field (gadget_officejs_harness_ai_setting_js.js's
 updateModelListField) does a plain GET to "<base_url>/models" to populate its
 <select> - since Base URL is pointed at this very script, that lands here as
 a subpath, bound as traverse_subpath (name_subpath in this script's
-Script (Python) parameters). Answer that one with a single fixed model so
-Zelenium tests can select a real option instead of hacking the <select>.
+Script (Python) parameters). Answer that one with fixed models so Zelenium
+tests can select a real option instead of hacking the <select>: "test-model"
+first (selected by every test through the shared macro) without any context
+window size, and SMALL_CONTEXT_MODEL reporting a tiny max_model_len (the vLLM
+field), so the client compacts history after a few tool calls. For that model
+only, usage.prompt_tokens follows the request size, since the client uses it
+to estimate the context size - every other model keeps the fixed numbers
+testOfficeJSHarnessAIUsageTotals.zpt checks.
 """
 import json
 import time
 
 request = context.REQUEST
 
+SMALL_CONTEXT_MODEL = 'test-model-small-context'
+
 if traverse_subpath and traverse_subpath[0] == 'models':
   request.RESPONSE.setHeader('Content-Type', 'application/json')
-  return json.dumps({'data': [{'id': 'test-model'}]})
+  return json.dumps({'data': [
+      {'id': 'test-model'},
+      {'id': SMALL_CONTEXT_MODEL, 'max_model_len': 4000},
+  ]})
 
 body = json.loads(request.get('BODY', '') or '{}')
 message_list = body.get('messages') or []
@@ -257,6 +298,37 @@ def is_repeat_test_tool_call(assistant_message):
   return bool(arguments.get('repeat_test'))
 
 
+def stuck_test_args():
+  return {'url': portal_url + '/ERP5Site_fakeHttpEndpoint', 'stuck_test': True}
+
+
+def is_stuck_test_tool_call(assistant_message):
+  tool_call_list = assistant_message.get('tool_calls') or []
+  if not tool_call_list:
+    return False
+  function = tool_call_list[0].get('function') or {}
+  if function.get('name') != 'http_request':
+    return False
+  try:
+    arguments = json.loads(function.get('arguments') or '{}')
+  except ValueError:
+    return False
+  return bool(arguments.get('stuck_test'))
+
+
+def compaction_test_args(step):
+  return {'code': 'return "compaction-step-%d " + "x".repeat(5000);' % step}
+
+
+def is_compaction_test_call(message):
+  tool_call_list = message.get('tool_calls') or []
+  if not tool_call_list:
+    return False
+  function = tool_call_list[0].get('function') or {}
+  return (function.get('name') == 'execute_javascript'
+          and 'compaction-step-' in (function.get('arguments') or ''))
+
+
 def list_defined_tools_repeat_args():
   return {'repeat_test': True}
 
@@ -288,8 +360,38 @@ def count_matching_assistant_tool_calls(msgs, name, arguments_json):
 
 
 chunk_list = None
+first_message = message_list[0] if message_list else {}
+first_system_content = (first_message.get('content') or '') if first_message.get('role') == 'system' else ''
+whole_request_text = json.dumps(message_list)
 
-if last_message.get('role') == 'tool' and last_message.get('name') == 'execution_plan':
+if first_system_content.startswith('The text above is a conversation to summarize'):
+  if 'more characters truncated' in last_content:
+    chunk = {'choices': [{'delta': {'content': 'SUMMARY-ONE: compaction context test in progress.'}}]}
+  else:
+    chunk = {'choices': [{'delta': {'content': 'SUMMARY-UNTRUNCATED'}}]}
+elif first_system_content.startswith('The text above contains NEW conversation messages'):
+  if '<previous-summary>\nSUMMARY-ONE' in last_content:
+    chunk = {'choices': [{'delta': {'content': 'SUMMARY-TWO: merged with the previous summary.'}}]}
+  else:
+    chunk = {'choices': [{'delta': {'content': 'SUMMARY-BAD'}}]}
+elif (last_message.get('role') == 'tool' and len(message_list) >= 2
+      and is_compaction_test_call(message_list[-2])):
+  # Older steps disappear from the history once summarized, so the next step
+  # number comes from the visible calls plus the summary already received.
+  visible_step_count = len([m for m in message_list if is_compaction_test_call(m)])
+  next_step = visible_step_count + 1 + (1 if 'SUMMARY-ONE' in whole_request_text else 0)
+  if 'SUMMARY-TWO' in whole_request_text:
+    chunk = {'choices': [{'delta': {
+        'content': 'Compaction test finished with a merged summary.',
+    }}]}
+  elif next_step > 6:
+    # Never loop forever if the client stopped compacting.
+    chunk = {'choices': [{'delta': {
+        'content': 'Compaction test failed: history was not compacted.',
+    }}]}
+  else:
+    chunk = tool_call_chunk('execute_javascript', compaction_test_args(next_step))
+elif last_message.get('role') == 'tool' and last_message.get('name') == 'execution_plan':
   # Chains straight off the "execution plan tool test" branch below, without
   # needing a second user message - same one-phrase-per-tool-test convention
   # as every other "<tool> tool test" branch here. Only chain once: look at
@@ -316,6 +418,10 @@ elif (last_message.get('role') == 'tool' and len(message_list) >= 2
   # Re-issue the exact same call once - see the "repeated http_request tool
   # test" docstring entry above for why this stops after one re-issue.
   chunk = tool_call_chunk('http_request', repeat_test_args())
+elif (last_message.get('role') == 'tool' and len(message_list) >= 2
+      and is_stuck_test_tool_call(message_list[-2])):
+  # Never gives up - see the "stuck http_request tool test" docstring entry.
+  chunk = tool_call_chunk('http_request', stuck_test_args())
 elif (last_message.get('role') == 'tool' and len(message_list) >= 2
       and is_list_defined_tools_repeat_test_call(message_list[-2])
       and count_matching_assistant_tool_calls(
@@ -358,8 +464,14 @@ elif 'library_inspect tool test' in last_content_lower:
   })
 elif 'repeated http_request tool test' in last_content_lower:
   chunk = tool_call_chunk('http_request', repeat_test_args())
+elif 'stuck http_request tool test' in last_content_lower:
+  chunk = tool_call_chunk('http_request', stuck_test_args())
 elif 'repeated list_defined_tools tool test' in last_content_lower:
   chunk = tool_call_chunk('list_defined_tools', list_defined_tools_repeat_args())
+elif 'compaction context test' in last_content_lower:
+  chunk = tool_call_chunk('execute_javascript', compaction_test_args(1))
+elif 'spawn_subagent tool test' in last_content_lower:
+  chunk = tool_call_chunk('spawn_subagent', {'task': 'Please run the http_request tool test'})
 elif 'http_request tool test' in last_content_lower:
   chunk = tool_call_chunk('http_request', {
       'url': portal_url + '/ERP5Site_fakeHttpEndpoint',
@@ -442,10 +554,15 @@ if chunk_list is None:
 # "usage" and an empty/absent "choices" - added here so every response this
 # script returns exercises gadget_officejs_harness_ai_agent_js.js's usage
 # accumulation (gadget.usage_totals) the same way a real backend would.
+if body.get('model') == SMALL_CONTEXT_MODEL:
+  # Same 3.5 characters per token as the client's own estimate.
+  prompt_tokens = int(len(json.dumps(message_list, separators=(',', ':'))) / 3.5)
+else:
+  prompt_tokens = 500
 chunk_list = chunk_list + [{'choices': [], 'usage': {
-    'prompt_tokens': 500,
+    'prompt_tokens': prompt_tokens,
     'completion_tokens': 50,
-    'total_tokens': 550,
+    'total_tokens': prompt_tokens + 50,
 }}]
 
 body_text = ''.join('data: %s\n\n' % json.dumps(c) for c in chunk_list) + 'data: [DONE]\n\n'

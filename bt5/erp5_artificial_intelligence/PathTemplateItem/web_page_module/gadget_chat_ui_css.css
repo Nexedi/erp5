@@ -241,14 +241,14 @@ hr#post_item {
    with a fade-out, instead of dumping the whole thing - the full text is
    still in the DOM and becomes fully visible once the turn finishes and
    .post-tool-pending is removed. */
-
+/*
 #post_list li.post-tool details.post-tool-pending .post-tool-content {
   max-height: 4.5em;
   overflow: hidden;
   mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
   -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
 }
-
+*/
 /* ---- Sub-agent trace ------------------------------------------------------- */
 
 #post_list li.post-tool .post-tool-sub-list {

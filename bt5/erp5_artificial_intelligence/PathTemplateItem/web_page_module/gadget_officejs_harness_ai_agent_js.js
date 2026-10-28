@@ -6,6 +6,7 @@
   var CHARS_PER_TOKEN = 3.5,
     COMPACT_TOKEN_BUDGET = 80000,
     KEEP_RECENT_TOKEN_BUDGET = 28000,
+    CONTEXT_RESERVE_TOKENS = 16384,
     PANIC_KEEP_RECENT_TOKEN_BUDGET = 8000,
     RATE_LIMIT_RETRY_DELAY_MS = 120000,
     MAX_LOOP_COUNT = 200000,
@@ -13,7 +14,26 @@
     SUMMARY_PROMPT = "The text below is one chunk of a larger tool result that was too large to return " +
       "as-is. Summarize it concisely, but preserve exact facts, numbers, names, dates, code, and any " +
       "other concrete detail that may be needed later - this summary is the ONLY part of this chunk " +
-      "that will remain visible; anything you omit is permanently lost to the rest of this conversation.";
+      "that will remain visible; anything you omit is permanently lost to the rest of this conversation.",
+    CONTEXT_SUMMARY_PREFIX = "[context summary]\n",
+    SUMMARY_TOOL_RESULT_MAX_CHARS = 2000,
+    SUMMARY_FORMAT = "## Goal\n[What is the user trying to accomplish?]\n\n" +
+      "## Constraints & Preferences\n- [Any constraints or requirements mentioned by the user, or \"(none)\"]\n\n" +
+      "## Progress\n### Done\n- [Completed steps]\n\n### In Progress\n- [Current work]\n\n### Blocked\n- [Issues preventing progress, if any]\n\n" +
+      "## Key Decisions\n- [Decision]: [Brief rationale]\n\n" +
+      "## Next Steps\n1. [Ordered list of what should happen next]\n\n" +
+      "## Critical Context\n- [Any data, identifiers, or exact values needed to continue, or \"(none)\"]\n\n" +
+      "Keep each section concise. Preserve exact names, numbers, and error messages.",
+    SUMMARIZATION_PROMPT = "The text above is a conversation to summarize. Create a structured context " +
+      "checkpoint that another instance of this agent will use to continue the task. Use this EXACT format:\n\n" +
+      SUMMARY_FORMAT,
+    // Used when an earlier compaction already produced a summary: merge the
+    // new messages into it instead of summarizing the summary again, which
+    // would lose a little more detail at every compaction.
+    UPDATE_SUMMARIZATION_PROMPT = "The text above contains NEW conversation messages to incorporate into " +
+      "the existing summary provided in <previous-summary> tags. Update that summary: keep everything " +
+      "from it that is still relevant, move finished work to Done, and add new progress, decisions and " +
+      "context. Use this EXACT format:\n\n" + SUMMARY_FORMAT;
 
   function isRateLimitError(e) {
     return Boolean(e && e.message && (/^LLM 429 /).test(e.message));
@@ -33,15 +53,12 @@
       (/failed to fetch|network\s*error|load failed|connection was lost/i).test(e.message));
   }
 
-  var SUMMARIZATION_PROMPT = "The text above is a conversation to summarize. Create a structured context " +
-    "checkpoint that another instance of this agent will use to continue the task. Use this EXACT format:\n\n" +
-    "## Goal\n[What is the user trying to accomplish?]\n\n" +
-    "## Constraints & Preferences\n- [Any constraints or requirements mentioned by the user, or \"(none)\"]\n\n" +
-    "## Progress\n### Done\n- [Completed steps]\n\n### In Progress\n- [Current work]\n\n### Blocked\n- [Issues preventing progress, if any]\n\n" +
-    "## Key Decisions\n- [Decision]: [Brief rationale]\n\n" +
-    "## Next Steps\n1. [Ordered list of what should happen next]\n\n" +
-    "## Critical Context\n- [Any data, identifiers, or exact values needed to continue, or \"(none)\"]\n\n" +
-    "Keep each section concise. Preserve exact names, numbers, and error messages.";
+  function truncateForSummary(text, max_chars) {
+    if (text.length <= max_chars) {
+      return text;
+    }
+    return text.slice(0, max_chars) + "\n[... " + (text.length - max_chars) + " more characters truncated]";
+  }
 
   function estimateTokensForMessages(message_list) {
     return Math.ceil(JSON.stringify(message_list).length / CHARS_PER_TOKEN);
@@ -64,7 +81,8 @@
         }).join("\n");
       }
       if (message.role === "tool") {
-        return "Tool result [" + message.name + "]: " + messageContentToText(message.content);
+        return "Tool result [" + message.name + "]: " +
+          truncateForSummary(messageContentToText(message.content), SUMMARY_TOOL_RESULT_MAX_CHARS);
       }
       return message.role + ": " + messageContentToText(message.content);
     }).join("\n\n");
@@ -77,10 +95,102 @@
     return estimateTokensForMessages(message_list);
   }
 
+  // Summarizes the older part of message_list once it is estimated above
+  // compact_token_budget, keeping roughly keep_recent_budget tokens as-is.
+  function compactWithBudget(gadget, message_list, keep_recent_budget, compact_token_budget, last_usage_anchor) {
+    var leading_system_count = 0,
+      cut_index,
+      recent_token_count = 0,
+      leading_system_message_list,
+      old_message_list,
+      recent_message_list,
+      previous_summary = null;
+    if (estimateContextTokens(last_usage_anchor, message_list) < compact_token_budget) {
+      return message_list;
+    }
+    while (leading_system_count < message_list.length &&
+        message_list[leading_system_count].role === "system") {
+      leading_system_count += 1;
+    }
+
+    cut_index = message_list.length;
+    while (cut_index > leading_system_count && recent_token_count < keep_recent_budget) {
+      cut_index -= 1;
+      recent_token_count += estimateTokensForMessages([message_list[cut_index]]);
+    }
+    while (cut_index > leading_system_count &&
+        message_list[cut_index].role === "tool") {
+      cut_index -= 1;
+    }
+    leading_system_message_list = message_list.slice(0, leading_system_count);
+    old_message_list = message_list.slice(leading_system_count, cut_index);
+    recent_message_list = message_list.slice(cut_index);
+
+    if (old_message_list.length && old_message_list[0].role === "user" &&
+        typeof old_message_list[0].content === "string" &&
+        old_message_list[0].content.indexOf(CONTEXT_SUMMARY_PREFIX) === 0) {
+      previous_summary = old_message_list[0].content.slice(CONTEXT_SUMMARY_PREFIX.length);
+      old_message_list = old_message_list.slice(1);
+    }
+    if (!old_message_list.length) {
+      return message_list;
+    }
+
+    if (gadget.tool_message_list) {
+      gadget.tool_message_list.push({
+        role: "tool",
+        name: "compact_history",
+        content: "Conversation getting long - summarizing " + old_message_list.length +
+          " older message(s) to free up context..."
+      });
+    }
+    return new RSVP.Queue()
+      .push(function () {
+        return gadget.gadget_chat_ui && gadget.gadget_chat_ui.showMessage({
+          tool_message_list: gadget.tool_message_list,
+          execution_plan: gadget.execution_plan
+        });
+      })
+      .push(function () {
+        return gadget.requestProcessTaskWithUsage(
+          gadget,
+          gadget.jio_key,
+          {
+            message_list: JSON.stringify([
+              { role: "system", content: previous_summary !== null ? UPDATE_SUMMARIZATION_PROMPT : SUMMARIZATION_PROMPT },
+              { role: "user", content: (previous_summary !== null ?
+                  "<previous-summary>\n" + previous_summary + "\n</previous-summary>\n\n" : "") +
+                "<conversation>\n" + serializeMessageListForSummary(old_message_list) + "\n</conversation>" }
+            ]),
+            tool_definition_list: JSON.stringify([]),
+            is_background: "1"
+          }
+        );
+      })
+      .push(function (result) {
+        if (!result.content) {
+          throw new Error("compactMessageList: empty summary");
+        }
+        // A summary cut off by the output token limit is incomplete -
+        // keep the full history rather than lose its missing part.
+        if (result.finish_reason === "length") {
+          throw new Error("compactMessageList: summary truncated");
+        }
+        return leading_system_message_list.concat([{
+          role: "user",
+          content: CONTEXT_SUMMARY_PREFIX + result.content
+        }], recent_message_list);
+      })
+      .push(undefined, function () {
+        return message_list;
+      });
+  }
+
   rJS(window)
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
     .declareAcquiredMethod("requestProcessTask", "requestProcessTask")
     .declareAcquiredMethod("storeTaskResult", "storeTaskResult")
+    .declareAcquiredMethod("getModelContextWindow", "getModelContextWindow")
 
     .declareMethod('render', function (options) {
       var gadget = this;
@@ -116,7 +226,7 @@
       return this.skill_manager.getSkillByName(argument_list[0]);
     })
     .allowPublicAcquisition('compactMessageList', function (argument_list) {
-      return this.compactMessageList.apply(argument_list[0], argument_list);
+      return this.compactMessageList.apply(this, argument_list);
     })
     .allowPublicAcquisition('summarizeToolOutput', function (argument_list) {
       return this.summarizeToolOutput.apply(argument_list[0], argument_list);
@@ -171,78 +281,27 @@
       ]);
     })
     .declareMethod('compactMessageList', function (gadget, message_list, keep_recent_override, last_usage_anchor) {
-      var keep_recent_budget = keep_recent_override || KEEP_RECENT_TOKEN_BUDGET,
-        leading_system_count = 0,
-        cut_index,
-        recent_token_count = 0,
-        leading_system_message_list,
-        old_message_list,
-        recent_message_list;
-      if (!keep_recent_override && estimateContextTokens(last_usage_anchor, message_list) < COMPACT_TOKEN_BUDGET) {
-        return message_list;
-      }
-      while (leading_system_count < message_list.length &&
-          message_list[leading_system_count].role === "system") {
-        leading_system_count += 1;
-      }
-
-      cut_index = message_list.length;
-      while (cut_index > leading_system_count && recent_token_count < keep_recent_budget) {
-        cut_index -= 1;
-        recent_token_count += estimateTokensForMessages([message_list[cut_index]]);
-      }
-      while (cut_index > leading_system_count &&
-          message_list[cut_index].role === "tool") {
-        cut_index -= 1;
-      }
-      leading_system_message_list = message_list.slice(0, leading_system_count);
-      old_message_list = message_list.slice(leading_system_count, cut_index);
-      recent_message_list = message_list.slice(cut_index);
-
-      if (!old_message_list.length) {
-        return message_list;
-      }
-
-      if (gadget.tool_message_list) {
-        gadget.tool_message_list.push({
-          role: "tool",
-          name: "compact_history",
-          content: "Conversation getting long - summarizing " + old_message_list.length +
-            " older message(s) to free up context..."
-        });
-      }
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.gadget_chat_ui && gadget.gadget_chat_ui.showMessage({
-            tool_message_list: gadget.tool_message_list,
-            execution_plan: gadget.execution_plan
-          });
-        })
-        .push(function () {
-          return gadget.requestProcessTaskWithUsage(
-            gadget,
-            gadget.jio_key,
-            {
-              message_list: JSON.stringify([
-                { role: "system", content: SUMMARIZATION_PROMPT },
-                { role: "user", content: "<conversation>\n" + serializeMessageListForSummary(old_message_list) + "\n</conversation>" }
-              ]),
-              tool_definition_list: JSON.stringify([]),
-              is_background: "1"
-            }
-          );
-        })
-        .push(function (result) {
-          if (!result.content) {
-            throw new Error("compactMessageList: empty summary");
+      var agent = this;
+      return new RSVP.Queue(agent.getModelContextWindow())
+        .push(function (context_window) {
+          var compact_token_budget = COMPACT_TOKEN_BUDGET,
+            keep_recent_budget = KEEP_RECENT_TOKEN_BUDGET;
+          // Compact once the context gets within CONTEXT_RESERVE_TOKENS of the
+          // model's real context window (kept for the reply and tool
+          // definitions), like ~/pi does. When the server does not report the
+          // window size, keep the fixed budgets.
+          if (context_window) {
+            compact_token_budget = context_window - Math.min(CONTEXT_RESERVE_TOKENS, Math.floor(context_window / 4));
+            keep_recent_budget = Math.min(KEEP_RECENT_TOKEN_BUDGET, Math.floor(compact_token_budget * 0.35));
           }
-          return leading_system_message_list.concat([{
-            role: "user",
-            content: "[context summary]\n" + result.content
-          }], recent_message_list);
-        })
-        .push(undefined, function () {
-          return message_list;
+          // An explicit keep_recent_override (context overflow retry) always compacts.
+          return compactWithBudget(
+            gadget,
+            message_list,
+            keep_recent_override || keep_recent_budget,
+            keep_recent_override ? 0 : compact_token_budget,
+            last_usage_anchor
+          );
         });
     })
     .declareMethod('summarizeToolOutput', function (gadget, content) {
@@ -369,10 +428,7 @@
               return gadget.gadget_chat_ui.showMessage({tool_message_list: gadget.tool_message_list, execution_plan: gadget.execution_plan });
             })
             .push(function () {
-              return gadget.tool_manager.getToolList();
-            })
-            .push(function (tool_list) {
-              return window.ChatToolCommon.runClientToolCallList(pending_tool_call_list, message_list, tool_list);
+              return gadget.tool_manager.runToolCallList(pending_tool_call_list, message_list);
             })
             .push(function (client_tool_result_list) {
               var i, tool_call, client_tool_result;
@@ -448,15 +504,15 @@
               gadget.last_usage_anchor.message_count = Math.max(0, gadget.last_usage_anchor.message_count - shrunk_by);
             }
             message_list = compacted_message_list;
-            return gadget.tool_manager.getToolList();
+            return gadget.tool_manager.getToolDefinitionList(message_list);
           })
-          .push(function (tool_list) {
+          .push(function (tool_definition_list) {
             return gadget.requestProcessTaskWithUsage(
               gadget,
               gadget.jio_key,
               {
                 message_list: JSON.stringify(message_list),
-                tool_definition_list: JSON.stringify(window.ChatToolCommon.toolDefinitionList(tool_list))
+                tool_definition_list: JSON.stringify(tool_definition_list)
               }
             );
           })
@@ -599,12 +655,13 @@
             });
         })
         .push(function (message_list) {
-          return gadget.skill_manager.formatSkillListForPrompt()
-            .push(function (skill_list_prompt) {
-              var system_message_list = [
-                { role: "system", content: window.ChatToolCommon.ENVIRONMENT_SYSTEM_PROMPT },
-                { role: "system", content: window.ChatToolCommon.TOOL_CALL_REPEAT_SYSTEM_PROMPT }
-              ];
+          return new RSVP.Queue(RSVP.all([
+            gadget.tool_manager.getSystemPromptList(),
+            gadget.skill_manager.formatSkillListForPrompt()
+          ]))
+            .push(function (result_list) {
+              var system_message_list = result_list[0],
+                skill_list_prompt = result_list[1];
               if (skill_list_prompt) {
                 system_message_list.push({ role: "system", content: skill_list_prompt });
               }

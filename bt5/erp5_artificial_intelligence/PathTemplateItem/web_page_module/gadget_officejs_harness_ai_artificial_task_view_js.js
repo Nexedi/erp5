@@ -21,6 +21,59 @@
   }
 
 
+  // OpenAI's own /models entries carry no context window size, but many
+  // OpenAI-compatible servers add one: OpenRouter/Together (context_length),
+  // Groq (context_window), vLLM (max_model_len), LM Studio/Mistral
+  // (max_context_length).
+  function getContextWindowFromModelInfo(model_info) {
+    var value = model_info.context_length || model_info.context_window ||
+      model_info.max_model_len || model_info.max_context_length ||
+      (model_info.top_provider && model_info.top_provider.context_length);
+    value = parseInt(value, 10);
+    return value > 0 ? value : null;
+  }
+
+  // Context window of the configured model, from GET <baseUrl>/models, or
+  // null when the server does not report it (or the request fails).
+  function fetchModelContextWindow(settings) {
+    var target = settings.baseUrl.replace(/\/+$/, '') + "/models",
+      headers = {"Authorization": "Bearer " + settings.apiKey};
+    return new RSVP.Queue()
+      .push(function () {
+        if (settings.proxy_server_url) {
+          return fetch(settings.proxy_server_url.replace(/\/+$/, '') + "/proxy", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/octet-stream",
+              "X-Target-URL": encodeURI(target),
+              "X-Target-Method": "GET",
+              "X-Target-Headers": asciiJSON(headers)
+            }
+          });
+        }
+        return fetch(target, {headers: headers});
+      })
+      .push(function (response) {
+        if (!response.ok) {
+          return null;
+        }
+        return response.json();
+      })
+      .push(function (json) {
+        var model_list = (json && json.data) || [],
+          i;
+        for (i = 0; i < model_list.length; i += 1) {
+          if (model_list[i].id === settings.model) {
+            return getContextWindowFromModelInfo(model_list[i]);
+          }
+        }
+        return null;
+      })
+      .push(undefined, function () {
+        return null;
+      });
+  }
+
   function applyStreamChunk(json, state) {
     var choice = json.choices && json.choices[0], delta, content_grew = false;
     if (json.error) {
@@ -388,6 +441,7 @@
             settings.baseUrl.replace(/\/+$/, '') + "/" + (settings.endpoint || "chat/completions").replace(/^\/+/, '') :
             "",
         payload,
+        tool_definition_list,
         fetch_url,
         fetch_options;
 
@@ -401,9 +455,13 @@
         model: settings.model,
         stream: true,
         stream_options: {include_usage: true},
-        messages: JSON.parse(body.message_list),
-        tools: JSON.parse(body.tool_definition_list)
+        messages: JSON.parse(body.message_list)
       };
+      tool_definition_list = JSON.parse(body.tool_definition_list);
+      // Some OpenAI-compatible servers reject an empty "tools" array.
+      if (tool_definition_list.length) {
+        payload.tools = tool_definition_list;
+      }
 
       if (settings.proxy_server_url) {
         fetch_url = settings.proxy_server_url.replace(/\/+$/, '') + "/proxy";
@@ -454,6 +512,22 @@
       }, function canceller() {
         controller.abort();
       });
+    })
+    .allowPublicAcquisition('getModelContextWindow', function () {
+      var gadget = this,
+        settings = gadget.llm_settings;
+      // Fetched once per render: undefined = not fetched yet, null = unknown.
+      if (gadget.model_context_window !== undefined) {
+        return gadget.model_context_window;
+      }
+      if (!settings.apiKey || !settings.baseUrl || !settings.model) {
+        return null;
+      }
+      return fetchModelContextWindow(settings)
+        .push(function (context_window) {
+          gadget.model_context_window = context_window;
+          return context_window;
+        });
     })
     .allowPublicAcquisition('storeTaskResult', function (argument_list) {
       var gadget = this,
@@ -524,6 +598,7 @@
             proxy_server_url: setting_list[4] || '',
             endpoint: setting_list[5] || 'chat/completions'
           };
+          gadget.model_context_window = undefined;
           gadget.mcp_server_list = window.ChatMCP.parseServerListText(setting_list[6] || '').value || [];
           gadget.mcp_server_list.forEach(function (server_config) {
             var oauth_state = gadget.mcp_oauth_token_map[server_config.name];

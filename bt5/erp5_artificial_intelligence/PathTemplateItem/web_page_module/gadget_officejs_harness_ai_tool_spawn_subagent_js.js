@@ -10,7 +10,9 @@
   rJS(window)
     .declareAcquiredMethod("requestProcessTask", "requestProcessTask")
     .declareAcquiredMethod("requestProcessTaskWithUsage", "requestProcessTaskWithUsage")
-    .declareAcquiredMethod("getToolList", "getToolList")
+    .declareAcquiredMethod("getSystemPromptList", "getSystemPromptList")
+    .declareAcquiredMethod("getToolDefinitionList", "getToolDefinitionList")
+    .declareAcquiredMethod("runToolCallList", "runToolCallList")
     .declareAcquiredMethod("compactMessageList", "compactMessageList")
     .declareAcquiredMethod("summarizeToolOutput", "summarizeToolOutput")
     .declareMethod('render', function (options) {
@@ -63,8 +65,6 @@
         queue_loop = new RSVP.Queue(),
         document_id = gadget.jio_key,
         max_loop_count = Math.min(Math.max(Number(args.max_turns) || SUBAGENT_DEFAULT_MAX_LOOP_COUNT, 1), SUBAGENT_MAX_LOOP_COUNT_CAP),
-        tool_list,
-        tool_definition_list_json,
         last_usage_anchor;
 
       gadget.usage_totals = { call_count: 0, prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 };
@@ -93,7 +93,7 @@
         if (has_tool_call) {
           queue_loop
             .push(function () {
-              return window.ChatToolCommon.runClientToolCallList(pending_tool_call_list, message_list, tool_list);
+              return gadget.runToolCallList(pending_tool_call_list, message_list);
             })
             .push(function (client_tool_result_list) {
               var summarize_queue = new RSVP.Queue(),
@@ -138,12 +138,15 @@
           })
           .push(function (compacted_message_list) {
             message_list = compacted_message_list;
+            return gadget.getToolDefinitionList(message_list, SUBAGENT_EXCLUDED_TOOL_NAME_LIST);
+          })
+          .push(function (tool_definition_list) {
             return gadget.requestProcessTaskWithUsage(
               gadget,
               document_id,
               {
                 message_list: JSON.stringify(message_list),
-                tool_definition_list: tool_definition_list_json,
+                tool_definition_list: JSON.stringify(tool_definition_list),
                 is_background: "1"
               }
             );
@@ -174,18 +177,12 @@
 
       queue_loop
         .push(function () {
-          return gadget.getToolList();
+          return gadget.getSystemPromptList();
         })
-        .push(function (resolved_tool_list) {
-          tool_list = resolved_tool_list;
-          tool_definition_list_json = JSON.stringify(window.ChatToolCommon.toolDefinitionList(tool_list.filter(function (tool) {
-            return SUBAGENT_EXCLUDED_TOOL_NAME_LIST.indexOf(tool.definition.name) === -1;
-          })));
-          subagentLoopCall(0, [
-            { role: "system", content: window.ChatToolCommon.ENVIRONMENT_SYSTEM_PROMPT },
-            { role: "system", content: window.ChatToolCommon.TOOL_CALL_REPEAT_SYSTEM_PROMPT },
+        .push(function (system_message_list) {
+          subagentLoopCall(0, system_message_list.concat([
             { role: "user", content: args.task }
-          ]);
+          ]));
         });
 
       return queue_loop;
