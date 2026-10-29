@@ -1,0 +1,5 @@
+web_page_module/gadget_trade**
+web_site_module/trade_application
+web_site_module/trade_application/**
+web_page_module/trade_application_panel_html
+web_page_module/trade_application_panel_js
