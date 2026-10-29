@@ -65,6 +65,14 @@ from Products.PageTemplates.Expressions import getEngine
 from Products.PageTemplates.Expressions import SecureModuleImporter
 from ZTUtils.Lazy import LazyMap
 
+from zope.interface import classImplements, implementer
+from ZPublisher.Iterators import IStreamIterator
+try:
+  from ZPublisher.Iterators import IZODBStreamIterator
+except ImportError: # BBB Zope without IZODBStreamIterator (Zope 4)
+  IZODBStreamIterator = None
+  assert six.PY2
+
 try:
   import chardet
 except ImportError:
@@ -1980,3 +1988,52 @@ def formatRFC822Headers(headers):
         vallines = linesplit.split(str(value))
       munged.append('%s: %s' % (key, '\r\n  '.join(vallines)))
   return '\r\n'.join(munged)
+
+#####################################################
+# Streaming of ZODB data by the publisher
+#####################################################
+
+@implementer(IStreamIterator)
+class IterableAsStreamIterator(object):
+  """Response body made of an iterable of bytes of known total length.
+
+  The iterable can load objects from the ZODB: the body provides
+  IZODBStreamIterator, so the publisher keeps the ZODB connection of the
+  request open until the WSGI server closes the body. The transaction of the
+  request is finished when the iteration starts, so the iterable must not
+  modify objects.
+
+  If Zope does not have IZODBStreamIterator, the publisher closes the ZODB
+  connection before the WSGI server reads the body. The body then reads all
+  the iterable when it is created.
+  """
+  def __init__(self, iterable, content_length):
+    if IZODBStreamIterator is None:
+      iterator = iter(iterable)
+      try:
+        iterable = b''.join(iterator),
+      finally:
+        close = getattr(iterator, 'close', None)
+        if close is not None:
+          close()
+    self._iterator = iter(iterable)
+    self._content_length = content_length
+
+  def __iter__(self):
+    return self
+
+  def __len__(self):
+    return self._content_length
+
+  def __next__(self):
+    return next(self._iterator)
+
+  next = __next__ # BBB Python 2
+
+  def close(self):
+    close = getattr(self._iterator, 'close', None)
+    if close is not None:
+      close()
+
+if IZODBStreamIterator is not None:
+  classImplements(IterableAsStreamIterator, IZODBStreamIterator)

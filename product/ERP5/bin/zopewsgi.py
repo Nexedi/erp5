@@ -291,6 +291,11 @@ def runwsgi():
       resource.setrlimit(resource.RLIMIT_NOFILE, new_limit)
 
     port = urlsplit('//' + args.address).port
+    # waitress refuses a request body bigger than max_request_body_size with
+    # a 413 error. Use the form-disk-limit of zope.conf, which is the maximum
+    # size of a POST request body for Zope. Without a dos_protection section,
+    # the defaults of Zope and waitress are both 1GB.
+    dos_protection = getattr(conf, 'dos_protection', None)
     server = createServer(
         app_wrapper(
           large_file_threshold=args.large_file_threshold,
@@ -301,6 +306,8 @@ def runwsgi():
         asyncore_use_poll=True,
         # Prevent waitress from adding its own Via and Server response headers.
         ident=None,
+        **({} if dos_protection is None else
+           {'max_request_body_size': dos_protection.form_disk_limit})
     )
     logger = logging.getLogger(__name__)
 
