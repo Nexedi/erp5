@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testOfficeJSHarnessAIToolCallStreakStop</string> </value>
+            <value> <string>testOfficeJSHarnessAIChat</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>

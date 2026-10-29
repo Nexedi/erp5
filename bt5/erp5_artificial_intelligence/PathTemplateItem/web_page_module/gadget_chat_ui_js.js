@@ -117,11 +117,18 @@
   }
 
   function getAssistantMessageDiv(assistant_message) {
-    return domsugar("div", { "class": "post-tool-entry post-assistant-entry" }, [
+    var dom_list = [
       domsugar("strong", ["Assistant"]),
-      domsugar("br"),
-      domsugar("div", { "class": "post-tool-content" }, [assistant_message.content || ""])
-    ]);
+      domsugar("br")
+    ];
+    if (assistant_message.reasoning) {
+      dom_list.push(domsugar("details", { "class": "post-assistant-reasoning" }, [
+        domsugar("summary", ["Thinking"]),
+        domsugar("pre", { "class": "post-tool-content" }, [assistant_message.reasoning])
+      ]));
+    }
+    dom_list.push(domsugar("div", { "class": "post-tool-content" }, [assistant_message.content || ""]));
+    return domsugar("div", { "class": "post-tool-entry post-assistant-entry" }, dom_list);
   }
 
   function getSubMessageDiv(sub_message) {

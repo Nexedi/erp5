@@ -56,6 +56,48 @@
   <td>Tool result: Tool result:</td>
   <td></td>
 </tr>
+<!-- A sub-agent stuck in a loop still reports a partial answer at its
+     turn limit. -->
+<tr>
+  <td>waitForEval</td>
+  <td>(function(){var cm=window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror;cm.setValue('Please run the spawn_subagent turn limit test');return cm.getValue();})()</td>
+  <td>Please run the spawn_subagent turn limit test</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>[subagent reached its turn limit - partial answer]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Partial answer after the turn limit.</td>
+  <td></td>
+</tr>
 </tbody></table>
 </body>
 </html>

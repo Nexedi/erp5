@@ -517,24 +517,31 @@
             );
           })
           .push(function (result) {
-            var execution_plan;
+            var execution_plan, assistant_message;
             if (result.usage && result.usage.prompt_tokens) {
               gadget.last_usage_anchor = { prompt_tokens: result.usage.prompt_tokens, message_count: message_list.length };
             }
             if (result.tool_calls && result.tool_calls.length) {
               gadget.tool_message_list.push({
                 'role': 'assistant',
-                'content': result.content
-              })
+                'content': result.content,
+                'reasoning': result.reasoning
+              });
+              assistant_message = {
+                role: "assistant",
+                content: result.content,
+                tool_calls: result.tool_calls
+              };
+              // Send the reasoning back in the field the server used, so the
+              // model still sees why it made the previous tool calls.
+              if (result.reasoning && result.reasoning_field) {
+                assistant_message[result.reasoning_field] = result.reasoning;
+              }
               return gadget.gadget_chat_ui.showMessage({tool_message_list: gadget.tool_message_list, execution_plan: gadget.execution_plan })
                 .push(function () {
                  return loop_call(
                    loop_count + 1,
-                   message_list.concat([{
-                    role: "assistant",
-                    content: result.content,
-                    tool_calls: result.tool_calls
-                  }]),
+                   message_list.concat([assistant_message]),
                   result.tool_calls,
                   is_retry
                 );

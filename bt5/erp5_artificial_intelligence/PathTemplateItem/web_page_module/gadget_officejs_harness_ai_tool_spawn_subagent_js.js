@@ -3,8 +3,9 @@
 (function (window, rJS, RSVP) {
   "use strict";
 
-  var SUBAGENT_DEFAULT_MAX_LOOP_COUNT = 2000,
-    SUBAGENT_MAX_LOOP_COUNT_CAP = 5000,
+  var SUBAGENT_MAX_LOOP_COUNT_CAP = 30,
+    SUBAGENT_TURN_LIMIT_PROMPT = "Turn limit reached: you can not call tools anymore. Give your final " +
+      "answer now, with what you found so far, and say clearly what you could not find or verify.",
     SUBAGENT_EXCLUDED_TOOL_NAME_LIST = ["spawn_subagent", "execution_plan"];
 
   rJS(window)
@@ -53,7 +54,8 @@
             },
             max_turns: {
               type: "integer",
-              description: "Cap on the sub-agent's own turn count (default 20, max 50)."
+              description: "Cap on the sub-agent's loop iterations - one LLM request and one round " +
+                "of tool calls count as 2 (default and maximum " + SUBAGENT_MAX_LOOP_COUNT_CAP + ")."
             }
           },
           required: ["task"]
@@ -64,7 +66,7 @@
       var gadget = this,
         queue_loop = new RSVP.Queue(),
         document_id = gadget.jio_key,
-        max_loop_count = Math.min(Math.max(Number(args.max_turns) || SUBAGENT_DEFAULT_MAX_LOOP_COUNT, 1), SUBAGENT_MAX_LOOP_COUNT_CAP),
+        max_loop_count = Math.min(Math.max(Number(args.max_turns) || SUBAGENT_MAX_LOOP_COUNT_CAP, 1), SUBAGENT_MAX_LOOP_COUNT_CAP),
         last_usage_anchor;
 
       gadget.usage_totals = { call_count: 0, prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 };
@@ -80,14 +82,56 @@
             usage_totals: gadget.usage_totals
           };
         }
+        // At the limit, one last request without tools makes the sub-agent
+        // report what it found, instead of losing all of its work.
+        function subagentFinalAnswer() {
+          var final_message_list = message_list,
+            stopped_content = "[subagent stopped: exceeded " + max_loop_count + " turns without a final answer]";
+          if (has_tool_call) {
+            final_message_list = final_message_list.concat(pending_tool_call_list.map(function (tool_call) {
+              return {
+                role: "tool",
+                tool_call_id: tool_call.id,
+                name: tool_call.function.name,
+                content: "Not run: turn limit reached."
+              };
+            }));
+          }
+          final_message_list = final_message_list.concat([{ role: "user", content: SUBAGENT_TURN_LIMIT_PROMPT }]);
+          return new RSVP.Queue()
+            .push(function () {
+              return gadget.compactMessageList(gadget, final_message_list, undefined, last_usage_anchor);
+            })
+            .push(function (compacted_message_list) {
+              final_message_list = compacted_message_list;
+              return gadget.requestProcessTaskWithUsage(
+                gadget,
+                document_id,
+                {
+                  message_list: JSON.stringify(final_message_list),
+                  tool_definition_list: JSON.stringify([]),
+                  is_background: "1"
+                }
+              );
+            })
+            .push(function (result) {
+              return {
+                content: result.content ?
+                    "[subagent reached its turn limit - partial answer]\n" + result.content : stopped_content,
+                message_list: final_message_list.concat([{ role: "assistant", content: result.content }]),
+                usage_totals: gadget.usage_totals
+              };
+            }, function () {
+              return {
+                content: stopped_content,
+                message_list: message_list,
+                usage_totals: gadget.usage_totals
+              };
+            });
+        }
+
         if (loop_count >= max_loop_count) {
-          return new RSVP.Queue().push(function () {
-            return {
-              content: "[subagent stopped: exceeded " + max_loop_count + " turns without a final answer]",
-              message_list: message_list,
-              usage_totals: gadget.usage_totals
-            };
-          });
+          return subagentFinalAnswer();
         }
 
         if (has_tool_call) {
@@ -152,17 +196,22 @@
             );
           })
           .push(function (result) {
+            var assistant_message;
             if (result.usage && result.usage.prompt_tokens) {
               last_usage_anchor = { prompt_tokens: result.usage.prompt_tokens, message_count: message_list.length };
             }
             if (result.tool_calls && result.tool_calls.length) {
+              assistant_message = {
+                role: "assistant",
+                content: result.content,
+                tool_calls: result.tool_calls
+              };
+              if (result.reasoning && result.reasoning_field) {
+                assistant_message[result.reasoning_field] = result.reasoning;
+              }
               return subagentLoopCall(
                 loop_count + 1,
-                message_list.concat([{
-                  role: "assistant",
-                  content: result.content,
-                  tool_calls: result.tool_calls
-                }]),
+                message_list.concat([assistant_message]),
                 result.tool_calls
               );
             }

@@ -94,7 +94,8 @@
             baseUrl: content.base_url || "",
             apiKey: content.api_key || "",
             model: content.model || "",
-            endpoint: content.endpoint || "chat/completions"
+            endpoint: content.endpoint || "chat/completions",
+            thinking: content.thinking === "on"
           })
             .push(function () {
               return gadget.redirect({command: "display", options: {
@@ -192,13 +193,14 @@
 
     .declareService(function () {
       var gadget = this;
-      return gadget.getSettingList(["baseUrl", "apiKey", "model", "proxy_server_url", "endpoint"])
+      return gadget.getSettingList(["baseUrl", "apiKey", "model", "proxy_server_url", "endpoint", "thinking"])
         .push(function (setting_list) {
           gadget.state.baseUrl = setting_list[0] || "";
           gadget.state.apiKey = setting_list[1] || "";
           gadget.state.model = setting_list[2] || "";
           gadget.state.proxy_server_url = setting_list[3] || "";
           gadget.state.endpoint = setting_list[4] || "chat/completions";
+          gadget.state.thinking = Boolean(setting_list[5]);
         })
         .push(function () {
           return gadget.getDeclaredGadget('form_view');
@@ -253,6 +255,19 @@
                 "key": "endpoint",
                 "hidden": 0,
                 "type": "StringField"
+              },
+              "my_thinking": {
+                "description": "Ask the model to reason before it answers, with chat_template_kwargs " +
+                  "{enable_thinking: true, preserve_thinking: true} - for llama.cpp and vLLM servers " +
+                  "running a model with a thinking mode, such as Qwen3. Leave it off for other servers.",
+                "title": "Thinking",
+                "default": gadget.state.thinking,
+                "css_class": "",
+                "required": 0,
+                "editable": 1,
+                "key": "thinking",
+                "hidden": 0,
+                "type": "CheckBoxField"
               }
             }},
               "_links": {
@@ -264,7 +279,7 @@
             form_definition: {
               group_list: [[
                 "top",
-                [["my_base_url"], ["my_api_key"], ["my_model"], ["my_endpoint"]]
+                [["my_base_url"], ["my_api_key"], ["my_model"], ["my_endpoint"], ["my_thinking"]]
               ]]
             }
           });

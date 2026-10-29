@@ -215,18 +215,7 @@ hr#post_item {
   font-weight: 600;
 }
 
-/* ---- Trim in-progress traces: while a turn is still running (the LLM call
-   for it hasn't produced its final answer yet - gadget_chat_ui_js.js's
-   showMessage/getToolCallDom tag that <details> with .post-tool-pending for
-   exactly as long as that's true), only the last 4 entries are shown, and
-   nth-last-of-type recomputes live as more entries stream in so "last 4"
-   always tracks the newest ones. Once the turn finishes, .post-tool-pending
-   is removed (or never added, for a historical post rendered from storage),
-   so nothing is hidden any more and clicking the summary reveals the full
-   trace. Older entries stay in the DOM throughout (so
-   gadget_officejs_harness_ai_agent_js.js's incremental appendChild logic and
-   getMessageList don't need to know about this), only CSS display is
-   affected. ------------------------------------------------------------- */
+
 
 #post_list li.post-tool details.post-tool-pending > .post-tool-entry:nth-last-of-type(n+5) {
   display: none;
@@ -236,19 +225,14 @@ hr#post_item {
   display: none;
 }
 
-/* While pending, also clamp each entry's own body (the args/result text,
-   which can be an arbitrarily long single-line JSON dump) to a few lines
-   with a fade-out, instead of dumping the whole thing - the full text is
-   still in the DOM and becomes fully visible once the turn finishes and
-   .post-tool-pending is removed. */
-/*
+
 #post_list li.post-tool details.post-tool-pending .post-tool-content {
-  max-height: 4.5em;
+  max-height: 20em;
   overflow: hidden;
   mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
   -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
 }
-*/
+
 /* ---- Sub-agent trace ------------------------------------------------------- */
 
 #post_list li.post-tool .post-tool-sub-list {
@@ -277,6 +261,33 @@ hr#post_item {
 
 #post_list li.post-tool .post-tool-sub-entry strong {
   color: var(--subagent-accent);
+}
+
+/* ---- Assistant reasoning (same frame as the sub-agent trace) --------------- */
+
+#post_list li.post-tool .post-assistant-reasoning {
+  --reasoning-accent: #D4880F;
+  margin-top: 0.5em;
+  padding: 0.5em 0.75em 0.15em;
+  background: var(--chat-surface);
+  border: 1px dashed var(--reasoning-accent);
+  border-left: 3px solid var(--reasoning-accent);
+  border-radius: 0.5rem;
+}
+
+#post_list li.post-tool .post-assistant-reasoning summary {
+  color: var(--reasoning-accent);
+}
+
+#post_list li.post-tool .post-assistant-reasoning summary::before {
+  content: "\1F4AD";
+}
+
+#post_list li.post-tool .post-assistant-reasoning pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: inherit;
+  opacity: 0.85;
 }
 
 /* ---- Execution plan checklist ---------------------------------------------- */

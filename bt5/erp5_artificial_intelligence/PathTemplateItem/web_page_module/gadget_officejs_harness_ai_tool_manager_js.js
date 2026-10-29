@@ -22,12 +22,6 @@
     // at STOP_LIMIT the agent loop stops instead of calling the LLM again.
     TOOL_CALL_REPEAT_HIDE_LIMIT = 3,
     TOOL_CALL_REPEAT_STOP_LIMIT = 4,
-    // Same escalation for a model that keeps calling one tool turn after
-    // turn, changing the arguments every time (eg. run_wasm with a new
-    // constant on each call), which the exact-repeat guard can not see.
-    TOOL_CALL_STREAK_NOTICE_LIMIT = 16,
-    TOOL_CALL_STREAK_HIDE_LIMIT = 24,
-    TOOL_CALL_STREAK_STOP_LIMIT = 32,
     TOOL_CALL_REPEAT_SYSTEM_PROMPT = "If a tool call with the exact same name and arguments fails or does " +
       "not help, do not call it again with the exact same arguments - it will not produce a different " +
       "result. Try different arguments, a different tool, or report the issue and move on instead.",
@@ -132,68 +126,23 @@
     return Boolean(tool && tool.definition && tool.definition.allow_repeat);
   }
 
-  // Number of trailing assistant turns, back to the last user message or
-  // final answer, whose tool calls all target the same tool.
-  function getToolCallStreak(message_list, tool_list) {
-    var name = null, count = 0, i, j, message, tool_call;
-    for (i = message_list.length - 1; i >= 0; i -= 1) {
-      message = message_list[i];
-      if (message.role === "user" || (message.role === "assistant" &&
-          !(message.tool_calls && message.tool_calls.length))) {
-        break;
-      }
-      if (message.role === "assistant") {
-        for (j = 0; j < message.tool_calls.length; j += 1) {
-          tool_call = message.tool_calls[j];
-          if (name === null) {
-            name = tool_call.function.name;
-          }
-          if (tool_call.function.name !== name || isRepeatAllowedTool(tool_call, tool_list)) {
-            return { name: name, count: count };
-          }
-        }
-        count += 1;
-      }
-    }
-    return { name: name, count: count };
-  }
-
   function runOneClientToolCall(tool_call, message_list, tool_list) {
-    var repeat_count, streak;
+    var repeat_count;
     if (isRepeatAllowedTool(tool_call, tool_list)) {
       return runClientToolCall(tool_call, tool_list);
-    }
-    streak = getToolCallStreak(message_list, tool_list);
-    if (streak.name === tool_call.function.name && streak.count >= TOOL_CALL_STREAK_HIDE_LIMIT) {
-      return {
-        tool_call_id: tool_call.id,
-        name: tool_call.function.name,
-        content: "This tool is disabled for the rest of this task: it was called " + streak.count +
-          " turns in a row without progress. Use the results you already have to answer the user."
-      };
     }
     repeat_count = countPriorIdenticalToolCalls(message_list, tool_call);
     if (repeat_count >= TOOL_CALL_REPEAT_LIMIT) {
       return {
         tool_call_id: tool_call.id,
         name: tool_call.function.name,
-        content: "You already called this exact tool with these exact same arguments " + repeat_count +
+        content: "You already called this exact tool with these exact same arguments " + (repeat_count - 1) +
           " time(s) before in this conversation, and it did not help - repeating it again will not " +
           "produce a different result. Stop retrying this exact call: try different arguments, a " +
           "different tool, or report the failure and move on." +
           (repeat_count >= TOOL_CALL_REPEAT_HIDE_LIMIT ?
               " This tool is now disabled for the rest of this task." : "")
       };
-    }
-    if (streak.name === tool_call.function.name && streak.count >= TOOL_CALL_STREAK_NOTICE_LIMIT) {
-      return new RSVP.Queue(runClientToolCall(tool_call, tool_list))
-        .push(function (result) {
-          result.content += "\n\n[Note: you called \"" + tool_call.function.name + "\" " + streak.count +
-            " turns in a row, with different arguments each time. Check that these calls still move " +
-            "the user's task forward. If the task is done, stop calling tools and answer. This tool " +
-            "is disabled after " + TOOL_CALL_STREAK_HIDE_LIMIT + " turns in a row.]";
-          return result;
-        });
     }
     return runClientToolCall(tool_call, tool_list);
   }
@@ -204,7 +153,6 @@
     var count_dict = {},
       hidden_tool_name_list = [],
       stop_reason = null,
-      streak = getToolCallStreak(message_list, tool_list),
       i,
       j,
       message,
@@ -231,14 +179,6 @@
           }
         }
       }
-    }
-    if (streak.count >= TOOL_CALL_STREAK_HIDE_LIMIT &&
-        hidden_tool_name_list.indexOf(streak.name) === -1) {
-      hidden_tool_name_list.push(streak.name);
-    }
-    if (streak.count >= TOOL_CALL_STREAK_STOP_LIMIT && !stop_reason) {
-      stop_reason = "Stopped: the model called \"" + streak.name + "\" " + streak.count +
-        " turns in a row without giving an answer.";
     }
     return {
       hidden_tool_name_list: hidden_tool_name_list,

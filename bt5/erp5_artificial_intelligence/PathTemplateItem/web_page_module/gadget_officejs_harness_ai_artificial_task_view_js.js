@@ -3,6 +3,11 @@
 (function (window, rJS, RSVP, SimpleQuery, ComplexQuery) {
   "use strict";
 
+  // Fields in which OpenAI-compatible servers stream the model reasoning
+  // (llama.cpp and vLLM use reasoning_content). Some servers send the same
+  // text in two of them, so only the first field seen is kept.
+  var REASONING_FIELD_LIST = ["reasoning_content", "reasoning", "reasoning_text"];
+
   function fakeXhrEvent() {
     return {target: {getResponseHeader: function () { return null; }}};
   }
@@ -75,7 +80,7 @@
   }
 
   function applyStreamChunk(json, state) {
-    var choice = json.choices && json.choices[0], delta, content_grew = false;
+    var choice = json.choices && json.choices[0], delta, content_grew = false, i, field;
     if (json.error) {
       state.error = json.error;
       return false;
@@ -93,6 +98,14 @@
       state.finish_reason = choice.finish_reason;
     }
     delta = choice.delta || {};
+    for (i = 0; i < REASONING_FIELD_LIST.length; i += 1) {
+      field = REASONING_FIELD_LIST[i];
+      if (typeof delta[field] === "string" && delta[field] &&
+          (state.reasoning_field === null || state.reasoning_field === field)) {
+        state.reasoning_field = field;
+        state.reasoning += delta[field];
+      }
+    }
     if (delta.content) {
       state.content += delta.content;
       content_grew = true;
@@ -125,7 +138,8 @@
     var reader = response.body.getReader(),
       decoder = new TextDecoder(),
       buffer = "",
-      state = {content: "", model: null, usage: null, finish_reason: null, error: null, tool_call_map: {}, tool_call_order: []};
+      state = {content: "", reasoning: "", reasoning_field: null, model: null, usage: null, finish_reason: null,
+        error: null, tool_call_map: {}, tool_call_order: []};
 
     function handleFrame(frame) {
       var data_line, json;
@@ -183,9 +197,11 @@
           return state.tool_call_map[index];
         });
         if (tool_calls.length) {
-          return {content: state.content || "", tool_calls: tool_calls, usage: state.usage, finish_reason: state.finish_reason};
+          return {content: state.content || "", tool_calls: tool_calls, usage: state.usage, finish_reason: state.finish_reason,
+            reasoning: state.reasoning, reasoning_field: state.reasoning_field};
         }
-        return {content: state.content, model: state.model, usage: state.usage, finish_reason: state.finish_reason};
+        return {content: state.content, model: state.model, usage: state.usage, finish_reason: state.finish_reason,
+          reasoning: state.reasoning, reasoning_field: state.reasoning_field};
       });
   }
 
@@ -458,6 +474,12 @@
         messages: JSON.parse(body.message_list)
       };
       tool_definition_list = JSON.parse(body.tool_definition_list);
+      // llama.cpp/vLLM chat template switches, as pi sends them for Qwen3:
+      // preserve_thinking keeps the reasoning of the previous turns, which
+      // agent_js.js sends back in reasoning_content.
+      if (settings.thinking) {
+        payload.chat_template_kwargs = {enable_thinking: true, preserve_thinking: true};
+      }
       // Some OpenAI-compatible servers reject an empty "tools" array.
       if (tool_definition_list.length) {
         payload.tools = tool_definition_list;
@@ -586,7 +608,8 @@
       var gadget = this;
       gadget.options = options;
       return gadget.getSettingList(
-        ["hateoas_url", "baseUrl", "apiKey", "model", "proxy_server_url", "endpoint", "mcp_server_list", "mcp_oauth_token_map"]
+        ["hateoas_url", "baseUrl", "apiKey", "model", "proxy_server_url", "endpoint", "mcp_server_list", "mcp_oauth_token_map",
+          "thinking"]
       )
         .push(function (setting_list) {
           gadget.hateoas_url = setting_list[0];
@@ -596,7 +619,8 @@
             apiKey: setting_list[2] || '',
             model: setting_list[3] || '',
             proxy_server_url: setting_list[4] || '',
-            endpoint: setting_list[5] || 'chat/completions'
+            endpoint: setting_list[5] || 'chat/completions',
+            thinking: Boolean(setting_list[8])
           };
           gadget.model_context_window = undefined;
           gadget.mcp_server_list = window.ChatMCP.parseServerListText(setting_list[6] || '').value || [];

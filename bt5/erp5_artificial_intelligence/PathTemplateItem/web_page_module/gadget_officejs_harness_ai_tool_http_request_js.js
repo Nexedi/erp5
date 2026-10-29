@@ -15,6 +15,32 @@
     });
   }
 
+  // Appended to failures, so the model moves on instead of retrying the
+  // same URL, which returns the same failure.
+  var NO_RETRY_HINT = "Retrying the same URL will not help: use other sources, or report this " +
+      "source as not verified.";
+
+  function normalizeUrl(url) {
+    try {
+      url = decodeURI(url);
+    } catch (ignore) {
+      // keep the URL as it is
+    }
+    return url.replace(/\/+$/, "");
+  }
+
+  // Note after the body of an HTTP error status of the target.
+  function statusHint(status) {
+    if (status < 400) {
+      return "";
+    }
+    if (status === 408 || status === 429 || (status >= 500 && status !== 501)) {
+      return "\n\n[HTTP " + status + ": the site failed to answer. It may work later, but do not " +
+        "retry it right away: use other sources first.]";
+    }
+    return "\n\n[HTTP " + status + ": this URL does not work. " + NO_RETRY_HINT + "]";
+  }
+
   rJS(window)
     .declareMethod('render', function (options) {
       this.proxy_server_url = (options && options.proxy_server_url) || '';
@@ -27,7 +53,10 @@
           "to get around the browser's own CORS restriction on the target; without one, this is a " +
           "plain, unproxied fetch, which only succeeds if the target itself allows cross-origin " +
           "requests. HTML is converted to readable text unless `raw` is requested. This is not a " +
-          "general web browser - no JavaScript on the fetched page runs, and there is no rendering.",
+          "general web browser - no JavaScript on the fetched page runs, and there is no rendering. " +
+          "One call returns at most " + window.ChatToolCommon.TEXT_WINDOW_CHARS + " chars of the " +
+          "response; use min_chars to read further, or `pattern` to search a long page for what you " +
+          "need instead of reading all of it.",
         parameters: {
           type: "object",
           properties: {
@@ -36,9 +65,15 @@
             headers: { type: "object", description: "Extra request headers." },
             body: { type: "string" },
             raw: { type: "boolean", description: "Return the body verbatim instead of extracted text." },
-            max_chars: { type: "integer", description: "Optional: truncate the returned text to this many " +
-              "characters. If omitted, the full text is returned (and automatically summarized if it's too " +
-              "large to send as-is)." }
+            min_chars: { type: "integer", description: "Return the text from this character offset " +
+              "(default 0). Use it to continue reading a long response." },
+            max_chars: { type: "integer", description: "Stop at this character offset, exclusive (default " +
+              "and maximum: min_chars + " + window.ChatToolCommon.TEXT_WINDOW_CHARS + ")." },
+            pattern: { type: "string", description: "Search the response text instead of reading it: a " +
+              "case-insensitive regular expression (eg. \"deadline|closing date\"). Returns each match " +
+              "with its char offset and " + window.ChatToolCommon.TEXT_SEARCH_CONTEXT_CHARS + " chars of " +
+              "context on each side, at most " + window.ChatToolCommon.TEXT_SEARCH_MAX_MATCHES + " matches. " +
+              "min_chars/max_chars are ignored." }
           },
           required: ["url"]
         }
@@ -85,12 +120,18 @@
         fetch(fetch_url, fetch_options)
           .then(function (response) {
             var content_type = response.headers.get("content-type") || "",
-              status = response.status;
+              status = response.status,
+              // Through the forwarder, response.url is the forwarder itself:
+              // it reports the URL that answered in X-Final-URL instead.
+              final_url = gadget.proxy_server_url ? response.headers.get("X-Final-URL") : response.url,
+              is_proxy_error = Boolean(gadget.proxy_server_url && response.headers.get("X-Proxy-Error"));
             return response.text().then(function (text) {
               return {
                 status: status,
                 content_type: content_type,
-                text: text
+                text: text,
+                final_url: final_url,
+                is_proxy_error: is_proxy_error
               };
             });
           })
@@ -103,22 +144,42 @@
 
       return new RSVP.Queue(raw_promise)
         .push(function (result) {
-          var text, is_html;
+          var text, is_html, proxy_error, header;
           if (result.error) {
-            return "ERROR: " + result.error;
+            return "ERROR: could not fetch " + target + ": " + result.error +
+              (gadget.proxy_server_url ? "" : " (network error, or the site does not allow requests " +
+                "from a browser page and no forwarder Server URL is set)") + ". " + NO_RETRY_HINT;
+          }
+          if (result.is_proxy_error) {
+            try {
+              proxy_error = JSON.parse(result.text).error;
+            } catch (ignore) {
+              proxy_error = result.text;
+            }
+            // A DNS failure reads like a network hiccup, but the domain does
+            // not exist: say so, the model tends to retry it otherwise.
+            if (/^cannot resolve /.test(proxy_error)) {
+              return "ERROR: the domain " + proxy_error.replace(/^cannot resolve ([^:]+):[\s\S]*$/, "$1") +
+                " does not exist (DNS lookup failed), so " + target + " is a wrong address, not a site " +
+                "that is down for now. Do not retry it: find the right address of this source, or report " +
+                "it as not verified.";
+            }
+            return "ERROR: could not fetch " + target + ": " + proxy_error + ". " + NO_RETRY_HINT;
           }
           text = result.text || "";
+          header = "HTTP " + result.status + " " + (result.content_type || "");
+          if (result.final_url && normalizeUrl(result.final_url) !== normalizeUrl(target)) {
+            header += "\nRedirected to: " + result.final_url;
+          }
 
           is_html = /html/i.test(result.content_type || "") ||
             /<(!doctype\s+html|html|head)[\s>]/i.test(text.slice(0, 2000));
-          is_html = true;
           if (!args.raw && is_html) {
             text = window.ChatToolCommon.htmlToText(text);
           }
-          if (args.max_chars && text.length > args.max_chars) {
-            text = text.slice(0, args.max_chars) + "\n... [truncated at " + args.max_chars + " chars]";
-          }
-          return "HTTP " + result.status + " " + (result.content_type || "") + "\n\n" + text;
+          text = args.pattern ? window.ChatToolCommon.searchText(text, args.pattern) :
+              window.ChatToolCommon.readTextWindow(text, args.min_chars, args.max_chars);
+          return header + "\n\n" + text + statusHint(result.status);
         });
     });
 }(window, rJS, RSVP));

@@ -10,7 +10,12 @@
       (document.currentScript && document.currentScript.src) || document.baseURI
     ).href,
     SANDBOX_DEFAULT_TIMEOUT_MS = 10000,
-    SANDBOX_MAX_TIMEOUT_MS = 120000;
+    SANDBOX_MAX_TIMEOUT_MS = 120000,
+    // Long tool results (PDF text, fetched pages) are read in windows of at
+    // most TEXT_WINDOW_CHARS, or searched with a regular expression.
+    TEXT_WINDOW_CHARS = 30000,
+    TEXT_SEARCH_MAX_MATCHES = 40,
+    TEXT_SEARCH_CONTEXT_CHARS = 150;
 
   function htmlToText(html) {
     var body_match = /<body[^>]*>([\s\S]*)<\/body>/i.exec(html);
@@ -108,7 +113,74 @@
       });
   }
 
+  function noLocation() {
+    return "";
+  }
+
+  // Every match of the case-insensitive `pattern` with its char offset and
+  // TEXT_SEARCH_CONTEXT_CHARS of context on each side. locate(start, end)
+  // adds a location (eg. a page number) to each offset.
+  function searchText(text, pattern, locate) {
+    var regexp,
+      match,
+      match_list = [],
+      match_count = 0,
+      last_end = -1,
+      start,
+      end;
+    locate = locate || noLocation;
+    try {
+      regexp = new RegExp(pattern, "gi");
+    } catch (e) {
+      return "ERROR: invalid pattern: " + e.message;
+    }
+    match = regexp.exec(text);
+    while (match !== null) {
+      if (match[0].length === 0) {
+        regexp.lastIndex += 1;
+      } else {
+        match_count += 1;
+        if (match.index >= last_end && match_list.length < TEXT_SEARCH_MAX_MATCHES) {
+          start = Math.max(0, match.index - TEXT_SEARCH_CONTEXT_CHARS);
+          end = Math.min(text.length, match.index + match[0].length + TEXT_SEARCH_CONTEXT_CHARS);
+          last_end = end;
+          match_list.push("[char " + match.index + locate(match.index, match.index + 1) + "] ..." +
+            text.slice(start, end).replace(/\s+/g, " ") + "...");
+        }
+      }
+      match = regexp.exec(text);
+    }
+    if (!match_count) {
+      return "No match for /" + pattern + "/i in " + text.length + " chars.";
+    }
+    return match_count + " match(es) for /" + pattern + "/i in " + text.length + " chars" +
+      (match_list.length < match_count ? ", showing " + match_list.length +
+        " (overlapping ones and those beyond the first " + TEXT_SEARCH_MAX_MATCHES + " are left out)" : "") +
+      ":\n\n" + match_list.join("\n\n") +
+      "\n\n[To read around a match, call again with min_chars a little before its char offset.]";
+  }
+
+  // The [min_chars, max_chars) window of `text`, at most TEXT_WINDOW_CHARS
+  // long, followed by how to read further when it is not the whole text.
+  function readTextWindow(text, min_chars, max_chars, locate) {
+    var start = Math.min(Math.max(0, Number(min_chars) || 0), text.length),
+      end = Math.max(start, Math.min(Number(max_chars) || Infinity, start + TEXT_WINDOW_CHARS, text.length));
+    locate = locate || noLocation;
+    if (start === 0 && end === text.length) {
+      return text;
+    }
+    return text.slice(start, end) + "\n\n[Showing chars " + start + "-" + end + " of " + text.length +
+      locate(start, end) + "." + (end < text.length ?
+          " Use min_chars=" + end + " to continue, or pattern to search the whole text." :
+          " End of the text.") + "]";
+  }
+
   window.ChatToolCommon = {
+    TEXT_WINDOW_CHARS: TEXT_WINDOW_CHARS,
+    TEXT_SEARCH_MAX_MATCHES: TEXT_SEARCH_MAX_MATCHES,
+    TEXT_SEARCH_CONTEXT_CHARS: TEXT_SEARCH_CONTEXT_CHARS,
+    searchText: searchText,
+    readTextWindow: readTextWindow,
     htmlToText: htmlToText,
     runSandboxJob: runSandboxJob,
     renderPlanText: renderPlanText,

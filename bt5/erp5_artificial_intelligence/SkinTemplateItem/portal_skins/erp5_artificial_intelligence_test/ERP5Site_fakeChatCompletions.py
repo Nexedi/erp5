@@ -88,6 +88,31 @@ message's role/content picks the branch:
                                              lifecycle on this one tool name,
                                              reusing it throughout rather than
                                              defining a separate tool per test)
+- content "spawn_subagent turn limit
+  test"                                  -> calls spawn_subagent with max_turns 4 on the "endless
+                                             run_wasm tool test" task, which never ends. At the
+                                             limit the sub-agent sends one last request without
+                                             tools, ending with its turn limit prompt, answered
+                                             with "Partial answer after the turn limit."
+                                             (testOfficeJSHarnessAISpawnSubagentTool.zpt)
+- content "check thinking parameter"    -> reports whether the request carries
+                                             chat_template_kwargs {enable_thinking: true,
+                                             preserve_thinking: true}, which the Thinking
+                                             setting adds: "Thinking parameter: enabled." or
+                                             "Thinking parameter: absent."
+                                             (testOfficeJSHarnessAIThinking.zpt)
+- content "reasoning tool test"         -> streams a delta.reasoning_content chunk before an
+                                             http_request call, like llama.cpp/vLLM reasoning
+                                             models. On the next request it checks that the
+                                             previous assistant message carries that reasoning
+                                             in reasoning_content, and answers "The reasoning
+                                             was sent back." or "The reasoning was lost."
+                                             (testOfficeJSHarnessAIThinking.zpt)
+- content "http_request pattern tool test"
+                                         -> calls http_request on ERP5Site_fakeHttpEndpoint with
+                                             pattern "fake http": the result lists the match
+                                             instead of the page text
+                                             (testOfficeJSHarnessAIHttpRequestTool.zpt)
 - content "repeated http_request tool
   test"                                  -> calls http_request with a marked
                                              ("repeat_test") argument set; once
@@ -111,7 +136,7 @@ message's role/content picks the branch:
                                              role-"tool" branch below, which
                                              echoes that notice back as the
                                              final answer
-                                             (testOfficeJSHarnessAIRepeatedToolCallGuard.zpt)
+                                             (testOfficeJSHarnessAIRepeatedToolCall.zpt)
 - content "repeated list_defined_tools
   tool test"                              -> calls list_defined_tools (marked with a
                                              "repeat_test" argument, silently ignored by the
@@ -123,7 +148,7 @@ message's role/content picks the branch:
                                              the three calls reaches the real tool and returns
                                              its genuine result, so the guard's canned "you
                                              already called this" notice must never appear
-                                             (testOfficeJSHarnessAIAllowRepeatTool.zpt)
+                                             (testOfficeJSHarnessAIRepeatedToolCall.zpt)
 - content "stuck http_request tool test" -> calls http_request with a marked ("stuck_test")
                                              argument set, then keeps re-issuing that exact
                                              call after every result, even once http_request
@@ -132,15 +157,10 @@ message's role/content picks the branch:
                                              must stop on its own: it hides the tool after the
                                              3rd call and ends the task with an error before
                                              the 5th LLM request
-                                             (testOfficeJSHarnessAIRepeatedToolCallStop.zpt)
-- content "stuck run_wasm streak test" -> calls run_wasm with a new constant on every turn,
-                                             forever, even once run_wasm has been dropped from
-                                             the request's tools - a model that keeps calling one
-                                             tool with different arguments. The client adds a
-                                             notice from the 16th turn, disables the tool at the
-                                             24th and ends the task with an error before the
-                                             33rd LLM request
-                                             (testOfficeJSHarnessAIToolCallStreakStop.zpt)
+                                             (testOfficeJSHarnessAIRepeatedToolCall.zpt)
+- content "endless run_wasm loop" -> calls run_wasm with a new constant on every turn,
+                                             forever - a task that never gives a final answer
+                                             (used through "spawn_subagent turn limit test")
 - content "check for skill injection"    -> reports back (as plain text) whether any role-"system"
                                              message in the request already carries the lightweight
                                              <available_skills> name+description listing for the
@@ -162,21 +182,21 @@ message's role/content picks the branch:
                                              message's string content) - the branch only matches if
                                              the fixture text is actually present, so this is a real
                                              end-to-end check, not just a trigger-phrase match
-                                             (testOfficeJSHarnessAITextAttachmentUpload.zpt)
+                                             (testOfficeJSHarnessAIAttachmentUpload.zpt)
 - content "please confirm image
   attachment" + the message's content
   is a list with an image_url part       -> confirms an image/* attachment became a real structured
                                              multimodal content part (not flattened text) - message_text()/
                                              message_has_image() below handle the "content" field being
                                              a list of parts (see note above their definitions)
-                                             (testOfficeJSHarnessAIImageAttachmentUpload.zpt)
+                                             (testOfficeJSHarnessAIAttachmentUpload.zpt)
 - content "please confirm pdf
   attachment" + the message also
   mentions "pdf_to_text"                 -> confirms a PDF attachment produced the "call pdf_to_text"
                                              skip-placeholder text (PDF content itself is never inlined -
                                              see getAttachmentContentPart) - this does NOT exercise the
                                              real pdf_to_text tool/pdf.js/CDN, only the placeholder text
-                                             (testOfficeJSHarnessAIPdfAttachmentUpload.zpt)
+                                             (testOfficeJSHarnessAIAttachmentUpload.zpt)
 - content "spawn_subagent tool test"     -> calls spawn_subagent with a task that is itself the
                                              "http_request tool test" phrase, so the sub-agent's own
                                              loop (driven by this same script) runs http_request and
@@ -211,7 +231,7 @@ window size, and SMALL_CONTEXT_MODEL reporting a tiny max_model_len (the vLLM
 field), so the client compacts history after a few tool calls. For that model
 only, usage.prompt_tokens follows the request size, since the client uses it
 to estimate the context size - every other model keeps the fixed numbers
-testOfficeJSHarnessAIUsageTotals.zpt checks.
+testOfficeJSHarnessAIChat.zpt checks.
 """
 import json
 import time
@@ -324,18 +344,29 @@ def is_stuck_test_tool_call(assistant_message):
   return bool(arguments.get('stuck_test'))
 
 
-def streak_test_args(step):
-  return {'wat': '(module (func (export "streak_test") (result i32) (i32.const %d)))' % step,
-          'calls': [{'name': 'streak_test'}]}
+def endless_test_args(step):
+  return {'wat': '(module (func (export "endless_test") (result i32) (i32.const %d)))' % step,
+          'calls': [{'name': 'endless_test'}]}
 
 
-def is_streak_test_call(message):
+def is_endless_test_call(message):
   tool_call_list = message.get('tool_calls') or []
   if not tool_call_list:
     return False
   function = tool_call_list[0].get('function') or {}
   return (function.get('name') == 'run_wasm'
-          and '"streak_test"' in (function.get('arguments') or ''))
+          and '"endless_test"' in (function.get('arguments') or ''))
+
+
+REASONING_TEST_TEXT = 'REASONING-MARKER: fetch the fake endpoint first.'
+
+
+def is_reasoning_test_call(message):
+  tool_call_list = message.get('tool_calls') or []
+  if not tool_call_list:
+    return False
+  function = tool_call_list[0].get('function') or {}
+  return '"reasoning_test"' in (function.get('arguments') or '')
 
 
 def compaction_test_args(step):
@@ -441,10 +472,16 @@ elif (last_message.get('role') == 'tool' and len(message_list) >= 2
   # test" docstring entry above for why this stops after one re-issue.
   chunk = tool_call_chunk('http_request', repeat_test_args())
 elif (last_message.get('role') == 'tool' and len(message_list) >= 2
-      and is_streak_test_call(message_list[-2])):
-  # Never gives up - see the "stuck run_wasm streak test" docstring entry.
-  chunk = tool_call_chunk('run_wasm', streak_test_args(
-      len([m for m in message_list if is_streak_test_call(m)]) + 1))
+      and is_reasoning_test_call(message_list[-2])):
+  if message_list[-2].get('reasoning_content') == REASONING_TEST_TEXT:
+    chunk = {'choices': [{'delta': {'content': 'The reasoning was sent back.'}}]}
+  else:
+    chunk = {'choices': [{'delta': {'content': 'The reasoning was lost.'}}]}
+elif (last_message.get('role') == 'tool' and len(message_list) >= 2
+      and is_endless_test_call(message_list[-2])):
+  # Never gives up - see the "endless run_wasm loop" docstring entry.
+  chunk = tool_call_chunk('run_wasm', endless_test_args(
+      len([m for m in message_list if is_endless_test_call(m)]) + 1))
 elif (last_message.get('role') == 'tool' and len(message_list) >= 2
       and is_stuck_test_tool_call(message_list[-2])):
   # Never gives up - see the "stuck http_request tool test" docstring entry.
@@ -489,10 +526,37 @@ elif 'library_inspect tool test' in last_content_lower:
   chunk = tool_call_chunk('library_inspect', {
       'libraries': [portal_url + '/ERP5Site_fakeLibrary'],
   })
+elif 'spawn_subagent turn limit test' in last_content_lower:
+  chunk = tool_call_chunk('spawn_subagent', {
+      'task': 'Please run the endless run_wasm loop',
+      'max_turns': 4,
+  })
+elif last_content_lower.startswith('turn limit reached: you can not call tools anymore'):
+  chunk = {'choices': [{'delta': {'content': 'Partial answer after the turn limit.'}}]}
+elif 'check thinking parameter' in last_content_lower:
+  chat_template_kwargs = body.get('chat_template_kwargs') or {}
+  if chat_template_kwargs.get('enable_thinking') and chat_template_kwargs.get('preserve_thinking'):
+    chunk = {'choices': [{'delta': {'content': 'Thinking parameter: enabled.'}}]}
+  else:
+    chunk = {'choices': [{'delta': {'content': 'Thinking parameter: absent.'}}]}
+elif 'reasoning tool test' in last_content_lower:
+  chunk_list = [
+      {'choices': [{'delta': {'reasoning_content': REASONING_TEST_TEXT[:20]}}]},
+      {'choices': [{'delta': {'reasoning_content': REASONING_TEST_TEXT[20:]}}]},
+      tool_call_chunk('http_request', {
+          'url': portal_url + '/ERP5Site_fakeHttpEndpoint',
+          'reasoning_test': True,
+      }),
+  ]
+elif 'http_request pattern tool test' in last_content_lower:
+  chunk = tool_call_chunk('http_request', {
+      'url': portal_url + '/ERP5Site_fakeHttpEndpoint',
+      'pattern': 'fake http',
+  })
 elif 'repeated http_request tool test' in last_content_lower:
   chunk = tool_call_chunk('http_request', repeat_test_args())
-elif 'stuck run_wasm streak test' in last_content_lower:
-  chunk = tool_call_chunk('run_wasm', streak_test_args(1))
+elif 'endless run_wasm loop' in last_content_lower:
+  chunk = tool_call_chunk('run_wasm', endless_test_args(1))
 elif 'stuck http_request tool test' in last_content_lower:
   chunk = tool_call_chunk('http_request', stuck_test_args())
 elif 'repeated list_defined_tools tool test' in last_content_lower:
