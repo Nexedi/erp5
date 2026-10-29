@@ -10,6 +10,8 @@
     PANIC_KEEP_RECENT_TOKEN_BUDGET = 8000,
     RATE_LIMIT_RETRY_DELAY_MS = 120000,
     MAX_LOOP_COUNT = 500,
+    TURN_LIMIT_PROMPT = "Turn limit reached: you can not call tools anymore. Give your final answer " +
+      "now, with what you found so far, and say clearly what you could not find or verify.",
     SUMMARY_CHUNK_CHARS = 100000,
     SUMMARY_PROMPT = "The text below is one chunk of a larger tool result that was too large to return " +
       "as-is. Summarize it concisely, but preserve exact facts, numbers, names, dates, code, and any " +
@@ -186,6 +188,10 @@
       });
   }
 
+  function joinAnswerText(answer_text_list, current_text) {
+    return (answer_text_list || []).concat(current_text ? [current_text] : []).join("\n\n");
+  }
+
   rJS(window)
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
     .declareAcquiredMethod("requestProcessTask", "requestProcessTask")
@@ -256,7 +262,8 @@
     .declareMethod('cancelProcessing', function () {
       var gadget = this,
         queue_loop = gadget.processing_queue,
-        execution_plan;
+        execution_plan,
+        content;
       if (!queue_loop) {
         return;
       }
@@ -265,16 +272,26 @@
 
       execution_plan = gadget.execution_plan;
       gadget.execution_plan = null;
+      // Keep what the model already wrote, including the turn it was
+      // streaming when the user cancelled.
+      content = joinAnswerText(gadget.answer_text_list, gadget.streaming_text);
+      // Shown in the tool call trace only: the answer itself goes back to the
+      // model as its own message in the next requests.
+      gadget.tool_message_list.push({
+        role: "tool",
+        name: "cancelled",
+        content: "Cancelled by user"
+      });
 
       return RSVP.all([
-        gadget.gadget_chat_ui.showMessage({ content: "Cancelled by user", tool_message_list: gadget.tool_message_list, execution_plan: execution_plan }),
+        gadget.gadget_chat_ui.showMessage({ content: content, tool_message_list: gadget.tool_message_list, execution_plan: execution_plan }),
         gadget.notifySubmitted({message: 'Cancelled', status: "success"}),
         gadget.gadget_chat_ui.resetEditor(),
         gadget.storeTaskResult(
           gadget.options.jio_key,
           {
             tool_message_list: JSON.stringify(gadget.tool_message_list),
-            content: "Cancelled by user",
+            content: content,
             execution_plan: execution_plan ? JSON.stringify(execution_plan) : ""
           }
         )
@@ -370,8 +387,9 @@
     })
     .declareMethod('showStreamingDelta', function (partial) {
       var gadget = this;
+      gadget.streaming_text = partial.content;
       return gadget.gadget_chat_ui.showMessage({
-        content: partial.content,
+        content: joinAnswerText(gadget.answer_text_list, partial.content),
         tool_message_list: gadget.tool_message_list || [],
         execution_plan: gadget.execution_plan
       });
@@ -380,6 +398,10 @@
       var gadget = this,
         queue_loop = new RSVP.Queue();
       gadget.tool_message_list = [];
+      // Text the model wrote in the turns that called tools: it stays shown
+      // above the text of the next turns, and is part of the final answer.
+      gadget.answer_text_list = [];
+      gadget.streaming_text = "";
       gadget.processing_queue = queue_loop;
       gadget.last_usage_anchor = null;
       gadget.usage_totals = { call_count: 0, prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 };
@@ -390,7 +412,8 @@
           );
 
         function loopError(e) {
-          var error_text = "Error: " + (e && e.message ? e.message : String(e)),
+          var error_text = joinAnswerText(gadget.answer_text_list,
+              "Error: " + (e && e.message ? e.message : String(e))),
             execution_plan = gadget.execution_plan;
           gadget.processing_queue = null;
           gadget.execution_plan = null;
@@ -409,8 +432,82 @@
           ]);
         }
 
+        function completeTask(final_content) {
+          var execution_plan = gadget.execution_plan,
+            content = joinAnswerText(gadget.answer_text_list, final_content);
+          gadget.processing_queue = null;
+          gadget.execution_plan = null;
+          gadget.tool_message_list.push({
+            role: "tool",
+            name: "usage_totals",
+            content: "Task usage: " + gadget.usage_totals.call_count + " LLM call(s), " +
+              gadget.usage_totals.prompt_tokens + " prompt + " + gadget.usage_totals.completion_tokens +
+              " completion = " + gadget.usage_totals.total_tokens + " token(s) total."
+          });
+          return RSVP.all([
+            gadget.gadget_chat_ui.showMessage({ content: content, tool_message_list: gadget.tool_message_list, execution_plan: execution_plan }),
+            gadget.notifySubmitted({message: 'Completed', status: "success"}),
+            gadget.gadget_chat_ui.resetEditor(),
+            gadget.storeTaskResult(
+              gadget.options.jio_key,
+              {
+                tool_message_list: JSON.stringify(gadget.tool_message_list),
+                content: content,
+                execution_plan: execution_plan ? JSON.stringify(execution_plan) : ""
+              }
+            )
+          ]);
+        }
+
+        // At the limit, one last request without tools makes the model
+        // report what it found, instead of losing all of its work.
         if (loop_count >= max_loop_count) {
-          throw new Error("processTask: too many iterations");
+          queue_loop
+            .push(function () {
+              var final_message_list = message_list;
+              if (has_tool_call) {
+                final_message_list = final_message_list.concat(pending_tool_call_list.map(function (tool_call) {
+                  return {
+                    role: "tool",
+                    tool_call_id: tool_call.id,
+                    name: tool_call.function.name,
+                    content: "Not run: turn limit reached."
+                  };
+                }));
+              }
+              gadget.tool_message_list.push({
+                role: "tool",
+                name: "turn_limit",
+                content: "Turn limit of " + max_loop_count + " reached - asking the model for a final answer without tools"
+              });
+              return gadget.gadget_chat_ui.showMessage({
+                tool_message_list: gadget.tool_message_list,
+                execution_plan: gadget.execution_plan
+              })
+                .push(function () {
+                  return gadget.compactMessageList(gadget, final_message_list.concat([
+                    { role: "user", content: TURN_LIMIT_PROMPT }
+                  ]), undefined, gadget.last_usage_anchor);
+                });
+            })
+            .push(function (final_message_list) {
+              return gadget.requestProcessTaskWithUsage(
+                gadget,
+                gadget.jio_key,
+                {
+                  message_list: JSON.stringify(final_message_list),
+                  tool_definition_list: JSON.stringify([])
+                }
+              );
+            })
+            .push(function (result) {
+              if (!result.content) {
+                throw new Error("processTask: too many iterations");
+              }
+              return completeTask("[turn limit reached - partial answer]\n" + result.content);
+            })
+            .push(undefined, loopError);
+          return;
         }
 
         if (has_tool_call) {
@@ -517,7 +614,8 @@
             );
           })
           .push(function (result) {
-            var execution_plan, assistant_message;
+            var assistant_message;
+            gadget.streaming_text = "";
             if (result.usage && result.usage.prompt_tokens) {
               gadget.last_usage_anchor = { prompt_tokens: result.usage.prompt_tokens, message_count: message_list.length };
             }
@@ -527,6 +625,9 @@
                 'content': result.content,
                 'reasoning': result.reasoning
               });
+              if (result.content && result.content.trim()) {
+                gadget.answer_text_list.push(result.content.trim());
+              }
               assistant_message = {
                 role: "assistant",
                 content: result.content,
@@ -551,29 +652,7 @@
               throw new Error("Empty response from LLM with no tool calls" +
                 (result.finish_reason ? " (finish_reason: " + result.finish_reason + ")" : ""));
             }
-            execution_plan = gadget.execution_plan;
-            gadget.processing_queue = null;
-            gadget.execution_plan = null;
-            gadget.tool_message_list.push({
-              role: "tool",
-              name: "usage_totals",
-              content: "Task usage: " + gadget.usage_totals.call_count + " LLM call(s), " +
-                gadget.usage_totals.prompt_tokens + " prompt + " + gadget.usage_totals.completion_tokens +
-                " completion = " + gadget.usage_totals.total_tokens + " token(s) total."
-            });
-            return RSVP.all([
-              gadget.gadget_chat_ui.showMessage({ content: result.content , tool_message_list: gadget.tool_message_list, execution_plan: execution_plan }),
-              gadget.notifySubmitted({message: 'Completed', status: "success"}),
-              gadget.gadget_chat_ui.resetEditor(),
-              gadget.storeTaskResult(
-                gadget.options.jio_key,
-                {
-                  tool_message_list: JSON.stringify(gadget.tool_message_list),
-                  content: result.content,
-                  execution_plan: execution_plan ? JSON.stringify(execution_plan) : ""
-                }
-              )
-            ]);
+            return completeTask(result.content);
           })
           .push(undefined, function (e) {
             if (!is_retry && isRateLimitError(e)) {

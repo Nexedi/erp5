@@ -354,6 +354,10 @@
         li = li_list[i];
         content_element = li.querySelector('pre.chat-hidden-field') || li.querySelector('pre');
         content = content_element ? content_element.textContent : "";
+        // An answer cancelled before the model wrote anything is left out.
+        if (li.classList.contains("post-answer") && !content.trim()) {
+          continue;
+        }
         attachment_element = li.querySelector('.post-attachment a');
         attachment_part = attachment_element ?
           getAttachmentContentPart(attachment_element.textContent, attachment_element.getAttribute('href')) :
@@ -407,14 +411,17 @@
           new Date(time_element.getAttribute("datetime")).toLocaleString();
       }
       markdown_element = gadget.new_message_element.querySelector(".post-markdown");
-      if (message.hasOwnProperty('content') && message.content) {
+      if (message.hasOwnProperty('content')) {
         details_open = false;
-        markdown_element.innerHTML = marked.parse(message.content);
-        gadget.new_message_element.querySelector('pre.chat-hidden-field').textContent = message.content;
+        markdown_element.innerHTML = marked.parse(message.content || "");
+        gadget.new_message_element.querySelector('pre.chat-hidden-field').textContent = message.content || "";
       } else {
+        // Still working: keep the text already shown, the model goes on
+        // writing below it.
         details_open = true;
-        markdown_element.innerHTML = "";
-        markdown_element.appendChild(getTypingIndicatorDom());
+        if (!markdown_element.querySelector('.chat-typing-indicator')) {
+          markdown_element.appendChild(getTypingIndicatorDom());
+        }
       }
       if (tool_message_list.length) {
         details_element = gadget.new_message_element.querySelector('.post-tool > details');

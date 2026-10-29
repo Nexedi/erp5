@@ -141,7 +141,9 @@
           "produce a different result. Stop retrying this exact call: try different arguments, a " +
           "different tool, or report the failure and move on." +
           (repeat_count >= TOOL_CALL_REPEAT_HIDE_LIMIT ?
-              " This tool is now disabled for the rest of this task." : "")
+              " This tool is now disabled for the rest of this task." :
+              " If you call it again with these same arguments, this tool will be disabled for the " +
+              "rest of this task.")
       };
     }
     return runClientToolCall(tool_call, tool_list);

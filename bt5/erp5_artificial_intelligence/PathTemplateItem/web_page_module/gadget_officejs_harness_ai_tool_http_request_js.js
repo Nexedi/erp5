@@ -15,9 +15,10 @@
     });
   }
 
-  // Appended to failures, so the model moves on instead of retrying the
-  // same URL, which returns the same failure.
-  var NO_RETRY_HINT = "Retrying the same URL will not help: use other sources, or report this " +
+  var HTTP_TEXT_WINDOW_CHARS = 8000,
+    // Appended to failures, so the model moves on instead of retrying the
+    // same URL, which returns the same failure.
+    NO_RETRY_HINT = "Retrying the same URL will not help: use other sources, or report this " +
       "source as not verified.";
 
   function normalizeUrl(url) {
@@ -54,7 +55,7 @@
           "plain, unproxied fetch, which only succeeds if the target itself allows cross-origin " +
           "requests. HTML is converted to readable text unless `raw` is requested. This is not a " +
           "general web browser - no JavaScript on the fetched page runs, and there is no rendering. " +
-          "One call returns at most " + window.ChatToolCommon.TEXT_WINDOW_CHARS + " chars of the " +
+          "One call returns at most " + HTTP_TEXT_WINDOW_CHARS + " chars of the " +
           "response; use min_chars to read further, or `pattern` to search a long page for what you " +
           "need instead of reading all of it.",
         parameters: {
@@ -68,7 +69,7 @@
             min_chars: { type: "integer", description: "Return the text from this character offset " +
               "(default 0). Use it to continue reading a long response." },
             max_chars: { type: "integer", description: "Stop at this character offset, exclusive (default " +
-              "and maximum: min_chars + " + window.ChatToolCommon.TEXT_WINDOW_CHARS + ")." },
+              "and maximum: min_chars + " + HTTP_TEXT_WINDOW_CHARS + ")." },
             pattern: { type: "string", description: "Search the response text instead of reading it: a " +
               "case-insensitive regular expression (eg. \"deadline|closing date\"). Returns each match " +
               "with its char offset and " + window.ChatToolCommon.TEXT_SEARCH_CONTEXT_CHARS + " chars of " +
@@ -178,7 +179,8 @@
             text = window.ChatToolCommon.htmlToText(text);
           }
           text = args.pattern ? window.ChatToolCommon.searchText(text, args.pattern) :
-              window.ChatToolCommon.readTextWindow(text, args.min_chars, args.max_chars);
+              window.ChatToolCommon.readTextWindow(text, args.min_chars, args.max_chars, undefined,
+                HTTP_TEXT_WINDOW_CHARS);
           return header + "\n\n" + text + statusHint(result.status);
         });
     });

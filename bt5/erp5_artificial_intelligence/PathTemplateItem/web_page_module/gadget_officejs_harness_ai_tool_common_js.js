@@ -160,11 +160,13 @@
       "\n\n[To read around a match, call again with min_chars a little before its char offset.]";
   }
 
-  // The [min_chars, max_chars) window of `text`, at most TEXT_WINDOW_CHARS
-  // long, followed by how to read further when it is not the whole text.
-  function readTextWindow(text, min_chars, max_chars, locate) {
+  // The [min_chars, max_chars) window of `text`, at most window_chars
+  // (default TEXT_WINDOW_CHARS) long, followed by how to read further when
+  // it is not the whole text.
+  function readTextWindow(text, min_chars, max_chars, locate, window_chars) {
     var start = Math.min(Math.max(0, Number(min_chars) || 0), text.length),
-      end = Math.max(start, Math.min(Number(max_chars) || Infinity, start + TEXT_WINDOW_CHARS, text.length));
+      end = Math.max(start, Math.min(Number(max_chars) || Infinity, start + (window_chars || TEXT_WINDOW_CHARS),
+        text.length));
     locate = locate || noLocation;
     if (start === 0 && end === text.length) {
       return text;

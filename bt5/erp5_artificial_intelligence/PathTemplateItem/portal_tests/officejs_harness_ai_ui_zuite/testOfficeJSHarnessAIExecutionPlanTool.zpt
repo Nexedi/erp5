@@ -17,9 +17,9 @@
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForHarnessAI/macros/setup_fake_llm_and_new_task" />
 <tr>
-  <td>getEval</td>
-  <td>window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror.setValue('Please run the execution plan tool test')</td>
-  <td></td>
+  <td>waitForEval</td>
+  <td>(function(){var cm=window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror;cm.setValue('Please run the execution plan tool test');return cm.getValue();})()</td>
+  <td>Please run the execution plan tool test</td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
@@ -72,9 +72,9 @@
   <td></td>
 </tr>
 <tr>
-  <td>getEval</td>
-  <td>window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror.setValue('Please run the archive plan tool test')</td>
-  <td></td>
+  <td>waitForEval</td>
+  <td>(function(){var cm=window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror;cm.setValue('Please run the archive plan tool test');return cm.getValue();})()</td>
+  <td>Please run the archive plan tool test</td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
@@ -127,9 +127,9 @@
   <td></td>
 </tr>
 <tr>
-  <td>getEval</td>
-  <td>window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror.setValue('Just say hi, nothing else needed.')</td>
-  <td></td>
+  <td>waitForEval</td>
+  <td>(function(){var cm=window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror;cm.setValue('Just say hi, nothing else needed.');return cm.getValue();})()</td>
+  <td>Just say hi, nothing else needed.</td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>

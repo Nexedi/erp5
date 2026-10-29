@@ -5,8 +5,15 @@
 
   var SUBAGENT_MAX_LOOP_COUNT_CAP = 30,
     SUBAGENT_TURN_LIMIT_PROMPT = "Turn limit reached: you can not call tools anymore. Give your final " +
-      "answer now, with what you found so far, and say clearly what you could not find or verify.",
-    SUBAGENT_EXCLUDED_TOOL_NAME_LIST = ["spawn_subagent", "execution_plan"];
+      "answer now, with what you found so far, in the form asked in the task.",
+    SUBAGENT_EXCLUDED_TOOL_NAME_LIST = ["spawn_subagent", "execution_plan"],
+    // Appended to the task, so every report has the same shape for the
+    // parent agent to check.
+    SUBAGENT_REPORT_FORMAT_PROMPT = "When you are done, answer in this form:\n" +
+      "Findings: the answer to the task, short and concrete.\n" +
+      "Verified sources: each source you actually read, with its URL or document name.\n" +
+      "Not verified: what you could not find, read or confirm, and why (eg. a site that does not " +
+      "exist or does not answer). Do not guess to fill the gaps.";
 
   rJS(window)
     .declareAcquiredMethod("requestProcessTask", "requestProcessTask")
@@ -22,35 +29,27 @@
     .declareMethod('getDefinition', function () {
       return {
         name: "spawn_subagent",
-        description: "Delegate a self-contained sub-task to a fresh, independent instance of this " +
-          "same agent - same tools (everything except spawn_subagent itself, to prevent runaway " +
-          "recursion), but its own separate conversation that starts empty (it has NO access to this " +
-          "conversation's history - give it a full, self-contained task description). Runs to " +
-          "completion (its own multi-turn tool-calling loop) before this call returns; only its final " +
-          "answer comes back - none of its intermediate searches/reads/retries appear in this " +
-          "conversation. USE THIS WHEN: a piece of the current task is large or noisy enough to " +
-          "isolate (e.g. \"research X and summarize\", \"go create and populate these 5 documents, " +
-          "report back what was done\"). DO NOT USE THIS for a trivial one-tool-call task - just call " +
-          "that tool directly. WARNING: a sub-agent's own conversation has the exact same context " +
-          "size limit as this one - it does NOT give you a bigger context window, only a separate " +
-          "one. If the reference material for a sub-task is itself too large to read through in one " +
-          "conversation (e.g. a document of hundreds of pages), do not hand the whole thing to a " +
-          "single spawn_subagent call and expect it to read all of it sequentially - that just moves " +
-          "the same overflow problem one level down. Instead, split the material into bounded chunks " +
-          "yourself (e.g. by page range) and make one spawn_subagent call per chunk (\"read pages " +
-          "40-60 of document X and extract/summarize Y\"), each starting fresh with no memory of the " +
-          "others, then combine their individual (short) results yourself - recursively, in another " +
-          "batch of chunked calls, if even those combined results would be too large for one call. " +
-          "Do NOT launch a large number of these at once (e.g. dozens or more in one batch) - each " +
-          "one is a full separate conversation with the LLM backend, and firing too many in parallel " +
-          "can overwhelm it. Keep any one batch to a handful of chunks, and process the rest in " +
-          "further batches afterwards.",
+        description: "Delegate a self-contained sub-task to a fresh instance of this agent, with " +
+          "the same tools (except spawn_subagent and execution_plan) but its own empty conversation: " +
+          "it can NOT see this conversation, so the task must contain everything it needs. Only its " +
+          "final report comes back. USE IT ONLY for independent research paths that need little from " +
+          "the rest of the task and can run in parallel (eg. \"find the open calls of funding " +
+          "program X\" next to \"... of program Y\"), where many intermediate reads would otherwise " +
+          "fill this conversation. DO NOT USE IT for a task you can do with a few direct tool calls, " +
+          "and DO NOT USE IT to read a long PDF or web page by chunks: call pdf_to_text or " +
+          "http_request with `pattern` to find the passages you need, then read only around them. " +
+          "In the task, state only facts you have verified: never invent a URL, a program name or a " +
+          "date - if you do not know where a source is, ask the sub-agent to find it. The sub-agent " +
+          "reports its findings, the sources it actually read, and what it could not verify; check " +
+          "its conclusions before you rely on them. Each sub-agent is a full separate conversation " +
+          "with the LLM backend: launch at most a handful at once.",
         parameters: {
           type: "object",
           properties: {
             task: {
               type: "string",
-              description: "Full, self-contained description of what the sub-agent should do."
+              description: "Full, self-contained description of what the sub-agent should do, " +
+                "with only verified facts."
             },
             max_turns: {
               type: "integer",
@@ -230,7 +229,7 @@
         })
         .push(function (system_message_list) {
           subagentLoopCall(0, system_message_list.concat([
-            { role: "user", content: args.task }
+            { role: "user", content: args.task + "\n\n" + SUBAGENT_REPORT_FORMAT_PROMPT }
           ]));
         });
 

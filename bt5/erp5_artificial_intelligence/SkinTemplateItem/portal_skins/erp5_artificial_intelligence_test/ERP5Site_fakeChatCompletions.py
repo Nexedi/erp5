@@ -101,6 +101,16 @@ message's role/content picks the branch:
                                              setting adds: "Thinking parameter: enabled." or
                                              "Thinking parameter: absent."
                                              (testOfficeJSHarnessAIThinking.zpt)
+- content "please work then stall for
+  the cancel test"                       -> writes "WORK-DONE-BEFORE-CANCEL." with an
+                                             http_request call, then stalls 5 seconds on the
+                                             next request, so the user cancels after some text
+                                             was written (testOfficeJSHarnessAICancelRequest.zpt)
+- content "report in tool turn test"    -> writes "REPORT-BODY: the whole report." in the same
+                                             response as an http_request call, then ends with a
+                                             short "The full report is above." - the client must
+                                             keep the report in the answer of the task
+                                             (testOfficeJSHarnessAIChat.zpt)
 - content "reasoning tool test"         -> streams a delta.reasoning_content chunk before an
                                              http_request call, like llama.cpp/vLLM reasoning
                                              models. On the next request it checks that the
@@ -361,6 +371,22 @@ def is_endless_test_call(message):
 REASONING_TEST_TEXT = 'REASONING-MARKER: fetch the fake endpoint first.'
 
 
+def is_cancel_test_call(message):
+  tool_call_list = message.get('tool_calls') or []
+  if not tool_call_list:
+    return False
+  function = tool_call_list[0].get('function') or {}
+  return '"cancel_test"' in (function.get('arguments') or '')
+
+
+def is_report_test_call(message):
+  tool_call_list = message.get('tool_calls') or []
+  if not tool_call_list:
+    return False
+  function = tool_call_list[0].get('function') or {}
+  return '"report_test"' in (function.get('arguments') or '')
+
+
 def is_reasoning_test_call(message):
   tool_call_list = message.get('tool_calls') or []
   if not tool_call_list:
@@ -472,6 +498,9 @@ elif (last_message.get('role') == 'tool' and len(message_list) >= 2
   # test" docstring entry above for why this stops after one re-issue.
   chunk = tool_call_chunk('http_request', repeat_test_args())
 elif (last_message.get('role') == 'tool' and len(message_list) >= 2
+      and is_report_test_call(message_list[-2])):
+  chunk = {'choices': [{'delta': {'content': 'The full report is above.'}}]}
+elif (last_message.get('role') == 'tool' and len(message_list) >= 2
       and is_reasoning_test_call(message_list[-2])):
   if message_list[-2].get('reasoning_content') == REASONING_TEST_TEXT:
     chunk = {'choices': [{'delta': {'content': 'The reasoning was sent back.'}}]}
@@ -494,10 +523,24 @@ elif (last_message.get('role') == 'tool' and len(message_list) >= 2
   # tool test" docstring entry above: allow_repeat means none of these ever
   # get intercepted by the guard, unlike the http_request case.
   chunk = tool_call_chunk('list_defined_tools', list_defined_tools_repeat_args())
+elif (last_message.get('role') == 'tool' and len(message_list) >= 2
+      and is_cancel_test_call(message_list[-2])):
+  # Second turn of "please work then stall for the cancel test": stalls so
+  # the user can cancel after some text was already written.
+  time.sleep(5)
+  chunk = {'choices': [{'delta': {'content': 'Finished stalling.'}}]}
 elif last_message.get('role') == 'tool':
   chunk = {'choices': [{'delta': {
       'content': 'Tool result: %s' % last_content,
   }}]}
+elif 'please work then stall for the cancel test' in last_content_lower:
+  chunk_list = [
+      {'choices': [{'delta': {'content': 'WORK-DONE-BEFORE-CANCEL.'}}]},
+      tool_call_chunk('http_request', {
+          'url': portal_url + '/ERP5Site_fakeHttpEndpoint',
+          'cancel_test': True,
+      }),
+  ]
 elif 'please stall for the cancel test' in last_content_lower:
   # Real LLM providers are never instant - without this, a Zelenium test has
   # no reliable window to click Cancel before the (otherwise synchronous)
@@ -539,6 +582,14 @@ elif 'check thinking parameter' in last_content_lower:
     chunk = {'choices': [{'delta': {'content': 'Thinking parameter: enabled.'}}]}
   else:
     chunk = {'choices': [{'delta': {'content': 'Thinking parameter: absent.'}}]}
+elif 'report in tool turn test' in last_content_lower:
+  chunk_list = [
+      {'choices': [{'delta': {'content': 'REPORT-BODY: the whole report.'}}]},
+      tool_call_chunk('http_request', {
+          'url': portal_url + '/ERP5Site_fakeHttpEndpoint',
+          'report_test': True,
+      }),
+  ]
 elif 'reasoning tool test' in last_content_lower:
   chunk_list = [
       {'choices': [{'delta': {'reasoning_content': REASONING_TEST_TEXT[:20]}}]},
