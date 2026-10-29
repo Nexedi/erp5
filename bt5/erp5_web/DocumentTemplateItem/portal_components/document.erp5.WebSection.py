@@ -120,6 +120,9 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
     document = None
     try:
       document = DocumentExtensibleTraversableMixin.__bobo_traverse__(self, request, name)
+      # XXX rewrap in self so that we can edit python scripts from a web site with ERP5JS
+      if name == 'portal_skins':
+        document = aq_base(document).__of__(self)
     except NotFound:
       not_found_page_ref = self.getLayoutProperty('layout_not_found_page_reference')
       if not_found_page_ref:

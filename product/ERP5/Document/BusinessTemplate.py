@@ -173,6 +173,7 @@ SEPARATELY_EXPORTED_PROPERTY_DICT = {
   "Web Script":          (None,   0, "data",         False),
   "Web Style":           (None,   0, "data",         False),
   "ZopePageTemplate":    ("zpt",  1, "_text",        True ),
+  "Page Template":       ("zpt",  1, "_text",        True ),
 }
 
 def _getCatalog(acquisition_context):
