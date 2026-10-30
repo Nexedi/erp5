@@ -47,8 +47,9 @@
       return {
         name: "create_html_report",
         description: "Writing HTML content for a report that will be rendered as a paginated " +
-          "document (table of contents, numbered figures/tables, page breaks). Use when asked to " +
-          "write or generate a report, or any HTML that will be converted to such a document.",
+          "document (table of contents, numbered figures/tables, page breaks). Use ONLY when the user " +
+          "explicitly asks for HTML or for such a paginated document. For any other report, write it " +
+          "in Markdown directly in your answer.",
         instructions: INSTRUCTIONS
       };
     })
