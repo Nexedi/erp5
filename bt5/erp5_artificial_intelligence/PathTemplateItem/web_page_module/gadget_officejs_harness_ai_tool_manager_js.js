@@ -16,37 +16,22 @@
       "tool_undefine_tool",
       "tool_spawn_subagent"
     ],
-    TOOL_CALL_REPEAT_LIMIT = 2,
-    // Escalation when the LLM ignores the TOOL_CALL_REPEAT_LIMIT notice:
+    TOOL_CALL_REPEAT_LIMIT = 3,
+    // Only the tool calls of the last TOOL_CALL_REPEAT_WINDOW assistant
+    // turns are counted.
+    TOOL_CALL_REPEAT_WINDOW = 12,
+    // Is it really a good idea ?
+    // If it happends, it means probably that the tool is bad defined
     // at HIDE_LIMIT the tool is dropped from the tool list sent to the LLM,
     // at STOP_LIMIT the agent loop stops instead of calling the LLM again.
-    TOOL_CALL_REPEAT_HIDE_LIMIT = 3,
-    TOOL_CALL_REPEAT_STOP_LIMIT = 4,
+    TOOL_CALL_REPEAT_HIDE_LIMIT = 4,
+    // Written in the tool result that removes a tool: finding it in the
+    // message_list keeps that tool removed for the rest of the task.
+    TOOL_DISABLED_NOTICE = "This tool is now disabled for the rest of this task.",
+    TOOL_CALL_REPEAT_STOP_LIMIT = 5,
     TOOL_CALL_REPEAT_SYSTEM_PROMPT = "If a tool call with the exact same name and arguments fails or does " +
       "not help, do not call it again with the exact same arguments - it will not produce a different " +
-      "result. Try different arguments, a different tool, or report the issue and move on instead.",
-    ENVIRONMENT_SYSTEM_PROMPT = "This agent runs entirely inside a web browser tab, not on a server or a " +
-      "local machine. There is no local filesystem, no shell, and no OS process to invoke - paths like " +
-      "\"/home/...\" and commands like \"ls\", \"cat\" or \"pip install\" do not exist here, and any " +
-      "attempt to use them will fail. The only capabilities available are the tools explicitly provided " +
-      "in this conversation: a sandboxed JavaScript/WASM execution environment (itself with no " +
-      "filesystem or network access), http_request for making network calls, execution_plan for " +
-      "tracking a checklist, define_tool/list_defined_tools/undefine_tool for creating new callable " +
-      "tools out of JS code, spawn_subagent for delegating sub-tasks, and whatever MCP tools are " +
-      "configured. Do not assume access to anything beyond these.";
-
-  function toolDefinitionList(tool_list) {
-    return tool_list.map(function (tool) {
-      return {
-        type: "function",
-        "function": {
-          name: tool.definition.name,
-          description: tool.definition.description,
-          parameters: tool.definition.parameters
-        }
-      };
-    });
-  }
+      "result. Try different arguments, a different tool, or report the issue and move on instead.";
 
   function findClientTool(name, tool_list) {
     var i;
@@ -105,20 +90,26 @@
     });
   }
 
-  function countPriorIdenticalToolCalls(message_list, tool_call) {
-    var count = 0, i, message, j, tc;
-    for (i = 0; i < message_list.length; i += 1) {
+
+  // How many times each tool call (same name, same arguments) appears in
+  // the last TOOL_CALL_REPEAT_WINDOW assistant turns of message_list, keyed
+  // by the JSON of its name and arguments.
+  function countToolCalls(message_list) {
+    var count_dict = {}, turn_count = 0, i, j, message, key;
+    for (i = message_list.length - 1; i >= 0 && turn_count < TOOL_CALL_REPEAT_WINDOW; i -= 1) {
       message = message_list[i];
-      if (message.role === "assistant" && message.tool_calls) {
+      if (message.role === "assistant" && message.tool_calls && message.tool_calls.length) {
+        turn_count += 1;
         for (j = 0; j < message.tool_calls.length; j += 1) {
-          tc = message.tool_calls[j];
-          if (tc.function.name === tool_call.function.name && tc.function.arguments === tool_call.function.arguments) {
-            count += 1;
+          key = JSON.stringify([message.tool_calls[j].function.name, message.tool_calls[j].function.arguments]);
+          if (!count_dict.hasOwnProperty(key)) {
+            count_dict[key] = { name: message.tool_calls[j].function.name, count: 0 };
           }
+          count_dict[key].count += 1;
         }
       }
     }
-    return count;
+    return count_dict;
   }
 
   function isRepeatAllowedTool(tool_call, tool_list) {
@@ -126,83 +117,62 @@
     return Boolean(tool && tool.definition && tool.definition.allow_repeat);
   }
 
+  // Names of the tools whose result, anywhere in message_list, says that
+  // they are disabled.
+  function getDisabledToolNameList(message_list) {
+    var name_list = [], i, message;
+    for (i = 0; i < message_list.length; i += 1) {
+      message = message_list[i];
+      if (message.role === "tool" && message.name && typeof message.content === "string" &&
+          message.content.indexOf(TOOL_DISABLED_NOTICE) !== -1 && name_list.indexOf(message.name) === -1) {
+        name_list.push(message.name);
+      }
+    }
+    return name_list;
+  }
+
   function runOneClientToolCall(tool_call, message_list, tool_list) {
     var repeat_count;
     if (isRepeatAllowedTool(tool_call, tool_list)) {
       return runClientToolCall(tool_call, tool_list);
     }
-    repeat_count = countPriorIdenticalToolCalls(message_list, tool_call);
+    repeat_count = (countToolCalls(message_list)[
+      JSON.stringify([tool_call.function.name, tool_call.function.arguments])
+    ] || { count: 0 }).count;
     if (repeat_count >= TOOL_CALL_REPEAT_LIMIT) {
       return {
         tool_call_id: tool_call.id,
         name: tool_call.function.name,
-        content: "You already called this exact tool with these exact same arguments " + (repeat_count - 1) +
-          " time(s) before in this conversation, and it did not help - repeating it again will not " +
+        content: "You already called this exact tool with these exact same arguments (" +
+          (tool_call.function.arguments.length > 300 ?
+              tool_call.function.arguments.slice(0, 300) + "..." : tool_call.function.arguments) + ") " +
+          (repeat_count - 1) + " time(s) in the last " + TOOL_CALL_REPEAT_WINDOW + " turns, and it did not help - repeating it again will not " +
           "produce a different result. Stop retrying this exact call: try different arguments, a " +
           "different tool, or report the failure and move on." +
           (repeat_count >= TOOL_CALL_REPEAT_HIDE_LIMIT ?
-              " This tool is now disabled for the rest of this task." :
+              " " + TOOL_DISABLED_NOTICE :
               " If you call it again with these same arguments, this tool will be disabled for the " +
               "rest of this task.")
+      };
+    }
+    if (getDisabledToolNameList(message_list).indexOf(tool_call.function.name) !== -1) {
+      return {
+        tool_call_id: tool_call.id,
+        name: tool_call.function.name,
+        content: "Not run: it was called again and again with the same arguments before. " +
+          TOOL_DISABLED_NOTICE + " Use another tool, or the results you already have."
       };
     }
     return runClientToolCall(tool_call, tool_list);
   }
 
-  // Derived from message_list on every LLM request, so it needs no extra
-  // state and works the same for the main agent loop and sub-agents.
-  function getRepeatEscalation(message_list, tool_list) {
-    var count_dict = {},
-      hidden_tool_name_list = [],
-      stop_reason = null,
-      i,
-      j,
-      message,
-      tool_call,
-      key,
-      count;
-    for (i = 0; i < message_list.length; i += 1) {
-      message = message_list[i];
-      if (message.role === "assistant" && message.tool_calls) {
-        for (j = 0; j < message.tool_calls.length; j += 1) {
-          tool_call = message.tool_calls[j];
-          if (!isRepeatAllowedTool(tool_call, tool_list)) {
-            key = JSON.stringify([tool_call.function.name, tool_call.function.arguments]);
-            count = (count_dict[key] || 0) + 1;
-            count_dict[key] = count;
-            if (count >= TOOL_CALL_REPEAT_HIDE_LIMIT &&
-                hidden_tool_name_list.indexOf(tool_call.function.name) === -1) {
-              hidden_tool_name_list.push(tool_call.function.name);
-            }
-            if (count >= TOOL_CALL_REPEAT_STOP_LIMIT && !stop_reason) {
-              stop_reason = "Stopped: the model kept calling \"" + tool_call.function.name +
-                "\" with the same arguments " + count + " times after being told to stop.";
-            }
-          }
-        }
-      }
-    }
-    return {
-      hidden_tool_name_list: hidden_tool_name_list,
-      stop_reason: stop_reason
-    };
-  }
-
-  function filterHiddenTools(tool_list, hidden_tool_name_list) {
-    return tool_list.filter(function (tool) {
-      return hidden_tool_name_list.indexOf(tool.definition.name) === -1;
-    });
-  }
-
-  function isSequentialToolCall(tool_call, tool_list) {
-    var tool = findClientTool(tool_call.function.name, tool_list);
-    return Boolean(tool && tool.definition && tool.definition.executionMode === "sequential");
-  }
-
   function runClientToolCallList(tool_call_list, message_list, tool_list) {
     var queue, result_list;
 
-    if (!tool_call_list.some(function (tool_call) { return isSequentialToolCall(tool_call, tool_list); })) {
+    if (!tool_call_list.some(function (tool_call) {
+        var tool = findClientTool(tool_call.function.name, tool_list);
+        return Boolean(tool && tool.definition && tool.definition.executionMode === "sequential");
+      })) {
       return RSVP.all(tool_call_list.map(function (tool_call) {
         return runOneClientToolCall(tool_call, message_list, tool_list);
       }));
@@ -228,25 +198,37 @@
     });
   }
 
-  function getSystemPromptList() {
-    return [
-      { role: "system", content: ENVIRONMENT_SYSTEM_PROMPT },
-      { role: "system", content: TOOL_CALL_REPEAT_SYSTEM_PROMPT }
-    ];
-  }
 
-  // Tool definitions for the next LLM request. Tools the LLM keeps calling
-  // with the same arguments are hidden, and once it still insists the whole
-  // request is refused, so a looping agent stops instead of spinning forever.
   function getToolDefinitionList(tool_list, message_list, excluded_tool_name_list) {
-    var escalation = getRepeatEscalation(message_list, tool_list);
-    if (escalation.stop_reason) {
-      throw new Error(escalation.stop_reason);
-    }
-    return toolDefinitionList(filterHiddenTools(
-      tool_list,
-      escalation.hidden_tool_name_list.concat(excluded_tool_name_list || [])
-    ));
+    var count_dict = countToolCalls(message_list),
+      hidden_tool_name_list = getDisabledToolNameList(message_list).concat(excluded_tool_name_list || []);
+    Object.keys(count_dict).forEach(function (key) {
+      var name = count_dict[key].name,
+        count = count_dict[key].count;
+      if (isRepeatAllowedTool({ "function": { name: name } }, tool_list)) {
+        return;
+      }
+      if (count >= TOOL_CALL_REPEAT_STOP_LIMIT) {
+        throw new Error("Stopped: the model kept calling \"" + name +
+          "\" with the same arguments " + count + " times in the last " + TOOL_CALL_REPEAT_WINDOW +
+          " turns after being told to stop.");
+      }
+      if (count >= TOOL_CALL_REPEAT_HIDE_LIMIT) {
+        hidden_tool_name_list.push(name);
+      }
+    });
+    return tool_list.filter(function (tool) {
+      return hidden_tool_name_list.indexOf(tool.definition.name) === -1;
+    }).map(function (tool) {
+      return {
+        type: "function",
+        "function": {
+          name: tool.definition.name,
+          description: tool.definition.description,
+          parameters: tool.definition.parameters
+        }
+      };
+    });
   }
 
   rJS(window)
@@ -326,11 +308,11 @@
             });
         });
     })
-    .declareMethod('getSystemPromptList', function () {
-      return getSystemPromptList();
-    })
-    .allowPublicAcquisition('getSystemPromptList', function () {
-      return getSystemPromptList();
+    // System prompts about using the tools, added by the agent to its own.
+    .declareMethod('getToolPromptList', function () {
+      return [
+        { role: "system", content: TOOL_CALL_REPEAT_SYSTEM_PROMPT }
+      ];
     })
     .declareMethod('getToolDefinitionList', function (message_list, excluded_tool_name_list) {
       return getToolDefinitionList(this.tool_list, message_list, excluded_tool_name_list);

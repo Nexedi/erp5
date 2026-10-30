@@ -116,6 +116,11 @@
     </tr>
     <tr>
       <td>waitForElementPresent</td>
+      <td>css=div.chat-editor</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
       <td>css=div.CodeMirror</td>
       <td></td>
     </tr>

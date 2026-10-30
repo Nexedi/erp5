@@ -128,19 +128,20 @@ message's role/content picks the branch:
                                              ("repeat_test") argument set; once
                                              that result comes back, this
                                              script re-issues the exact same
-                                             call a second time rather than
-                                             giving a final answer - the
-                                             client-side guard in
+                                             call until it was made three
+                                             times (TOOL_CALL_REPEAT_LIMIT)
+                                             rather than giving a final
+                                             answer - the client-side guard in
                                              runClientToolCallList
                                              (gadget_officejs_harness_ai_tool_manager_js.js)
-                                             short-circuits that second,
+                                             short-circuits that third,
                                              identical call itself (never
                                              reaching ERP5Site_fakeHttpEndpoint
                                              again) and returns its own
                                              canned "you already called this"
                                              notice as the tool result
                                              instead - this script then sees
-                                             two prior matching assistant
+                                             three prior matching assistant
                                              tool_calls and stops re-issuing,
                                              falling through to the generic
                                              role-"tool" branch below, which
@@ -150,12 +151,12 @@ message's role/content picks the branch:
 - content "repeated list_defined_tools
   tool test"                              -> calls list_defined_tools (marked with a
                                              "repeat_test" argument, silently ignored by the
-                                             real tool) three times in a row - one more than
+                                             real tool) four times in a row - one more than
                                              TOOL_CALL_REPEAT_LIMIT - proving its allow_repeat
                                              flag (gadget_officejs_harness_ai_tool_list_defined_tools_js.js)
                                              exempts it from the client-side guard entirely:
                                              unlike the http_request case above, every one of
-                                             the three calls reaches the real tool and returns
+                                             the four calls reaches the real tool and returns
                                              its genuine result, so the guard's canned "you
                                              already called this" notice must never appear
                                              (testOfficeJSHarnessAIRepeatedToolCall.zpt)
@@ -165,8 +166,8 @@ message's role/content picks the branch:
                                              has been dropped from the request's tools - a
                                              model that ignores the guard notice. The client
                                              must stop on its own: it hides the tool after the
-                                             3rd call and ends the task with an error before
-                                             the 5th LLM request
+                                             4th call and ends the task with an error before
+                                             the 6th LLM request
                                              (testOfficeJSHarnessAIRepeatedToolCall.zpt)
 - content "endless run_wasm loop" -> calls run_wasm with a new constant on every turn,
                                              forever - a task that never gives a final answer
@@ -493,9 +494,9 @@ elif last_message.get('role') == 'tool' and last_message.get('name') == 'executi
 elif (last_message.get('role') == 'tool' and len(message_list) >= 2
       and is_repeat_test_tool_call(message_list[-2])
       and count_matching_assistant_tool_calls(
-          message_list, 'http_request', json.dumps(repeat_test_args())) < 2):
-  # Re-issue the exact same call once - see the "repeated http_request tool
-  # test" docstring entry above for why this stops after one re-issue.
+          message_list, 'http_request', json.dumps(repeat_test_args())) < 3):
+  # Re-issue the exact same call up to 3 calls in total - see the "repeated
+  # http_request tool test" docstring entry above.
   chunk = tool_call_chunk('http_request', repeat_test_args())
 elif (last_message.get('role') == 'tool' and len(message_list) >= 2
       and is_report_test_call(message_list[-2])):
@@ -518,8 +519,8 @@ elif (last_message.get('role') == 'tool' and len(message_list) >= 2
 elif (last_message.get('role') == 'tool' and len(message_list) >= 2
       and is_list_defined_tools_repeat_test_call(message_list[-2])
       and count_matching_assistant_tool_calls(
-          message_list, 'list_defined_tools', json.dumps(list_defined_tools_repeat_args())) < 3):
-  # Re-issue twice more (3 calls total) - see the "repeated list_defined_tools
+          message_list, 'list_defined_tools', json.dumps(list_defined_tools_repeat_args())) < 4):
+  # Re-issue three times more (4 calls total) - see the "repeated list_defined_tools
   # tool test" docstring entry above: allow_repeat means none of these ever
   # get intercepted by the guard, unlike the http_request case.
   chunk = tool_call_chunk('list_defined_tools', list_defined_tools_repeat_args())

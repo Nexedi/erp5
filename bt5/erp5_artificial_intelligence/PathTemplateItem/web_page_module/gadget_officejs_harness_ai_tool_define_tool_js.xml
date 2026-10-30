@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts91364563.8186183</string> </value>
+            <value> <string>ts93353640.2934268</string> </value>
         </item>
         <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
@@ -230,7 +230,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1036.11338.10586.12288</string> </value>
+                      <value> <string>1036.44488.19504.56507</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -246,7 +246,7 @@
                           <tuple/>
                           <state>
                             <tuple>
-                              <float>1791400000.0</float>
+                              <float>1793353640.297416</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

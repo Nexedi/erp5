@@ -97,10 +97,7 @@
             }));
           }
           final_message_list = final_message_list.concat([{ role: "user", content: SUBAGENT_TURN_LIMIT_PROMPT }]);
-          return new RSVP.Queue()
-            .push(function () {
-              return gadget.compactMessageList(gadget, final_message_list, undefined, last_usage_anchor);
-            })
+          return gadget.compactMessageList(gadget, final_message_list, undefined, last_usage_anchor)
             .push(function (compacted_message_list) {
               final_message_list = compacted_message_list;
               return gadget.requestProcessTaskWithUsage(
@@ -155,10 +152,10 @@
               });
             })
             .push(function (summarized_content_list) {
-              var next_message_list = message_list, i, tool_call;
+              var i, tool_call;
               for (i = 0; i < pending_tool_call_list.length; i += 1) {
                 tool_call = pending_tool_call_list[i];
-                next_message_list = next_message_list.concat([{
+                message_list = message_list.concat([{
                   role: "tool",
                   tool_call_id: tool_call.id,
                   name: tool_call.function.name,
@@ -167,7 +164,7 @@
               }
               return subagentLoopCall(
                 loop_count + 1,
-                next_message_list,
+                message_list,
                 null
               );
             })

@@ -127,7 +127,7 @@
 </tr>
 <tr>
   <td>waitForTextPresent</td>
-  <td>with the same arguments 4 times after being told to stop.</td>
+  <td>with the same arguments 5 times in a row after being told to stop.</td>
   <td></td>
 </tr>
 </tbody></table>

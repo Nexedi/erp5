@@ -10,6 +10,15 @@
     PANIC_KEEP_RECENT_TOKEN_BUDGET = 8000,
     RATE_LIMIT_RETRY_DELAY_MS = 120000,
     MAX_LOOP_COUNT = 500,
+    ENVIRONMENT_SYSTEM_PROMPT = "This agent runs entirely inside a web browser tab, not on a server or a " +
+      "local machine. There is no local filesystem, no shell, and no OS process to invoke - paths like " +
+      "\"/home/...\" and commands like \"ls\", \"cat\" or \"pip install\" do not exist here, and any " +
+      "attempt to use them will fail. The only capabilities available are the tools explicitly provided " +
+      "in this conversation: a sandboxed JavaScript/WASM execution environment (itself with no " +
+      "filesystem or network access), http_request for making network calls, execution_plan for " +
+      "tracking a checklist, define_tool/list_defined_tools/undefine_tool for creating new callable " +
+      "tools out of JS code, spawn_subagent for delegating sub-tasks, and whatever MCP tools are " +
+      "configured. Do not assume access to anything beyond these.",
     TURN_LIMIT_PROMPT = "Turn limit reached: you can not call tools anymore. Give your final answer " +
       "now, with what you found so far, and say clearly what you could not find or verify.",
     SUMMARY_CHUNK_CHARS = 100000,
@@ -97,8 +106,7 @@
     return estimateTokensForMessages(message_list);
   }
 
-  // Summarizes the older part of message_list once it is estimated above
-  // compact_token_budget, keeping roughly keep_recent_budget tokens as-is.
+
   function compactWithBudget(gadget, message_list, keep_recent_budget, compact_token_budget, last_usage_anchor) {
     var leading_system_count = 0,
       cut_index,
@@ -173,8 +181,7 @@
         if (!result.content) {
           throw new Error("compactMessageList: empty summary");
         }
-        // A summary cut off by the output token limit is incomplete -
-        // keep the full history rather than lose its missing part.
+
         if (result.finish_reason === "length") {
           throw new Error("compactMessageList: summary truncated");
         }
@@ -275,8 +282,7 @@
       // Keep what the model already wrote, including the turn it was
       // streaming when the user cancelled.
       content = joinAnswerText(gadget.answer_text_list, gadget.streaming_text);
-      // Shown in the tool call trace only: the answer itself goes back to the
-      // model as its own message in the next requests.
+      // Only show in the tool call trace only
       gadget.tool_message_list.push({
         role: "tool",
         name: "cancelled",
@@ -385,6 +391,25 @@
         return summary_list.join("\n\n");
       });
     })
+    // System prompts of a task, for this agent and its sub-agents: the
+    // environment, the tool usage rules and the list of skills.
+    .declareMethod('getSystemPromptList', function () {
+      var gadget = this;
+      return new RSVP.Queue(RSVP.all([
+        gadget.tool_manager.getToolPromptList(),
+        gadget.skill_manager.formatSkillListForPrompt()
+      ]))
+        .push(function (result_list) {
+          var system_message_list = [{ role: "system", content: ENVIRONMENT_SYSTEM_PROMPT }].concat(result_list[0]);
+          if (result_list[1]) {
+            system_message_list.push({ role: "system", content: result_list[1] });
+          }
+          return system_message_list;
+        });
+    })
+    .allowPublicAcquisition('getSystemPromptList', function () {
+      return this.getSystemPromptList();
+    })
     .declareMethod('showStreamingDelta', function (partial) {
       var gadget = this;
       gadget.streaming_text = partial.content;
@@ -398,8 +423,7 @@
       var gadget = this,
         queue_loop = new RSVP.Queue();
       gadget.tool_message_list = [];
-      // Text the model wrote in the turns that called tools: it stays shown
-      // above the text of the next turns, and is part of the final answer.
+      // use for all the llm answer
       gadget.answer_text_list = [];
       gadget.streaming_text = "";
       gadget.processing_queue = queue_loop;
@@ -459,14 +483,12 @@
           ]);
         }
 
-        // At the limit, one last request without tools makes the model
         // report what it found, instead of losing all of its work.
         if (loop_count >= max_loop_count) {
           queue_loop
             .push(function () {
-              var final_message_list = message_list;
               if (has_tool_call) {
-                final_message_list = final_message_list.concat(pending_tool_call_list.map(function (tool_call) {
+                message_list = message_list.concat(pending_tool_call_list.map(function (tool_call) {
                   return {
                     role: "tool",
                     tool_call_id: tool_call.id,
@@ -485,7 +507,7 @@
                 execution_plan: gadget.execution_plan
               })
                 .push(function () {
-                  return gadget.compactMessageList(gadget, final_message_list.concat([
+                  return gadget.compactMessageList(gadget, message_list.concat([
                     { role: "user", content: TURN_LIMIT_PROMPT }
                   ]), undefined, gadget.last_usage_anchor);
                 });
@@ -566,17 +588,17 @@
                   });
               });
               return summarize_queue.push(function () {
-                var next_message_list = message_list, i, tool_call;
+                var i, tool_call;
                 for (i = 0; i < pending_tool_call_list.length; i += 1) {
                   tool_call = pending_tool_call_list[i];
-                  next_message_list = next_message_list.concat([{
+                  message_list = message_list.concat([{
                     role: "tool",
                     tool_call_id: tool_call.id,
                     name: tool_call.function.name,
                     content: summarized_content_list[i]
                   }]);
                 }
-                return next_message_list;
+                return message_list;
               });
             })
             .push(function (next_message_list) {
@@ -741,16 +763,8 @@
             });
         })
         .push(function (message_list) {
-          return new RSVP.Queue(RSVP.all([
-            gadget.tool_manager.getSystemPromptList(),
-            gadget.skill_manager.formatSkillListForPrompt()
-          ]))
-            .push(function (result_list) {
-              var system_message_list = result_list[0],
-                skill_list_prompt = result_list[1];
-              if (skill_list_prompt) {
-                system_message_list.push({ role: "system", content: skill_list_prompt });
-              }
+          return gadget.getSystemPromptList()
+            .push(function (system_message_list) {
               return loop_call(0, system_message_list.concat(message_list));
             });
         });

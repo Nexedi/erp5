@@ -26,10 +26,6 @@
   }
 
 
-  // OpenAI's own /models entries carry no context window size, but many
-  // OpenAI-compatible servers add one: OpenRouter/Together (context_length),
-  // Groq (context_window), vLLM (max_model_len), LM Studio/Mistral
-  // (max_context_length).
   function getContextWindowFromModelInfo(model_info) {
     var value = model_info.context_length || model_info.context_window ||
       model_info.max_model_len || model_info.max_context_length ||
@@ -474,13 +470,10 @@
         messages: JSON.parse(body.message_list)
       };
       tool_definition_list = JSON.parse(body.tool_definition_list);
-      // llama.cpp/vLLM chat template switches, as pi sends them for Qwen3:
-      // preserve_thinking keeps the reasoning of the previous turns, which
-      // agent_js.js sends back in reasoning_content.
+      // if thinking is enabled
       if (settings.thinking) {
         payload.chat_template_kwargs = {enable_thinking: true, preserve_thinking: true};
       }
-      // Some OpenAI-compatible servers reject an empty "tools" array.
       if (tool_definition_list.length) {
         payload.tools = tool_definition_list;
       }

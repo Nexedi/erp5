@@ -17,11 +17,14 @@
       var gadget = this,
         form_data_json = argument_list[1],
         file = form_data_json.file,
+        date = new Date().toISOString(),
         artificial_task_id;
       return gadget.jio_post({
         portal_type: 'Artificial Task',
         parent_relative_url: 'artificial_task_module',
         state: 'started',
+        modification_date: date,
+        creation_date: date,
         title: form_data_json.data
       })
         .push(function (new_id) {
@@ -42,7 +45,7 @@
               url: file.url,
               file_name: file.file_name,
               follow_up_relative_url: task_line_id,
-              date: new Date().toISOString()
+              date: date
             });
           }
         })

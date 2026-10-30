@@ -3,8 +3,7 @@
 (function (window, document) {
   "use strict";
 
-  // Resolved once, against this script's own URL, so a <base> element added to
-  // the shared page later can not re-point the worker to another origin.
+
   var SANDBOX_WORKER_URL = new URL(
       "gadget_officejs_harness_ai_sandbox_worker.js",
       (document.currentScript && document.currentScript.src) || document.baseURI
@@ -86,15 +85,6 @@
       if (settled) { return; }
       cleanup();
     });
-  }
-
-  function renderPlanText(plan) {
-    if (!plan) {
-      return "(no execution plan set)";
-    }
-    return "Goal: " + plan.goal + "\n" + plan.step_list.map(function (step, i) {
-      return i + ". [" + step.status + "] " + step.title + (step.note ? " - " + step.note : "");
-    }).join("\n");
   }
 
   function runJsCode(code, args, libraries) {
@@ -185,7 +175,6 @@
     readTextWindow: readTextWindow,
     htmlToText: htmlToText,
     runSandboxJob: runSandboxJob,
-    renderPlanText: renderPlanText,
     runJsCode: runJsCode
   };
 }(window, document));

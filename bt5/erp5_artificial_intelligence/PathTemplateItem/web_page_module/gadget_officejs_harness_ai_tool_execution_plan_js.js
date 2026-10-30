@@ -56,6 +56,15 @@
     })
     .declareMethod('execute', function (args) {
       var gadget = this, step;
+      function renderPlanText(plan) {
+        if (!plan) {
+          return "(no execution plan set)";
+        }
+        return "Goal: " + plan.goal + "\n" + plan.step_list.map(function (step, i) {
+          return i + ". [" + step.status + "] " + step.title + (step.note ? " - " + step.note : "");
+        }).join("\n");
+      }
+
       if (args.command === "set") {
         gadget.execution_plan = {
           goal: args.goal || "",
@@ -63,7 +72,7 @@
             return { title: step_spec.title, status: "pending", note: "" };
           })
         };
-        return { content: window.ChatToolCommon.renderPlanText(gadget.execution_plan), execution_plan: gadget.execution_plan };
+        return { content: renderPlanText(gadget.execution_plan), execution_plan: gadget.execution_plan };
       }
       if (args.command === "update_step") {
         if (!gadget.execution_plan) {
@@ -76,11 +85,11 @@
             "0-" + (gadget.execution_plan.step_list.length - 1) + "). If you did not expect this, it is likely " +
             "because \"set\" was called again since you last checked (e.g. to test the tool) and " +
             "replaced the plan you meant to update - here is what is actually active right now, " +
-            "re-sync your step indices against it:\n" + window.ChatToolCommon.renderPlanText(gadget.execution_plan);
+            "re-sync your step indices against it:\n" + renderPlanText(gadget.execution_plan);
         }
         step.status = args.status;
         step.note = args.note || "";
-        return { content: window.ChatToolCommon.renderPlanText(gadget.execution_plan), execution_plan: gadget.execution_plan };
+        return { content: renderPlanText(gadget.execution_plan), execution_plan: gadget.execution_plan };
       }
       return "ERROR: unknown command \"" + args.command + "\" - must be \"set\" or \"update_step\".";
     });
