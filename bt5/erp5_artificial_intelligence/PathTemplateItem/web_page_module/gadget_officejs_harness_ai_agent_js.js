@@ -15,10 +15,10 @@
       "\"/home/...\" and commands like \"ls\", \"cat\" or \"pip install\" do not exist here, and any " +
       "attempt to use them will fail. The only capabilities available are the tools explicitly provided " +
       "in this conversation: a sandboxed JavaScript/WASM execution environment (itself with no " +
-      "filesystem or network access), http_request for making network calls, execution_plan for " +
-      "tracking a checklist, define_tool/list_defined_tools/undefine_tool for creating new callable " +
-      "tools out of JS code, spawn_subagent for delegating sub-tasks, and whatever MCP tools are " +
-      "configured. Do not assume access to anything beyond these.",
+      "filesystem or network access), http_request for making network calls, " +
+      "define_tool/list_defined_tools/undefine_tool for creating new callable tools out of JS code, " +
+      "spawn_subagent for delegating sub-tasks, whatever MCP tools are configured, and - only when the " +
+      "user asks for it - execution_plan for a checklist. Do not assume access to anything beyond these.",
     TURN_LIMIT_PROMPT = "Turn limit reached: you can not call tools anymore. Give your final answer " +
       "now, with what you found so far, and say clearly what you could not find or verify.",
     SUMMARY_CHUNK_CHARS = 100000,

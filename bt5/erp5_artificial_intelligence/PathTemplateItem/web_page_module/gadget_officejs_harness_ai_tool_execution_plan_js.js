@@ -8,27 +8,15 @@
       return {
         name: "execution_plan",
         executionMode: "sequential",
-        description: "Create, replace or update your execution plan: an ordered checklist of steps " +
-          "working towards a stated goal, shown to the user as a live checklist right in your current " +
-          "chat message. Two commands: \"set\" (create or completely replace the plan - call this first " +
-          "for any non-trivial multi-step request, before doing any work, and call it again with the " +
-          "FULL, updated step list whenever you revise the plan - e.g. after reasoning through a step (a " +
-          "\"dry run\": predict what would happen without actually doing it yet) reveals the plan needs " +
-          "to change; every \"set\" replaces the checklist shown in the CURRENT message with a new one - " +
-          "fresh steps, every status reset to \"pending\" - re-mark already-finished steps as \"done\" " +
-          "again afterwards with \"update_step\" if they still are) and \"update_step\" (update one step's " +
-          "status and an optional note - e.g. a dry-run prediction before actually doing the step, or the " +
-          "real outcome afterwards - call it after reasoning through or actually executing every step). " +
-          "Nothing is lost: once a turn finishes, its final checklist state is kept permanently attached " +
-          "to it, so calling \"set\" again later (in a new message, for a new/different goal) never " +
-          "overwrites or hides the earlier one - scrolling up still shows exactly how each past plan " +
-          "ended up. USE THIS WHEN: the request needs several distinct actions, or asks you to create " +
-          "and iteratively improve a plan until some condition holds. DO NOT USE for a single-step " +
-          "request a direct reply or tool call already answers. WARNING: never call \"set\" just to " +
-          "test/demonstrate the tool while a real plan is still in progress - it immediately replaces " +
-          "that plan, so every step index you were tracking (for \"update_step\") becomes invalid. If you " +
-          "need to sanity-check this tool, do it only when no real plan is active, or restate the real " +
-          "plan's steps again afterwards.",
+        description: "USE THIS ONLY WHEN THE USER EXPLICITLY ASKS for a plan or a checklist " +
+          "(eg. \"make a plan first\", \"track the steps\"). Otherwise do not call it: just do the work " +
+          "with the other tools. Shows the user an ordered checklist of steps towards a goal, live in " +
+          "your current chat message. Two commands: \"set\" creates or completely replaces the plan " +
+          "(every step back to \"pending\" - mark finished steps \"done\" again afterwards), and " +
+          "\"update_step\" changes one step's status with an optional note. Once a turn finishes, its " +
+          "final checklist stays attached to it, so a later \"set\" for a new goal does not hide it. " +
+          "Never call \"set\" just to test the tool while a plan is in progress: it replaces that plan " +
+          "and the step indices you were using become invalid.",
         parameters: {
           type: "object",
           properties: {
