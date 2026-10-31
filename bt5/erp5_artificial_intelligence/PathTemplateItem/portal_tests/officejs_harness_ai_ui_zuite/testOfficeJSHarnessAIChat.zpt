@@ -1,0 +1,132 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test OfficeJS Harness AI - Chat</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test OfficeJS Harness AI - Chat</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/officejs_harness_ai/</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForHarnessAI/macros/setup_fake_llm_and_new_task" />
+<tr>
+  <td>waitForEval</td>
+  <td>(function(){var cm=window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror;cm.setValue('Hello');return cm.getValue();})()</td>
+  <td>Hello</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Hello from the fake LLM!</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Task usage: 1 LLM call(s), 500 prompt + 50 completion = 550 token(s) total.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForEval</td>
+  <td>(function(){var cm=window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror;cm.setValue('Please stream a reply in parts');return cm.getValue();})()</td>
+  <td>Please stream a reply in parts</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Hello from streaming!</td>
+  <td></td>
+</tr>
+<!-- Text written in a turn that also calls a tool is part of the answer. -->
+<tr>
+  <td>waitForEval</td>
+  <td>(function(){var cm=window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror;cm.setValue('Please run the report in tool turn test');return cm.getValue();})()</td>
+  <td>Please run the report in tool turn test</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//li[contains(@class, 'post-answer')]//div[@class='post-markdown'][contains(., 'REPORT-BODY: the whole report.') and contains(., 'The full report is above.')]</td>
+  <td></td>
+</tr>
+</tbody></table>
+</body>
+</html>

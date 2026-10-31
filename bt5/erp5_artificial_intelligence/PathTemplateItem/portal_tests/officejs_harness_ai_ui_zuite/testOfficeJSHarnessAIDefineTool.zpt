@@ -1,0 +1,161 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test OfficeJS Harness AI - define_tool / list_defined_tools / undefine_tool Round Trip</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test OfficeJS Harness AI - define_tool / list_defined_tools / undefine_tool Round Trip</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/officejs_harness_ai/</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForHarnessAI/macros/setup_fake_llm_and_new_task" />
+<tr>
+  <td>waitForEval</td>
+  <td>(function(){var cm=window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror;cm.setValue('Please define a tool for me');return cm.getValue();})()</td>
+  <td>Please define a tool for me</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Defined tool "double"</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForEval</td>
+  <td>(function(){var cm=window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror;cm.setValue('Please define a tool for me');return cm.getValue();})()</td>
+  <td>Please define a tool for me</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>already exists</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForEval</td>
+  <td>(function(){var cm=window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror;cm.setValue('Please run the list_defined_tools tool test');return cm.getValue();})()</td>
+  <td>Please run the list_defined_tools tool test</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>code:</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForEval</td>
+  <td>(function(){var cm=window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror;cm.setValue('Please run the undefine_tool tool test, remove the double tool');return cm.getValue();})()</td>
+  <td>Please run the undefine_tool tool test, remove the double tool</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Removed tool "double"</td>
+  <td></td>
+</tr>
+</tbody></table>
+</body>
+</html>
