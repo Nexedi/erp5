@@ -49,28 +49,20 @@ class AcceptSolver(ConfigurablePropertySolverMixin):
     original one recorded.
     """
     portal = self.getPortalObject()
-    solved_property_list = self.getConfigurationPropertyDict() \
-                               .get('tested_property_list')
-    if solved_property_list is None:
-      solved_property_list = \
-        portal.portal_types.getTypeInfo(self).getTestedPropertyList()
+    solver_portal_type_relative_url = self.getPortalTypeValue().getRelativeUrl()
     with self.defaultActivateParameterDict(activate_kw, True):
       for simulation_movement in self.getDeliveryValueList():
         movement = simulation_movement.getDeliveryValue()
         value_dict = {}
-        base_category_set = set(movement.getBaseCategoryList())
-        for solved_property in solved_property_list:
-          if solved_property in base_category_set:
-            # XXX-Leo: Hack, the accept solver was 'accepting' only the first
-            # value of a category and discarding all others by using only
-            # movement.getProperty().
-            # A proper fix would perhaps be to use .getPropertyList() always
-            # (and use .setPropertyList()), but we need to do property
-            # mapping on simulation and there is no
-            # simulation_movement.setMappedPropertyList().
-            new_value = movement.getPropertyList(solved_property)
-          else:
-            new_value = movement.getProperty(solved_property)
+        divergence_list = movement.getDivergenceList()
+        for divergence in divergence_list:
+          solved_property = divergence.getProperty('tested_property')
+          # Only apply solver if it has been defined on the Tester
+          if (not solver_portal_type_relative_url\
+              in portal.restrictedTraverse(
+                divergence.getProperty('tester_relative_url')).getSolverList()):
+            continue
+          new_value = divergence.getProperty('decision_value')
           # XXX hard coded
           if solved_property == 'quantity':
             new_value *= simulation_movement.getDeliveryRatio()
