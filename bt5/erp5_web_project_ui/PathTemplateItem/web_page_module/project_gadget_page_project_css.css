@@ -285,3 +285,19 @@ div[data-gadget-url$="gadget_project_rss_link.html"] button {
 div[data-gadget-url$="gadget_project_rss_link.html"] button:before {
   padding-right: 4pt;
 }
+/* EDITOR */
+
+.gadget-content .bottom div[data-gadget-scope='editor'] {
+  height: 40vh;
+  resize: vertical;
+  overflow: hidden;
+}
+
+.gadget-content .bottom div[data-gadget-scope='editor'] iframe {
+  height: 100%;
+}
+
+.gadget-content .bottom .editor-maximize div[data-gadget-scope='editor'] {
+  height: calc(100vh - 30pt);
+  resize: none;
+}

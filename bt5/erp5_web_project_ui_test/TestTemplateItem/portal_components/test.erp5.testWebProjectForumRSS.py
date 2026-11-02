@@ -705,6 +705,18 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
                 if action.getReference() == 'project_new_bug']
     self.assertEqual('project_jio_action', new_bug.getActionType())
 
+  def test_new_bug_from_project_has_a_start_date(self):
+    """The app bug view does not show the start date, which nexedi-erp5
+    requires to assign or resolve a bug, so the creating script sets it."""
+    project = self.portal.project_module.newContent(portal_type='Project')
+    existing_bug_id_list = list(self.portal.bug_module.objectIds())
+    project.Project_newBug(title='Bug with a start date')
+    bug, = [x for x in self.portal.bug_module.objectValues()
+            if x.getId() not in existing_bug_id_list]
+    self.assertNotEqual(None, bug.getStartDate())
+    self.assertEqual(project, bug.getSourceProjectValue())
+    self.assertEqual('confirmed', bug.getSimulationState())
+
   def test_add_file_action_follows_the_add_permission_on_the_bug(self):
     """A project_jio_action permission is checked on the portal, not on the bug:
     the action checks Add portal content on the bug in its condition, so a
