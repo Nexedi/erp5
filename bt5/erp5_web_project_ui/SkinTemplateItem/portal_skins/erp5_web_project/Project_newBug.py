@@ -19,7 +19,7 @@ bug = module.newContent(portal_type=portal_type,
                         title=title,
                         description=description,
                         source_project=context.getRelativeUrl(),
-                        # required by nexedi-erp5 BugConstraint, not shown in the app
+                        # required by nexedi-erp5 BugConstraint
                         start_date=DateTime(),
                         **bug_kw)
 bug.confirm()
