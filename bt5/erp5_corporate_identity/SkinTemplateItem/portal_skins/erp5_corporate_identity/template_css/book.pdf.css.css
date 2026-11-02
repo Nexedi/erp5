@@ -509,9 +509,11 @@ NOTE: logos will disappear in wkhtmltopdf if they go beyond the available space
 .ci-book a + table tbody tr th:not(:first-child) {
   /*text-align: right;*/
 }
+/*
 .ci-book p + table td a {
   display: block;
 }
+*/
 /* table formatting */
 .ci-book table {
   border-collapse: collapse;
