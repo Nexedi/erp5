@@ -9,10 +9,27 @@
   // whole fetched web page): show raw HTML as text instead of injecting it into
   // the page, where a <base href> would re-point every relative URL (worker,
   // gadgets) and <script>/<img onerror> would run in this origin.
+  // Only links and images to these URL schemes are rendered: a link like
+  // [x](javascript:...) in an untrusted text would run in this origin when
+  // clicked. Other URLs, relative ones included, are shown as text.
+  function isSafeUrl(url) {
+    // Browsers ignore control characters and spaces in a URL scheme.
+    var scheme = /^([a-z][a-z0-9+.\-]*):/.exec((url || "").replace(/[\u0000-\u0020]/g, "").toLowerCase());
+    return Boolean(scheme) && ["http", "https", "mailto"].indexOf(scheme[1]) !== -1;
+  }
+
   marked.use({
     renderer: {
       html: function (token) {
         return token.text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      },
+      // Returning false keeps marked's own rendering.
+      link: function (token) {
+        return isSafeUrl(token.href) ? false : this.parser.parseInline(token.tokens);
+      },
+      image: function (token) {
+        return isSafeUrl(token.href) ? false :
+            (token.text || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
       }
     }
   });
@@ -81,6 +98,15 @@
     post.date_formatted = date.toLocaleString();
     post.date_relative = date.toLocaleString();
     return post;
+  }
+
+  // The reasoning of an answer, in a "Thinking" block above its text.
+  function getReasoningDom(reasoning, is_open) {
+    return domsugar("details", is_open ? { open: "open", "class": "post-answer-reasoning" } :
+        { "class": "post-answer-reasoning" }, [
+      domsugar("summary", ["Thinking"]),
+      domsugar("div", { "class": "post-answer-reasoning-content" }, [reasoning])
+    ]);
   }
 
   function getPostDom(post) {
@@ -197,11 +223,28 @@
     ]);
   }
 
+  // The error that stopped a task, from the "error" entry of its trace:
+  // shown under the answer, as it is not part of the answer text.
+  function getErrorDom(tool_message_list) {
+    var i;
+    for (i = tool_message_list.length - 1; i >= 0; i -= 1) {
+      if (tool_message_list[i].name === "error") {
+        return domsugar("div", { "class": "post-error" }, [tool_message_list[i].content || ""]);
+      }
+    }
+    return null;
+  }
+
   function appendPlanAndToolDom(post_dom, post) {
-    var plan_dom = getExecutionPlanDom(post.execution_plan ? JSON.parse(post.execution_plan) : null),
-      tool_call_dom = getToolCallDom(JSON.parse(post.tool_message_list || "[]"), false);
+    var tool_message_list = JSON.parse(post.tool_message_list || "[]"),
+      plan_dom = getExecutionPlanDom(post.execution_plan ? JSON.parse(post.execution_plan) : null),
+      error_dom = getErrorDom(tool_message_list),
+      tool_call_dom = getToolCallDom(tool_message_list, false);
     if (plan_dom) {
       post_dom.appendChild(plan_dom);
+    }
+    if (error_dom) {
+      post_dom.appendChild(error_dom);
     }
     if (tool_call_dom) {
       post_dom.appendChild(tool_call_dom);
@@ -392,6 +435,8 @@
         tool_message_list = message.tool_message_list || [],
         details_open,
         details_element,
+        error_dom,
+        reasoning_element,
         markdown_element,
         time_element,
         rendered_count,
@@ -415,6 +460,9 @@
         details_open = false;
         markdown_element.innerHTML = marked.parse(message.content || "");
         gadget.new_message_element.querySelector('pre.chat-hidden-field').textContent = message.content || "";
+        if (message.reasoning_open) {
+          markdown_element.appendChild(getTypingIndicatorDom());
+        }
       } else {
         // Still working: keep the text already shown, the model goes on
         // writing below it.
@@ -440,6 +488,27 @@
           }
           details_element.open = details_open;
           details_element.classList.toggle('post-tool-pending', details_open);
+        }
+      }
+      // message.reasoning: "" removes the block, message.reasoning_open keeps
+      // it open while the model is still reasoning.
+      if (message.hasOwnProperty('reasoning')) {
+        reasoning_element = gadget.new_message_element.querySelector('.post-answer-reasoning');
+        if (!message.reasoning) {
+          if (reasoning_element) {
+            reasoning_element.parentNode.removeChild(reasoning_element);
+          }
+        } else if (reasoning_element) {
+          reasoning_element.querySelector('.post-answer-reasoning-content').textContent = message.reasoning;
+          reasoning_element.open = Boolean(message.reasoning_open);
+        } else {
+          gadget.new_message_element.appendChild(getReasoningDom(message.reasoning, message.reasoning_open));
+        }
+      }
+      if (!gadget.new_message_element.querySelector('.post-error')) {
+        error_dom = getErrorDom(tool_message_list);
+        if (error_dom) {
+          gadget.new_message_element.appendChild(error_dom);
         }
       }
       if (message.hasOwnProperty('execution_plan')) {

@@ -11,8 +11,9 @@
         name: "define_tool",
         executionMode: "sequential",
         description: "Define a new, named tool for yourself, available to call (by name, with its own " +
-          "argument schema) for the rest of this conversation, including by any sub-agent you spawn " +
-          "afterwards, and persisted so it is still there next time you open this task. The " +
+          "argument schema) from now on, including by any sub-agent you spawn afterwards. It is saved " +
+          "in this browser and shared by all tasks: it is also available in the other tasks, and " +
+          "still there next time you open one, until undefine_tool removes it. The " +
           "implementation is an async function body, exactly like execute_javascript's `code` (receives " +
           "`args` matching the `parameters` schema below, plus `console`/`utils`/`lib`); it runs in the " +
           "same isolated sandbox worker, with the same WebAssembly access execute_javascript and " +

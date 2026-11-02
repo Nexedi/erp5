@@ -8,8 +8,8 @@
     .declareMethod('getDefinition', function () {
       return {
         name: "list_defined_tools",
-        description: "List the tools you have defined for yourself with define_tool in this " +
-          "conversation, with their description, parameters and source code.",
+        description: "List the tools defined with define_tool (in this task or in any other task, " +
+          "they are shared), with their description, parameters and source code.",
         allow_repeat: true,
         parameters: { type: "object", properties: {} }
       };

@@ -18,6 +18,7 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForHarnessAI/macros/setup_fake_llm_and_new_task" />
 <!-- allow_repeat tool: never intercepted, so the guard notice must not
      appear yet. -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForHarnessAI/macros/wait_for_editor" />
 <tr>
   <td>waitForEval</td>
   <td>(function(){var cm=window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror;cm.setValue('Please run the repeated list_defined_tools tool test');return cm.getValue();})()</td>

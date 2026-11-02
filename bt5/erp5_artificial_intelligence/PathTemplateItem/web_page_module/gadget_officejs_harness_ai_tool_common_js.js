@@ -14,7 +14,10 @@
     // most TEXT_WINDOW_CHARS, or searched with a regular expression.
     TEXT_WINDOW_CHARS = 30000,
     TEXT_SEARCH_MAX_MATCHES = 40,
-    TEXT_SEARCH_CONTEXT_CHARS = 150;
+    TEXT_SEARCH_CONTEXT_CHARS = 150,
+    // A longer match (eg. of a greedy pattern) is cut, so that a search
+    // never returns most of the text.
+    TEXT_SEARCH_MATCH_MAX_CHARS = 300;
 
   // Usage counting of the agent loop and of spawn_subagent: each LLM call,
   // compaction and sub-agent returns its usage_totals, which the caller adds
@@ -134,7 +137,8 @@
       match_count = 0,
       last_end = -1,
       start,
-      end;
+      end,
+      match_text;
     locate = locate || noLocation;
     try {
       regexp = new RegExp(pattern, "gi");
@@ -151,8 +155,13 @@
           start = Math.max(0, match.index - TEXT_SEARCH_CONTEXT_CHARS);
           end = Math.min(text.length, match.index + match[0].length + TEXT_SEARCH_CONTEXT_CHARS);
           last_end = end;
+          match_text = match[0].length <= TEXT_SEARCH_MATCH_MAX_CHARS ? match[0] :
+              match[0].slice(0, TEXT_SEARCH_MATCH_MAX_CHARS) + " [... " +
+              (match[0].length - TEXT_SEARCH_MATCH_MAX_CHARS) + " more chars of this " +
+              match[0].length + "-char match: read it with min_chars=" + match.index + " ...] ";
           match_list.push("[char " + match.index + locate(match.index, match.index + 1) + "] ..." +
-            text.slice(start, end).replace(/\s+/g, " ") + "...");
+            (text.slice(start, match.index) + match_text +
+              text.slice(match.index + match[0].length, end)).replace(/\s+/g, " ") + "...");
         }
       }
       match = regexp.exec(text);

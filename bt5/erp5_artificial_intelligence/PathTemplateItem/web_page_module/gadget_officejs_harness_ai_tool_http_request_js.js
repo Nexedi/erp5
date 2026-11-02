@@ -94,10 +94,13 @@
         return "ERROR: missing url";
       }
 
+      // Requests never carry this site's cookies (credentials "omit"): the
+      // model must not act on the site as the logged-in user.
       if (gadget.proxy_server_url) {
         fetch_url = gadget.proxy_server_url.replace(/\/+$/, '') + "/proxy";
         fetch_options = {
           method: "POST",
+          credentials: "omit",
           headers: {
             "Content-Type": "application/octet-stream",
             "X-Target-URL": encodeURI(target),
@@ -111,6 +114,7 @@
         fetch_url = target;
         fetch_options = {
           method: method,
+          credentials: "omit",
           headers: request_headers,
           body: args.body,
           signal: controller.signal

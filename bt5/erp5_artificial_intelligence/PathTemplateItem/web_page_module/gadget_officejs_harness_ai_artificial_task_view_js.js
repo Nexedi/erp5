@@ -26,57 +26,8 @@
   }
 
 
-  function getContextWindowFromModelInfo(model_info) {
-    var value = model_info.context_length || model_info.context_window ||
-      model_info.max_model_len || model_info.max_context_length ||
-      (model_info.top_provider && model_info.top_provider.context_length);
-    value = parseInt(value, 10);
-    return value > 0 ? value : null;
-  }
-
-  // Context window of the configured model, from GET <baseUrl>/models, or
-  // null when the server does not report it (or the request fails).
-  function fetchModelContextWindow(settings) {
-    var target = settings.baseUrl.replace(/\/+$/, '') + "/models",
-      headers = {"Authorization": "Bearer " + settings.apiKey};
-    return new RSVP.Queue()
-      .push(function () {
-        if (settings.proxy_server_url) {
-          return fetch(settings.proxy_server_url.replace(/\/+$/, '') + "/proxy", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/octet-stream",
-              "X-Target-URL": encodeURI(target),
-              "X-Target-Method": "GET",
-              "X-Target-Headers": asciiJSON(headers)
-            }
-          });
-        }
-        return fetch(target, {headers: headers});
-      })
-      .push(function (response) {
-        if (!response.ok) {
-          return null;
-        }
-        return response.json();
-      })
-      .push(function (json) {
-        var model_list = (json && json.data) || [],
-          i;
-        for (i = 0; i < model_list.length; i += 1) {
-          if (model_list[i].id === settings.model) {
-            return getContextWindowFromModelInfo(model_list[i]);
-          }
-        }
-        return null;
-      })
-      .push(undefined, function () {
-        return null;
-      });
-  }
-
   function applyStreamChunk(json, state) {
-    var choice = json.choices && json.choices[0], delta, content_grew = false, i, field;
+    var choice = json.choices && json.choices[0], delta, grew = false, i, field;
     if (json.error) {
       state.error = json.error;
       return false;
@@ -100,11 +51,12 @@
           (state.reasoning_field === null || state.reasoning_field === field)) {
         state.reasoning_field = field;
         state.reasoning += delta[field];
+        grew = true;
       }
     }
     if (delta.content) {
       state.content += delta.content;
-      content_grew = true;
+      grew = true;
     }
     if (delta.tool_calls) {
       delta.tool_calls.forEach(function (tc) {
@@ -127,7 +79,22 @@
         }
       });
     }
-    return content_grew;
+    return grew;
+  }
+
+  // The usage reported by the server for one call, in the shape of the usage
+  // totals that the callers add up (ChatToolCommon.addUsageTotals); null if
+  // the server did not report it.
+  function getUsage(usage) {
+    if (!usage) {
+      return null;
+    }
+    return {
+      call_count: 1,
+      prompt_tokens: usage.prompt_tokens || 0,
+      completion_tokens: usage.completion_tokens || 0,
+      total_tokens: usage.total_tokens || ((usage.prompt_tokens || 0) + (usage.completion_tokens || 0))
+    };
   }
 
   function consumeOpenAIStream(response, on_delta) {
@@ -159,7 +126,7 @@
         return;
       }
       if (applyStreamChunk(json, state) && on_delta) {
-        on_delta({content: state.content});
+        on_delta({content: state.content, reasoning: state.reasoning});
       }
     }
 
@@ -207,10 +174,10 @@
           if (state.reasoning && state.reasoning_field) {
             message[state.reasoning_field] = state.reasoning;
           }
-          return {content: state.content || "", tool_calls: tool_calls, message: message, usage: state.usage,
+          return {content: state.content || "", tool_calls: tool_calls, message: message, usage: getUsage(state.usage),
             finish_reason: state.finish_reason, reasoning: state.reasoning, reasoning_field: state.reasoning_field};
         }
-        return {content: state.content, model: state.model, usage: state.usage, finish_reason: state.finish_reason,
+        return {content: state.content, model: state.model, usage: getUsage(state.usage), finish_reason: state.finish_reason,
           reasoning: state.reasoning, reasoning_field: state.reasoning_field};
       });
   }
@@ -556,7 +523,9 @@
     })
     .allowPublicAcquisition('getModelContextWindow', function () {
       var gadget = this,
-        settings = gadget.llm_settings;
+        settings = gadget.llm_settings,
+        target,
+        headers;
       // Fetched once per render: undefined = not fetched yet, null = unknown.
       if (gadget.model_context_window !== undefined) {
         return gadget.model_context_window;
@@ -564,7 +533,48 @@
       if (!settings.apiKey || !settings.baseUrl || !settings.model) {
         return null;
       }
-      return fetchModelContextWindow(settings)
+      target = settings.baseUrl.replace(/\/+$/, '') + "/models";
+      headers = {"Authorization": "Bearer " + settings.apiKey};
+      return new RSVP.Queue()
+        .push(function () {
+          if (settings.proxy_server_url) {
+            return fetch(settings.proxy_server_url.replace(/\/+$/, '') + "/proxy", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/octet-stream",
+                "X-Target-URL": encodeURI(target),
+                "X-Target-Method": "GET",
+                "X-Target-Headers": asciiJSON(headers)
+              }
+            });
+          }
+          return fetch(target, {headers: headers});
+        })
+        .push(function (response) {
+          if (!response.ok) {
+            return null;
+          }
+          return response.json();
+        })
+        .push(function (json) {
+          var model_list = (json && json.data) || [],
+            model_info,
+            value,
+            i;
+          for (i = 0; i < model_list.length; i += 1) {
+            if (model_list[i].id === settings.model) {
+              model_info = model_list[i];
+              value = parseInt(model_info.context_length || model_info.context_window ||
+                model_info.max_model_len || model_info.max_context_length ||
+                (model_info.top_provider && model_info.top_provider.context_length), 10);
+              return value > 0 ? value : null;
+            }
+          }
+          return null;
+        })
+        .push(undefined, function () {
+          return null;
+        })
         .push(function (context_window) {
           gadget.model_context_window = context_window;
           return context_window;

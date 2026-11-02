@@ -36,8 +36,9 @@
             .push(function () {
               return "Removed tool \"" + args.name + "\".";
             }, function (err) {
-              return "Removed tool \"" + args.name + "\" from this conversation, but deleting its " +
-                "persisted copy failed: " + (err && err.message ? err.message : String(err));
+              return "Removed tool \"" + args.name + "\" from this task, but deleting its saved " +
+                "copy failed, so it comes back in the other tasks: " +
+                (err && err.message ? err.message : String(err));
             });
         });
     });

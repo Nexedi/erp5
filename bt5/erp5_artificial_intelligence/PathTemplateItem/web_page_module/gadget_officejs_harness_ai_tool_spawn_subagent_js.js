@@ -16,8 +16,8 @@
       "exist or does not answer). Do not guess to fill the gaps.";
 
   rJS(window)
-    .declareAcquiredMethod("requestProcessTaskWithUsage", "requestProcessTaskWithUsage")
     .declareAcquiredMethod("requestProcessTask", "requestProcessTask")
+    // Used by compactMessageList, which runs with this gadget as its context.
     .declareAcquiredMethod("getModelContextWindow", "getModelContextWindow")
     .declareAcquiredMethod("getSystemPromptList", "getSystemPromptList")
     .declareAcquiredMethod("getToolDefinitionList", "getToolDefinitionList")
@@ -71,69 +71,67 @@
         // on this same gadget, each one counts its own usage.
         usage_totals = window.ChatToolCommon.createUsageTotals();
 
-      // pending_result: the LLM result whose tool calls are still to run.
+      function subagentError(message_list, e) {
+        return {
+          content: "Error running sub-agent: " + JSON.stringify(e, Object.getOwnPropertyNames(e)),
+          message_list: message_list,
+          usage_totals: usage_totals
+        };
+      }
+
+      function subagentFinalAnswer(message_list, pending_result) {
+        var final_message_list = message_list,
+          stopped_content = "[subagent stopped: exceeded " + max_loop_count + " turns without a final answer]";
+        return new RSVP.Queue()
+          .push(function () {
+            if (pending_result) {
+              return gadget.runToolCallList(pending_result.tool_calls, message_list, {
+                turn_limit_reached: true
+              });
+            }
+          })
+          .push(function (tool_round) {
+            if (tool_round) {
+              final_message_list = final_message_list.concat(tool_round.message_list);
+            }
+            final_message_list = final_message_list.concat([{ role: "user", content: SUBAGENT_TURN_LIMIT_PROMPT }]);
+            return gadget.compactMessageList(gadget, final_message_list, undefined, last_usage_anchor);
+          })
+          .push(function (compacted) {
+            window.ChatToolCommon.addUsageTotals(usage_totals, compacted.usage_totals);
+            final_message_list = compacted.message_list;
+            return gadget.requestProcessTask(
+              document_id,
+              {
+                message_list: JSON.stringify(final_message_list),
+                tool_definition_list: JSON.stringify([]),
+                is_background: "1"
+              }
+            );
+          })
+          .push(function (result) {
+            window.ChatToolCommon.addUsageTotals(usage_totals, result.usage);
+            return {
+              content: result.content ?
+                  "[subagent reached its turn limit - partial answer]\n" + result.content : stopped_content,
+              message_list: final_message_list.concat([{ role: "assistant", content: result.content }]),
+              usage_totals: usage_totals
+            };
+          }, function () {
+            return {
+              content: stopped_content,
+              message_list: message_list,
+              usage_totals: usage_totals
+            };
+          });
+      }
+
       function subagentLoopCall(loop_count, message_list, pending_result) {
 
         var has_tool_call = Boolean(pending_result && pending_result.tool_calls && pending_result.tool_calls.length);
 
-        function subagentError(e) {
-          return {
-            content: "Error running sub-agent: " + JSON.stringify(e, Object.getOwnPropertyNames(e)),
-            message_list: message_list,
-            usage_totals: usage_totals
-          };
-        }
-        // At the limit, one last request without tools makes the sub-agent
-        // report what it found, instead of losing all of its work.
-        function subagentFinalAnswer() {
-          var final_message_list = message_list,
-            stopped_content = "[subagent stopped: exceeded " + max_loop_count + " turns without a final answer]";
-          return new RSVP.Queue()
-            .push(function () {
-              if (has_tool_call) {
-                return gadget.runToolCallList(pending_result.tool_calls, message_list, {
-                  turn_limit_reached: true
-                });
-              }
-            })
-            .push(function (tool_round) {
-              if (tool_round) {
-                final_message_list = final_message_list.concat(tool_round.message_list);
-              }
-              final_message_list = final_message_list.concat([{ role: "user", content: SUBAGENT_TURN_LIMIT_PROMPT }]);
-              return gadget.compactMessageList(gadget, final_message_list, undefined, last_usage_anchor);
-            })
-            .push(function (compacted) {
-              window.ChatToolCommon.addUsageTotals(usage_totals, compacted.usage_totals);
-              final_message_list = compacted.message_list;
-              return gadget.requestProcessTaskWithUsage(
-                document_id,
-                {
-                  message_list: JSON.stringify(final_message_list),
-                  tool_definition_list: JSON.stringify([]),
-                  is_background: "1"
-                }
-              );
-            })
-            .push(function (result) {
-              window.ChatToolCommon.addUsageTotals(usage_totals, result.usage_totals);
-              return {
-                content: result.content ?
-                    "[subagent reached its turn limit - partial answer]\n" + result.content : stopped_content,
-                message_list: final_message_list.concat([{ role: "assistant", content: result.content }]),
-                usage_totals: usage_totals
-              };
-            }, function () {
-              return {
-                content: stopped_content,
-                message_list: message_list,
-                usage_totals: usage_totals
-              };
-            });
-        }
-
         if (loop_count >= max_loop_count) {
-          return subagentFinalAnswer();
+          return subagentFinalAnswer(message_list, pending_result);
         }
 
         if (has_tool_call) {
@@ -151,7 +149,9 @@
                 null
               );
             })
-            .push(undefined, subagentError);
+            .push(undefined, function (e) {
+              return subagentError(message_list, e);
+            });
           return;
         }
 
@@ -169,7 +169,7 @@
             return gadget.getToolDefinitionList(message_list, SUBAGENT_EXCLUDED_TOOL_NAME_LIST);
           })
           .push(function (tool_definition_list) {
-            return gadget.requestProcessTaskWithUsage(
+            return gadget.requestProcessTask(
               document_id,
               {
                 message_list: JSON.stringify(message_list),
@@ -179,7 +179,7 @@
             );
           })
           .push(function (result) {
-            window.ChatToolCommon.addUsageTotals(usage_totals, result.usage_totals);
+            window.ChatToolCommon.addUsageTotals(usage_totals, result.usage);
             if (result.usage && result.usage.prompt_tokens) {
               last_usage_anchor = { prompt_tokens: result.usage.prompt_tokens, message_count: message_list.length };
             }
@@ -196,7 +196,9 @@
               usage_totals: usage_totals
             };
           })
-          .push(undefined, subagentError);
+          .push(undefined, function (e) {
+            return subagentError(message_list, e);
+          });
       }
 
       queue_loop

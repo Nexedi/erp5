@@ -113,6 +113,32 @@ hr#post_item {
   order: 2;
 }
 
+/* The reasoning of the answer, above its text. */
+#post_list li.post-answer > details.post-answer-reasoning {
+  order: 2;
+  margin-bottom: 0.35em;
+  color: var(--chat-text-muted);
+}
+
+#post_list li.post-answer > details.post-answer-reasoning > summary {
+  cursor: pointer;
+}
+
+#post_list li.post-answer .post-answer-reasoning-content {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 0.9em;
+}
+
+/* The error that stopped a task, under the answer text. */
+#post_list li.post-answer > .post-error {
+  order: 3;
+  margin-top: 0.35em;
+  color: #c62828;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
 #post_list li.post-question > time {
   align-self: flex-end;
 }

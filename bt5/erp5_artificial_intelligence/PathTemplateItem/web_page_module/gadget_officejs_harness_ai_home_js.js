@@ -33,7 +33,10 @@
             portal_type: 'Artificial Task Line',
             parent_relative_url: artificial_task_id,
             text_content: form_data_json.data,
-            int_index: 0
+            int_index: 0,
+            response: false,
+            author_title: "",
+            date: date
           });
         })
         .push(function (task_line_id) {

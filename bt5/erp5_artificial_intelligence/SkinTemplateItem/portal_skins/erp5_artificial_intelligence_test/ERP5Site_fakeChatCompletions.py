@@ -169,6 +169,44 @@ message's role/content picks the branch:
                                              its genuine result, so the guard's canned "you
                                              already called this" notice must never appear
                                              (testOfficeJSHarnessAIRepeatedToolCall.zpt)
+- content "invalid tool arguments test" -> a tool_calls chunk for http_request whose arguments
+                                             are cut JSON: the client must not run it and must
+                                             send the error back as the tool result
+                                             (testOfficeJSHarnessAIToolArguments.zpt)
+- content "repairable tool arguments
+  test"                                  -> a tool_calls chunk for execute_javascript whose
+                                             arguments hold a raw newline inside the "code"
+                                             string (invalid JSON that the client repairs), so
+                                             the tool runs and returns repaired-json-ok
+                                             (testOfficeJSHarnessAIToolArguments.zpt)
+- content "truncated tool call test"     -> a tool_calls chunk with finish_reason "length": the
+                                             client must not run the call, the tool result says
+                                             why (testOfficeJSHarnessAIToolArguments.zpt)
+- content "crlf stream test"             -> a reply in two frames separated by "\r\n\r\n",
+                                             each frame's JSON split over two "data:" lines
+                                             (testOfficeJSHarnessAIChat.zpt)
+- content "context overflow test"        -> HTTP 400 with OpenAI's context_length_exceeded
+                                             error, until the request carries a
+                                             "[context summary]" (the client compacted the
+                                             history), then "Context overflow recovered."
+                                             (testOfficeJSHarnessAIContextOverflow.zpt)
+- content "check the history for errors" -> reports whether an assistant message of the
+                                             history holds the error of an earlier failed
+                                             turn: the client must keep the error out of the
+                                             answer text, so it is never sent back to the model
+                                             (testOfficeJSHarnessAIErrorHandling.zpt)
+- content "http_request cookie test"     -> calls http_request on the fake HTTP endpoint with
+                                             report_cookie=1, which says whether the request
+                                             carried cookies: it must not, although the test
+                                             browser is logged in
+                                             (testOfficeJSHarnessAIHttpRequestTool.zpt)
+- content "unsafe link test"             -> a reply with a javascript: link and an https:// one:
+                                             only the https:// one may become a link
+                                             (testOfficeJSHarnessAIChat.zpt)
+- content "final reasoning test"         -> a final answer (no tool call) streamed after its
+                                             reasoning_content: the client keeps that
+                                             reasoning in the answer's tool call trace
+                                             (testOfficeJSHarnessAIThinking.zpt)
 - content "read_tool_output tool test"  -> calls execute_javascript returning ~60000 chars
                                              with READ-OUTPUT-NEEDLE in the middle, more
                                              than the client's tool output limit; once the
@@ -309,6 +347,17 @@ if 'please return an llm error' in last_content_lower:
   request.RESPONSE.setHeader('Content-Type', 'text/plain')
   return 'Simulated LLM failure'
 
+if ('context overflow test' in last_content_lower
+    and '[context summary]' not in json.dumps(message_list)):
+  request.RESPONSE.setStatus(400)
+  request.RESPONSE.setHeader('Content-Type', 'application/json')
+  return json.dumps({'error': {
+      'message': "This model's maximum context length is 4096 tokens. However, your "
+                 "messages resulted in 9000 tokens. Please reduce the length of the messages.",
+      'type': 'invalid_request_error',
+      'code': 'context_length_exceeded',
+  }})
+
 
 def tool_call_chunk(name, arguments):
   return {'choices': [{'delta': {
@@ -320,6 +369,19 @@ def tool_call_chunk(name, arguments):
               'name': name,
               'arguments': json.dumps(arguments),
           },
+      }],
+  }}]}
+
+
+def raw_tool_call_chunk(name, arguments_text):
+  # Like tool_call_chunk, but with the arguments text as is, to send
+  # invalid JSON.
+  return {'choices': [{'delta': {
+      'tool_calls': [{
+          'index': 0,
+          'id': 'call_1',
+          'type': 'function',
+          'function': {'name': name, 'arguments': arguments_text},
       }],
   }}]}
 
@@ -475,6 +537,7 @@ def count_matching_assistant_tool_calls(msgs, name, arguments_json):
 
 
 chunk_list = None
+crlf_stream = False
 first_message = message_list[0] if message_list else {}
 first_system_content = (first_message.get('content') or '') if first_message.get('role') == 'system' else ''
 whole_request_text = json.dumps(message_list)
@@ -611,6 +674,42 @@ elif 'please stream a reply in parts' in last_content_lower:
       {'choices': [{'delta': {'content': 'Hello'}}]},
       {'choices': [{'delta': {'content': ' from'}}]},
       {'choices': [{'delta': {'content': ' streaming!'}}]},
+  ]
+elif 'invalid tool arguments test' in last_content_lower:
+  chunk = raw_tool_call_chunk('http_request', '{"url": "' + portal_url)
+elif 'repairable tool arguments test' in last_content_lower:
+  chunk = raw_tool_call_chunk('execute_javascript', '{"code": "return \'repaired-json-ok\';\n"}')
+elif 'truncated tool call test' in last_content_lower:
+  chunk = tool_call_chunk('http_request', {
+      'url': portal_url + '/ERP5Site_fakeHttpEndpoint',
+      'truncated_test': True,
+  })
+  chunk['choices'][0]['finish_reason'] = 'length'
+elif 'crlf stream test' in last_content_lower:
+  crlf_stream = True
+  chunk_list = [
+      {'choices': [{'delta': {'content': 'CRLF stream '}}]},
+      {'choices': [{'delta': {'content': 'is ok.'}}]},
+  ]
+elif 'context overflow test' in last_content_lower:
+  chunk = {'choices': [{'delta': {'content': 'Context overflow recovered.'}}]}
+elif 'check the history for errors' in last_content_lower:
+  chunk = {'choices': [{'delta': {'content': 'Error in history: %s' % any(
+      m.get('role') == 'assistant' and 'Simulated LLM failure' in message_text(m)
+      for m in message_list)}}]}
+elif 'http_request cookie test' in last_content_lower:
+  chunk = tool_call_chunk('http_request', {
+      'url': portal_url + '/ERP5Site_fakeHttpEndpoint?report_cookie=1',
+  })
+elif 'unsafe link test' in last_content_lower:
+  chunk = {'choices': [{'delta': {'content': (
+      'Links: [UNSAFE-LINK](javascript:alert(1)) and [SAFE-LINK](https://www.nexedi.com/).'
+  )}}]}
+elif 'final reasoning test' in last_content_lower:
+  chunk_list = [
+      {'choices': [{'delta': {'reasoning_content': 'FINAL-REASONING-'}}]},
+      {'choices': [{'delta': {'reasoning_content': 'MARKER: answer directly.'}}]},
+      {'choices': [{'delta': {'content': 'Final answer after reasoning.'}}]},
   ]
 elif 'read_tool_output tool test' in last_content_lower:
   chunk = tool_call_chunk('execute_javascript', read_output_test_args())
@@ -772,7 +871,18 @@ chunk_list = chunk_list + [{'choices': [], 'usage': {
     'total_tokens': prompt_tokens + 50,
 }}]
 
-body_text = ''.join('data: %s\n\n' % json.dumps(c) for c in chunk_list) + 'data: [DONE]\n\n'
+if crlf_stream:
+  # Frames separated by "\r\n\r\n", each JSON split over two "data:" lines
+  # right after its first ": " (between two tokens, so joined back with "\n"
+  # it is the same JSON).
+  body_text = ''
+  for c in chunk_list:
+    frame = json.dumps(c)
+    split_index = frame.index(': ') + 2
+    body_text += 'data: %s\r\ndata: %s\r\n\r\n' % (frame[:split_index], frame[split_index:])
+  body_text += 'data: [DONE]\r\n\r\n'
+else:
+  body_text = ''.join('data: %s\n\n' % json.dumps(c) for c in chunk_list) + 'data: [DONE]\n\n'
 
 response = request.RESPONSE
 response.setHeader('Content-Type', 'text/event-stream')

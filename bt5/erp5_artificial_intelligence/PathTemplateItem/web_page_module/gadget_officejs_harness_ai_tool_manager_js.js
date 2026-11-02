@@ -172,8 +172,6 @@
     return Boolean(tool && tool.definition && tool.definition.allow_repeat);
   }
 
-  // Names of the tools whose result, anywhere in message_list, says that
-  // they are disabled.
   function getDisabledToolNameList(message_list) {
     var name_list = [], i, message;
     for (i = 0; i < message_list.length; i += 1) {
@@ -381,7 +379,6 @@
             });
         });
     })
-    // System prompts about using the tools, added by the agent to its own.
     .declareMethod('getToolPromptList', function () {
       return [
         { role: "system", content: TOOL_CALL_REPEAT_SYSTEM_PROMPT }
@@ -393,13 +390,6 @@
     .allowPublicAcquisition('getToolDefinitionList', function (argument_list) {
       return getToolDefinitionList(this.tool_list, argument_list[0], argument_list[1]);
     })
-    // Run the tool calls of an LLM response. option_dict:
-    // - finish_reason: of that response; if "length", none is run
-    // - turn_limit_reached: none is run
-    // - excluded_tool_name_list: tools that must not be run
-    // Returns {message_list, result_list}: the "tool" messages to append to
-    // the conversation, and the results with their extra data for the
-    // caller (message_list of a sub-agent, execution_plan, usage_totals).
     .declareMethod('runToolCallList', function (tool_call_list, message_list, option_dict) {
       var gadget = this;
       option_dict = option_dict || {};
@@ -417,7 +407,7 @@
         .push(function (result_list) {
           // A too large content is cut by read_tool_output, which keeps the
           // full text for the model to read the rest.
-          return new RSVP.Queue(gadget.getDeclaredGadget("tool_read_tool_output"))
+          return gadget.getDeclaredGadget("tool_read_tool_output")
             .push(function (read_tool_output) {
               return RSVP.all(result_list.map(function (tool_result) {
                 return read_tool_output.limitToolOutput(tool_result.content);

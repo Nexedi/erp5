@@ -140,6 +140,15 @@
     return estimateTokensForMessages(message_list);
   }
 
+  // Drop the streamed delta waiting for the next animation frame, so that it
+  // can not be shown over what comes after the end of the stream.
+  function stopStreamingDelta(gadget) {
+    if (gadget.streaming_frame) {
+      window.cancelAnimationFrame(gadget.streaming_frame);
+      gadget.streaming_frame = null;
+    }
+  }
+
   function joinAnswerText(answer_text_list, current_text) {
     return (answer_text_list || []).concat(current_text ? [current_text] : []).join("\n\n");
   }
@@ -186,28 +195,6 @@
     .allowPublicAcquisition('compactMessageList', function (argument_list) {
       return this.compactMessageList.apply(argument_list[0], [argument_list[1], argument_list[2], argument_list[3]])
     })
-    // requestProcessTask, with the usage of this call in result.usage_totals,
-    // in the shape that each caller adds up (addUsageTotals) in its own
-    // local usage_totals: a task and each of its sub-agents count apart,
-    // even when several sub-agents run at the same time.
-    .declareMethod('requestProcessTaskWithUsage', function (document_id, request_options) {
-      var gadget = this;
-      return gadget.requestProcessTask(document_id, request_options)
-        .push(function (result) {
-          var usage = result.usage;
-          result.usage_totals = window.ChatToolCommon.createUsageTotals();
-          if (usage) {
-            result.usage_totals.call_count = 1;
-            result.usage_totals.prompt_tokens = usage.prompt_tokens || 0;
-            result.usage_totals.completion_tokens = usage.completion_tokens || 0;
-            result.usage_totals.total_tokens = usage.total_tokens || ((usage.prompt_tokens || 0) + (usage.completion_tokens || 0));
-          }
-          return result;
-        });
-    })
-    .allowPublicAcquisition('requestProcessTaskWithUsage', function (argument_list) {
-      return this.requestProcessTaskWithUsage(argument_list[0], argument_list[1]);
-    })
     .allowPublicAcquisition('notifyCommentPosted', function () {
       return this.processTask(MAX_LOOP_COUNT);
     })
@@ -224,6 +211,7 @@
       }
       gadget.processing_queue = null;
       queue_loop.cancel("Cancelled by user");
+      stopStreamingDelta(gadget);
 
       execution_plan = gadget.execution_plan;
       gadget.execution_plan = null;
@@ -238,7 +226,7 @@
       });
 
       return RSVP.all([
-        gadget.gadget_chat_ui.showMessage({ content: content, tool_message_list: gadget.tool_message_list, execution_plan: execution_plan }),
+        gadget.gadget_chat_ui.showMessage({ content: content, reasoning: "", tool_message_list: gadget.tool_message_list, execution_plan: execution_plan }),
         gadget.notifySubmitted({message: 'Cancelled', status: "success"}),
         gadget.gadget_chat_ui.resetEditor(),
         gadget.storeTaskResult(
@@ -251,9 +239,6 @@
         )
       ]);
     })
-    // Returns {message_list, usage_totals}: the compacted message_list, and
-    // the usage of the summary request (zero if no compaction was needed).
-    // gadget is the caller: its tool_message_list, if any, shows the progress.
     .declareMethod('compactMessageList', function (message_list, keep_recent_override, last_usage_anchor) {
       var gadget = this;
       return new RSVP.Queue(gadget.getModelContextWindow())
@@ -268,15 +253,10 @@
             old_message_list,
             recent_message_list,
             previous_summary = null;
-          // Compact once the context gets within CONTEXT_RESERVE_TOKENS of the
-          // model's real context window (kept for the reply and tool
-          // definitions). When the server does not report the
-          // window size, keep the fixed budgets.
           if (context_window) {
             compact_token_budget = context_window - Math.min(CONTEXT_RESERVE_TOKENS, Math.floor(context_window / 4));
             keep_recent_budget = Math.min(KEEP_RECENT_TOKEN_BUDGET, Math.floor(compact_token_budget * 0.35));
           }
-          // An explicit keep_recent_override (context overflow retry) always compacts.
           if (keep_recent_override) {
             keep_recent_budget = keep_recent_override;
             compact_token_budget = 0;
@@ -328,7 +308,7 @@
               });
             })
             .push(function () {
-              return gadget.requestProcessTaskWithUsage(
+              return gadget.requestProcessTask(
                 gadget.jio_key,
                 {
                   message_list: JSON.stringify([
@@ -343,7 +323,9 @@
               );
             })
             .push(function (result) {
-              summary_usage_totals = result.usage_totals;
+              if (result.usage) {
+                summary_usage_totals = result.usage;
+              }
               if (!result.content) {
                 throw new Error("compactMessageList: empty summary");
               }
@@ -374,8 +356,6 @@
             });
         });
     })
-    // System prompts of a task, for this agent and its sub-agents: the
-    // environment, the tool usage rules and the list of skills.
     .declareMethod('getSystemPromptList', function () {
       var gadget = this;
       return new RSVP.Queue(RSVP.all([
@@ -393,13 +373,24 @@
     .allowPublicAcquisition('getSystemPromptList', function () {
       return this.getSystemPromptList();
     })
+    // The streamed text and reasoning are shown at most once per animation
+    // frame, not at every delta: each refresh renders the whole text again.
     .declareMethod('showStreamingDelta', function (partial) {
       var gadget = this;
       gadget.streaming_text = partial.content;
-      return gadget.gadget_chat_ui.showMessage({
-        content: joinAnswerText(gadget.answer_text_list, partial.content),
-        tool_message_list: gadget.tool_message_list || [],
-        execution_plan: gadget.execution_plan
+      gadget.streaming_partial = partial;
+      if (gadget.streaming_frame) {
+        return;
+      }
+      gadget.streaming_frame = window.requestAnimationFrame(function () {
+        gadget.streaming_frame = null;
+        return gadget.gadget_chat_ui.showMessage({
+          content: joinAnswerText(gadget.answer_text_list, gadget.streaming_partial.content),
+          reasoning: gadget.streaming_partial.reasoning,
+          reasoning_open: true,
+          tool_message_list: gadget.tool_message_list || [],
+          execution_plan: gadget.execution_plan
+        });
       });
     })
     .declareJob('processTask', function (max_loop_count) {
@@ -418,61 +409,75 @@
       gadget.streaming_text = "";
       gadget.processing_queue = queue_loop;
 
-      // pending_result: the LLM result whose tool calls are still to run.
-      // retry_count: how many times in a row this same LLM request failed
-      // with a transient error, reset by every successful request.
+      function loopError(e) {
+        // The answer keeps only what the model wrote before the error: it is
+        // sent back to the model with the history of the next turns. The
+        // error itself goes in the trace, which shows it under the answer.
+        var content = joinAnswerText(gadget.answer_text_list, ""),
+          execution_plan = gadget.execution_plan;
+        gadget.processing_queue = null;
+        gadget.execution_plan = null;
+        gadget.tool_message_list.push({
+          role: "tool",
+          name: "error",
+          content: "Error: " + (e && e.message ? e.message : String(e))
+        });
+        stopStreamingDelta(gadget);
+        return RSVP.all([
+          gadget.gadget_chat_ui.showMessage({ content: content, reasoning: "", tool_message_list: gadget.tool_message_list, execution_plan: execution_plan }),
+          gadget.notifySubmitted({message: 'Error', status: "error"}),
+          gadget.gadget_chat_ui.resetEditor(),
+          gadget.storeTaskResult(
+            gadget.options.jio_key,
+            {
+              tool_message_list: JSON.stringify(gadget.tool_message_list),
+              content: content,
+              execution_plan: execution_plan ? JSON.stringify(execution_plan) : ""
+            }
+          )
+        ]);
+      }
+
+      // reasoning: the reasoning of the final answer, kept in the trace like
+      // the one of the turns with tool calls.
+      function completeTask(final_content, reasoning) {
+        var execution_plan = gadget.execution_plan,
+          content = joinAnswerText(gadget.answer_text_list, final_content);
+        gadget.processing_queue = null;
+        gadget.execution_plan = null;
+        if (reasoning) {
+          gadget.tool_message_list.push({
+            role: "assistant",
+            content: "",
+            reasoning: reasoning
+          });
+        }
+        gadget.tool_message_list.push({
+          role: "tool",
+          name: "usage_totals",
+          content: "Task usage: " + usage_totals.call_count + " LLM call(s), " +
+            usage_totals.prompt_tokens + " prompt + " + usage_totals.completion_tokens +
+            " completion = " + usage_totals.total_tokens + " token(s) total."
+        });
+        return RSVP.all([
+          gadget.gadget_chat_ui.showMessage({ content: content, reasoning: "", tool_message_list: gadget.tool_message_list, execution_plan: execution_plan }),
+          gadget.notifySubmitted({message: 'Completed', status: "success"}),
+          gadget.gadget_chat_ui.resetEditor(),
+          gadget.storeTaskResult(
+            gadget.options.jio_key,
+            {
+              tool_message_list: JSON.stringify(gadget.tool_message_list),
+              content: content,
+              execution_plan: execution_plan ? JSON.stringify(execution_plan) : ""
+            }
+          )
+        ]);
+      }
+
       function loop_call(loop_count, message_list, pending_result, retry_count) {
         var has_tool_call = Boolean(
             pending_result && pending_result.tool_calls && pending_result.tool_calls.length
           );
-
-        function loopError(e) {
-          var error_text = joinAnswerText(gadget.answer_text_list,
-              "Error: " + (e && e.message ? e.message : String(e))),
-            execution_plan = gadget.execution_plan;
-          gadget.processing_queue = null;
-          gadget.execution_plan = null;
-          return RSVP.all([
-            gadget.gadget_chat_ui.showMessage({ content: error_text, tool_message_list: gadget.tool_message_list, execution_plan: execution_plan }),
-            gadget.notifySubmitted({message: 'Error', status: "error"}),
-            gadget.gadget_chat_ui.resetEditor(),
-            gadget.storeTaskResult(
-              gadget.options.jio_key,
-              {
-                tool_message_list: JSON.stringify(gadget.tool_message_list),
-                content: error_text,
-                execution_plan: execution_plan ? JSON.stringify(execution_plan) : ""
-              }
-            )
-          ]);
-        }
-
-        function completeTask(final_content) {
-          var execution_plan = gadget.execution_plan,
-            content = joinAnswerText(gadget.answer_text_list, final_content);
-          gadget.processing_queue = null;
-          gadget.execution_plan = null;
-          gadget.tool_message_list.push({
-            role: "tool",
-            name: "usage_totals",
-            content: "Task usage: " + usage_totals.call_count + " LLM call(s), " +
-              usage_totals.prompt_tokens + " prompt + " + usage_totals.completion_tokens +
-              " completion = " + usage_totals.total_tokens + " token(s) total."
-          });
-          return RSVP.all([
-            gadget.gadget_chat_ui.showMessage({ content: content, tool_message_list: gadget.tool_message_list, execution_plan: execution_plan }),
-            gadget.notifySubmitted({message: 'Completed', status: "success"}),
-            gadget.gadget_chat_ui.resetEditor(),
-            gadget.storeTaskResult(
-              gadget.options.jio_key,
-              {
-                tool_message_list: JSON.stringify(gadget.tool_message_list),
-                content: content,
-                execution_plan: execution_plan ? JSON.stringify(execution_plan) : ""
-              }
-            )
-          ]);
-        }
 
         // report what it found, instead of losing all of its work.
         if (loop_count >= max_loop_count) {
@@ -505,7 +510,7 @@
             })
             .push(function (compacted) {
               window.ChatToolCommon.addUsageTotals(usage_totals, compacted.usage_totals);
-              return gadget.requestProcessTaskWithUsage(
+              return gadget.requestProcessTask(
                 gadget.jio_key,
                 {
                   message_list: JSON.stringify(compacted.message_list),
@@ -514,11 +519,11 @@
               );
             })
             .push(function (result) {
-              window.ChatToolCommon.addUsageTotals(usage_totals, result.usage_totals);
+              window.ChatToolCommon.addUsageTotals(usage_totals, result.usage);
               if (!result.content) {
                 throw new Error("processTask: too many iterations");
               }
-              return completeTask("[turn limit reached - partial answer]\n" + result.content);
+              return completeTask("[turn limit reached - partial answer]\n" + result.content, result.reasoning);
             })
             .push(undefined, loopError);
           return;
@@ -586,7 +591,7 @@
             return gadget.tool_manager.getToolDefinitionList(message_list);
           })
           .push(function (tool_definition_list) {
-            return gadget.requestProcessTaskWithUsage(
+            return gadget.requestProcessTask(
               gadget.jio_key,
               {
                 message_list: JSON.stringify(message_list),
@@ -595,7 +600,8 @@
             );
           })
           .push(function (result) {
-            window.ChatToolCommon.addUsageTotals(usage_totals, result.usage_totals);
+            window.ChatToolCommon.addUsageTotals(usage_totals, result.usage);
+            stopStreamingDelta(gadget);
             gadget.streaming_text = "";
             if (result.usage && result.usage.prompt_tokens) {
               last_usage_anchor = { prompt_tokens: result.usage.prompt_tokens, message_count: message_list.length };
@@ -609,7 +615,9 @@
               if (result.content && result.content.trim()) {
                 gadget.answer_text_list.push(result.content.trim());
               }
-              return gadget.gadget_chat_ui.showMessage({tool_message_list: gadget.tool_message_list, execution_plan: gadget.execution_plan })
+              // The reasoning of this turn is now in the trace, with its
+              // tool calls.
+              return gadget.gadget_chat_ui.showMessage({reasoning: "", tool_message_list: gadget.tool_message_list, execution_plan: gadget.execution_plan })
                 .push(function () {
                   return loop_call(
                     loop_count + 1,
@@ -623,10 +631,11 @@
               throw new Error("Empty response from LLM with no tool calls" +
                 (result.finish_reason ? " (finish_reason: " + result.finish_reason + ")" : ""));
             }
-            return completeTask(result.content);
+            return completeTask(result.content, result.reasoning);
           })
           .push(undefined, function (e) {
             var retry_name, retry_reason, delay;
+            stopStreamingDelta(gadget);
             retry_count = retry_count || 0;
             if (retry_count >= MAX_RETRY_COUNT) {
               return loopError(e);
