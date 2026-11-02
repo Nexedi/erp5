@@ -38,6 +38,10 @@
             </value>
         </item>
         <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts93610160.7136786</string> </value>
+        </item>
+        <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
@@ -67,9 +71,7 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>2c31e7635c02c1394659d8a4cae0de52</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -100,6 +102,10 @@
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>27784</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
