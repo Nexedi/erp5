@@ -701,13 +701,17 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
                  if action.getReference() == 'add_file_project']
     self.assertEqual('project_jio_action', add_file.getActionType())
     self.assertEqual(['View'], add_file.getActionPermissionList())
+    send_bug_line, = [action for action in portal_types.Bug.getActionInformationList()
+                      if action.getReference() == 'send_bug_line_project']
+    self.assertEqual('project_jio_action', send_bug_line.getActionType())
+    self.assertEqual(['View'], send_bug_line.getActionPermissionList())
     new_bug, = [action for action in portal_types.Project.getActionInformationList()
                 if action.getReference() == 'project_new_bug']
     self.assertEqual('project_jio_action', new_bug.getActionType())
 
   def test_new_bug_from_project_has_a_start_date(self):
-    """The app bug view does not show the start date, which nexedi-erp5
-    requires to assign or resolve a bug, so the creating script sets it."""
+    """nexedi-erp5 requires a start date to assign or resolve a bug, so the
+    creating script sets it."""
     project = self.portal.project_module.newContent(portal_type='Project')
     existing_bug_id_list = list(self.portal.bug_module.objectIds())
     project.Project_newBug(title='Bug with a start date')
@@ -717,10 +721,10 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     self.assertEqual(project, bug.getSourceProjectValue())
     self.assertEqual('confirmed', bug.getSimulationState())
 
-  def test_add_file_action_follows_the_add_permission_on_the_bug(self):
+  def test_bug_actions_follow_the_add_permission_on_the_bug(self):
     """A project_jio_action permission is checked on the portal, not on the bug:
-    the action checks Add portal content on the bug in its condition, so a
-    project member (not Manager) sees it, and a reader does not."""
+    the actions check Add portal content on the bug in their condition, so a
+    project member (not Manager) sees them, and a reader does not."""
     bug = self.portal.bug_module.newContent(portal_type='Bug',
                                             title='Add file visibility')
     login_reference_by_role = {}
@@ -743,8 +747,9 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
         self.login()
       return [x['id'] for x in action_dict.get('project_jio_action', [])]
 
-    self.assertIn('add_file_project', getActionIdList('Assignee'))
-    self.assertNotIn('add_file_project', getActionIdList('Auditor'))
+    for action_id in ('add_file_project', 'send_bug_line_project'):
+      self.assertIn(action_id, getActionIdList('Assignee'))
+      self.assertNotIn(action_id, getActionIdList('Auditor'))
 
   def test_add_file_dialog_posts_the_upload_to_its_script(self):
     form = self.portal.portal_skins.erp5_web_project.Bug_viewAddFileProjectDialog
@@ -753,6 +758,18 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     self.assertEqual(['your_file', 'your_description'],
                      [field.getId() for field in form.get_fields()])
     self.assertFalse(form.your_description.get_value('required'))
+
+  def test_send_bug_line_dialog_posts_to_the_forge_script(self):
+    form = self.portal.portal_skins.erp5_web_project.Bug_viewSendBugLineProjectDialog
+    self.assertEqual('Bug_doBugLineSendFastInputAction', form.action)
+    self.assertEqual(['your_title', 'your_text_content'],
+                     [field.getId() for field in form.get_fields()])
+
+  def test_filter_project_actions_replaces_forge_send_bug_line(self):
+    other_action = {'id': 'other'}
+    result = self.portal.Base_filterProjectActions(actions={
+      'object_jio_fast_input': [{'id': 'bug_line_send'}, other_action]})
+    self.assertEqual([other_action], result['object_jio_fast_input'])
 
   def test_filter_project_actions_merges_project_jio_action(self):
     """project_jio_action is merged into object_jio_action whatever the dict
