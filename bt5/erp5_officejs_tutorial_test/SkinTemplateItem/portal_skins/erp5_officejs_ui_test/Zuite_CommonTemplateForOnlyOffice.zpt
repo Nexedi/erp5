@@ -1,0 +1,272 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal">
+  <tal:block metal:define-macro="wait_for_load_spreadsheet">
+    <tr>
+      <td colspan="3"><b>Wait for load OnlyOffice</b></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@class='asc-loadmask-title']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>identifier=ws-canvas</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//button[@id='id-toolbar-btn-align-center' and not(contains(@class, "disabled"))]</td>
+      <td></td>
+    </tr>
+  </tal:block>
+  <tal:block metal:define-macro="wait_for_load">
+    <tr>
+      <td colspan="3"><b>Wait for load OnlyOffice</b></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@class='asc-loadmask-title']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>identifier=id_viewer</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//button[@id='id-toolbar-btn-align-center' and not(contains(@class, "disabled"))]</td>
+      <td></td>
+    </tr>
+  </tal:block>
+  <tal:block metal:define-macro="wait_for_load_presentation">
+    <tr>
+      <td colspan="3"><b>Wait for load OnlyOffice</b></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@class='asc-loadmask-title']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>identifier=id_viewer</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@id='id-toolbar-btn-insertimage' and not(contains(@class, "disabled"))]</td>
+      <td></td>
+    </tr>
+  </tal:block>
+  <tal:block metal:define-macro="open_document_with_title">
+    <tr>
+      <td colspan="3"><b>Open Document</b></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_list.html')]//input[@name='search']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_list.html')]//input[@name='search']</td>
+      <td>${title}</td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_list.html')]//div[@data-gadget-scope='erp5_searchfield']//button[contains(@class, 'search_button')]</td>
+      <td></td>
+    </tr>
+    <!-- due to local storage, loading is faster than display/hide header spinner
+          So icon doesn't appear. Using a pause (and check no-spinner after) instead. -->
+    <tr>
+      <td>pause</td>
+      <td>1000</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementNotPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//h1//*[contains(@class, "ui-icon-spinner")]</td>
+      <td></td>
+    </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>link=${title}</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>link=${title}</td>
+      <td></td>
+    </tr>
+  </tal:block>
+  <tal:block metal:define-macro="save">
+    <tr>
+      <td colspan="3"><b>Save</b></td>
+    </tr>
+    <tr>
+     <td>waitForElementPresent</td>
+     <td>//button[@data-i18n='Save']</td>
+     <td></td>
+    </tr>
+    <tr>
+     <td>click</td>
+     <td>//button[@data-i18n='Save']</td>
+     <td></td>
+    </tr>
+    <!-- First loader while calling Base_edit -->
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//h1//*[contains(@class, "ui-icon-spinner")]</td>
+      <td></td>
+    </tr>
+    <!-- Save Button is disabled  -->
+    <tr>
+      <td>verifyElementPresent</td>
+      <td>//button[@data-i18n="Save"][contains(@class, "ui-disabled")]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Data Updated</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>pause</td>
+      <td>2000</td>
+      <td></td>
+    </tr>
+    <!-- Second loader while updating the page -->
+    <!--
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//h1[@class="ui-title"]//a[contains(@class, "ui-icon-spinner")]</td>
+      <td></td>
+    </tr>
+    <!-- Save Button is disabled  -->
+    <!--
+    <tr>
+      <td>verifyElementPresent</td>
+      <td>//button[@data-i18n="Save"][contains(@class, "ui-disabled")]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementNotPresent</td>
+      <td>//h1[@class="ui-title"]//a[contains(@class, "ui-icon-spinner")]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>verifyElementPresent</td>
+      <td>//button[@data-i18n="Save"][contains(@class, "ui-icon-check")]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+    <-->
+  </tal:block>
+  <tal:block metal:define-macro="click_to_align_center">
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//button[@id='id-toolbar-btn-align-center' and not(contains(@class, "disabled"))]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//button[@id='id-toolbar-btn-align-center']</td>
+      <td></td>
+    </tr>
+  </tal:block>
+  <tal:block metal:define-macro="wait_align_center">
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//button[@id='id-toolbar-btn-align-center' and contains(@class, "active")]</td>
+      <td></td>
+    </tr>
+  </tal:block>
+  <tal:block metal:define-macro="synchronize">
+    <tr>
+      <td colspan="3"><b>Synchronize</b></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//a[@data-i18n="Synchronize"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a[@data-i18n="Synchronize"]</td>
+      <td></td>
+    </tr>
+  </tal:block>
+  <tal:block metal:define-macro="choice_erp5_storage">
+    <tr>
+      <td colspan="3"><b>Select Erp5 storage</b></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//a[@data-i18n="Storages"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a[@data-i18n="Storages"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>link=Erp5</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>link=Erp5</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>name=erp5_url</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=erp5_url</td>
+      <td><tal:block metal:define-slot="hateoas_url">${base_url}/web_site_module/</tal:block></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>name=submit</td>
+      <td></td>
+    </tr>
+  </tal:block>
+  <tal:block metal:define-macro="remove_document_by_id">
+    <tr>
+      <td colspan="3"><b>Remove Document with ${id}</b></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/document_module/manage_main</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>name=ids:list</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=ids:list</td>
+      <td>${id}</td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>name=manage_delObjects:method</td>
+      <td></td>
+    </tr>
+
+  </tal:block>
+
+</tal:block>
