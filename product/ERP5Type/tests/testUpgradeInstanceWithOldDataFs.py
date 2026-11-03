@@ -31,6 +31,7 @@ import six.moves.urllib as urllib
 import six.moves.http_client
 from DateTime import DateTime
 import pickle
+import re
 import six
 import unittest
 import ZODB.serialize
@@ -589,6 +590,55 @@ class TestPython3PickleMigration(unittest.TestCase):
     )
     self.assertEqual(
       self._get_state_from_pickle(pickle_data), {'data': [b'Hello']})
+
+  @unittest.skipIf(six.PY2, 'Python 2 loads its own regular expressions as they are')
+  def test_regular_expression_with_global_flags_at_the_end(self):
+    # pickle with protocol 1 on Python 2 for
+    # persistent.list.PersistentList([re.compile(fnmatch.translate('*.pdf'))])
+    pickle_data = (
+      #     0: c    GLOBAL     'persistent.list PersistentList'
+      #    32: q    BINPUT     1
+      #    34: .    STOP
+      b'cpersistent.list\nPersistentList\nq\x01.'
+      #    35: }    EMPTY_DICT
+      #    36: q    BINPUT     2
+      #    38: U    SHORT_BINSTRING 'data'
+      #    44: q    BINPUT     3
+      #    46: ]    EMPTY_LIST
+      #    47: q    BINPUT     4
+      #    49: c    GLOBAL     're _compile'
+      #    62: q    BINPUT     5
+      #    64: (    MARK
+      #    65: U        SHORT_BINSTRING '.*\\.pdf\\Z(?ms)'
+      #    81: q        BINPUT     6
+      #    83: K        BININT1    24
+      #    85: t        TUPLE      (MARK at 64)
+      #    86: R    REDUCE
+      #    87: q    BINPUT     7
+      #    89: a    APPEND
+      #    90: s    SETITEM
+      #    91: .    STOP
+      b'}q\x02U\x04dataq\x03]q\x04cre\n_compile\nq\x05(U\x0e.*\\.pdf\\Z(?ms)'
+      b'q\x06K\x18tRq\x07as.'
+    )
+    pattern, = self._get_state_from_pickle(pickle_data)['data']
+    self.assertEqual(pattern.pattern, '(?ms).*\\.pdf\\Z')
+    self.assertTrue(pattern.match('document.pdf'))
+    self.assertFalse(pattern.match('document.pdf.txt'))
+    # The same pickle, loaded outside of a ZODB connection, for example by
+    # Products.ERP5Type.XMLExportImport when a business template is updated.
+    from ZODB._compat import Unpickler
+    unpickler = Unpickler(io.BytesIO(pickle_data))
+    unpickler.load()
+    pattern, = unpickler.load()['data']
+    self.assertEqual(pattern.pattern, '(?ms).*\\.pdf\\Z')
+
+  @unittest.skipIf(six.PY2, 'Python 2 loads its own regular expressions as they are')
+  def test_regular_expression_with_global_flags_at_the_start(self):
+    from ZODB._compat import Unpickler
+    for pattern in '(?i)a.*', b'(?i)a.*':
+      p = re.compile(pattern)
+      self.assertEqual(Unpickler(io.BytesIO(pickle.dumps(p, 1))).load(), p)
 
   def test_no_copyreg_pollution(self):
     self.assertIn(
