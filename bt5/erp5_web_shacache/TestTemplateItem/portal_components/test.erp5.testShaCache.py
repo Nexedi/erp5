@@ -33,7 +33,7 @@ import six.moves.urllib.parse
 from unittest import expectedFailure
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from erp5.component.test.ShaCacheMixin import ShaCacheMixin
-from Products.ERP5Type.Utils import str2bytes
+from Products.ERP5Type.Utils import bytes2str, str2bytes
 import io
 
 
@@ -128,6 +128,22 @@ class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
     self.assertEqual(response.getHeader('cache-control'), 'public,max-age=31556926,immutable')
     self.assertEqual(response.getHeader('accept-ranges'), None)
     self.assertEqual(response.getHeader('etag'), None)
+
+  def test_get_file_with_str_data(self):
+    """
+      Check the download of a small file that was made on Python 2. On
+      Python 3, its data loads as str when it is valid UTF-8.
+    """
+    result, data = self.postFile()
+    self.assertEqual(result, six.moves.http_client.CREATED)
+    self.tic()
+    document = self.portal.portal_catalog.getResultValue(reference=self.key)
+    document.data = bytes2str(self.data)
+    self.tic()
+
+    response = self.getFile()
+    self.assertEqual(response.getStatus(), six.moves.http_client.OK)
+    self.assertEqual(response.getBody(), self.data)
 
   def test_put_file_twice(self):
     """
