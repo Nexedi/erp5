@@ -100,6 +100,7 @@
                       <list>
                         <string>my_reference</string>
                         <string>my_source_trade_title</string>
+                        <string>my_start_date</string>
                         <string>my_bug_priority</string>
                         <string>my_translated_simulation_state_title</string>
                       </list>
