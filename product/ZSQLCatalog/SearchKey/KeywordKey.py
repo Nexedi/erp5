@@ -47,6 +47,12 @@ class KeywordKey(SearchKey):
   def parseSearchText(self, value, is_column):
     return parse(value, is_column)
 
+  def _processSearchValue(self, search_value, default_logical_operator,
+                          comparison_operator):
+    if comparison_operator == '':
+      comparison_operator = None
+    return super(KeywordKey, self)._processSearchValue(search_value, default_logical_operator, comparison_operator)
+
   def _buildQuery(self, operator_value_dict, logical_operator, parsed, group):
     """
       Treat "!=" operator specialy:
