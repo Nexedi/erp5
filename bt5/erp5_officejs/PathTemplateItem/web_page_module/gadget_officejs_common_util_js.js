@@ -91,6 +91,16 @@
     }));
   }
 
+  function buildActionInformationQuery() {
+    // Matches any action, whatever its portal type.
+    return Query.objectToSearchText(new SimpleQuery({
+      key: "portal_type",
+      operator: "",
+      type: "simple",
+      value: "Action Information"
+    }));
+  }
+
   function getFormInfo(form_definition) {
     var child_gadget_url,
       form_type,
@@ -255,10 +265,25 @@
         })
         .push(function (data) {
           if (data.data.rows.length === 0) {
-            error = new Error("Can not find action '" + action_reference +
-                              "' for portal type '" + portal_type + "'");
-            error.status_code = 400;
-            throw error;
+            // Zero rows: unknown action, or configuration never loaded.
+            return gadget.jio_allDocs({
+              query: buildActionInformationQuery(),
+              limit: [0, 1]
+            })
+              .push(function (any_action) {
+                if (any_action.data.rows.length === 0) {
+                  error = new Error("Application configuration is empty: " +
+                                    "run 'Create App Configuration " +
+                                    "Manifest' on the application Web " +
+                                    "Section");
+                } else {
+                  error = new Error("Can not find action '" +
+                                    action_reference + "' for portal type '" +
+                                    portal_type + "'");
+                }
+                error.status_code = 400;
+                throw error;
+              });
           }
           return gadget.jio_get(data.data.rows[0].id);
         })
