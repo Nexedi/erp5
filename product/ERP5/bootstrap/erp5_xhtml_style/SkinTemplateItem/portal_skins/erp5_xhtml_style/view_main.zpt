@@ -3,14 +3,13 @@
            xmlns:i18n="http://xml.zope.org/namespaces/i18n">
   <tal:block metal:define-macro="master">
     <tal:block
-              tal:define="object_uid           here/getUid | nothing;
-              object_path          here/getPath | nothing;
+              tal:define="
               form                 nocall: form | nothing;
               form_id              form/id | template/id | nothing;
               portal               here/getPortalObject;
               form_action          python: form and form.action not in ('', None) and portal.portal_membership.checkPermission('Modify portal content', here) and form.action or nothing;
               local_parameter_list local_parameter_list | python: {};
-              dummy                python: local_parameter_list.update({'object_uid': object_uid, 'object_path': object_path, 'form_id': form_id});
+              dummy                python: local_parameter_list.update({'form_id': form_id});
               title                python: '%s - %s' % (portal.Base_translateString(template.title_or_id()), here.getTitle());
               ">
       <tal:block metal:use-macro="here/main_template/macros/master">
