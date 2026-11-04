@@ -108,6 +108,21 @@ message's role/content picks the branch:
                                              http_request call, then stalls 5 seconds on the
                                              next request, so the user cancels after some text
                                              was written (testOfficeJSHarnessAICancelRequest.zpt)
+- content "please stall then call a tool
+  for the steering test"                 -> stalls 5 seconds, then calls http_request, so
+                                             the user posts while the agent runs: the
+                                             client adds the queued post after the tool
+                                             result, before its next request
+                                             (testOfficeJSHarnessAISteering.zpt)
+- content "steering message"            -> "STEERING-RECEIVED after tool." if the message
+                                             just before is a tool result (the post was
+                                             added in the middle of the task), else
+                                             "STEERING-RECEIVED without tool."
+                                             (testOfficeJSHarnessAISteering.zpt)
+- content "follow up message"           -> "FOLLOW-UP-RECEIVED.", with the number of
+                                             assistant answers before it, so the test
+                                             sees the stalled answer was sent first
+                                             (testOfficeJSHarnessAISteering.zpt)
 - content "proxy http_request test"     -> calls http_request on ERP5Site_fakeHttpEndpoint with
                                              "fake_proxy_redirect" in the URL: through
                                              ERP5Site_fakeProxy, the result shows "Redirected to:"
@@ -651,6 +666,19 @@ elif last_message.get('role') == 'tool':
   chunk = {'choices': [{'delta': {
       'content': 'Tool result: %s' % last_content,
   }}]}
+elif 'please stall then call a tool for the steering test' in last_content_lower:
+  time.sleep(5)
+  chunk = tool_call_chunk('http_request', {
+      'url': portal_url + '/ERP5Site_fakeHttpEndpoint',
+  })
+elif last_content_lower == 'steering message':
+  if len(message_list) >= 2 and message_list[-2].get('role') == 'tool':
+    chunk = {'choices': [{'delta': {'content': 'STEERING-RECEIVED after tool.'}}]}
+  else:
+    chunk = {'choices': [{'delta': {'content': 'STEERING-RECEIVED without tool.'}}]}
+elif last_content_lower == 'follow up message':
+  chunk = {'choices': [{'delta': {'content': 'FOLLOW-UP-RECEIVED after %d answer(s).' % len(
+      [m for m in message_list if m.get('role') == 'assistant'])}}]}
 elif 'please work then stall for the cancel test' in last_content_lower:
   chunk_list = [
       {'choices': [{'delta': {'content': 'WORK-DONE-BEFORE-CANCEL.'}}]},

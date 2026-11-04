@@ -33,7 +33,7 @@
     .declareJob('pollTask', function () {
       var gadget = this,
         gadget_chat_ui = gadget.gadget_chat_ui,
-        queue_loop = gadget_chat_ui.blockEditor();
+        queue_loop = gadget_chat_ui.startProcessing();
       gadget.is_processing = true;
       queue_loop
         .push(function () {
@@ -59,7 +59,7 @@
                 })
                 .push(function () {
                   gadget.is_processing = false;
-                  return gadget_chat_ui.resetEditor();
+                  return gadget_chat_ui.stopProcessing();
                 });
             } else {
               queue_loop

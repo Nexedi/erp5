@@ -512,7 +512,7 @@
               response,
               body.is_background ? undefined :
                 function onDelta(partial) {
-                  return gadget.chat_gadget.showStreamingDelta(partial);
+                  return gadget.agent_gadget.showStreamingDelta(partial);
                 }
             );
           })
@@ -688,10 +688,10 @@
     })
     .onStateChange(function () {
       var gadget = this;
-      return gadget.getDeclaredGadget("gadget_chat")
-        .push(function (chat_gadget) {
-          gadget.chat_gadget = chat_gadget;
-          return chat_gadget.render({
+      return gadget.getDeclaredGadget("gadget_agent")
+        .push(function (agent_gadget) {
+          gadget.agent_gadget = agent_gadget;
+          return agent_gadget.render({
             'chat_state': gadget.state.doc.state,
             'hateoas_url': gadget.hateoas_url,
             'jio_key': gadget.state.jio_key,

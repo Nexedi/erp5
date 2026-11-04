@@ -156,6 +156,15 @@ hr#post_item {
   padding: 0.55em 0.9em;
 }
 
+/* A post sent while the agent runs, waiting to be taken by the agent. */
+#post_list li.post-question.post-queued {
+  opacity: 0.6;
+}
+
+#post_list li.post-question.post-queued > time::after {
+  content: " · Queued";
+}
+
 @keyframes chat-cursor-blink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }

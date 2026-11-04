@@ -134,6 +134,30 @@
     }, dom_list);
   }
 
+  // The LLM message of a rendered question or answer post, or null for an
+  // answer cancelled before the model wrote anything.
+  function getMessageFromLi(li) {
+    var content_element = li.querySelector('pre.chat-hidden-field') || li.querySelector('pre'),
+      content = content_element ? content_element.textContent : "",
+      attachment_element,
+      attachment_part;
+    if (li.classList.contains("post-answer") && !content.trim()) {
+      return null;
+    }
+    attachment_element = li.querySelector('.post-attachment a');
+    attachment_part = attachment_element ?
+      getAttachmentContentPart(attachment_element.textContent, attachment_element.getAttribute('href')) :
+      null;
+    return {
+      role: li.classList.contains("post-answer") ? "assistant" : "user",
+      content: attachment_part ?
+        (attachment_part.type === "image_url" ?
+          [{ type: "text", text: content }, attachment_part] :
+          content + "\n\n" + attachment_part.text) :
+        content
+    };
+  }
+
   function getTypingIndicatorDom() {
     return domsugar("span", { "class": "chat-typing-indicator" }, [
       domsugar("span"),
@@ -281,6 +305,73 @@
     ]);
   }
 
+  function renderMessage(message_element, message, rendered_tool_message_count) {
+    var tool_message_list = message.tool_message_list || [],
+      details_open,
+      details_element,
+      error_dom,
+      reasoning_element,
+      markdown_element,
+      i;
+    markdown_element = message_element.querySelector(".post-markdown");
+    if (message.hasOwnProperty('content') && message.content) {
+      details_open = false;
+      markdown_element.innerHTML = marked.parse(message.content || "");
+      message_element.querySelector('pre.chat-hidden-field').textContent = message.content || "";
+      if (message.streaming) {
+        markdown_element.appendChild(getTypingIndicatorDom());
+      }
+    } else {
+      // Still working: keep the text already shown, the model goes on
+      // writing below it.
+      details_open = true;
+      if (!markdown_element.querySelector('.chat-typing-indicator')) {
+        markdown_element.appendChild(getTypingIndicatorDom());
+      }
+    }
+    if (tool_message_list.length) {
+      details_element = message_element.querySelector('.post-tool > details');
+      if (!details_element) {
+        message_element.appendChild(getToolCallDom(tool_message_list, details_open));
+      } else {
+        for (i = rendered_tool_message_count; i < tool_message_list.length; i += 1) {
+          details_element.appendChild(getAgentMessageDiv(tool_message_list[i]));
+        }
+        if (tool_message_list.length !== rendered_tool_message_count) {
+          details_element.querySelector('summary').textContent =
+            getToolCallSummaryText(tool_message_list.length);
+        }
+        details_element.open = details_open;
+        details_element.classList.toggle('post-tool-pending', details_open);
+      }
+    }
+    // message.reasoning: "" removes the block, it stays open while the
+    // answer is streamed.
+    if (message.hasOwnProperty('reasoning')) {
+      reasoning_element = message_element.querySelector('.post-answer-reasoning');
+      if (!message.reasoning) {
+        if (reasoning_element) {
+          reasoning_element.parentNode.removeChild(reasoning_element);
+        }
+      } else if (reasoning_element) {
+        reasoning_element.querySelector('.post-answer-reasoning-content').textContent = message.reasoning;
+        reasoning_element.open = Boolean(message.streaming);
+      } else {
+        message_element.appendChild(getReasoningDom(message.reasoning, message.streaming));
+      }
+    }
+    if (!message_element.querySelector('.post-error')) {
+      error_dom = getErrorDom(tool_message_list);
+      if (error_dom) {
+        message_element.appendChild(error_dom);
+      }
+    }
+    if (message.hasOwnProperty('execution_plan')) {
+      refreshMessageExecutionPlan(message_element, message.execution_plan);
+    }
+    return Math.max(rendered_tool_message_count, tool_message_list.length);
+  }
+
   rJS(window)
     .declareAcquiredMethod("translate", "translate")
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
@@ -316,18 +407,21 @@
     .onStateChange(function (modification_dict) {
       var gadget = this,
         queue = new RSVP.Queue();
-      if (modification_dict.hasOwnProperty("allow_submit")) {
+      if (modification_dict.hasOwnProperty("allow_submit") ||
+          modification_dict.hasOwnProperty("editor_state")) {
         var submitButton = gadget.element.querySelector("input[type=submit]"),
           cancelButton = gadget.element.querySelector("#cancel_button");
-        if (modification_dict.allow_submit) {
+        if (gadget.state.allow_submit) {
           submitButton.disabled = false;
           submitButton.classList.remove("ui-disabled");
-          cancelButton.style.display = "none";
         } else {
           submitButton.disabled = true;
           submitButton.classList.add("ui-disabled");
-          cancelButton.style.display = gadget.options.enable_cancel ? "inline-block" : "none";
         }
+        // The editor stays 'pending' while the agent runs, even when posts
+        // can be queued meanwhile (enable_queue).
+        cancelButton.style.display = (gadget.options.enable_cancel &&
+          (!gadget.state.allow_submit || gadget.state.editor_state === 'pending')) ? "inline-block" : "none";
       }
       if (modification_dict.hasOwnProperty("editor_state")) {
         if (modification_dict.editor_state == 'initialise') {
@@ -388,59 +482,105 @@
     })
     .declareMethod('getMessageList', function () {
       var gadget = this,
+        // Queued posts are not sent yet: the agent adds them to the
+        // conversation itself (flushQueuedPostList).
         li_list = gadget.element.querySelectorAll(
-          "#post_list li.post-question, #post_list li.post-answer"
+          "#post_list li.post-question:not(.post-queued), #post_list li.post-answer"
         ),
         message_list = [],
-        i, li, content_element, attachment_element, content, attachment_part;
+        i, message;
       for (i = 0; i < li_list.length; i += 1) {
-        li = li_list[i];
-        content_element = li.querySelector('pre.chat-hidden-field') || li.querySelector('pre');
-        content = content_element ? content_element.textContent : "";
-        // An answer cancelled before the model wrote anything is left out.
-        if (li.classList.contains("post-answer") && !content.trim()) {
-          continue;
+        message = getMessageFromLi(li_list[i]);
+        if (message) {
+          message_list.push(message);
         }
-        attachment_element = li.querySelector('.post-attachment a');
-        attachment_part = attachment_element ?
-          getAttachmentContentPart(attachment_element.textContent, attachment_element.getAttribute('href')) :
-          null;
-        message_list.push({
-          role: li.classList.contains("post-answer") ? "assistant" : "user",
-          content: attachment_part ?
-            (attachment_part.type === "image_url" ?
-              [{ type: "text", text: content }, attachment_part] :
-              content + "\n\n" + attachment_part.text) :
-            content
-        });
       }
       return message_list;
     })
-    .declareMethod('blockEditor', function () {
-      return this.changeState({
-        allow_submit: false,
-        editor_state: 'pending'
-      });
+    // Starts the answer, at the end of the page, and the processing.
+    .declareMethod('startProcessing', function () {
+      var gadget = this;
+      return gadget.showMessage({})
+        .push(function () {
+          return gadget.changeState({
+            // With enable_queue, the user can keep posting while the agent
+            // runs: the posts are queued (see submitPostComment).
+            allow_submit: Boolean(gadget.options.enable_queue),
+            editor_state: 'pending'
+          });
+        });
     })
-    .declareMethod('resetEditor', function () {
-      this.new_message_element = null;
-      this.rendered_tool_message_count = 0;
-      return this.changeState({
-        allow_submit: true,
-        editor_state: 'initialise'
-      });
+    .declareMethod('stopProcessing', function () {
+      var gadget = this,
+        message_element = gadget.new_message_element,
+        typing_indicator,
+        details_element;
+      if (gadget.streaming_frame) {
+        window.cancelAnimationFrame(gadget.streaming_frame);
+        gadget.streaming_frame = null;
+      }
+      if (message_element) {
+        // An answer with tool calls only still looks in progress: it is not
+        // anymore.
+        typing_indicator = message_element.querySelector('.post-markdown .chat-typing-indicator');
+        if (typing_indicator) {
+          typing_indicator.parentNode.removeChild(typing_indicator);
+        }
+        details_element = message_element.querySelector('.post-tool > details');
+        if (details_element) {
+          details_element.open = false;
+          details_element.classList.remove('post-tool-pending');
+        }
+      }
+      gadget.new_message_element = null;
+      gadget.rendered_tool_message_count = 0;
+      return gadget.flushQueuedPostList()
+        .push(function (queued_message_list) {
+          return gadget.changeState({
+            allow_submit: true,
+            // With enable_queue, the user may be writing the next post when
+            // the agent ends: 'ready' keeps that draft, 'initialise' would
+            // render the editor again, empty.
+            editor_state: gadget.options.enable_queue ? 'ready' : 'initialise'
+          })
+            .push(function () {
+              return queued_message_list;
+            });
+        });
+    })
+    .declareMethod('flushQueuedPostList', function () {
+      var gadget = this,
+        message_list = [];
+      function flushNext() {
+        var queued_post = (gadget.queued_post_list || [])[0];
+        if (!queued_post) {
+          return message_list;
+        }
+        return gadget.postComment(gadget.options.jio_key, queued_post.form_data_json)
+          .push(function () {
+            var message;
+            gadget.queued_post_list.shift();
+            queued_post.element.classList.remove("post-queued");
+            // Stored before the answer being written, which is stored once
+            // the agent ends: show it above, in the order of the stored
+            // lines. From stopProcessing, the posts stay below the answer.
+            if (gadget.new_message_element && gadget.new_message_element.parentNode &&
+                (gadget.new_message_element.compareDocumentPosition(queued_post.element) &
+                  window.Node.DOCUMENT_POSITION_FOLLOWING)) {
+              gadget.new_message_element.parentNode.insertBefore(queued_post.element, gadget.new_message_element);
+            }
+            message = getMessageFromLi(queued_post.element);
+            if (message) {
+              message_list.push(message);
+            }
+            return flushNext();
+          });
+      }
+      return flushNext();
     })
     .declareMethod('showMessage', function (message) {
       var gadget = this,
-        tool_message_list = message.tool_message_list || [],
-        details_open,
-        details_element,
-        error_dom,
-        reasoning_element,
-        markdown_element,
-        time_element,
-        rendered_count,
-        i;
+        time_element;
       if (!gadget.new_message_element) {
         gadget.new_message_element = getPostDom(formatPost({
           date: new Date().toISOString(),
@@ -455,65 +595,23 @@
         time_element.textContent = message.author_title + " · " +
           new Date(time_element.getAttribute("datetime")).toLocaleString();
       }
-      markdown_element = gadget.new_message_element.querySelector(".post-markdown");
-      if (message.hasOwnProperty('content')) {
-        details_open = false;
-        markdown_element.innerHTML = marked.parse(message.content || "");
-        gadget.new_message_element.querySelector('pre.chat-hidden-field').textContent = message.content || "";
-        if (message.reasoning_open) {
-          markdown_element.appendChild(getTypingIndicatorDom());
+      if (message.streaming) {
+        gadget.streaming_message = message;
+        if (!gadget.streaming_frame) {
+          gadget.streaming_frame = window.requestAnimationFrame(function () {
+            gadget.streaming_frame = null;
+            gadget.rendered_tool_message_count = renderMessage(gadget.new_message_element,
+              gadget.streaming_message, gadget.rendered_tool_message_count);
+          });
         }
-      } else {
-        // Still working: keep the text already shown, the model goes on
-        // writing below it.
-        details_open = true;
-        if (!markdown_element.querySelector('.chat-typing-indicator')) {
-          markdown_element.appendChild(getTypingIndicatorDom());
-        }
+        return;
       }
-      if (tool_message_list.length) {
-        details_element = gadget.new_message_element.querySelector('.post-tool > details');
-        rendered_count = gadget.rendered_tool_message_count || 0;
-        if (!details_element) {
-          gadget.new_message_element.appendChild(getToolCallDom(tool_message_list, details_open));
-          gadget.rendered_tool_message_count = tool_message_list.length;
-        } else {
-          for (i = rendered_count; i < tool_message_list.length; i += 1) {
-            details_element.appendChild(getAgentMessageDiv(tool_message_list[i]));
-          }
-          if (tool_message_list.length !== rendered_count) {
-            details_element.querySelector('summary').textContent =
-              getToolCallSummaryText(tool_message_list.length);
-            gadget.rendered_tool_message_count = tool_message_list.length;
-          }
-          details_element.open = details_open;
-          details_element.classList.toggle('post-tool-pending', details_open);
-        }
+      if (gadget.streaming_frame) {
+        window.cancelAnimationFrame(gadget.streaming_frame);
+        gadget.streaming_frame = null;
       }
-      // message.reasoning: "" removes the block, message.reasoning_open keeps
-      // it open while the model is still reasoning.
-      if (message.hasOwnProperty('reasoning')) {
-        reasoning_element = gadget.new_message_element.querySelector('.post-answer-reasoning');
-        if (!message.reasoning) {
-          if (reasoning_element) {
-            reasoning_element.parentNode.removeChild(reasoning_element);
-          }
-        } else if (reasoning_element) {
-          reasoning_element.querySelector('.post-answer-reasoning-content').textContent = message.reasoning;
-          reasoning_element.open = Boolean(message.reasoning_open);
-        } else {
-          gadget.new_message_element.appendChild(getReasoningDom(message.reasoning, message.reasoning_open));
-        }
-      }
-      if (!gadget.new_message_element.querySelector('.post-error')) {
-        error_dom = getErrorDom(tool_message_list);
-        if (error_dom) {
-          gadget.new_message_element.appendChild(error_dom);
-        }
-      }
-      if (message.hasOwnProperty('execution_plan')) {
-        refreshMessageExecutionPlan(gadget.new_message_element, message.execution_plan);
-      }
+      gadget.rendered_tool_message_count = renderMessage(gadget.new_message_element,
+        message, gadget.rendered_tool_message_count);
     })
     .declareJob('submitPostComment', function () {
       var gadget = this,
@@ -524,13 +622,16 @@
           return e.getContent();
         })
         .push(function (content) {
+          // Posted while the agent runs: the editor stays 'pending' until the
+          // agent ends (stopProcessing).
+          var is_queued = gadget.state.editor_state === 'pending';
           if (content.comment === '') {
             return gadget.translate("Post content can not be empty!")
               .push(function (translated_message) {
                 return gadget.notifySubmitted({message: translated_message});
               });
           }
-          queue = gadget.changeState({
+          queue = gadget.changeState(is_queued ? {allow_submit: false} : {
             allow_submit: false,
             editor_state: 'posting'
           })
@@ -558,6 +659,7 @@
                   }
                 })
                 .push(function (data_url_evt) {
+                  var queued_element;
                   if (data_url_evt) {
                     form_data_json.file = {
                       url: data_url_evt.target.result,
@@ -566,18 +668,47 @@
                     post.attachment_link = data_url_evt.target.result;
                     post.attachment_name = file_blob.name;
                   }
+                  if (is_queued) {
+                    // The agent is running: the post waits below the answer
+                    // being written until the agent takes it, before its
+                    // next LLM request or once it has answered.
+                    return new RSVP.Queue(gadget.new_message_element ? null : gadget.showMessage({}))
+                      .push(function () {
+                        queued_element = getPostDom(formatPost(post));
+                        queued_element.classList.add("post-queued");
+                        gadget.element.querySelector("#post_list").appendChild(queued_element);
+                        gadget.queued_post_list = (gadget.queued_post_list || []).concat([{
+                          element: queued_element,
+                          form_data_json: form_data_json
+                        }]);
+                      });
+                  }
                   return gadget.appendPost(post);
                 })
                 .push(function () {
+                  if (is_queued) {
+                    return;
+                  }
                   return gadget.postComment(
                     gadget.options.jio_key,
                     form_data_json
                   );
                 })
                 .push(function (evt) {
-                  var location = evt.target.getResponseHeader("X-Location"),
+                  var location,
                     uri,
                     redirect_jio_key;
+                  if (is_queued) {
+                    // Clear the editor without leaving the 'pending' state.
+                    return gadget.getDeclaredGadget("editor")
+                      .push(function (editor) {
+                        return editor.render(gadget.options.editor_options.options);
+                      })
+                      .push(function () {
+                        return gadget.changeState({allow_submit: true});
+                      });
+                  }
+                  location = evt.target.getResponseHeader("X-Location");
                   gadget.new_message_element = null;
                   if (location) {
                     uri = new URI(location);
@@ -601,7 +732,7 @@
                 });
             }, function (e) {
                 return RSVP.all([
-                  gadget.changeState({
+                  gadget.changeState(is_queued ? {allow_submit: true} : {
                     allow_submit: true,
                     editor_state: 'initialise'
                   }),

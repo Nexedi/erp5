@@ -140,15 +140,6 @@
     return estimateTokensForMessages(message_list);
   }
 
-  // Drop the streamed delta waiting for the next animation frame, so that it
-  // can not be shown over what comes after the end of the stream.
-  function stopStreamingDelta(gadget) {
-    if (gadget.streaming_frame) {
-      window.cancelAnimationFrame(gadget.streaming_frame);
-      gadget.streaming_frame = null;
-    }
-  }
-
   function joinAnswerText(answer_text_list, current_text) {
     return (answer_text_list || []).concat(current_text ? [current_text] : []).join("\n\n");
   }
@@ -181,7 +172,7 @@
         })
         .push(function (gadget_chat_ui) {
           gadget.gadget_chat_ui = gadget_chat_ui;
-          return gadget_chat_ui.render(Object.assign({}, options, {enable_cancel: true}));
+          return gadget_chat_ui.render(Object.assign({}, options, {enable_cancel: true, enable_queue: true}));
         })
         .push(function () {
           if (options.chat_state === 'started') {
@@ -211,7 +202,6 @@
       }
       gadget.processing_queue = null;
       queue_loop.cancel("Cancelled by user");
-      stopStreamingDelta(gadget);
 
       execution_plan = gadget.execution_plan;
       gadget.execution_plan = null;
@@ -225,10 +215,9 @@
         content: "Cancelled by user"
       });
 
-      return RSVP.all([
+      return new RSVP.Queue(RSVP.all([
         gadget.gadget_chat_ui.showMessage({ content: content, reasoning: "", tool_message_list: gadget.tool_message_list, execution_plan: execution_plan }),
         gadget.notifySubmitted({message: 'Cancelled', status: "success"}),
-        gadget.gadget_chat_ui.resetEditor(),
         gadget.storeTaskResult(
           gadget.options.jio_key,
           {
@@ -237,11 +226,16 @@
             execution_plan: execution_plan ? JSON.stringify(execution_plan) : ""
           }
         )
-      ]);
+      ]))
+        .push(function () {
+          // The posts queued while it ran are kept, after the answer, but
+          // not sent: the next post sends them with the history.
+          return gadget.gadget_chat_ui.stopProcessing();
+        });
     })
     .declareMethod('compactMessageList', function (message_list, keep_recent_override, last_usage_anchor) {
       var gadget = this;
-      return new RSVP.Queue(gadget.getModelContextWindow())
+      return gadget.getModelContextWindow()
         .push(function (context_window) {
           var compact_token_budget = COMPACT_TOKEN_BUDGET,
             keep_recent_budget = KEEP_RECENT_TOKEN_BUDGET,
@@ -373,24 +367,15 @@
     .allowPublicAcquisition('getSystemPromptList', function () {
       return this.getSystemPromptList();
     })
-    // The streamed text and reasoning are shown at most once per animation
-    // frame, not at every delta: each refresh renders the whole text again.
     .declareMethod('showStreamingDelta', function (partial) {
       var gadget = this;
       gadget.streaming_text = partial.content;
-      gadget.streaming_partial = partial;
-      if (gadget.streaming_frame) {
-        return;
-      }
-      gadget.streaming_frame = window.requestAnimationFrame(function () {
-        gadget.streaming_frame = null;
-        return gadget.gadget_chat_ui.showMessage({
-          content: joinAnswerText(gadget.answer_text_list, gadget.streaming_partial.content),
-          reasoning: gadget.streaming_partial.reasoning,
-          reasoning_open: true,
-          tool_message_list: gadget.tool_message_list || [],
-          execution_plan: gadget.execution_plan
-        });
+      return gadget.gadget_chat_ui.showMessage({
+        content: joinAnswerText(gadget.answer_text_list, partial.content),
+        reasoning: partial.reasoning,
+        streaming: true,
+        tool_message_list: gadget.tool_message_list || [],
+        execution_plan: gadget.execution_plan
       });
     })
     .declareJob('processTask', function (max_loop_count) {
@@ -420,13 +405,14 @@
         gadget.tool_message_list.push({
           role: "tool",
           name: "error",
-          content: "Error: " + (e && e.message ? e.message : String(e))
+          // With the stack, to know where an error of the code itself was
+          // thrown.
+          content: "Error: " + (e && e.message ? e.message : String(e)) +
+            (e && e.stack ? "\n\n" + e.stack : "")
         });
-        stopStreamingDelta(gadget);
-        return RSVP.all([
+        return new RSVP.Queue(RSVP.all([
           gadget.gadget_chat_ui.showMessage({ content: content, reasoning: "", tool_message_list: gadget.tool_message_list, execution_plan: execution_plan }),
           gadget.notifySubmitted({message: 'Error', status: "error"}),
-          gadget.gadget_chat_ui.resetEditor(),
           gadget.storeTaskResult(
             gadget.options.jio_key,
             {
@@ -435,16 +421,21 @@
               execution_plan: execution_plan ? JSON.stringify(execution_plan) : ""
             }
           )
-        ]);
+        ]))
+          .push(function () {
+            // Like on cancel, the queued posts are kept but not sent.
+            return gadget.gadget_chat_ui.stopProcessing();
+          });
       }
 
       // reasoning: the reasoning of the final answer, kept in the trace like
       // the one of the turns with tool calls.
-      function completeTask(final_content, reasoning) {
+      // message_list: the conversation ending with the final answer, to go on
+      // with the posts queued while the model answered (the follow-up of pi).
+      // Without it, they are only stored, like on cancel.
+      function completeTask(final_content, reasoning, message_list) {
         var execution_plan = gadget.execution_plan,
           content = joinAnswerText(gadget.answer_text_list, final_content);
-        gadget.processing_queue = null;
-        gadget.execution_plan = null;
         if (reasoning) {
           gadget.tool_message_list.push({
             role: "assistant",
@@ -459,10 +450,8 @@
             usage_totals.prompt_tokens + " prompt + " + usage_totals.completion_tokens +
             " completion = " + usage_totals.total_tokens + " token(s) total."
         });
-        return RSVP.all([
+        return new RSVP.Queue(RSVP.all([
           gadget.gadget_chat_ui.showMessage({ content: content, reasoning: "", tool_message_list: gadget.tool_message_list, execution_plan: execution_plan }),
-          gadget.notifySubmitted({message: 'Completed', status: "success"}),
-          gadget.gadget_chat_ui.resetEditor(),
           gadget.storeTaskResult(
             gadget.options.jio_key,
             {
@@ -471,7 +460,26 @@
               execution_plan: execution_plan ? JSON.stringify(execution_plan) : ""
             }
           )
-        ]);
+        ]))
+          .push(function () {
+            return gadget.gadget_chat_ui.stopProcessing();
+          })
+          .push(function (queued_message_list) {
+            if (queued_message_list.length && message_list) {
+              // A new turn, as if the user had posted after the answer.
+              gadget.execution_plan = null;
+              gadget.tool_message_list = [];
+              gadget.answer_text_list = [];
+              gadget.streaming_text = "";
+              return gadget.gadget_chat_ui.startProcessing()
+                .push(function () {
+                  return loop_call(0, message_list.concat(queued_message_list));
+                });
+            }
+            gadget.processing_queue = null;
+            gadget.execution_plan = null;
+            return gadget.notifySubmitted({message: 'Completed', status: "success"});
+          });
       }
 
       function loop_call(loop_count, message_list, pending_result, retry_count) {
@@ -579,6 +587,10 @@
 
         queue_loop
           .push(function () {
+            return gadget.gadget_chat_ui.flushQueuedPostList();
+          })
+          .push(function (queued_message_list) {
+            message_list = message_list.concat(queued_message_list);
             return gadget.compactMessageList(message_list, undefined, last_usage_anchor);
           })
           .push(function (compacted) {
@@ -600,8 +612,8 @@
             );
           })
           .push(function (result) {
+            var final_message;
             window.ChatToolCommon.addUsageTotals(usage_totals, result.usage);
-            stopStreamingDelta(gadget);
             gadget.streaming_text = "";
             if (result.usage && result.usage.prompt_tokens) {
               last_usage_anchor = { prompt_tokens: result.usage.prompt_tokens, message_count: message_list.length };
@@ -631,11 +643,17 @@
               throw new Error("Empty response from LLM with no tool calls" +
                 (result.finish_reason ? " (finish_reason: " + result.finish_reason + ")" : ""));
             }
-            return completeTask(result.content, result.reasoning);
+            // requestProcessTask only builds the assistant message of a turn
+            // with tool calls: build the one of the final answer, for the
+            // posts queued while it was written.
+            final_message = {role: "assistant", content: result.content};
+            if (result.reasoning && result.reasoning_field) {
+              final_message[result.reasoning_field] = result.reasoning;
+            }
+            return completeTask(result.content, result.reasoning, message_list.concat([final_message]));
           })
           .push(undefined, function (e) {
             var retry_name, retry_reason, delay;
-            stopStreamingDelta(gadget);
             retry_count = retry_count || 0;
             if (retry_count >= MAX_RETRY_COUNT) {
               return loopError(e);
@@ -698,19 +716,13 @@
 
       queue_loop
         .push(function () {
-          return gadget.gadget_chat_ui.blockEditor();
+          return gadget.gadget_chat_ui.startProcessing();
         })
         .push(function () {
           return gadget.notifySubmitted({message: 'Processing', status: "success"});
         })
         .push(function () {
           return gadget.gadget_chat_ui.getMessageList();
-        })
-        .push(function (message_list) {
-          return gadget.gadget_chat_ui.showMessage({})
-            .push(function () {
-              return message_list;
-            });
         })
         .push(function (message_list) {
           return gadget.getSystemPromptList()
