@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002-2026 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Sebastien Robin <seb@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -26,6 +26,8 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+
+from copy import deepcopy
 
 from AccessControl import ModuleSecurityInfo
 import six
@@ -62,3 +64,18 @@ else:
 
 def loadJson(*args, **kw):
   return byteify(json.loads(*args, **kw))
+
+
+def fillDefaultJsonData(schema, json_data=None):
+  """Fill missing data with defaults defined by a JSON schema."""
+  result = json_data or {}
+  for name, property_schema in schema.get("properties", {}).items():
+    if name in result:
+      continue
+    if "default" in property_schema:
+      result[name] = deepcopy(property_schema["default"])
+    elif property_schema.get("type") == "object":
+      default_data = fillDefaultJsonData(property_schema)
+      if default_data:
+        result[name] = default_data
+  return result
