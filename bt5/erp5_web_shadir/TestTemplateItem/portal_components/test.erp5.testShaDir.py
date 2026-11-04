@@ -254,6 +254,38 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     self.assertEqual(1, len(json.loads(document3)))
 
 
+  def test_post_information_summary(self):
+    """
+      Check the summary that the shadir table keeps for the information.
+    """
+    metadata = {
+      'sha512': self.file_sha512sum,
+      'file': 'slapos.cookbook-1.0.tar.gz',
+      'requirement': 'slapos.cookbook==1.0',
+      'revision': '0123456789abcdef',
+      'software_url': 'https://example.com/software/erp5/software.cfg',
+      'os': ['debian', '12', ''],
+      'url': 'https://example.com/slapos.cookbook-1.0.tar.gz',
+    }
+    data = str2bytes(json.dumps([json.dumps(metadata),
+      bytes2str(b64encode(b"User SIGNATURE goes here."))]))
+    self.postInformation(data=data)
+    self.tic()
+
+    document = self.portal.portal_catalog.getResultValue(
+      reference=hashlib.sha512(data).hexdigest())
+    (summary,), = self.portal.erp5_sql_connection().query(
+      "SELECT summary FROM shadir WHERE uid=%s" % document.getUid(), 0)[1]
+    self.assertEqual(summary, ';'.join((
+      "file='slapos.cookbook-1.0.tar.gz'",
+      "requirement='slapos.cookbook==1.0'",
+      "revision='0123456789abcdef'",
+      "software_url='https://example.com/software/erp5/software.cfg'",
+      "os=['debian', '12', '']",
+      "url='https://example.com/slapos.cookbook-1.0.tar.gz'")))
+    self.assertEqual(json.loads(self.getInformation()[1]),
+                     [json.loads(bytes2str(data))])
+
   def test_VirtualFolder_key(self):
     module = self.portal.newContent(portal_type='Folder', id='test_virtual_folder_%s' % random.random())
     # WebSite is a VirtualFolder
