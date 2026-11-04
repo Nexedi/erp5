@@ -27,7 +27,9 @@
 import io
 from ZPublisher.HTTPRequest import HTTPRequest
 from ZPublisher.HTTPResponse import HTTPResponse
+from ZPublisher.Iterators import IStreamIterator
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.Utils import IZODBStreamIterator
 from Products.ERP5Type import IS_ZOPE2
 from erp5.component.module.BTreeData import BTreeData, PersistentBytes
 
@@ -241,17 +243,19 @@ class TestBigFile(ERP5TypeTestCase):
     # like in ZPublisher - returned RESPONSE means empty
     if ret is request.RESPONSE:
       ret = b''
-    self.assertEqual(ret,       result)
+    elif IStreamIterator.providedBy(ret):
+      self.assertTrue(IZODBStreamIterator is None or # BBB Zope 4
+                      IZODBStreamIterator.providedBy(ret))
+      self.assertEqual(len(ret), len(result + body))
+      ret = b''.join(ret)
+    # data is never written to RESPONSE: it is returned, so that the
+    # publisher can stream it a bit at a time
+    self.assertEqual(request.RESPONSE.stdout.getvalue(), b'')
+    self.assertEqual(ret,       result + body)
     self.assertEqual(status,    request.RESPONSE.getStatus())
     for h,v in header_dict.items():
       rv = request.RESPONSE.getHeader(h)
       self.assertEqual(v, rv, '%s: %r != %r' % (h, v, rv))
-
-    # force response flush to its stdout
-    request.RESPONSE.write(b'')
-    # body and headers are delimited by empty line (RFC 2616, 4.1)
-    response_body = request.RESPONSE.stdout.getvalue().split(b'\r\n\r\n', 1)[1]
-    self.assertEqual(body, response_body)
 
 
   # basic tests for working with BigFile via its public interface
@@ -348,8 +352,29 @@ class TestBigFile(ERP5TypeTestCase):
     check(put({'Content-Range': 'bytes 9-10/11',  'Content-Length': '2'},b'??'),{}, b'', b'', 400, {'X-Explanation': 'Can only append data'})
     check(put({'Content-Range': 'bytes 11-11/12', 'Content-Length': '1'}, b'?'),{}, b'', b'', 400, {'X-Explanation': 'Can only append data'})
 
+    # multiple ranges in 'Range' with GET
+    request = get({'Range': 'bytes=0-1,5-6'})
+    ret = f.index_html(request, request.RESPONSE)
+    self.assertEqual(request.RESPONSE.getStatus(), 206)
+    self.assertEqual(request.RESPONSE.stdout.getvalue(), b'')
+    content_type = request.RESPONSE.getHeader('Content-Type')
+    prefix = 'multipart/byteranges; boundary='
+    self.assertTrue(content_type.startswith(prefix), content_type)
+    boundary = content_type[len(prefix):].encode()
+    part_header = b'\r\n--' + boundary + b'\r\nContent-Type: ' + \
+      ('%s' % f.content_type).encode() + b'\r\nContent-Range: bytes '
+    expected_body = (
+      part_header + b'0-1/10\r\n\r\nab' +
+      part_header + b'5-6/10\r\n\r\nfg' +
+      b'\r\n--' + boundary + b'--\r\n')
+    self.assertTrue(IZODBStreamIterator is None or # BBB Zope 4
+                      IZODBStreamIterator.providedBy(ret))
+    self.assertEqual(len(ret), len(expected_body))
+    self.assertEqual(b''.join(ret), expected_body)
+    self.assertEqual(request.RESPONSE.getHeader('Content-Length'),
+                     str(len(expected_body)))
+
     # TODO test 'If-Range' with GET
-    # TODO test multiple ranges in 'Range' with GET
 
 
   # test BigFile's .data property can be of several types and is handled

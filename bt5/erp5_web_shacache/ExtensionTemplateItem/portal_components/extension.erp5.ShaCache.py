@@ -29,6 +29,8 @@
 import hashlib
 import six.moves.http_client
 from Products.ERP5Type.UnrestrictedMethod import super_user
+from OFS.Image import Pdata
+from Products.ERP5Type.Utils import IterableAsStreamIterator
 
 
 def WebSection_getDocumentValue(self, key, portal=None, language=None,\
@@ -83,32 +85,23 @@ def File_viewAsWeb(self):
   RESPONSE.setHeader('Etag', etag)
   RESPONSE.setHeader('Accept-Ranges', 'bytes')
 
-  # Shortcut if the file is not a Pdata.
-  data=self.data
-  if isinstance(data, bytes):
-    # Do this way instead of 'return data'
-    # to bypass default caching policy manager.
-    RESPONSE.write(data)
-    return
+  data = self.data
+  if data is None:
+    return b''
+  if not isinstance(data, Pdata):
+    # The data is bytes, or str for a small file that was made on Python 2.
+    # getData returns bytes in both cases. Return a stream iterator instead
+    # of the bytes, to bypass the default caching policy manager.
+    data = self.getData()
+    return IterableAsStreamIterator((data,), len(data))
 
-  # XXX This code was not updated for WSGI and
-  # https://github.com/zopefoundation/Zope/issues/662
-  # The historical comment for ZServer was:
-  #
-  #   For Pdata type, we must iterate and send chunk by chunk.
-  #   And no need to continue if the client closed the connection.
-  #
-  # With WSGI we currently do not send chunk by chunk, this just builds
-  # big buffer and send at the end.
-  #
-  # We do not even check if client disconnected. On ZServer, this was checked using:
-  # `RESPONSE.stdout._channel.closed`, which we could replace by waitress'
-  # `REQUEST.environ['waitress.client_disconnected']()`; this would require running
-  # waitress with channel_request_lookahead larger than 0, so this was left as a possible
-  # future improvement.
-  while data:
-    # Send data to the client.
-    RESPONSE.write(data.data)
+  # For Pdata, the publisher sends the data chunk by chunk, while it loads
+  # the next chunks from the ZODB.
+  return IterableAsStreamIterator(_iteratePdata(data), self.getSize())
+
+def _iteratePdata(data):
+  while data is not None:
+    yield data.data
     # Load next object without keeping previous chunks in memory.
     deactivate = data._p_deactivate
     data = data.next
