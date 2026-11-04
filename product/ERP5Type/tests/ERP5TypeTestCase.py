@@ -828,7 +828,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase, functional.F
       request = getRequest()
       try:
         with user_context:
-          return super(ERP5TypeTestCaseMixin, self).publish(
+          response = super(ERP5TypeTestCaseMixin, self).publish(
             path,
             basic=basic,
             env=env,
@@ -837,6 +837,16 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase, functional.F
             stdin=stdin,
             handle_errors=handle_errors,
           )
+        # Like a WSGI server, read the whole body and close it, so that the
+        # publisher releases the ZODB connection of a streamed response.
+        result = getattr(response, '_wsgi_result', None)
+        close = getattr(result, 'close', None)
+        if close is not None:
+          try:
+            response._wsgi_result = (b''.join(result),)
+          finally:
+            close()
+        return response
       finally:
         # Make sure that the skin cache does not have objects that were
         # loaded with the connection used by the requested url.
