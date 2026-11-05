@@ -16,7 +16,9 @@
           "with b64encode/b64decode/describe/wat2wasm helpers is also available to the code. Pass " +
           "`libraries` (https:// URLs to a UMD/IIFE script or .mjs ES module) to preload third-party " +
           "helpers, available both as their usual global (e.g. a UMD bundle's own global, auto-detected) " +
-          "and via `lib[\"<the URL you passed>\"]`. Errors thrown by the " +
+          "and via `lib[\"<the URL you passed>\"]`. To check the real API of a library before " +
+          "writing code against it, instead of guessing, load it and return what it exposes, e.g. " +
+          "`return Object.keys(lib[url]);`. Errors thrown by the " +
           "code are reported back as an error message; a runaway loop is killed at its deadline, which " +
           "costs one worker, not the tab. USE THIS WHEN: you need custom computation or to " +
           "reshape/combine data you already have (e.g. a previous tool's result) that's easier to do in " +

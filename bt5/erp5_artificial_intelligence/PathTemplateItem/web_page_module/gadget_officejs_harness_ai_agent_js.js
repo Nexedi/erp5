@@ -215,7 +215,9 @@
         content: "Cancelled by user"
       });
 
+      // The posts queued while it ran are dropped with what it was doing.
       return new RSVP.Queue(RSVP.all([
+        gadget.gadget_chat_ui.clearQueuedPostList(),
         gadget.gadget_chat_ui.showMessage({ content: content, reasoning: "", tool_message_list: gadget.tool_message_list, execution_plan: execution_plan }),
         gadget.notifySubmitted({message: 'Cancelled', status: "success"}),
         gadget.storeTaskResult(
@@ -228,8 +230,6 @@
         )
       ]))
         .push(function () {
-          // The posts queued while it ran are kept, after the answer, but
-          // not sent: the next post sends them with the history.
           return gadget.gadget_chat_ui.stopProcessing();
         });
     })
@@ -395,20 +395,18 @@
       gadget.processing_queue = queue_loop;
 
       function loopError(e) {
-        // The answer keeps only what the model wrote before the error: it is
-        // sent back to the model with the history of the next turns. The
-        // error itself goes in the trace, which shows it under the answer.
         var content = joinAnswerText(gadget.answer_text_list, ""),
-          execution_plan = gadget.execution_plan;
+          execution_plan = gadget.execution_plan,
+          message = e && e.message ? e.message : String(e),
+          stack = e && e.stack ? String(e.stack) : "";
         gadget.processing_queue = null;
         gadget.execution_plan = null;
+        // only put inside the trace, to not send back to llm
         gadget.tool_message_list.push({
           role: "tool",
           name: "error",
-          // With the stack, to know where an error of the code itself was
-          // thrown.
-          content: "Error: " + (e && e.message ? e.message : String(e)) +
-            (e && e.stack ? "\n\n" + e.stack : "")
+          content: "Error: " + (stack.indexOf(message) !== -1 ? stack :
+              message + (stack ? "\n\n" + stack : ""))
         });
         return new RSVP.Queue(RSVP.all([
           gadget.gadget_chat_ui.showMessage({ content: content, reasoning: "", tool_message_list: gadget.tool_message_list, execution_plan: execution_plan }),
@@ -466,12 +464,17 @@
           })
           .push(function (queued_message_list) {
             if (queued_message_list.length && message_list) {
-              // A new turn, as if the user had posted after the answer.
+              // A new turn, as if the user had posted after the answer: its
+              // usage is counted from zero, like its turns.
               gadget.execution_plan = null;
               gadget.tool_message_list = [];
               gadget.answer_text_list = [];
               gadget.streaming_text = "";
+              usage_totals = window.ChatToolCommon.createUsageTotals();
               return gadget.gadget_chat_ui.startProcessing()
+                .push(function () {
+                  return gadget.notifySubmitted({message: 'Processing', status: "success"});
+                })
                 .push(function () {
                   return loop_call(0, message_list.concat(queued_message_list));
                 });

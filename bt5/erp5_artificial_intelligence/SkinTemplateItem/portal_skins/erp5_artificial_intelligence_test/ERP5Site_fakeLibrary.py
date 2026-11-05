@@ -1,6 +1,7 @@
 """
 A minimal UMD-style script exposing one global, used only by the Zelenium
-test for the library_inspect tool (testOfficeJSHarnessAILibraryInspectTool.zpt).
+test for the libraries of the execute_javascript tool
+(testOfficeJSHarnessAIExecuteJavascriptTool.zpt).
 Fetched by gadget_officejs_harness_ai_sandbox_worker_js.js's loadLibraries(),
 which evals classic/UMD sources and auto-detects whichever global newly
 appeared - same-origin and fixed content, so the test doesn't depend on any

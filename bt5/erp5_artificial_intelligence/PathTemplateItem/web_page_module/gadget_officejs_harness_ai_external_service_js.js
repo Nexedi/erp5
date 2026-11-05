@@ -18,10 +18,7 @@
     .declareMethod("render", function () {
       var gadget = this;
 
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.getSettingList(["proxy_server_url", "mcp_server_list", "mcp_oauth_token_map"]);
-        })
+      return gadget.getSettingList(["proxy_server_url", "mcp_server_list", "mcp_oauth_token_map"])
         .push(function (setting_list) {
           return gadget.getUrlFor({command: "display"})
             .push(function (url) {

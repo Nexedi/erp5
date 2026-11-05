@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -21,8 +21,16 @@
                         <value>
                           <dictionary>
                             <item>
-                                <key> <string>name_subpath</string> </key>
-                                <value> <string>traverse_subpath</string> </value>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
                             </item>
                           </dictionary>
                         </value>
@@ -33,20 +41,8 @@
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
-        </item>
-        <item>
-            <key> <string>expand</string> </key>
-            <value> <int>0</int> </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
-            <value> <string>testOfficeJSHarnessAILibraryInspectTool</string> </value>
-        </item>
-        <item>
-            <key> <string>output_encoding</string> </key>
-            <value> <string>utf-8</string> </value>
+            <value> <string>ERP5Site_fakeMcpServer</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

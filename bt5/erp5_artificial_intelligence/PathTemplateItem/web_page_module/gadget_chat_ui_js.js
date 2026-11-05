@@ -305,9 +305,9 @@
     ]);
   }
 
+
   function renderMessage(message_element, message, rendered_tool_message_count) {
     var tool_message_list = message.tool_message_list || [],
-      details_open,
       details_element,
       error_dom,
       reasoning_element,
@@ -315,7 +315,6 @@
       i;
     markdown_element = message_element.querySelector(".post-markdown");
     if (message.hasOwnProperty('content') && message.content) {
-      details_open = false;
       markdown_element.innerHTML = marked.parse(message.content || "");
       message_element.querySelector('pre.chat-hidden-field').textContent = message.content || "";
       if (message.streaming) {
@@ -324,7 +323,6 @@
     } else {
       // Still working: keep the text already shown, the model goes on
       // writing below it.
-      details_open = true;
       if (!markdown_element.querySelector('.chat-typing-indicator')) {
         markdown_element.appendChild(getTypingIndicatorDom());
       }
@@ -332,7 +330,7 @@
     if (tool_message_list.length) {
       details_element = message_element.querySelector('.post-tool > details');
       if (!details_element) {
-        message_element.appendChild(getToolCallDom(tool_message_list, details_open));
+        message_element.appendChild(getToolCallDom(tool_message_list, true));
       } else {
         for (i = rendered_tool_message_count; i < tool_message_list.length; i += 1) {
           details_element.appendChild(getAgentMessageDiv(tool_message_list[i]));
@@ -341,8 +339,8 @@
           details_element.querySelector('summary').textContent =
             getToolCallSummaryText(tool_message_list.length);
         }
-        details_element.open = details_open;
-        details_element.classList.toggle('post-tool-pending', details_open);
+        details_element.open = true;
+        details_element.classList.add('post-tool-pending');
       }
     }
     // message.reasoning: "" removes the block, it stays open while the
@@ -547,6 +545,17 @@
               return queued_message_list;
             });
         });
+    })
+    // Drops the queued posts, without storing them.
+    .declareMethod('clearQueuedPostList', function () {
+      (this.queued_post_list || []).forEach(function (queued_post) {
+        // A post already stored by a flush is not queued anymore: it stays.
+        if (queued_post.element.classList.contains("post-queued") &&
+            queued_post.element.parentNode) {
+          queued_post.element.parentNode.removeChild(queued_post.element);
+        }
+      });
+      this.queued_post_list = [];
     })
     .declareMethod('flushQueuedPostList', function () {
       var gadget = this,

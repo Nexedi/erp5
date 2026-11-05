@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP */
+/*global window, rJS */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP) {
+(function (window, rJS) {
   "use strict";
 
   rJS(window)
@@ -70,10 +70,7 @@
         window.location.host.length;
       current_version = current_version.substr(index);
 
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.getSettingList(["migration_version", "app_configurator", "hateoas_url"]);
-        })
+      return gadget.getSettingList(["migration_version", "app_configurator", "hateoas_url"])
         .push(function (setting_list) {
           var configurator = setting_list[1] || 'ojs_configurator';
           if (setting_list[0] !== current_version) {
@@ -116,4 +113,4 @@
           });
         });
     });
-}(window, rJS, RSVP));
+}(window, rJS));

@@ -170,7 +170,7 @@
   <td>//li[contains(@class, 'post-question')][not(contains(@class, 'post-queued'))][contains(., 'follow up message')]/preceding-sibling::li[1]//div[@class='post-markdown'][contains(., 'Finished stalling.')]</td>
   <td></td>
 </tr>
-<!-- Cancel: the queued post is stored as a plain post, but not sent -->
+<!-- Cancel: the queued post is dropped, with what the agent was doing -->
 <tr>
   <td>waitForEval</td>
   <td>(function(){var cm=window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror;cm.setValue('please stall for the cancel test');return cm.getValue();})()</td>
@@ -238,13 +238,13 @@
   <td></td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//li[contains(@class, 'post-question')][not(contains(@class, 'post-queued'))][contains(., 'queued during cancel')]</td>
+  <td>assertElementNotPresent</td>
+  <td>//li[contains(@class, 'post-question')][contains(., 'queued during cancel')]</td>
   <td></td>
 </tr>
 <tr>
-  <td>assertElementNotPresent</td>
-  <td>//li[contains(@class, 'post-question')][not(contains(@class, 'post-queued'))][contains(., 'queued during cancel')]/following-sibling::li</td>
+  <td>assertElementPresent</td>
+  <td>//li[contains(@class, 'post-question')][contains(., 'please stall for the cancel test')]/following-sibling::li[1][contains(@class, 'post-answer')]//div[contains(@class, 'post-tool-entry')][contains(., 'Cancelled by user')]</td>
   <td></td>
 </tr>
 </tbody></table>

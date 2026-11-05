@@ -321,44 +321,6 @@
     return out;
   }
 
-  /** Own + prototype property/method names of a loaded library's value, size-bounded. */
-  function describeMembers(value) {
-    const proto = Object.getPrototypeOf(value) || {};
-    const keys = Object.keys(value).concat(Object.getOwnPropertyNames(proto));
-    const seen = new Set();
-    const members = [];
-    for (const key of keys) {
-      if (key === 'constructor' || key.charAt(0) === '_' || seen.has(key)) continue;
-      seen.add(key);
-      members.push(key);
-      if (members.length >= 80) break;
-    }
-    return members;
-  }
-
-  /**
-   * Load each named library URL (if not already cached) and report what it
-   * actually exposes, so the agent can check a real API surface instead of
-   * guessing from the name.
-   */
-  async function inspectLibraries(names) {
-    const out = [];
-    for (const name of names || []) {
-      try {
-        const entry = resolveEntry(name);
-        const lib = await loadLibraries([name]);
-        const value = lib[name];
-        out.push({
-          name, global: entry.global, description: entry.description, url: entry.url,
-          type: typeof value, members: describeMembers(value),
-        });
-      } catch (err) {
-        out.push({ name, error: err.message });
-      }
-    }
-    return { ok: true, libraries: out };
-  }
-
   self.onmessage = async (event) => {
     const { id, kind, payload } = event.data;
     try {
@@ -367,8 +329,6 @@
         result = await execJS(payload.code, payload.args ?? null, payload.libraries ?? []);
       } else if (kind === 'wasm') {
         result = await execWasm(payload);
-      } else if (kind === 'library_inspect') {
-        result = await inspectLibraries(payload.libraries);
       } else if (kind === 'compile_check') {
         result = compileCheck(payload.code);
       } else {

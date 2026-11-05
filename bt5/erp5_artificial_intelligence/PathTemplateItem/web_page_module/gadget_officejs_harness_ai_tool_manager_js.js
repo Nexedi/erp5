@@ -6,7 +6,6 @@
   var STATIC_TOOL_SCOPE_LIST = [
       "tool_execute_javascript",
       "tool_run_wasm",
-      "tool_library_inspect",
       "tool_http_request",
       "tool_pdf_to_text",
       "tool_load_skill",

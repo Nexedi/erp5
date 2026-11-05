@@ -114,6 +114,24 @@ message's role/content picks the branch:
                                              client adds the queued post after the tool
                                              result, before its next request
                                              (testOfficeJSHarnessAISteering.zpt)
+- content "pdf_to_text tool test"       -> calls pdf_to_text without file_name: the last PDF
+                                             attached (pdf_to_text_test_document.pdf) is read
+                                             (testOfficeJSHarnessAIPdfToTextTool.zpt)
+- content "pdf_to_text missing file
+  test"                                  -> calls pdf_to_text with an unknown file_name
+                                             (testOfficeJSHarnessAIPdfToTextTool.zpt)
+- content "load_skill tool test"        -> calls load_skill for create_html_report
+                                             (testOfficeJSHarnessAILoadSkillTool.zpt)
+- content "load_skill unknown skill
+  test"                                  -> calls load_skill for a skill that does not exist
+                                             (testOfficeJSHarnessAILoadSkillTool.zpt)
+- content "mcp tool list test"          -> lists the descriptions of the tools sent in the
+                                             request that come from ERP5Site_fakeMcpServer
+                                             (their description has "FAKE-MCP-")
+- content "mcp echo tool test"          -> calls the MCP echo tool, found by its description
+                                             (its public name holds the server URL)
+- content "mcp fail tool test"          -> calls the MCP fail tool, which reports an error
+                                             (all three: testOfficeJSHarnessAIMcpServer.zpt)
 - content "steering message"            -> "STEERING-RECEIVED after tool." if the message
                                              just before is a tool result (the post was
                                              added in the middle of the task), else
@@ -539,6 +557,17 @@ def is_read_output_test_call(message):
           and 'READ-OUTPUT-START' in (function.get('arguments') or ''))
 
 
+def find_tool_name(description_marker):
+  # The public name of an MCP tool is built from the server URL, cut to 64
+  # chars (uniqueNamespacedName in gadget_officejs_harness_ai_mcp_client_js.js):
+  # find it by the description of the fake MCP server instead.
+  for tool in body.get('tools') or []:
+    function = tool.get('function') or {}
+    if description_marker in (function.get('description') or ''):
+      return function.get('name')
+  return None
+
+
 def count_matching_assistant_tool_calls(msgs, name, arguments_json):
   count = 0
   for m in msgs:
@@ -739,6 +768,29 @@ elif 'final reasoning test' in last_content_lower:
       {'choices': [{'delta': {'reasoning_content': 'MARKER: answer directly.'}}]},
       {'choices': [{'delta': {'content': 'Final answer after reasoning.'}}]},
   ]
+elif 'pdf_to_text missing file test' in last_content_lower:
+  chunk = tool_call_chunk('pdf_to_text', {'file_name': 'missing.pdf'})
+elif 'pdf_to_text tool test' in last_content_lower:
+  chunk = tool_call_chunk('pdf_to_text', {})
+elif 'load_skill unknown skill test' in last_content_lower:
+  chunk = tool_call_chunk('load_skill', {'name': 'no_such_skill'})
+elif 'load_skill tool test' in last_content_lower:
+  chunk = tool_call_chunk('load_skill', {'name': 'create_html_report'})
+elif 'mcp tool list test' in last_content_lower:
+  mcp_description_list = sorted(
+      (tool.get('function') or {}).get('description') or ''
+      for tool in body.get('tools') or []
+      if 'FAKE-MCP-' in ((tool.get('function') or {}).get('description') or ''))
+  chunk = {'choices': [{'delta': {'content': 'MCP tools: %d. %s' % (
+      len(mcp_description_list), ' | '.join(mcp_description_list))}}]}
+elif 'mcp echo tool test' in last_content_lower or 'mcp fail tool test' in last_content_lower:
+  mcp_tool_name = find_tool_name(
+      'FAKE-MCP-ECHO' if 'mcp echo tool test' in last_content_lower else 'FAKE-MCP-FAIL')
+  if mcp_tool_name:
+    chunk = tool_call_chunk(mcp_tool_name, {'text': 'hello mcp'}
+                            if 'mcp echo tool test' in last_content_lower else {})
+  else:
+    chunk = {'choices': [{'delta': {'content': 'The MCP tool was not sent to the model.'}}]}
 elif 'read_tool_output tool test' in last_content_lower:
   chunk = tool_call_chunk('execute_javascript', read_output_test_args())
 elif 'execute_javascript tool test' in last_content_lower:
@@ -749,8 +801,11 @@ elif 'run_wasm tool test' in last_content_lower:
              'local.get 0 local.get 1 i32.add))',
       'calls': [{'name': 'add', 'args': [2, 3]}],
   })
-elif 'library_inspect tool test' in last_content_lower:
-  chunk = tool_call_chunk('library_inspect', {
+elif 'execute_javascript library test' in last_content_lower:
+  # Checks the API of a library with execute_javascript, as its description
+  # tells the model to.
+  chunk = tool_call_chunk('execute_javascript', {
+      'code': 'return Object.keys(lib[%s]).join(", ");' % json.dumps(portal_url + '/ERP5Site_fakeLibrary'),
       'libraries': [portal_url + '/ERP5Site_fakeLibrary'],
   })
 elif 'spawn_subagent turn limit test' in last_content_lower:
