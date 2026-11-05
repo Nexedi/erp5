@@ -165,7 +165,7 @@
 </tr>
 <tr>
   <td>waitForElementNotPresent</td>
-  <td>//li[@class='post-answer'][last()]//div[@class='execution-plan']</td>
+  <td>(//li[contains(@class, 'post-answer')])[last()]//div[@class='execution-plan']</td>
   <td></td>
 </tr>
 <tr>

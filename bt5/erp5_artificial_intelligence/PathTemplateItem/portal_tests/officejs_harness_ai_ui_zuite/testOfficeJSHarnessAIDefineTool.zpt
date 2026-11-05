@@ -2,12 +2,12 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Test OfficeJS Harness AI - define_tool / list_defined_tools / undefine_tool Round Trip</title>
+<title>Test OfficeJS Harness AI - define_tool Round Trip</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Test OfficeJS Harness AI - define_tool / list_defined_tools / undefine_tool Round Trip</td></tr>
+<tr><td rowspan="1" colspan="3">Test OfficeJS Harness AI - define_tool Round Trip</td></tr>
 </thead><tbody>
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
 <tr>
@@ -90,8 +90,8 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForHarnessAI/macros/wait_for_editor" />
 <tr>
   <td>waitForEval</td>
-  <td>(function(){var cm=window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror;cm.setValue('Please run the list_defined_tools tool test');return cm.getValue();})()</td>
-  <td>Please run the list_defined_tools tool test</td>
+  <td>(function(){var cm=window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror;cm.setValue('Please run the define_tool list test');return cm.getValue();})()</td>
+  <td>Please run the define_tool list test</td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
@@ -126,8 +126,8 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForHarnessAI/macros/wait_for_editor" />
 <tr>
   <td>waitForEval</td>
-  <td>(function(){var cm=window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror;cm.setValue('Please run the undefine_tool tool test, remove the double tool');return cm.getValue();})()</td>
-  <td>Please run the undefine_tool tool test, remove the double tool</td>
+  <td>(function(){var cm=window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror;cm.setValue('Please run the define_tool remove test, remove the double tool');return cm.getValue();})()</td>
+  <td>Please run the define_tool remove test, remove the double tool</td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>

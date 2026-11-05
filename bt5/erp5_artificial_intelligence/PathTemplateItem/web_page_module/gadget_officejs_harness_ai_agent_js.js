@@ -28,7 +28,7 @@
       "attempt to use them will fail. The only capabilities available are the tools explicitly provided " +
       "in this conversation: a sandboxed JavaScript/WASM execution environment (itself with no " +
       "filesystem or network access), http_request for making network calls, " +
-      "define_tool/list_defined_tools/undefine_tool for creating new callable tools out of JS code, " +
+      "define_tool for creating (and listing, removing) new callable tools out of JS code, " +
       "spawn_subagent for delegating sub-tasks, read_tool_output for reading a tool output that was " +
       "too large to return whole, whatever MCP tools are configured, and - only when the " +
       "user asks for it - execution_plan for a checklist. Do not assume access to anything beyond these. " +
@@ -548,18 +548,6 @@
         if (has_tool_call) {
           queue_loop
             .push(function () {
-              var i, tool_call;
-              for (i = 0; i < pending_result.tool_calls.length; i += 1) {
-                tool_call = pending_result.tool_calls[i];
-                gadget.tool_message_list.push({
-                  name: tool_call.function.name + " (call " + tool_call.id + ")",
-                  content: 'args:' + (tool_call.function.arguments ? tool_call.function.arguments : ''),
-                  'role': "tool"
-                });
-              }
-              return gadget.gadget_chat_ui.showMessage({tool_message_list: gadget.tool_message_list, execution_plan: gadget.execution_plan });
-            })
-            .push(function () {
               return gadget.tool_manager.runToolCallList(pending_result.tool_calls, message_list, {
                 finish_reason: pending_result.finish_reason
               });
@@ -568,11 +556,14 @@
               var i, client_tool_result;
               for (i = 0; i < tool_round.result_list.length; i += 1) {
                 client_tool_result = tool_round.result_list[i];
+                // The tool message sent to the model, with the trace of a
+                // sub-agent for the page.
                 gadget.tool_message_list.push({
-                  name: client_tool_result.name + " (result " + client_tool_result.tool_call_id + ")",
-                  content: 'result:' + client_tool_result.content,
-                  sub_message_list: client_tool_result.message_list,
-                  'role': "tool"
+                  role: "tool",
+                  tool_call_id: client_tool_result.tool_call_id,
+                  name: client_tool_result.name,
+                  content: client_tool_result.content,
+                  sub_message_list: client_tool_result.message_list
                 });
                 if (client_tool_result.execution_plan !== undefined) {
                   gadget.execution_plan = client_tool_result.execution_plan;
@@ -627,10 +618,16 @@
               last_usage_anchor = { prompt_tokens: result.usage.prompt_tokens, message_count: message_list.length };
             }
             if (result.tool_calls && result.tool_calls.length) {
+              // The trace holds the messages of the model, like the one of
+              // the server side harness (ArtificialTask_runHarnessAgent):
+              // the tool calls with their arguments, then their results.
+              // Its tool messages without tool_call_id are notes of the
+              // agent (retries, compaction, usage...), not sent to the model.
               gadget.tool_message_list.push({
-                'role': 'assistant',
-                'content': result.content,
-                'reasoning': result.reasoning
+                role: "assistant",
+                content: result.content,
+                tool_calls: result.tool_calls,
+                reasoning: result.reasoning
               });
               if (result.content && result.content.trim()) {
                 gadget.answer_text_list.push(result.content.trim());

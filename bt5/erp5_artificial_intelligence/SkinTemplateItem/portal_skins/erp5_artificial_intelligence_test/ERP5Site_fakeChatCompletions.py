@@ -35,12 +35,13 @@ message's role/content picks the branch:
 - content "<tool> tool test"             -> a tool_calls chunk invoking that
                                              built-in tool with canned arguments
                                              (one per gadget_officejs_harness_ai_tool_*.html
-                                             gadget, including
-                                             list_defined_tools - no arguments
-                                             needed, it just lists whatever is
-                                             already defined)
+                                             gadget)
+- content "define_tool list test"       -> define_tool with command "list" - no
+                                             other argument needed, it just lists
+                                             whatever is already defined
 - content "remove the double tool"       -> a tool_calls chunk invoking
-                                             undefine_tool for "double"
+                                             define_tool with command "remove" for
+                                             "double"
 - content "execution plan tool test"     -> a tool_calls chunk invoking the
                                              single execution_plan tool with
                                              command "set" and two canned
@@ -86,8 +87,8 @@ message's role/content picks the branch:
 - content mentions "define"              -> define_tool, hard-coded as "double"
                                              (testOfficeJSHarnessAIDefineTool.zpt
                                              exercises the whole
-                                             define_tool/list_defined_tools/undefine_tool
-                                             lifecycle on this one tool name,
+                                             define/list/remove lifecycle of
+                                             define_tool on this one tool name,
                                              reusing it throughout rather than
                                              defining a separate tool per test)
 - content "spawn_subagent turn limit
@@ -190,12 +191,12 @@ message's role/content picks the branch:
                                              echoes that notice back as the
                                              final answer
                                              (testOfficeJSHarnessAIRepeatedToolCall.zpt)
-- content "repeated list_defined_tools
-  tool test"                              -> calls list_defined_tools (marked with a
+- content "repeated define_tool list
+  test"                                  -> calls define_tool with command "list" (marked with a
                                              "repeat_test" argument, silently ignored by the
                                              real tool) four times in a row - one more than
                                              TOOL_CALL_REPEAT_LIMIT - proving its allow_repeat
-                                             flag (gadget_officejs_harness_ai_tool_list_defined_tools_js.js)
+                                             flag (gadget_officejs_harness_ai_tool_define_tool_js.js)
                                              exempts it from the client-side guard entirely:
                                              unlike the http_request case above, every one of
                                              the four calls reaches the real tool and returns
@@ -421,6 +422,7 @@ def raw_tool_call_chunk(name, arguments_text):
 
 def define_tool_chunk(name):
   return tool_call_chunk('define_tool', {
+      'command': 'define',
       'name': name,
       'description': 'Test tool "%s" for Zelenium coverage.' % name,
       'parameters': {
@@ -522,16 +524,16 @@ def is_compaction_test_call(message):
           and 'compaction-step-' in (function.get('arguments') or ''))
 
 
-def list_defined_tools_repeat_args():
-  return {'repeat_test': True}
+def define_tool_list_repeat_args():
+  return {'command': 'list', 'repeat_test': True}
 
 
-def is_list_defined_tools_repeat_test_call(assistant_message):
+def is_define_tool_list_repeat_test_call(assistant_message):
   tool_call_list = assistant_message.get('tool_calls') or []
   if not tool_call_list:
     return False
   function = tool_call_list[0].get('function') or {}
-  if function.get('name') != 'list_defined_tools':
+  if function.get('name') != 'define_tool':
     return False
   try:
     arguments = json.loads(function.get('arguments') or '{}')
@@ -659,13 +661,13 @@ elif (last_message.get('role') == 'tool' and len(message_list) >= 2
   # Never gives up - see the "stuck http_request tool test" docstring entry.
   chunk = tool_call_chunk('http_request', stuck_test_args())
 elif (last_message.get('role') == 'tool' and len(message_list) >= 2
-      and is_list_defined_tools_repeat_test_call(message_list[-2])
+      and is_define_tool_list_repeat_test_call(message_list[-2])
       and count_matching_assistant_tool_calls(
-          message_list, 'list_defined_tools', json.dumps(list_defined_tools_repeat_args())) < 4):
-  # Re-issue three times more (4 calls total) - see the "repeated list_defined_tools
-  # tool test" docstring entry above: allow_repeat means none of these ever
+          message_list, 'define_tool', json.dumps(define_tool_list_repeat_args())) < 4):
+  # Re-issue three times more (4 calls total) - see the "repeated define_tool
+  # list test" docstring entry above: allow_repeat means none of these ever
   # get intercepted by the guard, unlike the http_request case.
-  chunk = tool_call_chunk('list_defined_tools', list_defined_tools_repeat_args())
+  chunk = tool_call_chunk('define_tool', define_tool_list_repeat_args())
 elif (last_message.get('role') == 'tool' and len(message_list) >= 2
       and is_cancel_test_call(message_list[-2])):
   # Second turn of "please work then stall for the cancel test": stalls so
@@ -855,8 +857,8 @@ elif 'endless run_wasm loop' in last_content_lower:
   chunk = tool_call_chunk('run_wasm', endless_test_args(1))
 elif 'stuck http_request tool test' in last_content_lower:
   chunk = tool_call_chunk('http_request', stuck_test_args())
-elif 'repeated list_defined_tools tool test' in last_content_lower:
-  chunk = tool_call_chunk('list_defined_tools', list_defined_tools_repeat_args())
+elif 'repeated define_tool list test' in last_content_lower:
+  chunk = tool_call_chunk('define_tool', define_tool_list_repeat_args())
 elif 'compaction context test' in last_content_lower:
   chunk = tool_call_chunk('execute_javascript', compaction_test_args(1))
 elif 'spawn_subagent tool test' in last_content_lower:
@@ -865,10 +867,10 @@ elif 'http_request tool test' in last_content_lower:
   chunk = tool_call_chunk('http_request', {
       'url': portal_url + '/ERP5Site_fakeHttpEndpoint',
   })
-elif 'list_defined_tools tool test' in last_content_lower:
-  chunk = tool_call_chunk('list_defined_tools', {})
+elif 'define_tool list test' in last_content_lower:
+  chunk = tool_call_chunk('define_tool', {'command': 'list'})
 elif 'remove the double tool' in last_content_lower:
-  chunk = tool_call_chunk('undefine_tool', {'name': 'double'})
+  chunk = tool_call_chunk('define_tool', {'command': 'remove', 'name': 'double'})
 elif 'long execution plan tool test' in last_content_lower:
   # More realistic, longer plan - 5 steps instead of the 1-2 used by the
   # other execution-plan branches above/below, e.g. for visually checking

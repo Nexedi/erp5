@@ -11,8 +11,6 @@
       "tool_load_skill",
       "tool_execution_plan",
       "tool_define_tool",
-      "tool_list_defined_tools",
-      "tool_undefine_tool",
       "tool_spawn_subagent",
       "tool_read_tool_output"
     ],
@@ -239,7 +237,7 @@
     }
 
     // At least one call in this round targets a tool that mutates shared
-    // gadget state (e.g. execution_plan, define_tool/undefine_tool) - run
+    // gadget state (e.g. execution_plan, define_tool) - run
     // the whole round one at a time instead of in parallel, so two such
     // calls in the same round can never race each other.
     queue = new RSVP.Queue();

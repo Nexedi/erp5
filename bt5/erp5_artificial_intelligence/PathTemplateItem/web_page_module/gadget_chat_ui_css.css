@@ -11,10 +11,6 @@ hr#post_item {
   margin-bottom: 20px;
 }
 
-.chat-hidden-field {
-  display: none;
-}
-
 /* ---- Chat page frame ---------------------------------------------------- */
 
 .ui-body-c {
@@ -243,6 +239,18 @@ hr#post_item {
 
 #post_list li.post-tool .post-tool-entry:first-child {
   border-top: none;
+}
+
+/* A tool call of an assistant entry, with its arguments. */
+#post_list li.post-tool .post-tool-call {
+  margin-top: 0.35em;
+}
+
+/* Until its result is in the trace. */
+#post_list li.post-tool .post-tool-call-running > strong::after {
+  content: " · running…";
+  font-weight: normal;
+  animation: chat-cursor-blink 1.2s step-start infinite;
 }
 
 #post_list li.post-tool strong {

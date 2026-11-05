@@ -38,6 +38,7 @@
     ATTACHMENT_TEXT_MAX_LENGTH = 5 * 1024 * 1024,
     ATTACHMENT_IMAGE_MAX_BYTES = 5 * 1024 * 1024;
 
+  // An attachment link is a "data:<mime>[;base64],<payload>" URI.
   function parseDataUri(data_uri) {
     var match = /^data:([^;,]*)(?:;[^,]*)?,([\s\S]*)$/.exec(data_uri || "");
     return match ? { mime: match[1], base64: match[2] } : null;
@@ -93,6 +94,25 @@
       (parsed.mime || "unknown type") + ") - not shown, unsupported type]" };
   }
 
+  // The LLM message of a post (as getCommentPostList returns it), or null for
+  // an answer cancelled before the model wrote anything.
+  function postToMessage(post) {
+    var content = post.text || "",
+      attachment_part = post.attachment_link ?
+          getAttachmentContentPart(post.attachment_name, post.attachment_link) : null;
+    if (post.response) {
+      return content.trim() ? { role: "assistant", content: content } : null;
+    }
+    return {
+      role: "user",
+      content: attachment_part ?
+          (attachment_part.type === "image_url" ?
+              [{ type: "text", text: content }, attachment_part] :
+              content + "\n\n" + attachment_part.text) :
+          content
+    };
+  }
+
   function formatPost(post) {
     var date = new Date(post.date);
     post.date_formatted = date.toLocaleString();
@@ -112,8 +132,7 @@
   function getPostDom(post) {
     var content_element = post.response ?
         domsugar("div", [
-        domsugar("div", { "class": "post-markdown", html: marked.parse(post.text) }),
-        domsugar("pre", { "class": "chat-hidden-field" }, [post.text])
+        domsugar("div", { "class": "post-markdown", html: marked.parse(post.text) })
       ]) :
         domsugar("div", [domsugar("pre", [post.text])]),
         dom_list = [
@@ -129,33 +148,12 @@
     dom_list.push(domsugar("time", { datetime: post.date, title: post.date }, [
       (post.response && post.author_title) ? (post.author_title + " · " + post.date_formatted) : post.date_formatted
     ]));
+    // post-has-text: an answer with a text, counted by onLoop as shown.
     return domsugar("li", {
-      "class": post.response ? "post-answer" : "post-question"
+      "class": post.response ?
+          ((post.text || "").trim() ? "post-answer post-has-text" : "post-answer") :
+          "post-question"
     }, dom_list);
-  }
-
-  // The LLM message of a rendered question or answer post, or null for an
-  // answer cancelled before the model wrote anything.
-  function getMessageFromLi(li) {
-    var content_element = li.querySelector('pre.chat-hidden-field') || li.querySelector('pre'),
-      content = content_element ? content_element.textContent : "",
-      attachment_element,
-      attachment_part;
-    if (li.classList.contains("post-answer") && !content.trim()) {
-      return null;
-    }
-    attachment_element = li.querySelector('.post-attachment a');
-    attachment_part = attachment_element ?
-      getAttachmentContentPart(attachment_element.textContent, attachment_element.getAttribute('href')) :
-      null;
-    return {
-      role: li.classList.contains("post-answer") ? "assistant" : "user",
-      content: attachment_part ?
-        (attachment_part.type === "image_url" ?
-          [{ type: "text", text: content }, attachment_part] :
-          content + "\n\n" + attachment_part.text) :
-        content
-    };
   }
 
   function getTypingIndicatorDom() {
@@ -178,6 +176,16 @@
       ]));
     }
     dom_list.push(domsugar("div", { "class": "post-tool-content" }, [assistant_message.content || ""]));
+    (assistant_message.tool_calls || []).forEach(function (tool_call) {
+      var tool_function = tool_call["function"] || {};
+      dom_list.push(domsugar("div", {
+        "class": "post-tool-call post-tool-call-running",
+        "data-tool-call-id": tool_call.id || ""
+      }, [
+        domsugar("strong", ["Tool call: " + tool_function.name + (tool_call.id ? " (" + tool_call.id + ")" : "")]),
+        domsugar("pre", { "class": "post-tool-content" }, [tool_function.arguments || ""])
+      ]));
+    });
     return domsugar("div", { "class": "post-tool-entry post-assistant-entry" }, dom_list);
   }
 
@@ -192,9 +200,12 @@
     ]);
   }
 
+  // A tool result has the tool_call_id of its call; a tool message without
+  // it is a note of the agent (retry, compaction, usage...).
   function getToolCallDiv(tool_message) {
     var dom_list = [
-      domsugar("strong", ["Tool: " + tool_message.name]),
+      domsugar("strong", ["Tool: " + tool_message.name +
+        (tool_message.tool_call_id ? " (result " + tool_message.tool_call_id + ")" : "")]),
       domsugar("br"),
       domsugar("div", { "class": "post-markdown post-tool-content", html: marked.parse(tool_message.content || "") })
     ];
@@ -292,17 +303,37 @@
     }
   }
 
+  // A tool call shows it is running until its result is in the trace, or
+  // until the request is finished (is_finished).
+  function refreshToolCallState(element, tool_message_list, is_finished) {
+    var done_dict = {};
+    tool_message_list.forEach(function (tool_message) {
+      if (tool_message.tool_call_id) {
+        done_dict[tool_message.tool_call_id] = true;
+      }
+    });
+    Array.prototype.forEach.call(element.querySelectorAll('.post-tool-call-running'), function (call_element) {
+      if (is_finished || done_dict.hasOwnProperty(call_element.getAttribute('data-tool-call-id'))) {
+        call_element.classList.remove('post-tool-call-running');
+      }
+    });
+  }
+
+  // details_open: the trace of the answer being written, open until the
+  // request is finished.
   function getToolCallDom(tool_message_list, details_open) {
-    var details_attr;
+    var details_attr, tool_call_dom;
     if (!tool_message_list || !tool_message_list.length) {
       return;
     }
     details_attr = details_open ? { open: "open", "class": "post-tool-pending" } : {};
-    return domsugar("li", { "class": "post-tool" }, [
+    tool_call_dom = domsugar("li", { "class": "post-tool" }, [
       domsugar("details", details_attr, [
         domsugar("summary", [getToolCallSummaryText(tool_message_list.length)])
       ].concat(tool_message_list.map(getAgentMessageDiv)))
     ]);
+    refreshToolCallState(tool_call_dom, tool_message_list, !details_open);
+    return tool_call_dom;
   }
 
 
@@ -316,7 +347,9 @@
     markdown_element = message_element.querySelector(".post-markdown");
     if (message.hasOwnProperty('content') && message.content) {
       markdown_element.innerHTML = marked.parse(message.content || "");
-      message_element.querySelector('pre.chat-hidden-field').textContent = message.content || "";
+      if (message.content.trim()) {
+        message_element.classList.add("post-has-text");
+      }
       if (message.streaming) {
         markdown_element.appendChild(getTypingIndicatorDom());
       }
@@ -341,6 +374,7 @@
         }
         details_element.open = true;
         details_element.classList.add('post-tool-pending');
+        refreshToolCallState(details_element, tool_message_list, false);
       }
     }
     // message.reasoning: "" removes the block, it stays open while the
@@ -461,39 +495,32 @@
       }
       return gadget.getCommentPostList(gadget.options.jio_key)
         .push(function (post_list) {
-          return gadget.getMessageList()
-            .push(function (rendered_list) {
-              var new_post_list = post_list.slice(rendered_list.length);
-              return new_post_list.reduce(function (sub_queue, post) {
-                return sub_queue.push(function () {
-                  return gadget.appendPost(post);
-                });
-              }, new RSVP.Queue());
+          // The stored posts after the ones already shown: questions, and
+          // answers with a text (not the one being written).
+          var rendered_count = gadget.element.querySelectorAll(
+              "#post_list li.post-question:not(.post-queued), #post_list li.post-answer.post-has-text"
+            ).length;
+          return post_list.slice(rendered_count).reduce(function (sub_queue, post) {
+            return sub_queue.push(function () {
+              return gadget.appendPost(post);
             });
+          }, new RSVP.Queue());
         });
     }, COMMENT_POLL_INTERVAL)
+    // The conversation as LLM messages, from the stored posts, not from what
+    // the page shows: the queued posts and the answer being written are not
+    // stored yet.
+    .declareMethod('getMessageList', function () {
+      return this.getCommentPostList(this.options.jio_key)
+        .push(function (post_list) {
+          return post_list.map(postToMessage).filter(Boolean);
+        });
+    })
     .declareMethod('appendPost', function (post) {
       var gadget = this,
         post_list_element = gadget.element.querySelector("#post_list"),
         dom = appendPlanAndToolDom(getPostDom(formatPost(post)), post);
       post_list_element.appendChild(dom);
-    })
-    .declareMethod('getMessageList', function () {
-      var gadget = this,
-        // Queued posts are not sent yet: the agent adds them to the
-        // conversation itself (flushQueuedPostList).
-        li_list = gadget.element.querySelectorAll(
-          "#post_list li.post-question:not(.post-queued), #post_list li.post-answer"
-        ),
-        message_list = [],
-        i, message;
-      for (i = 0; i < li_list.length; i += 1) {
-        message = getMessageFromLi(li_list[i]);
-        if (message) {
-          message_list.push(message);
-        }
-      }
-      return message_list;
     })
     // Starts the answer, at the end of the page, and the processing.
     .declareMethod('startProcessing', function () {
@@ -528,6 +555,7 @@
         if (details_element) {
           details_element.open = false;
           details_element.classList.remove('post-tool-pending');
+          refreshToolCallState(details_element, [], true);
         }
       }
       gadget.new_message_element = null;
@@ -557,6 +585,8 @@
       });
       this.queued_post_list = [];
     })
+    // Stores the queued posts, in the order they were posted, and returns
+    // their LLM messages.
     .declareMethod('flushQueuedPostList', function () {
       var gadget = this,
         message_list = [];
@@ -567,7 +597,6 @@
         }
         return gadget.postComment(gadget.options.jio_key, queued_post.form_data_json)
           .push(function () {
-            var message;
             gadget.queued_post_list.shift();
             queued_post.element.classList.remove("post-queued");
             // Stored before the answer being written, which is stored once
@@ -578,10 +607,7 @@
                   window.Node.DOCUMENT_POSITION_FOLLOWING)) {
               gadget.new_message_element.parentNode.insertBefore(queued_post.element, gadget.new_message_element);
             }
-            message = getMessageFromLi(queued_post.element);
-            if (message) {
-              message_list.push(message);
-            }
+            message_list.push(postToMessage(queued_post.post));
             return flushNext();
           });
       }
@@ -688,7 +714,8 @@
                         gadget.element.querySelector("#post_list").appendChild(queued_element);
                         gadget.queued_post_list = (gadget.queued_post_list || []).concat([{
                           element: queued_element,
-                          form_data_json: form_data_json
+                          form_data_json: form_data_json,
+                          post: post
                         }]);
                       });
                   }

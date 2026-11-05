@@ -21,8 +21,8 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForHarnessAI/macros/wait_for_editor" />
 <tr>
   <td>waitForEval</td>
-  <td>(function(){var cm=window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror;cm.setValue('Please run the repeated list_defined_tools tool test');return cm.getValue();})()</td>
-  <td>Please run the repeated list_defined_tools tool test</td>
+  <td>(function(){var cm=window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror;cm.setValue('Please run the repeated define_tool list test');return cm.getValue();})()</td>
+  <td>Please run the repeated define_tool list test</td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
