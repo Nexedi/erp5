@@ -13,6 +13,11 @@ documents instead of a monkey-patched Python object, since Zelenium drives a
 real, separately-running instance over HTTP rather than a single
 ERP5TypeTestCase process.
 
+In testFunctionalERP5HarnessAI, the connector is already created by
+afterSetUp, with the URL of the http server of the test: the URL of the
+portal seen here is the https frontend of the test nodes, whose certificate
+python requests (used by the connector on the server side) does not trust.
+
 Always creates a brand-new Artificial Task against that fixture agent (one
 fresh document per Zelenium `open` of this script, same "fresh document per
 test" choice TestArtificialIntelligence.py makes per test method), confirms

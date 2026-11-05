@@ -31,7 +31,12 @@
       "define_tool/list_defined_tools/undefine_tool for creating new callable tools out of JS code, " +
       "spawn_subagent for delegating sub-tasks, read_tool_output for reading a tool output that was " +
       "too large to return whole, whatever MCP tools are configured, and - only when the " +
-      "user asks for it - execution_plan for a checklist. Do not assume access to anything beyond these.",
+      "user asks for it - execution_plan for a checklist. Do not assume access to anything beyond these. " +
+      "The history of this conversation has only the posts of the user and the text of your answers: " +
+      "the tool calls of your earlier answers and their results are not repeated in it. The text of an " +
+      "earlier answer is a faithful record of what its tools returned - do not take it for made up. " +
+      "When a tool returns values the user may ask about later (ids, numbers, URLs), write them in " +
+      "your answer, since its text is all that the next turns keep.",
     TURN_LIMIT_PROMPT = "Turn limit reached: you can not call tools anymore. Give your final answer " +
       "now, with what you found so far, and say clearly what you could not find or verify.",
     CONTEXT_SUMMARY_PREFIX = "[context summary]\n",
