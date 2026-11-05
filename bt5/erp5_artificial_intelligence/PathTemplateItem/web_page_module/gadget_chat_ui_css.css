@@ -250,7 +250,7 @@ hr#post_item {
 #post_list li.post-tool .post-tool-call-running > strong::after {
   content: " · running…";
   font-weight: normal;
-  animation: chat-cursor-blink 1.2s step-start infinite;
+  animation: chat-cursor-blink 2s step-start infinite;
 }
 
 #post_list li.post-tool strong {
