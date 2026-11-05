@@ -651,6 +651,23 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
                        'content_type': 'Image'}],
                      line.BugLine_getAttachmentList())
 
+  def test_bug_line_content_shows_its_images_inline(self):
+    bug = self.portal.bug_module.newContent(portal_type='Bug')
+    bug.Bug_addFileProject(
+      file=self._makeUpload(['images', 'erp5_logo_small.png'], 'image/png'))
+    line = bug.default_bug_line
+    image, = line.contentValues()
+    image.setTitle('a "b" <c>')
+    self.assertIn('<p><img src="%s" alt="a &quot;b&quot; &lt;c&gt;"></p>'
+                  % image.File_getDownloadUrl(),
+                  line.BugLine_getContentOrTitle())
+
+  def test_bug_line_content_does_not_inline_files(self):
+    bug = self.portal.bug_module.newContent(portal_type='Bug')
+    bug.Bug_addFileProject(
+      file=self._makeUpload(['TEST-en-002.txt'], 'text/plain'))
+    self.assertNotIn('<img', bug.default_bug_line.BugLine_getContentOrTitle())
+
   def test_bug_messages_reader_uses_attachment_column(self):
     field = self.portal.portal_skins.erp5_web_project \
                 .Bug_viewProject.my_messages
