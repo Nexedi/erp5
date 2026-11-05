@@ -105,6 +105,11 @@
   <td></td>
 </tr>
 <tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[contains(@class, 'post-tool-entry')][contains(., 'Tool: mcp_unavailable')]</td>
+  <td></td>
+</tr>
+<tr>
   <td>waitForElementPresent</td>
   <td>//li[contains(@class, 'post-answer')]//div[@class='post-markdown'][contains(., 'MCP tools: 2.')]</td>
   <td></td>

@@ -20,14 +20,14 @@
           "including by any sub-agent you spawn afterwards. It is saved in this browser and shared " +
           "by all tasks: it is also available in the other tasks, and still there next time you open " +
           "one, until command \"remove\" removes it. Its implementation is an async function body, " +
-          "exactly like execute_javascript's `code` (receives `args` matching its `parameters` " +
+          "exactly like run_javascript's `code` (receives `args` matching its `parameters` " +
           "schema, plus `console`/`utils`/`lib`); it runs in the same isolated sandbox worker, with " +
           "the global `WebAssembly` and `utils.wat2wasm`. command \"list\" lists the defined tools " +
           "(of all tasks) with their description, parameters and code. command \"remove\" removes " +
           "one, with its saved copy - built-in and MCP tools can not be removed. USE \"define\" WHEN: " +
           "you expect to call the same piece of logic again, with different arguments, and want a " +
-          "clean, named, schema-checked tool instead of repeating execute_javascript calls with inline " +
-          "code. DO NOT USE it for a one-off computation - just use execute_javascript directly.",
+          "clean, named, schema-checked tool instead of repeating run_javascript calls with inline " +
+          "code. DO NOT USE it for a one-off computation - just use run_javascript directly.",
         parameters: {
           type: "object",
           properties: {

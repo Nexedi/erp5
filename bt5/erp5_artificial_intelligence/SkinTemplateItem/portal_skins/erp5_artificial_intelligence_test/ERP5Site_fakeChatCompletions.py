@@ -208,7 +208,7 @@ message's role/content picks the branch:
                                              send the error back as the tool result
                                              (testOfficeJSHarnessAIToolArguments.zpt)
 - content "repairable tool arguments
-  test"                                  -> a tool_calls chunk for execute_javascript whose
+  test"                                  -> a tool_calls chunk for run_javascript whose
                                              arguments hold a raw newline inside the "code"
                                              string (invalid JSON that the client repairs), so
                                              the tool runs and returns repaired-json-ok
@@ -241,7 +241,7 @@ message's role/content picks the branch:
                                              reasoning_content: the client keeps that
                                              reasoning in the answer's tool call trace
                                              (testOfficeJSHarnessAIThinking.zpt)
-- content "read_tool_output tool test"  -> calls execute_javascript returning ~60000 chars
+- content "read_tool_output tool test"  -> calls run_javascript returning ~60000 chars
                                              with READ-OUTPUT-NEEDLE in the middle, more
                                              than the client's tool output limit; once the
                                              cut result comes back, calls read_tool_output
@@ -307,7 +307,7 @@ message's role/content picks the branch:
                                              (testOfficeJSHarnessAISpawnSubagentTool.zpt)
 - content "compaction context test"      -> only meaningful with SMALL_CONTEXT_MODEL selected (its
                                              tiny context window makes the client compact after two
-                                             tool rounds): keeps calling execute_javascript, each
+                                             tool rounds): keeps calling run_javascript, each
                                              call returning ~5000 characters, until the history
                                              carries SUMMARY-TWO, then gives a final answer
                                              (testOfficeJSHarnessAICompaction.zpt)
@@ -520,7 +520,7 @@ def is_compaction_test_call(message):
   if not tool_call_list:
     return False
   function = tool_call_list[0].get('function') or {}
-  return (function.get('name') == 'execute_javascript'
+  return (function.get('name') == 'run_javascript'
           and 'compaction-step-' in (function.get('arguments') or ''))
 
 
@@ -555,7 +555,7 @@ def is_read_output_test_call(message):
   if not tool_call_list:
     return False
   function = tool_call_list[0].get('function') or {}
-  return (function.get('name') == 'execute_javascript'
+  return (function.get('name') == 'run_javascript'
           and 'READ-OUTPUT-START' in (function.get('arguments') or ''))
 
 
@@ -614,7 +614,7 @@ elif (last_message.get('role') == 'tool' and len(message_list) >= 2
         'content': 'Compaction test failed: history was not compacted.',
     }}]}
   else:
-    chunk = tool_call_chunk('execute_javascript', compaction_test_args(next_step))
+    chunk = tool_call_chunk('run_javascript', compaction_test_args(next_step))
 elif last_message.get('role') == 'tool' and last_message.get('name') == 'execution_plan':
   # Chains straight off the "execution plan tool test" branch below, without
   # needing a second user message - same one-phrase-per-tool-test convention
@@ -737,7 +737,7 @@ elif 'please stream a reply in parts' in last_content_lower:
 elif 'invalid tool arguments test' in last_content_lower:
   chunk = raw_tool_call_chunk('http_request', '{"url": "' + portal_url)
 elif 'repairable tool arguments test' in last_content_lower:
-  chunk = raw_tool_call_chunk('execute_javascript', '{"code": "return \'repaired-json-ok\';\n"}')
+  chunk = raw_tool_call_chunk('run_javascript', '{"code": "return \'repaired-json-ok\';\n"}')
 elif 'truncated tool call test' in last_content_lower:
   chunk = tool_call_chunk('http_request', {
       'url': portal_url + '/ERP5Site_fakeHttpEndpoint',
@@ -794,19 +794,19 @@ elif 'mcp echo tool test' in last_content_lower or 'mcp fail tool test' in last_
   else:
     chunk = {'choices': [{'delta': {'content': 'The MCP tool was not sent to the model.'}}]}
 elif 'read_tool_output tool test' in last_content_lower:
-  chunk = tool_call_chunk('execute_javascript', read_output_test_args())
-elif 'execute_javascript tool test' in last_content_lower:
-  chunk = tool_call_chunk('execute_javascript', {'code': 'return "javascript-tool-test-ok";'})
+  chunk = tool_call_chunk('run_javascript', read_output_test_args())
+elif 'run_javascript tool test' in last_content_lower:
+  chunk = tool_call_chunk('run_javascript', {'code': 'return "javascript-tool-test-ok";'})
 elif 'run_wasm tool test' in last_content_lower:
   chunk = tool_call_chunk('run_wasm', {
       'wat': '(module (func $add (export "add") (param i32 i32) (result i32) '
              'local.get 0 local.get 1 i32.add))',
       'calls': [{'name': 'add', 'args': [2, 3]}],
   })
-elif 'execute_javascript library test' in last_content_lower:
-  # Checks the API of a library with execute_javascript, as its description
+elif 'run_javascript library test' in last_content_lower:
+  # Checks the API of a library with run_javascript, as its description
   # tells the model to.
-  chunk = tool_call_chunk('execute_javascript', {
+  chunk = tool_call_chunk('run_javascript', {
       'code': 'return Object.keys(lib[%s]).join(", ");' % json.dumps(portal_url + '/ERP5Site_fakeLibrary'),
       'libraries': [portal_url + '/ERP5Site_fakeLibrary'],
   })
@@ -860,7 +860,7 @@ elif 'stuck http_request tool test' in last_content_lower:
 elif 'repeated define_tool list test' in last_content_lower:
   chunk = tool_call_chunk('define_tool', define_tool_list_repeat_args())
 elif 'compaction context test' in last_content_lower:
-  chunk = tool_call_chunk('execute_javascript', compaction_test_args(1))
+  chunk = tool_call_chunk('run_javascript', compaction_test_args(1))
 elif 'spawn_subagent tool test' in last_content_lower:
   chunk = tool_call_chunk('spawn_subagent', {'task': 'Please run the http_request tool test'})
 elif 'http_request tool test' in last_content_lower:

@@ -4,7 +4,7 @@
   "use strict";
 
   var STATIC_TOOL_SCOPE_LIST = [
-      "tool_execute_javascript",
+      "tool_run_javascript",
       "tool_run_wasm",
       "tool_http_request",
       "tool_pdf_to_text",
@@ -327,6 +327,7 @@
         })
         .push(function (static_tool_list) {
           gadget.tool_list = static_tool_list;
+          gadget.mcp_unavailable_list = [];
           if (!options.mcp_server_list || !options.mcp_server_list.length) {
             return;
           }
@@ -334,6 +335,11 @@
               options.mcp_server_list,
               function onMcpAuthExpired(server_config) {
                 return gadget.refreshMcpServerAuth(server_config);
+              },
+              function onMcpUnavailable(server_config, message) {
+                gadget.mcp_unavailable_list.push(
+                  "MCP server \"" + server_config.name + "\" unavailable, its tools are not offered: " + message
+                );
               }
             ))
             .push(function (mcp_tool_list) {
@@ -380,6 +386,10 @@
       return [
         { role: "system", content: TOOL_CALL_REPEAT_SYSTEM_PROMPT }
       ];
+    })
+    // Why configured MCP servers offer no tools, found when rendered.
+    .declareMethod('getMcpUnavailableList', function () {
+      return this.mcp_unavailable_list || [];
     })
     .declareMethod('getToolDefinitionList', function (message_list, excluded_tool_name_list) {
       return getToolDefinitionList(this.tool_list, message_list, excluded_tool_name_list);

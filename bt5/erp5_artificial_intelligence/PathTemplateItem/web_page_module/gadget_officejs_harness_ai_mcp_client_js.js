@@ -316,7 +316,9 @@
   // gadget_officejs_harness_ai_agent_js.js. onAuthExpired is optional - a server
   // authenticated with a plain static token (no OAuth) simply never
   // triggers it (a 401 there just fails discovery for that server normally).
-  function buildToolList(mcp_server_list, onAuthExpired) {
+  // onUnavailable(server_config, message), optional, is told why a server
+  // contributes no tools.
+  function buildToolList(mcp_server_list, onAuthExpired, onUnavailable) {
     if (!mcp_server_list || !mcp_server_list.length) {
       return RSVP.resolve([]);
     }
@@ -326,11 +328,14 @@
           return wrapServerTools(server_config, discovery, onAuthExpired);
         })
         .push(undefined, function (error) {
+          var message = error && error.message ? error.message : String(error);
           if (window.console && window.console.warn) {
             window.console.warn(
-              "MCP server \"" + (server_config && server_config.name) + "\" unavailable: " +
-                (error && error.message ? error.message : error)
+              "MCP server \"" + (server_config && server_config.name) + "\" unavailable: " + message
             );
+          }
+          if (onUnavailable) {
+            onUnavailable(server_config, message);
           }
           return [];
         });

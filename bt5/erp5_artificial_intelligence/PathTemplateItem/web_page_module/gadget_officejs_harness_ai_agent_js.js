@@ -224,7 +224,6 @@
       return new RSVP.Queue(RSVP.all([
         gadget.gadget_chat_ui.clearQueuedPostList(),
         gadget.gadget_chat_ui.showMessage({ content: content, reasoning: "", tool_message_list: gadget.tool_message_list, execution_plan: execution_plan }),
-        gadget.notifySubmitted({message: 'Cancelled', status: "success"}),
         gadget.storeTaskResult(
           gadget.options.jio_key,
           {
@@ -236,6 +235,11 @@
       ]))
         .push(function () {
           return gadget.gadget_chat_ui.stopProcessing();
+        })
+        .push(function () {
+          // Only once the processing is stopped: a post sent after the
+          // notification is not queued, it starts a new task.
+          return gadget.notifySubmitted({message: 'Cancelled', status: "success"});
         });
     })
     .declareMethod('compactMessageList', function (message_list, keep_recent_override, last_usage_anchor) {
@@ -415,7 +419,6 @@
         });
         return new RSVP.Queue(RSVP.all([
           gadget.gadget_chat_ui.showMessage({ content: content, reasoning: "", tool_message_list: gadget.tool_message_list, execution_plan: execution_plan }),
-          gadget.notifySubmitted({message: 'Error', status: "error"}),
           gadget.storeTaskResult(
             gadget.options.jio_key,
             {
@@ -426,8 +429,12 @@
           )
         ]))
           .push(function () {
-            // Like on cancel, the queued posts are kept but not sent.
+            // Unlike on cancel, the queued posts are kept, but not sent.
             return gadget.gadget_chat_ui.stopProcessing();
+          })
+          .push(function () {
+            // Only once the processing is stopped, like on cancel.
+            return gadget.notifySubmitted({message: 'Error', status: "error"});
           });
       }
 
@@ -722,6 +729,16 @@
       queue_loop
         .push(function () {
           return gadget.gadget_chat_ui.startProcessing();
+        })
+        .push(function () {
+          return gadget.tool_manager.getMcpUnavailableList();
+        })
+        .push(function (mcp_unavailable_list) {
+          // Shown in the trace, so that the user knows why MCP tools are
+          // missing.
+          mcp_unavailable_list.forEach(function (content) {
+            gadget.tool_message_list.push({ role: "tool", name: "mcp_unavailable", content: content });
+          });
         })
         .push(function () {
           return gadget.notifySubmitted({message: 'Processing', status: "success"});

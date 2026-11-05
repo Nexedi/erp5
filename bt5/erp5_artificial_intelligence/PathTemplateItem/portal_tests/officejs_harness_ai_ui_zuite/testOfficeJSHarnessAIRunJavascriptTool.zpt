@@ -2,12 +2,12 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Test OfficeJS Harness AI - execute_javascript Tool</title>
+<title>Test OfficeJS Harness AI - run_javascript Tool</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Test OfficeJS Harness AI - execute_javascript Tool</td></tr>
+<tr><td rowspan="1" colspan="3">Test OfficeJS Harness AI - run_javascript Tool</td></tr>
 </thead><tbody>
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
 <tr>
@@ -18,8 +18,8 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForHarnessAI/macros/setup_fake_llm_and_new_task" />
 <tr>
   <td>waitForEval</td>
-  <td>(function(){var cm=window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror;cm.setValue('Please run the execute_javascript tool test');return cm.getValue();})()</td>
-  <td>Please run the execute_javascript tool test</td>
+  <td>(function(){var cm=window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror;cm.setValue('Please run the run_javascript tool test');return cm.getValue();})()</td>
+  <td>Please run the run_javascript tool test</td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
@@ -54,8 +54,8 @@
 <!-- A library loaded with `libraries`: its real API is checked from the code (was the library_inspect tool) -->
 <tr>
   <td>waitForEval</td>
-  <td>(function(){var cm=window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror;cm.setValue('Please run the execute_javascript library test');return cm.getValue();})()</td>
-  <td>Please run the execute_javascript library test</td>
+  <td>(function(){var cm=window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror;cm.setValue('Please run the run_javascript library test');return cm.getValue();})()</td>
+  <td>Please run the run_javascript library test</td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>

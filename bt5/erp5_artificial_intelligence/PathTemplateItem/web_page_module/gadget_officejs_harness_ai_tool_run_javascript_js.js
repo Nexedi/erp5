@@ -6,8 +6,8 @@
   rJS(window)
     .declareMethod('getDefinition', function () {
       return {
-        name: "execute_javascript",
-        description: "Execute JavaScript and get the result back. Runs in the same isolated sandbox " +
+        name: "run_javascript",
+        description: "Run JavaScript and get the result back. Runs in the same isolated sandbox " +
           "worker as run_wasm - no DOM, no cookies, no access to the page or any other tool's state " +
           "(the only network access is the optional library fetch below, done by this worker itself, " +
           "never by your code). Write the body of an async function: `await` is available, and you " +

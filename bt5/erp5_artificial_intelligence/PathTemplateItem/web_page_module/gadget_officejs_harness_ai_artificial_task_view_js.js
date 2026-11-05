@@ -198,123 +198,86 @@
 
     .allowPublicAcquisition('getCommentPostList', function (argument_list) {
       var gadget = this,
-        document_id = argument_list[0],
-        task_line_row_list;
+        document_id = argument_list[0];
+      // The local storage (indexeddb) can not run a query: jIO reads all its
+      // documents for each allDocs. So the lines, their attachments and their
+      // execution plans are read with one allDocs, and joined here.
       return gadget.jio_allDocs({
         query: new ComplexQuery({
-          operator: "AND",
+          operator: "OR",
           type: "complex",
           query_list: [
-            new SimpleQuery({key: "portal_type", type: "simple", value: "Artificial Task Line"}),
-            new SimpleQuery({key: "parent_relative_url", type: "simple", value: document_id})
-          ]
+            "Artificial Task Line",
+            "Document",
+            "Artificial Task Execution Plan",
+            "Artificial Task Execution Plan Line"
+          ].map(function (portal_type) {
+            return new SimpleQuery({key: "portal_type", type: "simple", value: portal_type});
+          })
         }),
-        select_list: ["text_content", "int_index", "response", "tool_message_list", "author_title", "date"],
-        sort_on: [["int_index", "ascending"]]
+        select_list: ["portal_type", "parent_relative_url", "follow_up_relative_url", "text_content",
+          "int_index", "response", "tool_message_list", "author_title", "date", "url", "file_name"]
       })
-        .push(function (task_line_result) {
-          task_line_row_list = task_line_result.data.rows || [];
-
+        .push(function (result) {
+          var row_list = result.data.rows || [],
+            task_line_row_list = [],
+            is_task_line_id = {},
+            attachment_by_task_line_id = {},
+            plan_id_by_task_line_id = {},
+            step_row_list_by_plan_id = {},
+            plan_json_by_task_line_id = {};
+          row_list.forEach(function (row) {
+            if (row.value.portal_type === "Artificial Task Line" &&
+                row.value.parent_relative_url === document_id) {
+              task_line_row_list.push(row);
+              is_task_line_id[row.id] = true;
+            }
+          });
+          task_line_row_list.sort(function (a, b) {
+            return (a.value.int_index || 0) - (b.value.int_index || 0);
+          });
           gadget.next_int_index = task_line_row_list.reduce(function (max_index, row) {
             return Math.max(max_index, row.value.int_index || 0);
           }, -1) + 1;
 
-          if (!task_line_row_list.length) {
-            return {data: {rows: []}};
-          }
-          return gadget.jio_allDocs({
-            query: new ComplexQuery({
-              operator: "AND",
-              type: "complex",
-              query_list: [
-                new ComplexQuery({
-                  operator: "OR",
-                  type: "complex",
-                  query_list: [
-                    new SimpleQuery({key: "portal_type", type: "simple", value: "Artificial Task Execution Plan"}),
-                    new SimpleQuery({key: "portal_type", type: "simple", value: "Document"})
-                  ]
-                }),
-                new ComplexQuery({
-                  operator: "OR",
-                  type: "complex",
-                  query_list: task_line_row_list.map(function (row) {
-                    return new SimpleQuery({key: "follow_up_relative_url", type: "simple", value: row.id});
-                  })
-                })
-              ]
-            }),
-            select_list: ["follow_up_relative_url", "portal_type", "url", "file_name"]
-          });
-        })
-        .push(function (follow_up_result) {
-          var attachment_by_task_line_id = {},
-            plan_id_by_task_line_id = {},
-            own_plan_id_list = [];
-          (follow_up_result.data.rows || []).forEach(function (row) {
+          row_list.forEach(function (row) {
             var task_line_id = row.value.follow_up_relative_url;
+            if (!is_task_line_id.hasOwnProperty(task_line_id)) {
+              return;
+            }
             if (row.value.portal_type === "Document") {
               attachment_by_task_line_id[task_line_id] = {
                 link: row.value.url,
                 name: row.value.file_name || row.id
               };
-            } else {
+            } else if (row.value.portal_type === "Artificial Task Execution Plan") {
               plan_id_by_task_line_id[task_line_id] = row.id;
-              own_plan_id_list.push(row.id);
+              step_row_list_by_plan_id[row.id] = [];
             }
           });
-          if (!own_plan_id_list.length) {
-            return {
-              plan_id_by_task_line_id: plan_id_by_task_line_id,
-              attachment_by_task_line_id: attachment_by_task_line_id,
-              line_result: {data: {rows: []}}
-            };
-          }
-          return gadget.jio_allDocs({
-            query: new ComplexQuery({
-              operator: "OR",
-              type: "complex",
-              query_list: own_plan_id_list.map(function (plan_id) {
-                return new SimpleQuery({key: "parent_relative_url", type: "simple", value: plan_id});
-              })
-            }),
-            select_list: ["parent_relative_url", "int_index", "text_content"],
-            sort_on: [["int_index", "ascending"]]
-          })
-            .push(function (line_result) {
-              return {
-                plan_id_by_task_line_id: plan_id_by_task_line_id,
-                attachment_by_task_line_id: attachment_by_task_line_id,
-                line_result: line_result
-              };
-            });
-        })
-        .push(function (joined) {
-          var plan_id_by_task_line_id = joined.plan_id_by_task_line_id,
-            attachment_by_task_line_id = joined.attachment_by_task_line_id,
-            step_row_list_by_plan_id = {},
-            plan_json_by_task_line_id = {};
-          (joined.line_result.data.rows || []).forEach(function (row) {
-            var plan_id = row.value.parent_relative_url;
-            if (!step_row_list_by_plan_id[plan_id]) {
-              step_row_list_by_plan_id[plan_id] = [];
+          row_list.forEach(function (row) {
+            if (row.value.portal_type === "Artificial Task Execution Plan Line" &&
+                step_row_list_by_plan_id.hasOwnProperty(row.value.parent_relative_url)) {
+              step_row_list_by_plan_id[row.value.parent_relative_url].push(row.value);
             }
-            step_row_list_by_plan_id[plan_id].push(row.value);
           });
+
           Object.keys(plan_id_by_task_line_id).forEach(function (task_line_id) {
-            var plan_id = plan_id_by_task_line_id[task_line_id],
-              step_row_list = step_row_list_by_plan_id[plan_id] || [],
-              goal = "",
-              step_list = step_row_list.map(function (step_row) {
-                var step_data = {};
-                try {
-                  step_data = JSON.parse(step_row.text_content || "{}");
-                } catch (ignore) {}
-                if (step_data.goal) {
-                  goal = step_data.goal;
-                }
-                return { title: step_data.title, status: step_data.status, note: step_data.note };
-              });
+            var goal = "",
+              step_list = step_row_list_by_plan_id[plan_id_by_task_line_id[task_line_id]]
+                .sort(function (a, b) {
+                  return (a.int_index || 0) - (b.int_index || 0);
+                })
+                .map(function (step_row) {
+                  var step_data = {};
+                  try {
+                    step_data = JSON.parse(step_row.text_content || "{}");
+                  } catch (ignore) {}
+                  if (step_data.goal) {
+                    goal = step_data.goal;
+                  }
+                  return { title: step_data.title, status: step_data.status, note: step_data.note };
+                });
             if (step_list.length) {
               plan_json_by_task_line_id[task_line_id] = JSON.stringify({ goal: goal, step_list: step_list });
             }
