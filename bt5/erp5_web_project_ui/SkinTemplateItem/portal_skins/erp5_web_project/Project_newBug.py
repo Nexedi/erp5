@@ -1,6 +1,7 @@
 """
   Creates and opens a new bug on the current project and jumps to it.
 """
+from DateTime import DateTime
 Base_translateString = context.Base_translateString
 portal_type = 'Bug'
 module = context.getDefaultModule(portal_type)
@@ -18,6 +19,8 @@ bug = module.newContent(portal_type=portal_type,
                         title=title,
                         description=description,
                         source_project=context.getRelativeUrl(),
+                        # required by nexedi-erp5 BugConstraint
+                        start_date=DateTime(),
                         **bug_kw)
 bug.confirm()
 

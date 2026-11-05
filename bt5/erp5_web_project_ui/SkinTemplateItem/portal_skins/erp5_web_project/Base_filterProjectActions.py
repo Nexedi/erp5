@@ -22,6 +22,8 @@ for action_category_name, action_list in actions.items():
     if 'object_view' not in filtered_actions:
       filtered_actions['object_view'] = []
     filtered_actions['object_view'].extend(action_list)
+  elif (action_category_name == 'object_jio_fast_input'):
+    filtered_actions[action_category_name] = [action for action in action_list if action['id'] not in ['bug_line_send']]
   elif (action_category_name == 'object_jio_jump'):
     filtered_actions[action_category_name] = [action for action in action_list if action['id'] not in ['jump_to_portal_type']]
   else:
