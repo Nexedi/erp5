@@ -531,7 +531,7 @@ class TestSQLCatalog(ERP5TypeTestCase):
     self._testKeywordKey('related_keyword')
 
   def test_005_SearchText(self):
-    self.catalog(ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='like', keyword='%=a%'), ReferenceQuery(operator='like', keyword='%=b%'), operator='or'), operator='and'),
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='in', keyword=['a', 'b']), operator='and'),
                  {'keyword': '"=a" OR "=b"'})
     self.catalog(ReferenceQuery(ReferenceQuery(operator='in', keyword=['a', 'b']), operator='and'),
                  {'keyword': '="a" OR ="b"'})
@@ -545,7 +545,7 @@ class TestSQLCatalog(ERP5TypeTestCase):
                  {'keyword': 'default:a'})
     self.catalog(ReferenceQuery(ReferenceQuery(operator='like', keyword='%a b%'), operator='and'),
                  {'keyword': 'a b'})
-    self.catalog(ReferenceQuery(ReferenceQuery(operator='like', keyword='%=a OR =b%'), operator='and'),
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='=', keyword='a OR =b'), operator='and'),
                  {'keyword': '"=a OR =b"'})
     self.catalog(ReferenceQuery(ReferenceQuery(operator='=', keyword='=a OR =b'), operator='and'),
                  {'keyword': '="=a OR =b"'})
