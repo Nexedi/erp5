@@ -159,7 +159,6 @@
       var gadget = this;
       gadget.options = options;
       gadget.jio_key = options.jio_key;
-      gadget.execution_plan = null;
       return new RSVP.Queue(RSVP.all([
           gadget.getDeclaredGadget('tool_manager'),
           gadget.getDeclaredGadget('skill_manager')
@@ -220,9 +219,7 @@
         content: "Cancelled by user"
       });
 
-      // The posts queued while it ran are dropped with what it was doing.
       return new RSVP.Queue(RSVP.all([
-        gadget.gadget_chat_ui.clearQueuedPostList(),
         gadget.gadget_chat_ui.showMessage({ content: content, reasoning: "", tool_message_list: gadget.tool_message_list, execution_plan: execution_plan }),
         gadget.storeTaskResult(
           gadget.options.jio_key,
@@ -234,11 +231,9 @@
         )
       ]))
         .push(function () {
-          return gadget.gadget_chat_ui.stopProcessing();
+          return gadget.gadget_chat_ui.cancelProcessing();
         })
         .push(function () {
-          // Only once the processing is stopped: a post sent after the
-          // notification is not queued, it starts a new task.
           return gadget.notifySubmitted({message: 'Cancelled', status: "success"});
         });
     })
@@ -440,10 +435,7 @@
 
       // reasoning: the reasoning of the final answer, kept in the trace like
       // the one of the turns with tool calls.
-      // message_list: the conversation ending with the final answer, to go on
-      // with the posts queued while the model answered (the follow-up of pi).
-      // Without it, they are only stored, like on cancel.
-      function completeTask(final_content, reasoning, message_list) {
+      function completeTask(final_content, reasoning) {
         var execution_plan = gadget.execution_plan,
           content = joinAnswerText(gadget.answer_text_list, final_content);
         if (reasoning) {
@@ -475,24 +467,10 @@
             return gadget.gadget_chat_ui.stopProcessing();
           })
           .push(function (queued_message_list) {
-            if (queued_message_list.length && message_list) {
-              // A new turn, as if the user had posted after the answer: its
-              // usage is counted from zero, like its turns.
-              gadget.execution_plan = null;
-              gadget.tool_message_list = [];
-              gadget.answer_text_list = [];
-              gadget.streaming_text = "";
-              usage_totals = window.ChatToolCommon.createUsageTotals();
-              return gadget.gadget_chat_ui.startProcessing()
-                .push(function () {
-                  return gadget.notifySubmitted({message: 'Processing', status: "success"});
-                })
-                .push(function () {
-                  return loop_call(0, message_list.concat(queued_message_list));
-                });
-            }
-            gadget.processing_queue = null;
             gadget.execution_plan = null;
+            if (queued_message_list.length) {
+              return gadget.processTask(max_loop_count);
+            }
             return gadget.notifySubmitted({message: 'Completed', status: "success"});
           });
       }
@@ -618,7 +596,6 @@
             );
           })
           .push(function (result) {
-            var final_message;
             window.ChatToolCommon.addUsageTotals(usage_totals, result.usage);
             gadget.streaming_text = "";
             if (result.usage && result.usage.prompt_tokens) {
@@ -655,14 +632,7 @@
               throw new Error("Empty response from LLM with no tool calls" +
                 (result.finish_reason ? " (finish_reason: " + result.finish_reason + ")" : ""));
             }
-            // requestProcessTask only builds the assistant message of a turn
-            // with tool calls: build the one of the final answer, for the
-            // posts queued while it was written.
-            final_message = {role: "assistant", content: result.content};
-            if (result.reasoning && result.reasoning_field) {
-              final_message[result.reasoning_field] = result.reasoning;
-            }
-            return completeTask(result.content, result.reasoning, message_list.concat([final_message]));
+            return completeTask(result.content, result.reasoning);
           })
           .push(undefined, function (e) {
             var retry_name, retry_reason, delay;

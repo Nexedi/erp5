@@ -14,7 +14,8 @@
       return {
         name: "read_tool_output",
         description: "Read the full output of an earlier tool call that was too large and was " +
-          "cut (its result says \"[Output too large: ...]\" and gives an output_id). One call " +
+          "cut (its result says \"[Output too large: ...]\" and gives an output_id). The full outputs " +
+          "are kept only while this page stays open, the oldest are dropped. One call " +
           "returns at most " + window.ChatToolCommon.TEXT_WINDOW_CHARS + " chars. Do not read it " +
           "from start to end: call it with `pattern` to find the passages you need, then read " +
           "only around them.",

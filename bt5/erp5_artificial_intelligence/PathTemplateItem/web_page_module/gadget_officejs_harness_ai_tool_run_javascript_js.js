@@ -22,7 +22,7 @@
           "code are reported back as an error message; a runaway loop is killed at its deadline, which " +
           "costs one worker, not the tab. USE THIS WHEN: you need custom computation or to " +
           "reshape/combine data you already have (e.g. a previous tool's result) that's easier to do in " +
-          "code than by hand. DO NOT USE THIS WHEN: an existing tool (an MCP server's tools, draw_*, " +
+          "code than by hand. DO NOT USE THIS WHEN: an existing tool (an MCP server's tools, " +
           "run_wasm) already does what you need, or you need DOM/arbitrary network access - this sandbox " +
           "cannot reach either.",
         parameters: {

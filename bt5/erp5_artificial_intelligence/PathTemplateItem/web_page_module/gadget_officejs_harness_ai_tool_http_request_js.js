@@ -50,7 +50,7 @@
       return {
         name: "http_request",
         description: "Fetch a URL - a web page, a JSON API, any public HTTP(S) resource. Relayed " +
-          "through the configured forwarder (Server URL, in External Service) when one is set, purely " +
+          "through the proxy the user set (Proxy Server URL, in the External service page), purely " +
           "to get around the browser's own CORS restriction on the target; without one, this is a " +
           "plain, unproxied fetch, which only succeeds if the target itself allows cross-origin " +
           "requests. HTML is converted to readable text unless `raw` is requested. This is not a " +
@@ -62,7 +62,7 @@
           type: "object",
           properties: {
             url: { type: "string" },
-            method: { type: "string", enum: ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"] },
+            method: { type: "string", "enum": ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"] },
             headers: { type: "object", description: "Extra request headers." },
             body: { type: "string" },
             raw: { type: "boolean", description: "Return the body verbatim instead of extracted text." },

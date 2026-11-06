@@ -12,7 +12,9 @@
           "name, when the current task matches its description.",
         parameters: {
           type: "object",
-          properties: { name: { type: "string" } },
+          properties: {
+            name: { type: "string", description: "The name of the skill, as listed in <available_skills>." }
+          },
           required: ["name"]
         }
       };

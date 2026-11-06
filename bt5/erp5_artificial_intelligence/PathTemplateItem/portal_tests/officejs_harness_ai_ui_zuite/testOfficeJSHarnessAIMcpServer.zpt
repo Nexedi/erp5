@@ -40,8 +40,20 @@
   <td>//textarea[@name='mcp_server_list']</td>
   <td></td>
 </tr>
+<!-- The connection list is rendered last: once it is shown, the form is
+     rendered and does not reset the textarea after it is typed in -->
+<tr>
+  <td>waitForTextPresent</td>
+  <td>No MCP servers configured yet</td>
+  <td></td>
+</tr>
 <tr>
   <td>type</td>
+  <td>//textarea[@name='mcp_server_list']</td>
+  <td>${base_url}/ERP5Site_fakeMcpServer</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
   <td>//textarea[@name='mcp_server_list']</td>
   <td>${base_url}/ERP5Site_fakeMcpServer</td>
 </tr>
@@ -68,6 +80,12 @@
 <tr>
   <td>waitForElementNotPresent</td>
   <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Saved']</td>
+  <td></td>
+</tr>
+<!-- The saved server is listed below the form, with its connection status -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@id='mcp_connection_list']//strong[contains(., 'ERP5Site_fakeMcpServer')]</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForHarnessAI/macros/load_setting_page" />

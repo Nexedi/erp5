@@ -507,9 +507,7 @@
           }, new RSVP.Queue());
         });
     }, COMMENT_POLL_INTERVAL)
-    // The conversation as LLM messages, from the stored posts, not from what
-    // the page shows: the queued posts and the answer being written are not
-    // stored yet.
+
     .declareMethod('getMessageList', function () {
       return this.getCommentPostList(this.options.jio_key)
         .push(function (post_list) {
@@ -535,7 +533,8 @@
           });
         });
     })
-    .declareMethod('stopProcessing', function () {
+    // Ends the answer being written: the next showMessage starts a new one.
+    .declareMethod('finishAnswer', function () {
       var gadget = this,
         message_element = gadget.new_message_element,
         typing_indicator,
@@ -560,7 +559,15 @@
       }
       gadget.new_message_element = null;
       gadget.rendered_tool_message_count = 0;
-      return gadget.flushQueuedPostList()
+    })
+    // Ends the processing: the posts queued meanwhile are stored, below the
+    // answer, and their LLM messages returned.
+    .declareMethod('stopProcessing', function () {
+      var gadget = this;
+      return gadget.finishAnswer()
+        .push(function () {
+          return gadget.flushQueuedPostList();
+        })
         .push(function (queued_message_list) {
           return gadget.changeState({
             allow_submit: true,
@@ -574,16 +581,26 @@
             });
         });
     })
-    // Drops the queued posts, without storing them.
-    .declareMethod('clearQueuedPostList', function () {
-      (this.queued_post_list || []).forEach(function (queued_post) {
+    // Ends the processing cancelled by the user: the posts queued meanwhile
+    // are dropped, without storing them.
+    .declareMethod('cancelProcessing', function () {
+      var gadget = this;
+      (gadget.queued_post_list || []).forEach(function (queued_post) {
         // A post already stored by a flush is not queued anymore: it stays.
         if (queued_post.element.classList.contains("post-queued") &&
             queued_post.element.parentNode) {
           queued_post.element.parentNode.removeChild(queued_post.element);
         }
       });
-      this.queued_post_list = [];
+      gadget.queued_post_list = [];
+      return gadget.finishAnswer()
+        .push(function () {
+          return gadget.changeState({
+            allow_submit: true,
+            // Like in stopProcessing: 'ready' keeps the draft.
+            editor_state: gadget.options.enable_queue ? 'ready' : 'initialise'
+          });
+        });
     })
     // Stores the queued posts, in the order they were posted, and returns
     // their LLM messages.
