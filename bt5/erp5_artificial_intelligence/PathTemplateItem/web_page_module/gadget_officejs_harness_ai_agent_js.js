@@ -8,9 +8,12 @@
     KEEP_RECENT_TOKEN_BUDGET = 28000,
     CONTEXT_RESERVE_TOKENS = 16384,
     PANIC_KEEP_RECENT_TOKEN_BUDGET = 8000,
-    // Transient LLM errors (rate limit, 5xx, network, empty response) are
-    // retried MAX_RETRY_COUNT times in a row, see getRetryDelay.
+    // Transient LLM errors (context overflow, rate limit, 5xx, empty
+    // response) are retried MAX_RETRY_COUNT times in a row, each kind counted
+    // apart, see getRetryDelay. Network errors,
+    // frequent in a browser (sleep, wifi, ...), are retried until it works.
     MAX_RETRY_COUNT = 3,
+    MAX_RETRY_DELAY = 60000,
     // An image costs about this many characters of context, whatever the
     // size of its base64 data URI.
     IMAGE_ESTIMATE_CHARS = 4800,
@@ -77,12 +80,12 @@
   }
 
   // What the server asked with Retry-After (at most 2 minutes), otherwise
-  // 2s doubled at each attempt.
+  // 2s doubled at each attempt, at most MAX_RETRY_DELAY.
   function getRetryDelay(e, retry_count) {
     if (e && e.retry_after_ms > 0) {
       return Math.min(e.retry_after_ms, 120000);
     }
-    return 2000 * Math.pow(2, retry_count);
+    return Math.min(2000 * Math.pow(2, retry_count), MAX_RETRY_DELAY);
   }
 
   function isEmptyResponseError(e) {
@@ -475,7 +478,7 @@
           });
       }
 
-      function loop_call(loop_count, message_list, pending_result, retry_count) {
+      function loop_call(loop_count, message_list, pending_result, retry_count_dict) {
         var has_tool_call = Boolean(
             pending_result && pending_result.tool_calls && pending_result.tool_calls.length
           );
@@ -561,7 +564,7 @@
                     loop_count + 1,
                     message_list.concat(tool_round.message_list),
                     null,
-                    0
+                    {}
                   );
                 });
             })
@@ -624,7 +627,7 @@
                     loop_count + 1,
                     message_list.concat([result.message]),
                     result,
-                    0
+                    {}
                   );
                 });
             }
@@ -635,15 +638,33 @@
             return completeTask(result.content, result.reasoning);
           })
           .push(undefined, function (e) {
-            var retry_name, retry_reason, delay;
-            retry_count = retry_count || 0;
-            if (retry_count >= MAX_RETRY_COUNT) {
+            var retry_name,
+              retry_reason = "",
+              retry_count,
+              delay;
+            if (isContextOverflowError(e)) {
+              retry_name = "context_overflow_retry";
+            } else if (isTransientServerError(e)) {
+              retry_name = "rate_limit_retry";
+            } else if (isEmptyResponseError(e)) {
+              retry_name = "empty_response_retry";
+            } else if (isNetworkError(e)) {
+              retry_name = "network_error_retry";
+              retry_reason = " (the connection to the LLM server failed)";
+            } else {
               return loopError(e);
             }
-            if (isContextOverflowError(e)) {
+            // Counted by kind of error: network errors are not limited.
+            retry_count_dict = retry_count_dict || {};
+            retry_count = retry_count_dict[retry_name] || 0;
+            if (retry_name !== "network_error_retry" && retry_count >= MAX_RETRY_COUNT) {
+              return loopError(e);
+            }
+            retry_count_dict[retry_name] = retry_count + 1;
+            if (retry_name === "context_overflow_retry") {
               gadget.tool_message_list.push({
                 role: "tool",
-                name: "context_overflow_retry",
+                name: retry_name,
                 content: e.message + " - the proactive estimate missed this, compacting harder and retrying"
               });
               return gadget.gadget_chat_ui.showMessage({
@@ -660,26 +681,15 @@
                     throw e;
                   }
                   last_usage_anchor = null;
-                  return loop_call(loop_count, compacted.message_list, pending_result, retry_count + 1);
+                  return loop_call(loop_count, compacted.message_list, pending_result, retry_count_dict);
                 });
-            }
-            if (isTransientServerError(e)) {
-              retry_name = "rate_limit_retry";
-              retry_reason = "";
-            } else if (isEmptyResponseError(e)) {
-              retry_name = "empty_response_retry";
-              retry_reason = "";
-            } else if (isNetworkError(e)) {
-              retry_name = "network_error_retry";
-              retry_reason = " (the connection to the LLM server failed)";
-            } else {
-              return loopError(e);
             }
             delay = getRetryDelay(e, retry_count);
             gadget.tool_message_list.push({
               role: "tool",
               name: retry_name,
-              content: e.message + retry_reason + " - retry " + (retry_count + 1) + " of " + MAX_RETRY_COUNT +
+              content: e.message + retry_reason + " - retry " + (retry_count + 1) +
+                (retry_name === "network_error_retry" ? "" : " of " + MAX_RETRY_COUNT) +
                 " in " + Math.round(delay / 1000) + "s"
             });
             return gadget.gadget_chat_ui.showMessage({
@@ -690,9 +700,8 @@
                 return RSVP.delay(delay);
               })
               .push(function () {
-                return loop_call(loop_count, message_list, pending_result, retry_count + 1);
+                return loop_call(loop_count, message_list, pending_result, retry_count_dict);
               });
-            return loopError(e);
           });
       }
 

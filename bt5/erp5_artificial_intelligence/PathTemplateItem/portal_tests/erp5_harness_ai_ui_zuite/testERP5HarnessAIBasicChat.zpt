@@ -11,11 +11,14 @@
 </thead><tbody>
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForErp5HarnessAI/macros/open_fixture_task" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForHarnessAI/macros/wait_for_editor" />
+
 <tr>
-  <td>getEval</td>
-  <td>window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror.setValue('Please say hello')</td>
-  <td></td>
+  <td>waitForEval</td>
+  <td>(function(){var cm=window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror;cm.setValue('Please say hello');return cm.getValue();})()</td>
+  <td>Please say hello</td>
 </tr>
+
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForErp5HarnessAI/macros/post_comment_and_wait_for_activities" />
 <tr>
   <td>waitForTextPresent</td>

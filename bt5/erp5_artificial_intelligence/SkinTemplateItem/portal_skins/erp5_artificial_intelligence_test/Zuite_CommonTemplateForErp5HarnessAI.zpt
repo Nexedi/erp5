@@ -19,11 +19,6 @@
       <td></td>
     </tr>
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
-    <tr>
-      <td>waitForElementPresent</td>
-      <td>css=div.CodeMirror</td>
-      <td></td>
-    </tr>
   </tal:block>
 
   <tal:block metal:define-macro="post_comment_and_wait_for_activities">

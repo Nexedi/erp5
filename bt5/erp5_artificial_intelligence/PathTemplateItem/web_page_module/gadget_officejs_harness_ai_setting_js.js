@@ -80,6 +80,7 @@
           return gadget.setSettingList({
             jio_storage_description: {
               type: "query",
+              schema: {"modification_date": {type: "string", format: "date-time"}},
               sub_storage: {
                 type: "uuid",
                 sub_storage: {
