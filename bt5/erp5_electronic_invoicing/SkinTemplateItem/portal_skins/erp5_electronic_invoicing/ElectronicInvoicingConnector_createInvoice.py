@@ -13,6 +13,19 @@ matching_invoice = portal.portal_catalog(
 if len(matching_invoice) > 0:
   return
 
+# Create aggregated PDF
+group = context.getDestinationSectionValue().getGroupValue()
+document_value = portal.document_module.newContent(
+  portal_type="PDF",
+  title="Invoice %s" % invoice_id,
+  reference="%s-INVOICE-%s" % (group.getCodification(), invoice_id),
+  content_type="application/pdf",
+  data=context.getInvoice(invoice_id, invoice_format="factur-x"),
+  group=group.getRelativeUrl(),
+  classification="collaborative/accounting",
+)
+document_value.share()
+
 kw = context.getTypeBasedMethod("getInvoiceExtraPropertyList")(text_content)
 invoice_value = portal.electronic_invoice_module.newContent(
   portal_type="Electronic Invoice",
@@ -21,6 +34,7 @@ invoice_value = portal.electronic_invoice_module.newContent(
   source_value=context,
   destination_section=context.getDestinationSection(),
   text_content=text_content,
+  aggregate=document_value.getRelativeUrl(),
   **kw,
 )
 invoice_value.send()
