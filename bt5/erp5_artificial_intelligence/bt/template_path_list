@@ -1,0 +1,17 @@
+image_module/gadget_wendelin_panel_png
+portal_alarms/run_artificial_task_alarm
+portal_tests/erp5_harness_ai_ui_zuite
+portal_tests/erp5_harness_ai_ui_zuite/**
+portal_tests/officejs_harness_ai_ui_zuite
+portal_tests/officejs_harness_ai_ui_zuite/**
+portal_types/Artificial Task Module/officejs_harness_ai_view
+portal_types/Artificial Task/officejs_harness_ai_view
+web_page_module/gadget_chat_*
+web_page_module/gadget_erp5_harness_ai_*
+web_page_module/gadget_officejs_harness_ai_*
+web_page_module/marked_umd_js
+web_page_module/watr_js
+web_site_module/erp5_harness_ai
+web_site_module/erp5_harness_ai/**
+web_site_module/officejs_harness_ai
+web_site_module/officejs_harness_ai/**

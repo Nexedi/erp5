@@ -1,0 +1,219 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test OfficeJS Harness AI - MCP Server</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test OfficeJS Harness AI - MCP Server</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/officejs_harness_ai/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[text()='External service']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[text()='External service']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//textarea[@name='mcp_server_list']</td>
+  <td></td>
+</tr>
+<!-- The connection list is rendered last: once it is shown, the form is
+     rendered and does not reset the textarea after it is typed in -->
+<tr>
+  <td>waitForTextPresent</td>
+  <td>No MCP servers configured yet</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//textarea[@name='mcp_server_list']</td>
+  <td>${base_url}/ERP5Site_fakeMcpServer</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//textarea[@name='mcp_server_list']</td>
+  <td>${base_url}/ERP5Site_fakeMcpServer</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Proceed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Proceed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Saved']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Saved']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Saved']</td>
+  <td></td>
+</tr>
+<!-- The saved server is listed below the form, with its connection status -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@id='mcp_connection_list']//strong[contains(., 'ERP5Site_fakeMcpServer')]</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForHarnessAI/macros/load_setting_page" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForHarnessAI/macros/fill_setting_and_proceed" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForHarnessAI/macros/wait_for_editor" />
+<!-- Discovery: initialize, then tools/list on two pages (nextCursor) - both tools are sent to the model -->
+<tr>
+  <td>waitForEval</td>
+  <td>(function(){var cm=window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror;cm.setValue('Please run the mcp tool list test');return cm.getValue();})()</td>
+  <td>Please run the mcp tool list test</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[contains(@class, 'post-tool-entry')][contains(., 'Tool: mcp_unavailable')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//li[contains(@class, 'post-answer')]//div[@class='post-markdown'][contains(., 'MCP tools: 2.')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//li[contains(@class, 'post-answer')]//div[@class='post-markdown'][contains(., 'FAKE-MCP-ECHO tool')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//li[contains(@class, 'post-answer')]//div[@class='post-markdown'][contains(., 'FAKE-MCP-FAIL tool')]</td>
+  <td></td>
+</tr>
+<!-- tools/call with the Mcp-Session-Id of initialize, answered as an SSE stream -->
+<tr>
+  <td>waitForEval</td>
+  <td>(function(){var cm=window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror;cm.setValue('Please run the mcp echo tool test');return cm.getValue();})()</td>
+  <td>Please run the mcp echo tool test</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//li[contains(@class, 'post-answer')]//div[@class='post-markdown'][contains(., 'MCP-ECHO: hello mcp (session fake-mcp-session)')]</td>
+  <td></td>
+</tr>
+<!-- A tool result with isError is reported to the model -->
+<tr>
+  <td>waitForEval</td>
+  <td>(function(){var cm=window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror;cm.setValue('Please run the mcp fail tool test');return cm.getValue();})()</td>
+  <td>Please run the mcp fail tool test</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//li[contains(@class, 'post-answer')]//div[@class='post-markdown'][contains(., 'ERROR: MCP tool call failed: FAKE-MCP-FAILURE')]</td>
+  <td></td>
+</tr>
+</tbody></table>
+</body>
+</html>
