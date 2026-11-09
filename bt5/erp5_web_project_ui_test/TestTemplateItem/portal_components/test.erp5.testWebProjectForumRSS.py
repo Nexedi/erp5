@@ -706,6 +706,13 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     self.assertIn('("post_link", True)',
                   post_field.get_tales('renderjs_extra')._text)
 
+  def test_thread_view_shows_its_title_read_only(self):
+    """The thread title is shown as text above the posts, easy to copy."""
+    form = self.portal.portal_skins.erp5_discussion.DiscussionThread_viewPostList
+    self.assertEqual(['my_title'],
+                     [field.getId() for field in form.get_fields_in_group('center')])
+    self.assertFalse(form.my_title.get_value('editable'))
+
   def test_bug_module_list_filter_offers_project_once(self):
     """The search panel lists search columns then domains: a source_project
     domain titled "Project" would show next to the "Project" column."""
