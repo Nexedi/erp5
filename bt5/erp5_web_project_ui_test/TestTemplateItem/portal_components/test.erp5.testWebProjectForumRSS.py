@@ -855,6 +855,28 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
       actions={'workflow': workflow_action_list})
     self.assertEqual(workflow_action_list, result['workflow'])
 
+  def test_filter_project_actions_drops_clone_on_discussion_documents(self):
+    """Forums, threads and posts cannot be cloned from the app."""
+    thread = self.portal.discussion_thread_module.newContent(
+      portal_type='Discussion Thread')
+    for document in (
+        self.portal.discussion_forum_module.newContent(
+          portal_type='Discussion Forum'),
+        thread,
+        thread.newContent(portal_type='Discussion Post')):
+      self.portal.REQUEST.form['relative_url'] = document.getRelativeUrl()
+      actions = {'object_clone_action': [{'id': 'clone_document'}]}
+      result = self.portal.Base_filterProjectActions(actions=actions)
+      self.assertNotIn('object_clone_action', result, document.getPortalType())
+
+  def test_filter_project_actions_keeps_clone_on_bugs(self):
+    bug = self.portal.bug_module.newContent(portal_type='Bug')
+    self.portal.REQUEST.form['relative_url'] = bug.getRelativeUrl()
+    clone_action_list = [{'id': 'clone_document'}]
+    result = self.portal.Base_filterProjectActions(
+      actions={'object_clone_action': clone_action_list})
+    self.assertEqual(clone_action_list, result['object_clone_action'])
+
   def test_filter_project_actions_keeps_workflow_without_relative_url(self):
     self.assertNotIn('relative_url', self.portal.REQUEST.form)
     workflow_action_list = [{'id': 'release_action'}]
