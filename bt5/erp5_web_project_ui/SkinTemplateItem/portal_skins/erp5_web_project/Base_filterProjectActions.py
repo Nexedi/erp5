@@ -48,6 +48,9 @@ elif standard_view_action_list:
 relative_url = container.REQUEST.form.get('relative_url')
 if relative_url:
   document = context.getPortalObject().restrictedTraverse(relative_url)
-  if document.getPortalType() in ('Discussion Forum', 'Discussion Thread'):
+  portal_type = document.getPortalType()
+  if portal_type in ('Discussion Forum', 'Discussion Thread'):
     filtered_actions.pop('workflow', None)
+  if portal_type in ('Discussion Forum', 'Discussion Thread', 'Discussion Post'):
+    filtered_actions.pop('object_clone_action', None)
 return filtered_actions
