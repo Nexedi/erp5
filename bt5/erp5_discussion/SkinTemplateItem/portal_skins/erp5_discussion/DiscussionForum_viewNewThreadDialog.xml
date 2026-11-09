@@ -88,7 +88,13 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>your_send_notification_text</string>
+                        <string>your_text_content</string>
+                        <string>your_file</string>
+                        <string>your_captcha</string>
+                        <string>your_warning</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -104,11 +110,6 @@
                     <value>
                       <list>
                         <string>your_title</string>
-                        <string>your_send_notification_text</string>
-                        <string>your_text_content</string>
-                        <string>your_file</string>
-                        <string>your_captcha</string>
-                        <string>your_warning</string>
                       </list>
                     </value>
                 </item>
