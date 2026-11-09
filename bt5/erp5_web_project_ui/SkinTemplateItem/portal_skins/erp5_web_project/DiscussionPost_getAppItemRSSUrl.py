@@ -9,7 +9,12 @@ thread = context.getParentValue()
 forum = thread.DiscussionThread_getDiscussionForum()
 if forum is None:
   return ''
+# Rank of this post in the thread reader order (creation_date ASC)
+post_position = thread.countFolder(
+  portal_type='Discussion Post',
+  creation_date={'query': context.getCreationDate(), 'range': 'ngt'},
+)[0][0]
 return ('%s/#!push_history_stored_state?p.jio_key=%s&p.page=form&p.view=view&'
         'n.jio_key=%s&n.page=form&n.view=view&n.last_post=%s'
         % (base_url, forum.getRelativeUrl(), thread.getRelativeUrl(),
-           thread.DiscussionThread_getDiscussionPostCount()))
+           post_position))
