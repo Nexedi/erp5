@@ -84,7 +84,12 @@
         view_list = ensureArray(erp5_document._links.action_object_view);
         action_list = ensureArray(erp5_document._links.action_object_jio_action)
           .concat(ensureArray(erp5_document._links.action_object_jio_button))
-          .concat(ensureArray(erp5_document._links.action_object_jio_fast_input));
+          .concat(ensureArray(erp5_document._links.action_object_jio_fast_input))
+          .concat(ensureArray(erp5_document._links.action_object_clone_action)
+            .map(function (action) {
+              // Same as the standard panel: the clone opens in editable mode
+              return {href: action.href, title: action.title, editable: true};
+            }));
 
         if (view === 'view') {
           for (i = 0; i < view_list.length; i += 1) {
@@ -247,6 +252,7 @@
             .push(function () {
               var i = 0,
                 parameter_list = [],
+                action_options,
                 view_list = JSON.parse(gadget.state.view_list),
                 action_list = JSON.parse(gadget.state.action_list);
               workflow_list = JSON.parse(gadget.state.workflow_list);
@@ -270,12 +276,16 @@
                 });
               }
               for (i = 0; i < action_list.length; i += 1) {
+                action_options = {
+                  jio_key: gadget.state.jio_key,
+                  view: action_list[i].href
+                };
+                if (action_list[i].editable) {
+                  action_options.editable = true;
+                }
                 parameter_list.push({
                   command: 'display_dialog_with_history',
-                  options: {
-                    jio_key: gadget.state.jio_key,
-                    view: action_list[i].href
-                  }
+                  options: action_options
                 });
               }
               return RSVP.all([
