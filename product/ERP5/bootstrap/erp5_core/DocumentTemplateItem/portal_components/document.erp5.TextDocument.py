@@ -28,6 +28,7 @@
 ##############################################################################
 
 from hashlib import md5
+import sys
 import six
 from AccessControl.ZopeGuards import guarded_getattr
 from AccessControl import ClassSecurityInfo
@@ -47,6 +48,11 @@ from Products.ERP5Type.mixin.text_content_history import TextContentHistoryMixin
 from Products.ERP5Type.Utils import bytes2str, str2bytes, str2unicode, unicode2str, publishable
 
 from lxml import html as etree_html
+
+
+class _SubstitutionMappingMethodKeyError(Exception):
+  pass
+
 
 class TextDocument(TextContentMigrationMixin, CachedConvertableMixin, TextContentHistoryMixin, TextContent, File):
   """
@@ -103,7 +109,15 @@ class TextDocument(TextContentMigrationMixin, CachedConvertableMixin, TextConten
         @property
         def mapping(self):
           if self._mapping is None:
-            self._mapping = method(**kw)
+            try:
+              self._mapping = method(**kw)
+            except KeyError:
+              if safe_substitute:
+                exc_type, exc_value, exc_tb = sys.exc_info()
+                six.reraise(_SubstitutionMappingMethodKeyError,
+                            _SubstitutionMappingMethodKeyError(exc_type, exc_value, exc_tb),
+                            exc_tb)
+              raise
           return self._mapping
 
         def __getitem__(self, item):
@@ -120,7 +134,10 @@ class TextDocument(TextContentMigrationMixin, CachedConvertableMixin, TextConten
       unicode_mapping = LazyUnicodeMapping()
 
       if safe_substitute:
-        text = Template(text).safe_substitute(unicode_mapping)
+        try:
+          text = Template(text).safe_substitute(unicode_mapping)
+        except _SubstitutionMappingMethodKeyError as e:
+          six.reraise(*e.args)  # pylint:disable=no-value-for-parameter
       else:
         text = Template(text).substitute(unicode_mapping)
 
