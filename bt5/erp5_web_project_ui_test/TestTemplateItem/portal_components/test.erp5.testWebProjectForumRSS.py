@@ -25,6 +25,7 @@ import os
 import unittest
 from collections import OrderedDict
 from xml.dom.minidom import parseString
+from DateTime import DateTime
 import Products.ERP5.tests
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import FileUpload
@@ -87,7 +88,6 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     forum, thread = self._createForumThreadWithPosts(n_posts=2)
     # the item <link> self-derives the app base from the request (portal.absolute_url())
     base = self.portal.absolute_url()
-    post_count = thread.DiscussionThread_getDiscussionPostCount()
     doc = parseString(forum.DiscussionForum_viewLatestPostListAsRSS())
     links = [x for x in
              (getSubnodeContent(i, 'link')
@@ -99,7 +99,28 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
       self.assertIn(base, link)
       self.assertIn('p.jio_key=%s' % forum.getRelativeUrl(), link)
       self.assertIn('n.jio_key=%s' % thread.getRelativeUrl(), link)
-      self.assertIn('n.last_post=%s' % post_count, link)
+      self.assertIn('n.last_post=', link)
+
+  def test_rss_feed_link_targets_the_post_position(self):
+    """Each item <link> carries the rank of its post in the thread, so it does
+    not change when later posts arrive (readers would show them as unread)."""
+    now = DateTime()
+    with self.pinDateTime(now - 3 / 1440.):
+      forum, thread = self._createForumThreadWithPosts(n_posts=1)
+    for minutes_ago in (2, 1):
+      with self.pinDateTime(now - minutes_ago / 1440.):
+        thread.DiscussionThread_createNewDiscussionPost(
+          title='reply', text_content='reply body')
+    self.tic()
+    post_list = sorted(thread.objectValues(portal_type='Discussion Post'),
+                       key=lambda post: post.getCreationDate())
+    doc = parseString(forum.DiscussionForum_viewLatestPostListAsRSS())
+    link_dict = {getSubnodeContent(item, 'guid'): getSubnodeContent(item, 'link')
+                 for item in doc.getElementsByTagName('item')}
+    self.assertEqual(3, len(link_dict))
+    for position, post in enumerate(post_list, 1):
+      self.assertTrue(
+        link_dict[post.getRelativeUrl()].endswith('&n.last_post=%d' % position))
 
   def test_thread_url_helper_builds_push_history_jio_key(self):
     """ListBox_getDiscussionThreadUrl (the SPA thread-row link) returns a
@@ -674,16 +695,16 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     self.assertIn('("attachment_column", "BugLine_getAttachmentList")',
                   field.get_tales('renderjs_extra')._text)
 
-  def test_only_bug_messages_reader_links_each_post(self):
-    """The bug messages link each line like the bug line listbox does; forum
-    thread posts keep no link."""
+  def test_thread_readers_link_each_post(self):
+    """Bug messages and forum thread posts link each line to its post page."""
     bug_field = self.portal.portal_skins.erp5_web_project \
                     .Bug_viewProject.my_messages
     self.assertIn('("post_link", True)',
                   bug_field.get_tales('renderjs_extra')._text)
     post_field = self.portal.portal_skins.erp5_discussion \
                      .DiscussionThread_viewPostList.my_posts
-    self.assertNotIn('post_link', post_field.get_tales('renderjs_extra')._text)
+    self.assertIn('("post_link", True)',
+                  post_field.get_tales('renderjs_extra')._text)
 
   def test_bug_module_list_filter_offers_project_once(self):
     """The search panel lists search columns then domains: a source_project
