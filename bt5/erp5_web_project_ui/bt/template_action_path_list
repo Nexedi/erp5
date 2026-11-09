@@ -4,6 +4,7 @@ Bug Line | project_view
 Bug Module | project_view
 Bug | add_file_project
 Bug | project_view
+Bug | send_bug_line_project
 Discussion Forum | generate_rss_link
 Discussion Forum | project_view
 Discussion Post | project_view
