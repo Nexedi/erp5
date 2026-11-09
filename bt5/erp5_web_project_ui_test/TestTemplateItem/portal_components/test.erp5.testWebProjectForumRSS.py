@@ -764,7 +764,7 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
             if x.getId() not in existing_bug_id_list]
     self.assertNotEqual(None, bug.getStartDate())
     self.assertEqual(project, bug.getSourceProjectValue())
-    self.assertEqual('confirmed', bug.getSimulationState())
+    self.assertEqual('draft', bug.getSimulationState())
 
   def test_bug_actions_follow_the_add_permission_on_the_bug(self):
     """A project_jio_action permission is checked on the portal, not on the bug:
