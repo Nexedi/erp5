@@ -35,11 +35,8 @@
       "spawn_subagent for delegating sub-tasks, read_tool_output for reading a tool output that was " +
       "too large to return whole, whatever MCP tools are configured, and - only when the " +
       "user asks for it - execution_plan for a checklist. Do not assume access to anything beyond these. " +
-      "The history of this conversation has only the posts of the user and the text of your answers: " +
-      "the tool calls of your earlier answers and their results are not repeated in it. The text of an " +
-      "earlier answer is a faithful record of what its tools returned - do not take it for made up. " +
-      "When a tool returns values the user may ask about later (ids, numbers, URLs), write them in " +
-      "your answer, since its text is all that the next turns keep.",
+      "The history of this conversation keeps the tool calls of your earlier answers and their " +
+      "results. When it gets long, its oldest part is replaced by a summary.",
     TURN_LIMIT_PROMPT = "Turn limit reached: you can not call tools anymore. Give your final answer " +
       "now, with what you found so far, and say clearly what you could not find or verify.",
     CONTEXT_SUMMARY_PREFIX = "[context summary]\n",
@@ -151,12 +148,13 @@
   function joinAnswerText(answer_text_list, current_text) {
     return (answer_text_list || []).concat(current_text ? [current_text] : []).join("\n\n");
   }
-
   rJS(window)
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
     .declareAcquiredMethod("requestProcessTask", "requestProcessTask")
     .declareAcquiredMethod("storeTaskResult", "storeTaskResult")
     .declareAcquiredMethod("getModelContextWindow", "getModelContextWindow")
+    .declareAcquiredMethod("getTaskCompaction", "getTaskCompaction")
+    .declareAcquiredMethod("storeTaskCompaction", "storeTaskCompaction")
 
     .declareMethod('render', function (options) {
       var gadget = this;
@@ -217,7 +215,7 @@
       content = joinAnswerText(gadget.answer_text_list, gadget.streaming_text);
       // Only show in the tool call trace only
       gadget.tool_message_list.push({
-        role: "tool",
+        role: "note",
         name: "cancelled",
         content: "Cancelled by user"
       });
@@ -240,7 +238,8 @@
           return gadget.notifySubmitted({message: 'Cancelled', status: "success"});
         });
     })
-    .declareMethod('compactMessageList', function (message_list, keep_recent_override, last_usage_anchor) {
+    .declareMethod('compactMessageList', function (message_list, keep_recent_override, last_usage_anchor,
+                                                   cut_index_list) {
       var gadget = this;
       return gadget.getModelContextWindow()
         .push(function (context_window) {
@@ -279,6 +278,11 @@
               message_list[cut_index].role === "tool") {
             cut_index -= 1;
           }
+          if (cut_index_list) {
+            cut_index = cut_index_list.reduce(function (best, index) {
+              return (index > best && index <= cut_index) ? index : best;
+            }, leading_system_count);
+          }
           leading_system_message_list = message_list.slice(0, leading_system_count);
           old_message_list = message_list.slice(leading_system_count, cut_index);
           recent_message_list = message_list.slice(cut_index);
@@ -295,7 +299,7 @@
 
           if (gadget.tool_message_list) {
             gadget.tool_message_list.push({
-              role: "tool",
+              role: "note",
               name: "compact_history",
               content: "Conversation getting long - summarizing " + old_message_list.length +
                 " older message(s) to free up context..."
@@ -339,7 +343,9 @@
                   role: "user",
                   content: CONTEXT_SUMMARY_PREFIX + result.content
                 }], recent_message_list),
-                usage_totals: summary_usage_totals
+                usage_totals: summary_usage_totals,
+                summary: result.content,
+                cut_index: cut_index
               };
             })
             .push(undefined, function (e) {
@@ -347,13 +353,62 @@
               // may then overflow the context.
               if (gadget.tool_message_list) {
                 gadget.tool_message_list.push({
-                  role: "tool",
+                  role: "note",
                   name: "compact_history",
                   content: "Summarizing the older messages failed (" + (e && e.message ? e.message : String(e)) +
                     ") - continuing with the full history."
                 });
               }
               return { message_list: message_list, usage_totals: summary_usage_totals };
+            });
+        });
+    })
+    // The messages of the task to start the agent loop with: the system
+    // prompt, the stored summary of the older posts if any, then the posts
+    // after it, with the tool calls and results of the answers. If they are
+    // too long, the older turns are summarized - only at a turn start, so the
+    // cut is a post - and the summary is stored: the next tasks start from it
+    // instead of summarizing the same posts again. The compaction inside the
+    // agent loop, which may cut the current turn, is not stored.
+    // Returns {message_list, usage_totals}.
+    .declareMethod('loadHistory', function () {
+      var gadget = this;
+      return new RSVP.Queue(RSVP.all([
+        gadget.getTaskCompaction(gadget.jio_key),
+        gadget.getSystemPromptList()
+      ]))
+        .push(function (result_list) {
+          var compaction = result_list[0],
+            head_message_list = result_list[1].concat(compaction ? [{
+              role: "user",
+              content: CONTEXT_SUMMARY_PREFIX + compaction.summary
+            }] : []);
+          return gadget.gadget_chat_ui.getMessageList(compaction ? compaction.summarized_before_int_index : 0)
+            .push(function (history) {
+              return [head_message_list, history];
+            });
+        })
+        .push(function (result_list) {
+          var head_message_list = result_list[0],
+            history = result_list[1];
+          return gadget.compactMessageList(head_message_list.concat(history.message_list), undefined, null,
+            history.cut_list.map(function (cut) {
+              return cut.index + head_message_list.length;
+            }))
+            .push(function (compacted) {
+              var loaded = { message_list: compacted.message_list, usage_totals: compacted.usage_totals };
+              if (compacted.summary === undefined) {
+                return loaded;
+              }
+              return gadget.storeTaskCompaction(gadget.jio_key, {
+                summary: compacted.summary,
+                summarized_before_int_index: history.cut_list.filter(function (cut) {
+                  return cut.index === compacted.cut_index - head_message_list.length;
+                })[0].int_index
+              })
+                .push(function () {
+                  return loaded;
+                });
             });
         });
     })
@@ -364,11 +419,15 @@
         gadget.skill_manager.formatSkillListForPrompt()
       ]))
         .push(function (result_list) {
-          var system_message_list = [{ role: "system", content: ENVIRONMENT_SYSTEM_PROMPT }].concat(result_list[0]);
+          // One system message only: some servers reject several, or a
+          // system message after the first one, or keep only the first.
+          var content_list = [ENVIRONMENT_SYSTEM_PROMPT].concat(result_list[0].map(function (message) {
+            return message.content;
+          }));
           if (result_list[1]) {
-            system_message_list.push({ role: "system", content: result_list[1] });
+            content_list.push(result_list[1]);
           }
-          return system_message_list;
+          return [{ role: "system", content: content_list.join("\n\n") }];
         });
     })
     .allowPublicAcquisition('getSystemPromptList', function () {
@@ -410,7 +469,7 @@
         gadget.execution_plan = null;
         // only put inside the trace, to not send back to llm
         gadget.tool_message_list.push({
-          role: "tool",
+          role: "note",
           name: "error",
           content: "Error: " + (stack.indexOf(message) !== -1 ? stack :
               message + (stack ? "\n\n" + stack : ""))
@@ -449,7 +508,7 @@
           });
         }
         gadget.tool_message_list.push({
-          role: "tool",
+          role: "note",
           name: "usage_totals",
           content: "Task usage: " + usage_totals.call_count + " LLM call(s), " +
             usage_totals.prompt_tokens + " prompt + " + usage_totals.completion_tokens +
@@ -498,7 +557,7 @@
                 message_list = message_list.concat(tool_round.message_list);
               }
               gadget.tool_message_list.push({
-                role: "tool",
+                role: "note",
                 name: "turn_limit",
                 content: "Turn limit of " + max_loop_count + " reached - asking the model for a final answer without tools"
               });
@@ -608,8 +667,8 @@
               // The trace holds the messages of the model, like the one of
               // the server side harness (ArtificialTask_runHarnessAgent):
               // the tool calls with their arguments, then their results.
-              // Its tool messages without tool_call_id are notes of the
-              // agent (retries, compaction, usage...), not sent to the model.
+              // Its "note" messages are notes of the agent (retries,
+              // compaction, usage...), not sent to the model.
               gadget.tool_message_list.push({
                 role: "assistant",
                 content: result.content,
@@ -663,7 +722,7 @@
             retry_count_dict[retry_name] = retry_count + 1;
             if (retry_name === "context_overflow_retry") {
               gadget.tool_message_list.push({
-                role: "tool",
+                role: "note",
                 name: retry_name,
                 content: e.message + " - the proactive estimate missed this, compacting harder and retrying"
               });
@@ -686,7 +745,7 @@
             }
             delay = getRetryDelay(e, retry_count);
             gadget.tool_message_list.push({
-              role: "tool",
+              role: "note",
               name: retry_name,
               content: e.message + retry_reason + " - retry " + (retry_count + 1) +
                 (retry_name === "network_error_retry" ? "" : " of " + MAX_RETRY_COUNT) +
@@ -716,20 +775,18 @@
           // Shown in the trace, so that the user knows why MCP tools are
           // missing.
           mcp_unavailable_list.forEach(function (content) {
-            gadget.tool_message_list.push({ role: "tool", name: "mcp_unavailable", content: content });
+            gadget.tool_message_list.push({ role: "note", name: "mcp_unavailable", content: content });
           });
         })
         .push(function () {
           return gadget.notifySubmitted({message: 'Processing', status: "success"});
         })
         .push(function () {
-          return gadget.gadget_chat_ui.getMessageList();
+          return gadget.loadHistory();
         })
-        .push(function (message_list) {
-          return gadget.getSystemPromptList()
-            .push(function (system_message_list) {
-              return loop_call(0, system_message_list.concat(message_list));
-            });
+        .push(function (loaded) {
+          window.ChatToolCommon.addUsageTotals(usage_totals, loaded.usage_totals);
+          return loop_call(0, loaded.message_list);
         });
       return queue_loop;
     });

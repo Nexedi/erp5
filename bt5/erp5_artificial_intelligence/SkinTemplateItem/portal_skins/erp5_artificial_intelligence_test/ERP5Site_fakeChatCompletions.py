@@ -170,6 +170,24 @@ STUCK_TEST_ARGUMENTS = {'url': ENDPOINT_URL, 'stuck_test': True}
 DEFINE_TOOL_LIST_REPEAT_ARGUMENTS = {'command': 'list', 'repeat_test': True}
 REASONING_TEST_TEXT = 'REASONING-MARKER: fetch the fake endpoint first.'
 READ_OUTPUT_NEEDLE = 'READ-OUTPUT-NEEDLE'
+# Runs about 8 seconds, so the test can cancel the task while it runs.
+TOOL_HISTORY_SLOW_CODE = ('/* tool-history-slow */ var start = Date.now(); '
+                          'while (Date.now() - start < 8000) {} return "slow done";')
+
+
+def tool_result_of(name, marker):
+  # The content of the tool message answering the first call to `name` with
+  # `marker` in its arguments, or '' (the history replays the tool calls of
+  # the earlier answers with their results).
+  for index, message in enumerate(message_list):
+    for tool_call in message.get('tool_calls') or []:
+      function = tool_call.get('function') or {}
+      if function.get('name') == name and marker in (function.get('arguments') or ''):
+        for result in message_list[index + 1:]:
+          if result.get('role') == 'tool' and result.get('tool_call_id') == tool_call.get('id'):
+            return message_text(result)
+        return ''
+  return ''
 
 
 def endless_test_arguments(step):
@@ -273,6 +291,32 @@ def reply_to_tool_result():
 def reply_to_user_message():
   text = last_content_lower
 
+  # testOfficeJSHarnessAIToolCallHistory.zpt: a tool call that returns, then
+  # a slow one cancelled while it runs, then a check of the history sent.
+  if 'please start the tool history test' in text:
+    return [tool_call_chunk('http_request', {'url': ENDPOINT_URL, 'tool_history_test': True})]
+  if 'please run the slow tool history step' in text:
+    return [tool_call_chunk('run_javascript', {'code': TOOL_HISTORY_SLOW_CODE})]
+  if 'please check the tool history' in text:
+    return [text_chunk('Tool history: replayed=%s, missing result filled=%s.' % (
+        'Hello from the fake HTTP endpoint!' in tool_result_of('http_request', '"tool_history_test"'),
+        tool_result_of('run_javascript', 'tool-history-slow').startswith(
+            'Not run: the task stopped')))]
+
+  # testOfficeJSHarnessAIStoredCompaction.zpt: two long answers, then checks
+  # of the history once the first one is summarized.
+  if 'please write the first long answer for the stored compaction test' in text:
+    return [text_chunk('STORED-COMPACTION-ONE ' + 'filler ' * 714)]
+  if 'please write the second long answer for the stored compaction test' in text:
+    return [text_chunk('STORED-COMPACTION-TWO ' + 'filler ' * 714)]
+  if 'please check the stored compaction test' in text:
+    return [text_chunk('Stored compaction: summary=%s, first answer summarized=%s, '
+                       'second answer kept=%s.' % (
+        any(m.get('role') == 'user' and message_text(m).startswith('[context summary]\nSTORED-SUMMARY')
+            for m in message_list),
+        'STORED-COMPACTION-ONE' not in whole_request_text,
+        'STORED-COMPACTION-TWO' in whole_request_text))]
+
   # testOfficeJSHarnessAISteering.zpt: the user posts while the agent runs.
   if 'please stall then call a tool for the steering test' in text:
     time.sleep(5)
@@ -282,8 +326,9 @@ def reply_to_user_message():
       return [text_chunk('STEERING-RECEIVED after tool.')]
     return [text_chunk('STEERING-RECEIVED without tool.')]
   if text == 'follow up message':
+    # Answers only: the history also replays the tool calls of the answers.
     return [text_chunk('FOLLOW-UP-RECEIVED after %d answer(s).' % len(
-        [m for m in message_list if m.get('role') == 'assistant']))]
+        [m for m in message_list if m.get('role') == 'assistant' and not m.get('tool_calls')]))]
 
   # testOfficeJSHarnessAICancelRequest.zpt: write some text, then stall on
   # the next request (see "cancel_test" above).
@@ -541,7 +586,10 @@ crlf_stream = False
 # the long tool results were truncated, SUMMARY-TWO only when SUMMARY-ONE was
 # passed as <previous-summary>.
 if first_system_content.startswith('The text above is a conversation to summarize'):
-  if 'more characters truncated' in last_content:
+  # testOfficeJSHarnessAIStoredCompaction.zpt
+  if 'STORED-COMPACTION-ONE' in last_content:
+    chunk_list = [text_chunk('STORED-SUMMARY: the first long answer was summarized.')]
+  elif 'more characters truncated' in last_content:
     chunk_list = [text_chunk('SUMMARY-ONE: compaction context test in progress.')]
   else:
     chunk_list = [text_chunk('SUMMARY-UNTRUNCATED')]

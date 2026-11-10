@@ -184,6 +184,25 @@
 
 
 
+  // The row of the Artificial Task Compaction of the task, or null.
+  function findTaskCompactionRow(gadget, document_id) {
+    return gadget.jio_allDocs({
+      query: new ComplexQuery({
+        operator: "AND",
+        type: "complex",
+        query_list: [
+          new SimpleQuery({key: "portal_type", type: "simple", value: "Artificial Task Compaction"}),
+          new SimpleQuery({key: "parent_relative_url", type: "simple", value: document_id})
+        ]
+      }),
+      select_list: ["text_content", "int_index"],
+      limit: [0, 1]
+    })
+      .push(function (result) {
+        return (result.data.rows || [])[0] || null;
+      });
+  }
+
   rJS(window)
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("getSettingList", "getSettingList")
@@ -285,6 +304,7 @@
           return task_line_row_list.map(function (row) {
             var attachment = attachment_by_task_line_id[row.id];
             return {
+              int_index: row.value.int_index || 0,
               date: row.value.date || new Date().toISOString(),
               text: row.value.text_content,
               tool_message_list: row.value.tool_message_list || "[]",
@@ -295,6 +315,41 @@
               attachment_name: attachment ? attachment.name : null
             };
           });
+        });
+    })
+    // The summary of the older posts of the task, stored by
+    // storeTaskCompaction: {summary, summarized_before_int_index}, or null. The
+    // posts before summarized_before_int_index are replaced by the summary.
+    .allowPublicAcquisition('getTaskCompaction', function (argument_list) {
+      return findTaskCompactionRow(this, argument_list[0])
+        .push(function (row) {
+          if (!row || !row.value.text_content) {
+            return null;
+          }
+          return {
+            summary: row.value.text_content,
+            summarized_before_int_index: row.value.int_index || 0
+          };
+        });
+    })
+    // One summary per task: updated if the task has one, created otherwise.
+    .allowPublicAcquisition('storeTaskCompaction', function (argument_list) {
+      var gadget = this,
+        document_id = argument_list[0],
+        compaction = argument_list[1],
+        doc = {
+          portal_type: 'Artificial Task Compaction',
+          parent_relative_url: document_id,
+          text_content: compaction.summary,
+          int_index: compaction.summarized_before_int_index,
+          date: new Date().toISOString()
+        };
+      return findTaskCompactionRow(gadget, document_id)
+        .push(function (row) {
+          if (row) {
+            return gadget.jio_put(row.id, doc);
+          }
+          return gadget.jio_post(doc);
         });
     })
     .allowPublicAcquisition('getDefinedToolList', function () {

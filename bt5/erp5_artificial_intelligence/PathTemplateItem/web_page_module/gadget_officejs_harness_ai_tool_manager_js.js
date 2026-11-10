@@ -146,9 +146,23 @@
   // How many times each tool call (same name, same arguments) appears in
   // the last TOOL_CALL_REPEAT_WINDOW assistant turns of message_list, keyed
   // by the JSON of its name and arguments.
+  // The index of the first message of the current turn: the one after the
+  // last user message. The tool calls of the earlier answers, replayed in
+  // the history, do not count as repeats: the user may ask the same again.
+  function getTurnStartIndex(message_list) {
+    var i;
+    for (i = message_list.length - 1; i >= 0; i -= 1) {
+      if (message_list[i].role === "user") {
+        return i + 1;
+      }
+    }
+    return 0;
+  }
+
   function countToolCalls(message_list) {
-    var count_dict = {}, turn_count = 0, i, j, message, key;
-    for (i = message_list.length - 1; i >= 0 && turn_count < TOOL_CALL_REPEAT_WINDOW; i -= 1) {
+    var count_dict = {}, turn_count = 0, i, j, message, key,
+      turn_start_index = getTurnStartIndex(message_list);
+    for (i = message_list.length - 1; i >= turn_start_index && turn_count < TOOL_CALL_REPEAT_WINDOW; i -= 1) {
       message = message_list[i];
       if (message.role === "assistant" && message.tool_calls && message.tool_calls.length) {
         turn_count += 1;
@@ -171,7 +185,7 @@
 
   function getDisabledToolNameList(message_list) {
     var name_list = [], i, message;
-    for (i = 0; i < message_list.length; i += 1) {
+    for (i = getTurnStartIndex(message_list); i < message_list.length; i += 1) {
       message = message_list[i];
       if (message.role === "tool" && message.name && typeof message.content === "string" &&
           message.content.indexOf(TOOL_DISABLED_NOTICE) !== -1 && name_list.indexOf(message.name) === -1) {

@@ -113,6 +113,63 @@
     };
   }
 
+
+  function traceToMessageList(trace) {
+    var message_list = [];
+    trace.forEach(function (entry, index) {
+      var next_index = index + 1;
+      if (entry.role !== "assistant" || !entry.tool_calls || !entry.tool_calls.length) {
+        return;
+      }
+      while (next_index < trace.length && trace[next_index].role !== "assistant") {
+        next_index += 1;
+      }
+      message_list.push({
+        role: "assistant",
+        content: "",
+        tool_calls: entry.tool_calls
+      });
+      entry.tool_calls.forEach(function (tool_call) {
+        var result = trace.slice(index + 1, next_index).filter(function (message) {
+          return message.role === "tool" && message.tool_call_id === tool_call.id;
+        })[0];
+        message_list.push({
+          role: "tool",
+          tool_call_id: tool_call.id,
+          name: tool_call["function"].name,
+          // Without a stored result (the task was cancelled or failed while
+          // it ran, or it was not run at the turn limit), servers reject the
+          // tool call: say it was not run.
+          content: result ? result.content :
+              "Not run: the task stopped before this tool call returned a result."
+        });
+      });
+    });
+    return message_list;
+  }
+
+
+  function postListToHistory(post_list, summarized_before_int_index) {
+    var history = { message_list: [], cut_list: [] },
+      kept_list = post_list.filter(function (post) {
+        return (post.int_index || 0) >= summarized_before_int_index;
+      });
+    kept_list.forEach(function (post, index) {
+      var message = postToMessage(post);
+      if (post.response) {
+        history.message_list = history.message_list.concat(
+          traceToMessageList(JSON.parse(post.tool_message_list || "[]"))
+        );
+      } else if (index === 0 || kept_list[index - 1].response) {
+        history.cut_list.push({ index: history.message_list.length, int_index: post.int_index || 0 });
+      }
+      if (message) {
+        history.message_list.push(message);
+      }
+    });
+    return history;
+  }
+
   function formatPost(post) {
     var date = new Date(post.date);
     post.date_formatted = date.toLocaleString();
@@ -508,10 +565,11 @@
         });
     }, COMMENT_POLL_INTERVAL)
 
-    .declareMethod('getMessageList', function () {
+    // we send post message and also tool call trace
+    .declareMethod('getMessageList', function (summarized_before_int_index) {
       return this.getCommentPostList(this.options.jio_key)
         .push(function (post_list) {
-          return post_list.map(postToMessage).filter(Boolean);
+          return postListToHistory(post_list, summarized_before_int_index || 0);
         });
     })
     .declareMethod('appendPost', function (post) {
