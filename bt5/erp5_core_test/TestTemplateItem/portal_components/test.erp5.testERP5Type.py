@@ -3444,8 +3444,20 @@ class TestZODBStreaming(ERP5TypeTestCase):
     # Publish like Testing.ZopeTestCase.Functional does, without the read of
     # the body by ERP5TypeTestCaseMixin.publish
     from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCaseMixin
-    return super(ERP5TypeTestCaseMixin, self).publish(  # pylint:disable=bad-super-call
-      path, basic=self.basic, request_method=request_method)
+    from Testing.ZopeTestCase import functional
+    publish = super(ERP5TypeTestCaseMixin, self).publish  # pylint:disable=bad-super-call
+    read_wsgi_result = getattr(functional, 'read_wsgi_result', None)
+    if read_wsgi_result is None:
+      return publish(path, basic=self.basic, request_method=request_method)
+    # Testing.ZopeTestCase.Functional reads the whole body and closes it, like
+    # a WSGI server: keep the body as the publisher returns it.
+    functional.read_wsgi_result = lambda wsgi_result: wsgi_result
+    try:
+      response = publish(path, basic=self.basic, request_method=request_method)
+    finally:
+      functional.read_wsgi_result = read_wsgi_result
+    response._wsgi_result, = response._wsgi_result
+    return response
 
   def test_body_is_read_a_bit_at_a_time(self):
     response = self._publishWithoutReading(self.stream_path)
