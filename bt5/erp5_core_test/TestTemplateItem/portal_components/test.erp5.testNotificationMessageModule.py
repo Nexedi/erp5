@@ -217,3 +217,25 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
     mime, text = doc.convert('txt')
     self.assertEqual('text/plain', mime)
     self.assertEqual('substitution text: (dynamic key: a)', text)
+
+  def test_substitution_method_key_error(self):
+    module = self.portal.notification_message_module
+    createZODBPythonScript(
+      self.portal,
+      'NotificationMessage_getKeyErrorSubstitutionMapping',
+      '**kw',
+      '''raise KeyError("method failure")''',
+    )
+    doc = module.newContent(
+      portal_type='Notification Message',
+      title='Test ${a}',
+      content_type='text/plain',
+      text_content='substitution text: ${a}',
+      text_content_substitution_mapping_method_id='NotificationMessage_getKeyErrorSubstitutionMapping',
+    )
+
+    for safe_substitute in (True, False):
+      with self.assertRaisesRegex(KeyError, 'method failure'):
+        doc.convert('txt', safe_substitute=safe_substitute)
+      with self.assertRaisesRegex(KeyError, 'method failure'):
+        doc.asSubjectText(safe_substitute=safe_substitute)
