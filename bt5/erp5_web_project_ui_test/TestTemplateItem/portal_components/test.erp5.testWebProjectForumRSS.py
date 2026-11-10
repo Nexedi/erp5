@@ -877,6 +877,20 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
       actions={'object_clone_action': clone_action_list})
     self.assertEqual(clone_action_list, result['object_clone_action'])
 
+  def test_filter_project_actions_drops_add_on_bug_module(self):
+    """Bugs are created from a project page only, so they always have a project."""
+    self.portal.REQUEST.form['relative_url'] = self.portal.bug_module.getRelativeUrl()
+    actions = {'object_new_content_action': [{'id': 'create_a_document'}]}
+    result = self.portal.Base_filterProjectActions(actions=actions)
+    self.assertNotIn('object_new_content_action', result)
+
+  def test_filter_project_actions_keeps_add_on_other_modules(self):
+    self.portal.REQUEST.form['relative_url'] = self.portal.project_module.getRelativeUrl()
+    add_action_list = [{'id': 'create_a_document'}]
+    result = self.portal.Base_filterProjectActions(
+      actions={'object_new_content_action': add_action_list})
+    self.assertEqual(add_action_list, result['object_new_content_action'])
+
   def test_filter_project_actions_keeps_workflow_without_relative_url(self):
     self.assertNotIn('relative_url', self.portal.REQUEST.form)
     workflow_action_list = [{'id': 'release_action'}]
