@@ -45,11 +45,10 @@ setup(name=name,
       author='The ERP5 Development Team',
       keywords='erp5 utilities',
       license='GPLv3',
-      namespace_packages=['erp5', 'erp5.util'],
       install_requires=[
-        'setuptools', # namespaces
         'psutil >= 0.5.0',
         'six',
+        'setuptools; python_version < "3"',
       ],
       extras_require={
         'testnode': ['slapos.core', 'xml_marshaller', 'psutil >= 0.5.0', 'netaddr'],
