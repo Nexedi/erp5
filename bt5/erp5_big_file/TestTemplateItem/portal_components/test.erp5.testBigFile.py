@@ -243,9 +243,9 @@ class TestBigFile(ERP5TypeTestCase):
     # like in ZPublisher - returned RESPONSE means empty
     if ret is request.RESPONSE:
       ret = b''
-    elif IStreamIterator.providedBy(ret):
+    elif IStreamIterator.providedBy(ret):    # pylint:disable=no-value-for-parameter
       self.assertTrue(IZODBStreamIterator is None or # BBB Zope 4
-                      IZODBStreamIterator.providedBy(ret))
+                      IZODBStreamIterator.providedBy(ret))    # pylint:disable=no-value-for-parameter
       self.assertEqual(len(ret), len(result + body))
       ret = b''.join(ret)
     # data is never written to RESPONSE: it is returned, so that the
@@ -368,7 +368,7 @@ class TestBigFile(ERP5TypeTestCase):
       part_header + b'5-6/10\r\n\r\nfg' +
       b'\r\n--' + boundary + b'--\r\n')
     self.assertTrue(IZODBStreamIterator is None or # BBB Zope 4
-                      IZODBStreamIterator.providedBy(ret))
+                      IZODBStreamIterator.providedBy(ret))  # pylint:disable=no-value-for-parameter
     self.assertEqual(len(ret), len(expected_body))
     self.assertEqual(b''.join(ret), expected_body)
     self.assertEqual(request.RESPONSE.getHeader('Content-Length'),
