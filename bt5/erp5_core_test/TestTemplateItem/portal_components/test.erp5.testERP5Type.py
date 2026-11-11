@@ -3444,7 +3444,7 @@ class TestZODBStreaming(ERP5TypeTestCase):
     # Publish like Testing.ZopeTestCase.Functional does, without the read of
     # the body by ERP5TypeTestCaseMixin.publish
     from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCaseMixin
-    return super(ERP5TypeTestCaseMixin, self).publish(
+    return super(ERP5TypeTestCaseMixin, self).publish(  # pylint:disable=bad-super-call
       path, basic=self.basic, request_method=request_method)
 
   def test_body_is_read_a_bit_at_a_time(self):
