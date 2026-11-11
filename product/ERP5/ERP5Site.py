@@ -2219,7 +2219,9 @@ class ERP5Generator(PortalGenerator):
         ).upgradeSite(bt5.split(), update_catalog=True)
         # XXX: workaround for the above BT installation not using the upgrader,
         # and hence not triggering post-install constraints.
-        if 'erp5_oauth2_authorisation' in bt5:
+        if any([
+            b in bt5 for b in ("erp5_oauth2_authorisation", "erp5_configurator_standard")
+          ]):
           p.portal_templates.activate(
             after_tag=upgrade_tag,
           ).ERP5Site_checkOAuth2AuthorisationServerPostUpgradeConsistency(fixit=True)
