@@ -3458,7 +3458,7 @@ class TestZODBStreaming(ERP5TypeTestCase):
     self.assertEqual(next(result), self.chunk_list[0])
     self.assertEqual(next(result), self.chunk_list[1])
     self.assertEqual(len(self.loaded_list), 2)
-    connection, = set(self.loaded_list)
+    connection, = set(self.loaded_list)  # pylint:disable=unbalanced-tuple-unpacking
     self.assertIsNotNone(connection.opened)
     # The WSGI server closes the body when the client disconnects
     result.close()
@@ -3470,7 +3470,7 @@ class TestZODBStreaming(ERP5TypeTestCase):
     self.assertEqual(response.getStatus(), 200)
     self.assertEqual(response.getBody(), b''.join(self.chunk_list))
     self.assertEqual(len(self.loaded_list), self.chunk_count)
-    connection, = set(self.loaded_list)
+    connection, = set(self.loaded_list)   # pylint:disable=unbalanced-tuple-unpacking
     self.assertIsNone(connection.opened)
 
   def test_head(self):
