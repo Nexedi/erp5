@@ -181,7 +181,7 @@
                 </tr>
                 <tr>
                     <td>waitForTextPresent</td>
-                    <td>F821: Undefined name `undefined_variable`</td>
+                    <td>undefined-name: Undefined name `undefined_variable`</td>
                     <td></td>
                 </tr>
                 <tr>
@@ -194,7 +194,7 @@
                 </tr>
                 <tr>
                     <td>waitForTextPresent</td>
-                    <td>F841: Local variable `unused_variable` is assigned to but never used</td>
+                    <td>unused-variable: Local variable `unused_variable` is assigned to but never used</td>
                     <td></td>
                 </tr>
                 <tr>
