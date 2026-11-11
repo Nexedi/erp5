@@ -182,7 +182,7 @@
                 <td>JSON.stringify(
                     selenium.browserbot.getCurrentWindow().monaco.editor.getModelMarkers(
                     storedVars['model-data-uri']).map(m => [m.startLineNumber, m.startColumn, m.endColumn, m.message]))</td>
-                <td>[[1,18,21,"F821: Undefined name `XXX`"]]</td>
+                <td>[[1,18,21,"undefined-name: Undefined name `XXX`"]]</td>
             </tr>
             <tr>
                 <td>selectFrame</td>

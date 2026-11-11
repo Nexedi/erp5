@@ -46,7 +46,7 @@
       <!-- suggestion drop down -->
       <tr>
         <td>waitForElementPresent</td>
-        <td>//div[@aria-label="catalog"]</td>
+        <td>//div[contains(@aria-label, "catalog")]</td>
         <td></td>
       </tr>
 
