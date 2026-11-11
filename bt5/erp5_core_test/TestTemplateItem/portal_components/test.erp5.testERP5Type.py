@@ -3426,6 +3426,8 @@ class TestZODBStreaming(ERP5TypeTestCase):
           return self
         def __next__(self):
           return next(self._iterator)
+        if six.PY2:
+          next = __next__
         def __len__(self):
           return len(b''.join(test.chunk_list))
       return PlainStreamIterator()
