@@ -3487,7 +3487,7 @@ class TestZODBStreaming(ERP5TypeTestCase):
     response = self._publishWithoutReading(
       self.stream_path + '?stream_iterator:int=0')
     result = response._wsgi_result
-    self.assertTrue(IStreamIterator.providedBy(result))
+    self.assertTrue(IStreamIterator.providedBy(result))  # pylint:disable=no-value-for-parameter
     self.assertNotIsInstance(result, _ZODBStreamIterator)
     self.assertEqual(b''.join(result), b''.join(self.chunk_list))
 
