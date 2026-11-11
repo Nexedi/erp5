@@ -132,8 +132,8 @@ $script.onload = function() {
     editor.getModel().updateOptions({ tabSize: 2 });
   }
   if (mode === "html") {
-    monaco.languages.html.htmlDefaults.options.format.tabSize = 2;
-    monaco.languages.html.htmlDefaults.options.format.insertSpaces = true;
+    monaco.html.htmlDefaults.options.format.tabSize = 2;
+    monaco.html.htmlDefaults.options.format.insertSpaces = true;
   }
   if (mode === "javascript") {
     // load an external library in namespace of the edited .js
@@ -143,7 +143,7 @@ $script.onload = function() {
           return resp.text();
         })
         .then(function(script_code) {
-          monaco.languages.typescript.javascriptDefaults.addExtraLib(
+          monaco.typescript.javascriptDefaults.addExtraLib(
             script_code,
             lib_name
           );
@@ -166,16 +166,16 @@ $script.onload = function() {
   }
 
   // lint javascript with typescript compiler
-  monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+  monaco.typescript.javascriptDefaults.setDiagnosticsOptions({
     noSemanticValidation: false,
     noSyntaxValidation: false
   });
-  monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
-    target: monaco.languages.typescript.ScriptTarget.Latest,
+  monaco.typescript.javascriptDefaults.setCompilerOptions({
+    target: monaco.typescript.ScriptTarget.Latest,
     allowNonTsExtensions: true,
     checkJs: true,
     allowJs: true,
-    module: monaco.languages.typescript.ModuleKind.UMD
+    module: monaco.typescript.ModuleKind.UMD
   });
 
   var timeout = null;
