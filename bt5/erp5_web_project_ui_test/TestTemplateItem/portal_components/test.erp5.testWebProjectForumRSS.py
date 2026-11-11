@@ -610,6 +610,7 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
       field_my_description='edited',
       field_my_source_project_title='',
       field_my_source_title='',
+      field_my_source_decision_title='',
       field_my_bug_severity='',
       field_my_bug_priority='',
     ))
@@ -764,7 +765,45 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
             if x.getId() not in existing_bug_id_list]
     self.assertNotEqual(None, bug.getStartDate())
     self.assertEqual(project, bug.getSourceProjectValue())
+
+  def test_new_bug_from_project_without_supervisor_stays_in_draft(self):
+    """The default test user has no Person, so no Supervisor can be set: the
+    bug must not be opened, its reporter would lose edit rights."""
+    project = self.portal.project_module.newContent(portal_type='Project')
+    existing_bug_id_list = list(self.portal.bug_module.objectIds())
+    project.Project_newBug(title='Bug without a supervisor')
+    bug, = [x for x in self.portal.bug_module.objectValues()
+            if x.getId() not in existing_bug_id_list]
+    self.assertEqual(None, bug.getSourceDecisionValue())
     self.assertEqual('draft', bug.getSimulationState())
+
+  def test_new_bug_from_project_has_its_reporter_as_supervisor(self):
+    """The bug is opened at once: as Supervisor, the reporter keeps editing it."""
+    project = self.portal.project_module.newContent(portal_type='Project')
+    person = self.portal.person_module.newContent(
+      portal_type='Person', reference='TESTP-new-bug-reporter')
+    person.newContent(portal_type='Assignment').open()
+    person.newContent(portal_type='ERP5 Login',
+                      reference='new-bug-reporter-login').validate()
+    self.portal.acl_users.zodb_roles.assignRoleToPrincipal(
+      'Manager', person.getUserId())
+    self.tic()
+    existing_bug_id_list = list(self.portal.bug_module.objectIds())
+    self.loginByUserName('new-bug-reporter-login')
+    try:
+      project.Project_newBug(title='Bug with a supervisor')
+    finally:
+      self.login()
+    bug, = [x for x in self.portal.bug_module.objectValues()
+            if x.getId() not in existing_bug_id_list]
+    self.assertEqual(person, bug.getSourceDecisionValue())
+    self.assertEqual(person, bug.getSourceTradeValue())
+    self.assertEqual('confirmed', bug.getSimulationState())
+
+  def test_bug_view_shows_the_supervisor(self):
+    form = self.portal.portal_skins.erp5_web_project.Bug_viewProject
+    self.assertIn('my_source_decision_title',
+                  [field.getId() for field in form.get_fields()])
 
   def test_bug_actions_follow_the_add_permission_on_the_bug(self):
     """A project_jio_action permission is checked on the portal, not on the bug:
