@@ -133,8 +133,8 @@
 
         if (this.state.model_language === 'html') {
           // XXX why do we need this while it set on model already ? is it bug in monaco ?
-          monaco.languages.html.htmlDefaults.options.format.tabSize = 2;
-          monaco.languages.html.htmlDefaults.options.format.insertSpaces = true;
+          monaco.html.htmlDefaults.options.format.tabSize = 2;
+          monaco.html.htmlDefaults.options.format.insertSpaces = true;
         }
         if (this.state.model_language === 'javascript') {
           // lint with jslint
@@ -142,17 +142,17 @@
           this.runJsLint();
 
           // lint with typescript compiler
-          monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+          monaco.typescript.javascriptDefaults.setDiagnosticsOptions({
             noSemanticValidation: false,
             noSyntaxValidation: false
           });
 
-          monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
-            target: monaco.languages.typescript.ScriptTarget.Latest,
+          monaco.typescript.javascriptDefaults.setCompilerOptions({
+            target: monaco.typescript.ScriptTarget.Latest,
             allowNonTsExtensions: true,
             checkJs: true,
             allowJs: true,
-            module: monaco.languages.typescript.ModuleKind.UMD
+            module: monaco.typescript.ModuleKind.UMD
           });
 
           // Type mapping for Nexedi libraries
@@ -163,7 +163,7 @@
                   return resp.text();
                 })
                 .then(function (script_code) {
-                  monaco.languages.typescript.javascriptDefaults.addExtraLib(
+                  monaco.typescript.javascriptDefaults.addExtraLib(
                     script_code,
                     lib_name
                   );
