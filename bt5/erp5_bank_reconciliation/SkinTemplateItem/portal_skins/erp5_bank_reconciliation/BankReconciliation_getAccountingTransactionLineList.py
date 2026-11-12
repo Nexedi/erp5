@@ -65,5 +65,4 @@ if context.getSourcePayment():
       context.getQuantityPrecisionFromResource(
         context.getSourcePaymentValue().getPriceCurrency()))
 
-context.log(context.portal_simulation.getMovementHistoryList(src__=1,**kw))
 return context.portal_simulation.getMovementHistoryList(**kw)
