@@ -63,7 +63,7 @@ import os
 from threading import Thread
 import six.moves.http_client
 from six.moves.urllib.parse import urlencode
-from six.moves.urllib.request import urlopen
+from six.moves.urllib.request import Request, urlopen
 import re
 from AccessControl import Unauthorized
 from Acquisition import aq_base
