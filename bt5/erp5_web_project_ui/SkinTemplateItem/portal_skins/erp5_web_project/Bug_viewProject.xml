@@ -90,6 +90,7 @@
                         <string>my_title</string>
                         <string>my_source_project_title</string>
                         <string>my_source_title</string>
+                        <string>my_source_decision_title</string>
                         <string>my_bug_severity</string>
                       </list>
                     </value>
