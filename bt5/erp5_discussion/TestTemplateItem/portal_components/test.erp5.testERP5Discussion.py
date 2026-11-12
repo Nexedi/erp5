@@ -511,10 +511,13 @@ class TestERP5Discussion(DocumentUploadTestCase):
     brain, = self.portal.portal_catalog(uid=thread.getUid())
     self.assertEqual(
       {'command': 'push_history',
-       'options': {'jio_key': thread.getRelativeUrl(),
-                   'page': 'form',
-                   'view': 'view_post_list'}},
+       'options': {'jio_key': thread.getRelativeUrl()},
+       'view_kw': {'view': 'view_post_list',
+                   'jio_key': thread.getRelativeUrl()}},
       brain.ListBox_getDiscussionThreadReaderUrl(brain=brain, url_dict=True))
+    self.assertIn('view_post_list',
+                  [action.getReference() for action in
+                   thread.getTypeInfo().getActionInformationList()])
 
   def test_thread_list_title_reader_url_in_classic_ui(self):
     """Without url_dict (classic UI), the link is the post list form URL."""
