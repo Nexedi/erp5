@@ -29,6 +29,7 @@
 import hashlib
 import six.moves.http_client
 from Products.ERP5Type.UnrestrictedMethod import super_user
+from OFS.Image import Pdata
 from Products.ERP5Type.Utils import IterableAsStreamIterator
 
 
@@ -87,9 +88,11 @@ def File_viewAsWeb(self):
   data = self.data
   if data is None:
     return b''
-  if isinstance(data, bytes):
-    # Return a stream iterator instead of the bytes,
-    # to bypass the default caching policy manager.
+  if not isinstance(data, Pdata):
+    # The data is bytes, or str for a small file that was made on Python 2.
+    # getData returns bytes in both cases. Return a stream iterator instead
+    # of the bytes, to bypass the default caching policy manager.
+    data = self.getData()
     return IterableAsStreamIterator((data,), len(data))
 
   # For Pdata, the publisher sends the data chunk by chunk, while it loads
