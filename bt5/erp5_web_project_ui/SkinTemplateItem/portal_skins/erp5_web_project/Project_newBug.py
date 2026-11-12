@@ -1,5 +1,5 @@
 """
-  Creates a new draft bug on the current project and jumps to it.
+  Creates a new bug on the current project, opens it once its reporter is its Supervisor, and jumps to it.
 """
 from DateTime import DateTime
 Base_translateString = context.Base_translateString
@@ -14,6 +14,9 @@ if portal_type not in module.getVisibleAllowedContentTypeList():
 bug_kw = {}
 if bug_severity:
   bug_kw['bug_severity'] = bug_severity
+person = context.getPortalObject().portal_membership.getAuthenticatedMember().getUserValue()
+if person is not None:
+  bug_kw['source_decision_value'] = person
 
 bug = module.newContent(portal_type=portal_type,
                         title=title,
@@ -22,6 +25,9 @@ bug = module.newContent(portal_type=portal_type,
                         # required by nexedi-erp5 BugConstraint
                         start_date=DateTime(),
                         **bug_kw)
+if bug.getSourceDecision() is not None:
+  # Supervisor keeps edit rights once the bug is opened
+  bug.confirm()
 
 portal_status_message = Base_translateString(
   "Created and associated a new ${portal_type} to the project.",
