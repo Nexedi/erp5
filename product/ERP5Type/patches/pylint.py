@@ -576,24 +576,25 @@ _register_module_extender_from_live_module('numpy.core.umath', numpy.core.umath)
 # Products.ZSQLMethods; Shared and Shared.DC being a namespace package defined
 # in Zope2) as Shared (rather than Shared.DC) is considered...
 from astroid import modutils
-try: # BBB
-    modutils__module_file = modutils._module_file
-except AttributeError:
-    pass # recent astroid, anything to do ?
-else:
-    def _module_file(modpath, path=None):
-        if modutils.pkg_resources is not None:
-            i = len(modpath) - 1
-            while i > 0:
-                package = '.'.join(modpath[0:i])
-                if (package in modutils.pkg_resources._namespace_packages and
-                        package in sys.modules):
-                    modpath = modpath[i:]
-                    path = sys.modules[package].__path__
-                    break
-                i -= 1
-        return modutils__module_file(modpath, path)
-    modutils._module_file = _module_file
+if six.PY2:
+  try: # BBB
+      modutils__module_file = modutils._module_file
+  except AttributeError:
+      pass # recent astroid, anything to do ?
+  else:
+      def _module_file(modpath, path=None):
+          if getattr(modutils, 'pkg_resources', None) is not None:
+              i = len(modpath) - 1
+              while i > 0:
+                  package = '.'.join(modpath[0:i])
+                  if (package in modutils.pkg_resources._namespace_packages and
+                          package in sys.modules):
+                      modpath = modpath[i:]
+                      path = sys.modules[package].__path__
+                      break
+                  i -= 1
+          return modutils__module_file(modpath, path)
+      modutils._module_file = _module_file
 
 if sys.modules['isort'] is None:
     del sys.modules['isort']

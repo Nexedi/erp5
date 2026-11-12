@@ -31,16 +31,21 @@
 import threading
 import unittest
 from six.moves.urllib.request import urlopen
+import six
 import transaction
-import pkg_resources
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from six.moves import range
 
-ZEO5 = pkg_resources.parse_version(
-  pkg_resources.get_distribution('ZEO').version
-) >= pkg_resources.parse_version('5')
+if six.PY2:
+  import pkg_resources
+  ZEO5 = pkg_resources.parse_version(
+    pkg_resources.get_distribution('ZEO').version
+  ) >= pkg_resources.parse_version('5')
+else:
+  # On Python 3, ZEO is always > 6.
+  ZEO5 = True
 
 class TestInvalidationBug(ERP5TypeTestCase):
 
