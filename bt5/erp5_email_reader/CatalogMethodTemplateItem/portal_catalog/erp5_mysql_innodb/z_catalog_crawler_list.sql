@@ -1,5 +1,6 @@
-REPLACE INTO
-  crawler
+<dtml-let column_list="['frequency_index', 'creation_date_index']">
+INSERT INTO
+  crawler (uid, <dtml-in column_list>`<dtml-var sequence-item>`<dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>)
 VALUES
 <dtml-in prefix="loop" expr="_.range(_.len(uid))">
 (
@@ -12,3 +13,8 @@ VALUES
 ,
 </dtml-if>
 </dtml-in>
+ON DUPLICATE KEY UPDATE
+<dtml-in column_list>
+  `<dtml-var sequence-item>` = VALUES(`<dtml-var sequence-item>`)<dtml-if sequence-end><dtml-else>,</dtml-if>
+</dtml-in>
+</dtml-let>
