@@ -59,9 +59,9 @@ def main(*args):
         filename=parsed_argument.logfile,
         maxBytes=20000000, backupCount=4))
   else:
-    logger.disable(logging.CRITICAL)
+    logging.disable(logging.CRITICAL)
 
-  CONFIG = {
+  parsed_config = {
     'partition_reference': '',
   }
   config = configparser.ConfigParser()
@@ -76,17 +76,20 @@ def main(*args):
               'slapos_binary', 'httpd_ip', 'httpd_port', 'httpd_software_access_port',
               'computer_id', 'server_url', 'shared_part_list', 'keep_log_days',
               'frontend_url', 'log_frontend_url', 'ipv6_range'):
-    CONFIG[key] = config.get('testnode',key)
+    parsed_config[key] = config.get('testnode',key)
 
   for key in ('slapos_directory', 'working_directory', 'test_suite_directory',
       'log_directory', 'run_directory', 'srv_directory', 'software_directory'):
-    d = CONFIG[key]
+    d = parsed_config[key]
     if not os.path.isdir(d):
-      raise ValueError('Directory %r does not exists.' % d)
-  CONFIG['master_url'] = 'http://%s:%s' % (CONFIG['proxy_host'],
-        CONFIG['proxy_port'])
-  CONFIG['httpd_url'] = 'https://[%s]:%s' % (CONFIG['httpd_ip'],
-        CONFIG['httpd_port'])
+      raise ValueError(f"Directory {d!r} does not exist.")
+  CONFIG: dict[str, object] = {**parsed_config}
+  proxy_host = CONFIG["proxy_host"]
+  proxy_port = CONFIG["proxy_port"]
+  CONFIG["master_url"] = f"http://{proxy_host}:{proxy_port}"
+  httpd_ip = CONFIG["httpd_ip"]
+  httpd_port = CONFIG["httpd_port"]
+  CONFIG["httpd_url"] = f"https://[{httpd_ip}]:{httpd_port}"
   CONFIG['system_temp_folder'] = "/tmp"
 
   # generate vcs_repository_list
