@@ -82,7 +82,8 @@
   // compaction and sub-agent returns its usage_totals, which the caller adds
   // to its own.
   function createUsageTotals() {
-    return { call_count: 0, prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 };
+    return { call_count: 0, prompt_tokens: 0, completion_tokens: 0, total_tokens: 0, cached_tokens: 0,
+      duration_ms: 0 };
   }
 
   function addUsageTotals(usage_totals, added_usage_totals) {
@@ -91,6 +92,8 @@
       usage_totals.prompt_tokens += added_usage_totals.prompt_tokens;
       usage_totals.completion_tokens += added_usage_totals.completion_tokens;
       usage_totals.total_tokens += added_usage_totals.total_tokens;
+      usage_totals.cached_tokens += added_usage_totals.cached_tokens || 0;
+      usage_totals.duration_ms += added_usage_totals.duration_ms || 0;
     }
     return usage_totals;
   }

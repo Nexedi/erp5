@@ -89,9 +89,11 @@
     return (args && typeof args === "object" && !Array.isArray(args)) ? args : null;
   }
 
+  // The result of the tool call, with duration_ms: how long the tool ran.
   function runClientToolCall(tool_call, tool_list) {
     var tool = findClientTool(tool_call.function.name, tool_list),
       args = parseToolCallArguments(tool_call.function.arguments),
+      start_time = Date.now(),
       result;
     if (args === null) {
       return {
@@ -129,14 +131,16 @@
           content: content_text,
           message_list: message_list,
           execution_plan: execution_plan,
-          usage_totals: usage_totals
+          usage_totals: usage_totals,
+          duration_ms: Date.now() - start_time
         };
       }, function (e) {
       result = "Error running tool \"" + tool_call.function.name + "\": " + JSON.stringify(e, Object.getOwnPropertyNames(e));
       return {
         tool_call_id: tool_call.id,
         name: tool_call.function.name,
-        content: result
+        content: result,
+        duration_ms: Date.now() - start_time
       };
     });
   }

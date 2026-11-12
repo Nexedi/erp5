@@ -221,11 +221,40 @@
     ]);
   }
 
+  function formatSeconds(duration_ms) {
+    return (duration_ms / 1000).toFixed(1) + "s";
+  }
+
+  // How long the LLM request of an answer took, and its tokens, eg.
+  // "LLM request: 7.3s (first token after 5.1s), 3012 prompt (2800 from the
+  // cache) + 45 completion tokens, 18 tokens/s".
+  function getTimingText(timing, usage) {
+    var text = "LLM request: " + formatSeconds(timing.duration_ms),
+      generation_ms;
+    if (timing.first_token_ms !== null && timing.first_token_ms !== undefined) {
+      text += " (first token after " + formatSeconds(timing.first_token_ms) + ")";
+    }
+    if (usage && usage.total_tokens) {
+      text += ", " + usage.prompt_tokens + " prompt" +
+        (usage.cached_tokens ? " (" + usage.cached_tokens + " from the cache)" : "") +
+        " + " + usage.completion_tokens + " completion tokens";
+      generation_ms = timing.duration_ms - (timing.first_token_ms || 0);
+      if (usage.completion_tokens && generation_ms > 0) {
+        text += ", " + Math.round(usage.completion_tokens * 1000 / generation_ms) + " tokens/s";
+      }
+    }
+    return text;
+  }
+
   function getAssistantMessageDiv(assistant_message) {
     var dom_list = [
       domsugar("strong", ["Assistant"]),
       domsugar("br")
     ];
+    if (assistant_message.timing) {
+      dom_list.push(domsugar("div", { "class": "post-tool-timing" },
+        [getTimingText(assistant_message.timing, assistant_message.usage)]));
+    }
     if (assistant_message.reasoning) {
       dom_list.push(domsugar("details", { "class": "post-assistant-reasoning" }, [
         domsugar("summary", ["Thinking"]),
@@ -262,7 +291,8 @@
   function getToolCallDiv(tool_message) {
     var dom_list = [
       domsugar("strong", ["Tool: " + tool_message.name +
-        (tool_message.tool_call_id ? " (result " + tool_message.tool_call_id + ")" : "")]),
+        (tool_message.tool_call_id ? " (result " + tool_message.tool_call_id + ")" : "") +
+        (tool_message.duration_ms !== undefined ? " - " + formatSeconds(tool_message.duration_ms) : "")]),
       domsugar("br"),
       domsugar("div", { "class": "post-markdown post-tool-content", html: marked.parse(tool_message.content || "") })
     ];

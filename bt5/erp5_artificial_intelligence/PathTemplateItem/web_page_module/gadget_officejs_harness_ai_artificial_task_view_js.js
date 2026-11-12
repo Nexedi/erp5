@@ -82,27 +82,15 @@
     return grew;
   }
 
-  // The usage reported by the server for one call, in the shape of the usage
-  // totals that the callers add up (ChatToolCommon.addUsageTotals); null if
-  // the server did not report it.
-  function getUsage(usage) {
-    if (!usage) {
-      return null;
-    }
-    return {
-      call_count: 1,
-      prompt_tokens: usage.prompt_tokens || 0,
-      completion_tokens: usage.completion_tokens || 0,
-      total_tokens: usage.total_tokens || ((usage.prompt_tokens || 0) + (usage.completion_tokens || 0))
-    };
-  }
-
-  function consumeOpenAIStream(response, on_delta) {
+  // start_time: when the request was sent, to time the response: the
+  // result has timing {duration_ms, first_token_ms}, and its usage has
+  // duration_ms too, for the totals of the task.
+  function consumeOpenAIStream(response, on_delta, start_time) {
     var reader = response.body.getReader(),
       decoder = new TextDecoder(),
       buffer = "",
       state = {content: "", reasoning: "", reasoning_field: null, model: null, usage: null, finish_reason: null,
-        done: false,
+        done: false, first_token_time: null,
         error: null, tool_call_map: {}, tool_call_order: []};
 
     // A frame may hold several "data:" lines: per the SSE spec they are one
@@ -129,6 +117,9 @@
         json = JSON.parse(data_line);
       } catch (ignore) {
         return;
+      }
+      if (state.first_token_time === null && json.choices && json.choices.length) {
+        state.first_token_time = Date.now();
       }
       if (applyStreamChunk(json, state) && on_delta) {
         on_delta({content: state.content, reasoning: state.reasoning});
@@ -163,7 +154,7 @@
         return pump();
       })
       .push(function () {
-        var tool_calls, message;
+        var tool_calls, message, timing, usage;
         if (state.error) {
           throw new Error(typeof state.error === "string" ? state.error :
             (state.error.message || JSON.stringify(state.error)));
@@ -177,6 +168,25 @@
         tool_calls = state.tool_call_order.map(function (index) {
           return state.tool_call_map[index];
         });
+        timing = {
+          duration_ms: Date.now() - start_time,
+          first_token_ms: state.first_token_time === null ? null : state.first_token_time - start_time
+        };
+        // The usage reported by the server (0 if it did not), in the shape
+        // of the usage totals the callers add up (ChatToolCommon.addUsageTotals).
+        // cached_tokens: the prompt tokens read from the prompt cache of the
+        // server (prompt_tokens_details.cached_tokens of OpenAI, vLLM,
+        // llama.cpp and OpenRouter, prompt_cache_hit_tokens of DeepSeek).
+        usage = state.usage || {};
+        usage = {
+          call_count: 1,
+          prompt_tokens: usage.prompt_tokens || 0,
+          completion_tokens: usage.completion_tokens || 0,
+          total_tokens: usage.total_tokens || ((usage.prompt_tokens || 0) + (usage.completion_tokens || 0)),
+          cached_tokens: (usage.prompt_tokens_details && usage.prompt_tokens_details.cached_tokens) ||
+            usage.prompt_cache_hit_tokens || 0,
+          duration_ms: timing.duration_ms
+        };
         if (tool_calls.length) {
           // The assistant message to append to the conversation before the
           // tool results. The reasoning is sent back in the field the server
@@ -185,11 +195,12 @@
           if (state.reasoning && state.reasoning_field) {
             message[state.reasoning_field] = state.reasoning;
           }
-          return {content: state.content || "", tool_calls: tool_calls, message: message, usage: getUsage(state.usage),
-            finish_reason: state.finish_reason, reasoning: state.reasoning, reasoning_field: state.reasoning_field};
+          return {content: state.content || "", tool_calls: tool_calls, message: message, usage: usage,
+            finish_reason: state.finish_reason, reasoning: state.reasoning, reasoning_field: state.reasoning_field,
+            timing: timing};
         }
-        return {content: state.content, model: state.model, usage: getUsage(state.usage), finish_reason: state.finish_reason,
-          reasoning: state.reasoning, reasoning_field: state.reasoning_field};
+        return {content: state.content, model: state.model, usage: usage, finish_reason: state.finish_reason,
+          reasoning: state.reasoning, reasoning_field: state.reasoning_field, timing: timing};
       });
   }
 
@@ -464,6 +475,8 @@
             "",
         payload,
         tool_definition_list,
+        // When the request is sent, to time it.
+        start_time,
         fetch_url,
         fetch_options;
 
@@ -518,6 +531,7 @@
       }
 
       return new RSVP.Promise(function (resolve, reject) {
+        start_time = Date.now();
         fetch(fetch_url, fetch_options)
           .then(function (response) {
             if (!response.ok) {
@@ -542,7 +556,8 @@
               body.is_background ? undefined :
                 function onDelta(partial) {
                   return gadget.agent_gadget.showStreamingDelta(partial);
-                }
+                },
+              start_time
             );
           })
           .then(resolve, reject);

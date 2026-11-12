@@ -464,15 +464,18 @@
       }
 
       // reasoning: the reasoning of the final answer, kept in the trace like
-      // the one of the turns with tool calls.
-      function completeTask(final_content, reasoning) {
+      // the one of the turns with tool calls, with the timing and usage of
+      // the last LLM request (final_result).
+      function completeTask(final_content, reasoning, final_result) {
         var execution_plan = gadget.execution_plan,
           content = joinAnswerText(gadget.answer_text_list, final_content);
-        if (reasoning) {
+        if (reasoning || final_result) {
           gadget.tool_message_list.push({
             role: "assistant",
             content: "",
-            reasoning: reasoning
+            reasoning: reasoning,
+            timing: final_result && final_result.timing,
+            usage: final_result && final_result.usage
           });
         }
         gadget.tool_message_list.push({
@@ -480,7 +483,10 @@
           name: "usage_totals",
           content: "Task usage: " + usage_totals.call_count + " LLM call(s), " +
             usage_totals.prompt_tokens + " prompt + " + usage_totals.completion_tokens +
-            " completion = " + usage_totals.total_tokens + " token(s) total."
+            " completion = " + usage_totals.total_tokens + " token(s) total." +
+            (usage_totals.cached_tokens ? " " + usage_totals.cached_tokens + " prompt token(s) read " +
+              "from the cache." : "") +
+            " LLM requests took " + (usage_totals.duration_ms / 1000).toFixed(1) + "s."
         });
         return new RSVP.Queue(RSVP.all([
           gadget.gadget_chat_ui.showMessage({ content: content, reasoning: "", tool_message_list: gadget.tool_message_list, execution_plan: execution_plan }),
@@ -578,7 +584,8 @@
                   tool_call_id: client_tool_result.tool_call_id,
                   name: client_tool_result.name,
                   content: client_tool_result.content,
-                  sub_message_list: client_tool_result.message_list
+                  sub_message_list: client_tool_result.message_list,
+                  duration_ms: client_tool_result.duration_ms
                 });
                 if (client_tool_result.execution_plan !== undefined) {
                   gadget.execution_plan = client_tool_result.execution_plan;
@@ -641,7 +648,9 @@
                 role: "assistant",
                 content: result.content,
                 tool_calls: result.tool_calls,
-                reasoning: result.reasoning
+                reasoning: result.reasoning,
+                timing: result.timing,
+                usage: result.usage
               });
               if (result.content && result.content.trim()) {
                 gadget.answer_text_list.push(result.content.trim());
@@ -662,7 +671,7 @@
               throw new Error("Empty response from LLM with no tool calls" +
                 (result.finish_reason ? " (finish_reason: " + result.finish_reason + ")" : ""));
             }
-            return completeTask(result.content, result.reasoning);
+            return completeTask(result.content, result.reasoning, result);
           })
           .push(undefined, function (e) {
             var retry_name = window.ChatToolCommon.getRetryName(e),
