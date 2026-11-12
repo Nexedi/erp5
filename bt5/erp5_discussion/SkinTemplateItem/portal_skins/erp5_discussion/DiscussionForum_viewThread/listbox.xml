@@ -231,7 +231,12 @@
                 <item>
                     <key> <string>url_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>ListBox_getDiscussionThreadReaderUrl</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
               </dictionary>

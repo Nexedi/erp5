@@ -499,6 +499,31 @@ class TestERP5Discussion(DocumentUploadTestCase):
       self.assertIn('discussion_thread_module/', guid)
     self.assertEqual(len(guids), len(set(guids)), 'guids must be unique per post')
 
+  def test_thread_list_title_opens_the_post_reader(self):
+    """In the forum thread list, the title links to the posts reader
+    (view_post_list), not to the thread properties view."""
+    url_column_dict = dict(
+      self.portal.portal_skins.erp5_discussion.DiscussionForum_viewThread
+        .listbox.get_value('url_columns'))
+    self.assertEqual('ListBox_getDiscussionThreadReaderUrl',
+                     url_column_dict['title'])
+    _forum, thread = self._createForumThreadWithPosts(n_posts=1)
+    brain, = self.portal.portal_catalog(uid=thread.getUid())
+    self.assertEqual(
+      {'command': 'push_history',
+       'options': {'jio_key': thread.getRelativeUrl(),
+                   'page': 'form',
+                   'view': 'view_post_list'}},
+      brain.ListBox_getDiscussionThreadReaderUrl(brain=brain, url_dict=True))
+
+  def test_thread_list_title_reader_url_in_classic_ui(self):
+    """Without url_dict (classic UI), the link is the post list form URL."""
+    _forum, thread = self._createForumThreadWithPosts(n_posts=1)
+    brain, = self.portal.portal_catalog(uid=thread.getUid())
+    self.assertEqual(
+      '%s/DiscussionThread_viewPostList' % thread.absolute_url(),
+      brain.ListBox_getDiscussionThreadReaderUrl(brain=brain))
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestERP5Discussion))
