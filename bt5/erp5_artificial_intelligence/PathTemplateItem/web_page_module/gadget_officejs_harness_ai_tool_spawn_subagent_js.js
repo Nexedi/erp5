@@ -29,33 +29,23 @@
     .declareMethod('getDefinition', function () {
       return {
         name: "spawn_subagent",
-        description: "Delegate a self-contained sub-task to a fresh instance of this agent, with " +
-          "the same tools (except spawn_subagent and execution_plan) but its own empty conversation: " +
-          "it can NOT see this conversation, so the task must contain everything it needs. Only its " +
-          "final report comes back. USE IT ONLY for independent research paths that need little from " +
-          "the rest of the task and can run in parallel (eg. \"find the open calls of funding " +
-          "program X\" next to \"... of program Y\"), where many intermediate reads would otherwise " +
-          "fill this conversation. DO NOT USE IT for a task you can do with a few direct tool calls, " +
-          "and DO NOT USE IT to read a long PDF or web page by chunks: call pdf_to_text or " +
-          "http_request with `pattern` to find the passages you need, then read only around them. " +
-          "In the task, state only facts you have verified: never invent a URL, a program name or a " +
-          "date - if you do not know where a source is, ask the sub-agent to find it. The sub-agent " +
-          "reports its findings, the sources it actually read, and what it could not verify; check " +
-          "its conclusions before you rely on them. Each sub-agent is a full separate conversation " +
-          "with the LLM backend: launch at most a handful at once.",
+        description: "Delegate a self-contained sub-task to a new instance of this agent, which has " +
+          "the same tools except spawn_subagent and execution_plan. It does not see this " +
+          "conversation: the task must give everything it needs. Only its report comes " +
+          "back: its findings, the sources it read, and what it could not verify; check " +
+          "them before you rely on them. Use it only for independent research that would " +
+          "fill this conversation with many reads, and that can run next to others (eg. " +
+          "the open calls of program X, and those of program Y). Do not use it for a few " +
+          "direct tool calls, or to read a long page or PDF: search it with `pattern` " +
+          "instead. In the task, give only facts you verified: never invent a URL, a name " +
+          "or a date. Launch at most a few at once: each one is a separate conversation " +
+          "with the LLM.",
         parameters: {
           type: "object",
           properties: {
-            task: {
-              type: "string",
-              description: "Full, self-contained description of what the sub-agent should do, " +
-                "with only verified facts."
-            },
-            max_turns: {
-              type: "integer",
-              description: "Cap on the sub-agent's loop iterations - one LLM request and one round " +
-                "of tool calls count as 2 (default and maximum " + SUBAGENT_MAX_LOOP_COUNT_CAP + ")."
-            }
+            task: { type: "string", description: "Full, self-contained description of the sub-task, with only verified facts." },
+            max_turns: { type: "integer", description: "Maximum number of steps: each LLM request and each round of tool calls counts " +
+              "as one (default and maximum " + SUBAGENT_MAX_LOOP_COUNT_CAP + ")." }
           },
           required: ["task"]
         }
@@ -126,7 +116,9 @@
           });
       }
 
-      function subagentLoopCall(loop_count, message_list, pending_result) {
+      // retry_count_dict: how many times in a row the LLM request failed,
+      // by kind of error (see ChatToolCommon.getRetryName).
+      function subagentLoopCall(loop_count, message_list, pending_result, retry_count_dict) {
 
         var has_tool_call = Boolean(pending_result && pending_result.tool_calls && pending_result.tool_calls.length);
 
@@ -190,6 +182,10 @@
                 result
               );
             }
+            if (!result.content) {
+              throw new Error("Empty response from LLM with no tool calls" +
+                (result.finish_reason ? " (finish_reason: " + result.finish_reason + ")" : ""));
+            }
             return {
               content: result.content,
               message_list: message_list.concat([{ role: "assistant", content: result.content }]),
@@ -197,7 +193,34 @@
             };
           })
           .push(undefined, function (e) {
-            return subagentError(message_list, e);
+            var retry_name = window.ChatToolCommon.getRetryName(e),
+              retry_count;
+            retry_count_dict = retry_count_dict || {};
+            retry_count = retry_count_dict[retry_name] || 0;
+            if (!window.ChatToolCommon.isRetryAllowed(retry_name, retry_count)) {
+              return subagentError(message_list, e);
+            }
+            retry_count_dict[retry_name] = retry_count + 1;
+            if (retry_name === "context_overflow_retry") {
+              return gadget.compactMessageList(gadget, message_list,
+                window.ChatToolCommon.PANIC_KEEP_RECENT_TOKEN_BUDGET)
+                .push(function (compacted) {
+                  window.ChatToolCommon.addUsageTotals(usage_totals, compacted.usage_totals);
+                  // Nothing left to compact: retrying would fail the same way.
+                  if (compacted.message_list.length >= message_list.length) {
+                    return subagentError(message_list, e);
+                  }
+                  last_usage_anchor = null;
+                  return subagentLoopCall(loop_count, compacted.message_list, null, retry_count_dict);
+                });
+            }
+            return new RSVP.Queue()
+              .push(function () {
+                return RSVP.delay(window.ChatToolCommon.getRetryDelay(e, retry_count));
+              })
+              .push(function () {
+                return subagentLoopCall(loop_count, message_list, null, retry_count_dict);
+              });
           });
       }
 

@@ -51,29 +51,24 @@
     .declareMethod('getDefinition', function () {
       return {
         name: "pdf_to_text",
-        description: "Extract and return the text content of a PDF attachment the user uploaded in " +
-          "this conversation - PDFs are not sent as part of the conversation automatically, call this " +
-          "tool to read one. Give the exact attachment file name if more than one PDF has been " +
-          "uploaded; without it, the most recently uploaded PDF is used. One call returns at most " +
-          window.ChatToolCommon.TEXT_WINDOW_CHARS + " chars. For a long PDF, do not read it from start to end: " +
-          "first read the start (table of contents), then call with `pattern` to find the passages " +
-          "you need, and read only around their char offsets with min_chars/max_chars.",
+        description: "Read the text of a PDF the user attached to this conversation: attached PDFs " +
+          "are not sent to you otherwise. One call returns at most " +
+          window.ChatToolCommon.TEXT_WINDOW_CHARS +
+          " chars. For a long PDF, read its start (table of contents), then search it with " +
+          "`pattern` and read around the matches with min_chars.",
         allow_repeat: true,
         parameters: {
           type: "object",
           properties: {
-            file_name: { type: "string", description: "Exact attachment file name. Optional - " +
-              "defaults to the most recently uploaded PDF." },
-            min_chars: { type: "integer", description: "Start reading from this character offset " +
-              "(default 0)." },
-            max_chars: { type: "integer", description: "Stop reading at this character offset, " +
-              "exclusive (default and maximum: min_chars + " + window.ChatToolCommon.TEXT_WINDOW_CHARS + "). Use min_chars " +
-              "together with max_chars to page through a long PDF in multiple calls." },
-            pattern: { type: "string", description: "Search instead of reading: a case-insensitive " +
-              "regular expression (eg. \"Bpifrance|France 2030\"). Returns each match with its page, " +
-              "char offset and " + window.ChatToolCommon.TEXT_SEARCH_CONTEXT_CHARS + " chars of context on each " +
-              "side, at most " + window.ChatToolCommon.TEXT_SEARCH_MAX_MATCHES + " matches. min_chars/max_chars " +
-              "are ignored." },
+            file_name: { type: "string", description: "Exact file name of the attachment (default: the last PDF attached)." },
+            min_chars: { type: "integer", description: "Char offset to start reading from (default 0)." },
+            max_chars: { type: "integer", description: "Char offset to stop at (default and maximum: min_chars + " +
+              window.ChatToolCommon.TEXT_WINDOW_CHARS + ")." },
+            pattern: { type: "string", description: "Search the whole text instead of reading it: a case-insensitive regular " +
+              "expression (eg. \"deadline|closing date\"). Returns each match with its page, " +
+              "char offset and " + window.ChatToolCommon.TEXT_SEARCH_CONTEXT_CHARS +
+              " chars of context on each side, at most " + window.ChatToolCommon.TEXT_SEARCH_MAX_MATCHES +
+              " matches. min_chars and max_chars are ignored." },
             timeout_ms: { type: "integer", description: "Deadline in ms (default 30000, max 120000)." }
           }
         }

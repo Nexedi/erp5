@@ -7,91 +7,42 @@
     COMPACT_TOKEN_BUDGET = 80000,
     KEEP_RECENT_TOKEN_BUDGET = 28000,
     CONTEXT_RESERVE_TOKENS = 16384,
-    PANIC_KEEP_RECENT_TOKEN_BUDGET = 8000,
-    // Transient LLM errors (context overflow, rate limit, 5xx, empty
-    // response) are retried MAX_RETRY_COUNT times in a row, each kind counted
-    // apart, see getRetryDelay. Network errors,
-    // frequent in a browser (sleep, wifi, ...), are retried until it works.
-    MAX_RETRY_COUNT = 3,
-    MAX_RETRY_DELAY = 60000,
     // An image costs about this many characters of context, whatever the
     // size of its base64 data URI.
     IMAGE_ESTIMATE_CHARS = 4800,
-    // Error messages of the servers (in a 4xx response) when the prompt is
-    // larger than the context window.
-    CONTEXT_OVERFLOW_PATTERN = /context[_ ]length|context (?:size|window)|prompt (?:is )?too long|too many tokens|token limit exceeded/i,
-    // Errors sent inside the stream, which have no HTTP status, that may
-    // succeed later.
-    RETRYABLE_ERROR_PATTERN = /overloaded|rate.?limit|too many requests|unavailable|server.?error|internal.?error|provider returned error/i,
-    NON_RETRYABLE_ERROR_PATTERN = /insufficient_quota|quota exceeded|billing/i,
     MAX_LOOP_COUNT = 500,
-    ENVIRONMENT_SYSTEM_PROMPT = "This agent runs entirely inside a web browser tab, not on a server or a " +
-      "local machine. There is no local filesystem, no shell, and no OS process to invoke - paths like " +
-      "\"/home/...\" and commands like \"ls\", \"cat\" or \"pip install\" do not exist here, and any " +
-      "attempt to use them will fail. The only capabilities available are the tools explicitly provided " +
-      "in this conversation: a sandboxed JavaScript/WASM execution environment (itself with no " +
-      "filesystem or network access), http_request for making network calls, " +
-      "define_tool for creating (and listing, removing) new callable tools out of JS code, " +
-      "spawn_subagent for delegating sub-tasks, read_tool_output for reading a tool output that was " +
-      "too large to return whole, whatever MCP tools are configured, and - only when the " +
-      "user asks for it - execution_plan for a checklist. Do not assume access to anything beyond these. " +
-      "The history of this conversation keeps the tool calls of your earlier answers and their " +
-      "results. When it gets long, its oldest part is replaced by a summary.",
+    ENVIRONMENT_SYSTEM_PROMPT = "This agent runs inside a web browser tab, not on a server or a local " +
+      "machine. There is no filesystem, no shell and no OS process: paths like \"/home/...\" and " +
+      "commands like \"ls\" or \"pip install\" do not exist here. You can act only through the tools " +
+      "given in this conversation. The history of this conversation keeps the tool calls of your " +
+      "earlier answers and their results. When it gets long, its oldest part is replaced by a summary.",
     TURN_LIMIT_PROMPT = "Turn limit reached: you can not call tools anymore. Give your final answer " +
       "now, with what you found so far, and say clearly what you could not find or verify.",
     CONTEXT_SUMMARY_PREFIX = "[context summary]\n",
-    SUMMARY_TOOL_RESULT_MAX_CHARS = 2000,
     SUMMARY_FORMAT = "## Goal\n[What is the user trying to accomplish?]\n\n" +
       "## Constraints & Preferences\n- [Any constraints or requirements mentioned by the user, or \"(none)\"]\n\n" +
       "## Progress\n### Done\n- [Completed steps]\n\n### In Progress\n- [Current work]\n\n### Blocked\n- [Issues preventing progress, if any]\n\n" +
       "## Key Decisions\n- [Decision]: [Brief rationale]\n\n" +
       "## Next Steps\n1. [Ordered list of what should happen next]\n\n" +
       "## Critical Context\n- [Any data, identifiers, or exact values needed to continue, or \"(none)\"]\n\n" +
-      "Keep each section concise. Preserve exact names, numbers, and error messages.",
-    SUMMARIZATION_PROMPT = "The text above is a conversation to summarize. Create a structured context " +
-      "checkpoint that another instance of this agent will use to continue the task. Use this EXACT format:\n\n" +
-      SUMMARY_FORMAT,
+      "Keep each section concise. Preserve exact names, numbers, and error messages. Answer with the " +
+      "summary only.",
+    SUMMARIZATION_PROMPT = "Summarize the conversation given in <conversation> tags into a structured " +
+      "checkpoint, that another instance of this agent will use to continue the task. Use this EXACT " +
+      "format:\n\n" + SUMMARY_FORMAT,
     // Used when an earlier compaction already produced a summary: merge the
     // new messages into it instead of summarizing the summary again, which
     // would lose a little more detail at every compaction.
-    UPDATE_SUMMARIZATION_PROMPT = "The text above contains NEW conversation messages to incorporate into " +
-      "the existing summary provided in <previous-summary> tags. Update that summary: keep everything " +
-      "from it that is still relevant, move finished work to Done, and add new progress, decisions and " +
-      "context. Use this EXACT format:\n\n" + SUMMARY_FORMAT;
+    UPDATE_SUMMARIZATION_PROMPT = "Update the summary given in <previous-summary> tags with the NEW " +
+      "conversation messages given in <conversation> tags: keep all that is still relevant, move " +
+      "finished work to Done, and add the new progress, decisions and context. Use this EXACT " +
+      "format:\n\n" + SUMMARY_FORMAT;
 
-  function isContextOverflowError(e) {
-    if (!e || !e.status) {
-      return false;
-    }
-    return e.status === 413 || (e.status >= 400 && e.status < 500 && e.status !== 429 &&
-      CONTEXT_OVERFLOW_PATTERN.test(e.message));
-  }
-
-  // Rate limits and server side failures that may succeed later, but not
-  // an exhausted quota or billing problem.
-  function isTransientServerError(e) {
-    if (!e || !e.message || NON_RETRYABLE_ERROR_PATTERN.test(e.message)) {
-      return false;
-    }
-    return e.status === 429 || e.status >= 500 || (!e.status && RETRYABLE_ERROR_PATTERN.test(e.message));
-  }
-
-  // What the server asked with Retry-After (at most 2 minutes), otherwise
-  // 2s doubled at each attempt, at most MAX_RETRY_DELAY.
-  function getRetryDelay(e, retry_count) {
-    if (e && e.retry_after_ms > 0) {
-      return Math.min(e.retry_after_ms, 120000);
-    }
-    return Math.min(2000 * Math.pow(2, retry_count), MAX_RETRY_DELAY);
-  }
-
-  function isEmptyResponseError(e) {
-    return Boolean(e && e.message && (/^Empty response from LLM/).test(e.message));
-  }
-
-  function isNetworkError(e) {
-    return Boolean(e && e.message &&
-      (/failed to fetch|network\s*error|load failed|connection was lost/i).test(e.message));
+  // Whether the message is the summary of the older messages, put by
+  // compactMessageList.
+  function isSummaryMessage(message) {
+    return Boolean(message && message.role === "user" && typeof message.content === "string" &&
+      message.content.indexOf(CONTEXT_SUMMARY_PREFIX) === 0);
   }
 
   function truncateForSummary(text, max_chars) {
@@ -132,7 +83,7 @@
       }
       if (message.role === "tool") {
         return "Tool result [" + message.name + "]: " +
-          truncateForSummary(messageContentToText(message.content), SUMMARY_TOOL_RESULT_MAX_CHARS);
+          truncateForSummary(messageContentToText(message.content), 2000);
       }
       return message.role + ": " + messageContentToText(message.content);
     }).join("\n\n");
@@ -252,6 +203,11 @@
             leading_system_message_list,
             old_message_list,
             recent_message_list,
+            first_old_index,
+            before_cut_index,
+            after_cut_index,
+            index,
+            i,
             previous_summary = null;
           if (context_window) {
             compact_token_budget = context_window - Math.min(CONTEXT_RESERVE_TOKENS, Math.floor(context_window / 4));
@@ -279,17 +235,36 @@
             cut_index -= 1;
           }
           if (cut_index_list) {
-            cut_index = cut_index_list.reduce(function (best, index) {
-              return (index > best && index <= cut_index) ? index : best;
-            }, leading_system_count);
+            // message_list = [system, question 1, its 79 tool calls,
+            // results and answer, question 2 (index 81), ...] with
+            // cut_index_list = [1, 81, 83, 84, 85] and cut_index = 45 (in
+            // the tool calls of the first turn): 1 is first_old_index, so
+            // nothing is before the cut, and the cut moves to 81. Messages 1
+            // to 80 (the whole first turn) are summarized, and the messages
+            // from question 2 are kept.
+            first_old_index = leading_system_count;
+            if (isSummaryMessage(message_list[leading_system_count])) {
+              first_old_index += 1;
+            }
+            before_cut_index = null;
+            after_cut_index = null;
+            for (i = 0; i < cut_index_list.length; i += 1) {
+              index = cut_index_list[i];
+              if (index > first_old_index) {
+                if (index <= cut_index) {
+                  before_cut_index = index;
+                } else if (after_cut_index === null) {
+                  after_cut_index = index;
+                }
+              }
+            }
+            cut_index = before_cut_index || after_cut_index || leading_system_count;
           }
           leading_system_message_list = message_list.slice(0, leading_system_count);
           old_message_list = message_list.slice(leading_system_count, cut_index);
           recent_message_list = message_list.slice(cut_index);
 
-          if (old_message_list.length && old_message_list[0].role === "user" &&
-              typeof old_message_list[0].content === "string" &&
-              old_message_list[0].content.indexOf(CONTEXT_SUMMARY_PREFIX) === 0) {
+          if (old_message_list.length && isSummaryMessage(old_message_list[0])) {
             previous_summary = old_message_list[0].content.slice(CONTEXT_SUMMARY_PREFIX.length);
             old_message_list = old_message_list.slice(1);
           }
@@ -363,14 +338,7 @@
             });
         });
     })
-    // The messages of the task to start the agent loop with: the system
-    // prompt, the stored summary of the older posts if any, then the posts
-    // after it, with the tool calls and results of the answers. If they are
-    // too long, the older turns are summarized - only at a turn start, so the
-    // cut is a post - and the summary is stored: the next tasks start from it
-    // instead of summarizing the same posts again. The compaction inside the
-    // agent loop, which may cut the current turn, is not stored.
-    // Returns {message_list, usage_totals}.
+    // load&compact&save summary if needed
     .declareMethod('loadHistory', function () {
       var gadget = this;
       return new RSVP.Queue(RSVP.all([
@@ -697,26 +665,15 @@
             return completeTask(result.content, result.reasoning);
           })
           .push(undefined, function (e) {
-            var retry_name,
-              retry_reason = "",
+            var retry_name = window.ChatToolCommon.getRetryName(e),
+              retry_reason = retry_name === "network_error_retry" ?
+                  " (the connection to the LLM server failed)" : "",
               retry_count,
               delay;
-            if (isContextOverflowError(e)) {
-              retry_name = "context_overflow_retry";
-            } else if (isTransientServerError(e)) {
-              retry_name = "rate_limit_retry";
-            } else if (isEmptyResponseError(e)) {
-              retry_name = "empty_response_retry";
-            } else if (isNetworkError(e)) {
-              retry_name = "network_error_retry";
-              retry_reason = " (the connection to the LLM server failed)";
-            } else {
-              return loopError(e);
-            }
-            // Counted by kind of error: network errors are not limited.
+            // Counted by kind of error.
             retry_count_dict = retry_count_dict || {};
             retry_count = retry_count_dict[retry_name] || 0;
-            if (retry_name !== "network_error_retry" && retry_count >= MAX_RETRY_COUNT) {
+            if (!window.ChatToolCommon.isRetryAllowed(retry_name, retry_count)) {
               return loopError(e);
             }
             retry_count_dict[retry_name] = retry_count + 1;
@@ -731,7 +688,7 @@
                 execution_plan: gadget.execution_plan
               })
                 .push(function () {
-                  return gadget.compactMessageList(message_list, PANIC_KEEP_RECENT_TOKEN_BUDGET);
+                  return gadget.compactMessageList(message_list, window.ChatToolCommon.PANIC_KEEP_RECENT_TOKEN_BUDGET);
                 })
                 .push(function (compacted) {
                   window.ChatToolCommon.addUsageTotals(usage_totals, compacted.usage_totals);
@@ -743,12 +700,12 @@
                   return loop_call(loop_count, compacted.message_list, pending_result, retry_count_dict);
                 });
             }
-            delay = getRetryDelay(e, retry_count);
+            delay = window.ChatToolCommon.getRetryDelay(e, retry_count);
             gadget.tool_message_list.push({
               role: "note",
               name: retry_name,
               content: e.message + retry_reason + " - retry " + (retry_count + 1) +
-                (retry_name === "network_error_retry" ? "" : " of " + MAX_RETRY_COUNT) +
+                (retry_name === "network_error_retry" ? "" : " of " + window.ChatToolCommon.MAX_RETRY_COUNT) +
                 " in " + Math.round(delay / 1000) + "s"
             });
             return gadget.gadget_chat_ui.showMessage({

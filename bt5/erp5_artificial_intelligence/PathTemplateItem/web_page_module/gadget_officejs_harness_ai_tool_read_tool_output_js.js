@@ -13,35 +13,24 @@
     .declareMethod('getDefinition', function () {
       return {
         name: "read_tool_output",
-        description: "Read the full output of an earlier tool call that was too large and was " +
-          "cut (its result says \"[Output too large: ...]\" and gives an output_id). The full outputs " +
-          "are kept only while this page stays open, the oldest are dropped. One call " +
-          "returns at most " + window.ChatToolCommon.TEXT_WINDOW_CHARS + " chars. Do not read it " +
-          "from start to end: call it with `pattern` to find the passages you need, then read " +
-          "only around them.",
+        description: "Read an earlier tool result that was cut because it was too large: it says " +
+          "\"[Output too large: ...]\" and gives an output_id. The full results are kept " +
+          "only until this page is closed or reloaded, and the oldest are dropped. One " +
+          "call returns at most " + window.ChatToolCommon.TEXT_WINDOW_CHARS +
+          " chars: search with `pattern`, then read around the matches with min_chars, " +
+          "instead of reading it all.",
         parameters: {
           type: "object",
           properties: {
-            output_id: {
-              type: "string",
-              description: "The output_id given in the cut tool result, eg. \"output_1\"."
-            },
-            min_chars: {
-              type: "integer",
-              description: "Start reading at this character offset (default 0)."
-            },
-            max_chars: {
-              type: "integer",
-              description: "Stop at this character offset, exclusive (default and maximum: " +
-                "min_chars + " + window.ChatToolCommon.TEXT_WINDOW_CHARS + ")."
-            },
-            pattern: {
-              type: "string",
-              description: "Case-insensitive regular expression to search the whole output for: " +
-                "returns each match's char offset and " + window.ChatToolCommon.TEXT_SEARCH_CONTEXT_CHARS +
-                " chars of context on each side, at most " + window.ChatToolCommon.TEXT_SEARCH_MAX_MATCHES +
-                " matches. min_chars/max_chars are ignored."
-            }
+            output_id: { type: "string", description: "The output_id given in the cut result, eg. \"output_1\"." },
+            min_chars: { type: "integer", description: "Char offset to start reading from (default 0)." },
+            max_chars: { type: "integer", description: "Char offset to stop at (default and maximum: min_chars + " +
+              window.ChatToolCommon.TEXT_WINDOW_CHARS + ")." },
+            pattern: { type: "string", description: "Search the whole result instead of reading it: a case-insensitive regular " +
+              "expression. Returns each match with its char offset and " +
+              window.ChatToolCommon.TEXT_SEARCH_CONTEXT_CHARS + " chars of context on each side, at most " +
+              window.ChatToolCommon.TEXT_SEARCH_MAX_MATCHES +
+              " matches. min_chars and max_chars are ignored." }
           },
           required: ["output_id"]
         }

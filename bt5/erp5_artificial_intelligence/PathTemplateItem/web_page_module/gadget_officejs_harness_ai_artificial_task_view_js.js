@@ -102,6 +102,7 @@
       decoder = new TextDecoder(),
       buffer = "",
       state = {content: "", reasoning: "", reasoning_field: null, model: null, usage: null, finish_reason: null,
+        done: false,
         error: null, tool_call_map: {}, tool_call_order: []};
 
     // A frame may hold several "data:" lines: per the SSE spec they are one
@@ -117,7 +118,11 @@
       data_line = data_line_list.map(function (line) {
         return line.slice(line.charAt(5) === " " ? 6 : 5);
       }).join("\n").trim();
-      if (data_line === "" || data_line === "[DONE]") {
+      if (data_line === "[DONE]") {
+        state.done = true;
+        return;
+      }
+      if (data_line === "") {
         return;
       }
       try {
@@ -162,6 +167,12 @@
         if (state.error) {
           throw new Error(typeof state.error === "string" ? state.error :
             (state.error.message || JSON.stringify(state.error)));
+        }
+        // A forwarder relays the stream until its end of file: if the LLM
+        // server connection breaks, the stream just ends, without
+        // finish_reason nor [DONE]. Its content is then incomplete.
+        if (!state.done && !state.finish_reason) {
+          throw new Error("LLM stream ended before the end of the response: the connection was lost");
         }
         tool_calls = state.tool_call_order.map(function (index) {
           return state.tool_call_map[index];

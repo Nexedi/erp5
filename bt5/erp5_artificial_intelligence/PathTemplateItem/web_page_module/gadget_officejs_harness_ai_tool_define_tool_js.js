@@ -15,42 +15,30 @@
         executionMode: "sequential",
         // Listing again is harmless, and defining an existing name fails.
         allow_repeat: true,
-        description: "Manage the tools you define for yourself. command \"define\" creates a new, " +
-          "named tool, available to call (by name, with its own argument schema) from now on, " +
-          "including by any sub-agent you spawn afterwards. It is saved in this browser and shared " +
-          "by all tasks: it is also available in the other tasks, and still there next time you open " +
-          "one, until command \"remove\" removes it. Its implementation is an async function body, " +
-          "exactly like run_javascript's `code` (receives `args` matching its `parameters` " +
-          "schema, plus `console`/`utils`/`lib`); it runs in the same isolated sandbox worker, with " +
-          "the global `WebAssembly` and `utils.wat2wasm`. command \"list\" lists the defined tools " +
-          "(of all tasks) with their description, parameters and code. command \"remove\" removes " +
-          "one, with its saved copy - built-in and MCP tools can not be removed. USE \"define\" WHEN: " +
-          "you expect to call the same piece of logic again, with different arguments, and want a " +
-          "clean, named, schema-checked tool instead of repeating run_javascript calls with inline " +
-          "code. DO NOT USE it for a one-off computation - just use run_javascript directly.",
+        description: "Manage your own tools. \"define\" creates a tool that you, and the sub-agents you " +
+          "spawn, can call by name from now on. It is saved in this browser for all the " +
+          "tasks, until \"remove\" removes it. Its `code` is like the code of " +
+          "run_javascript, run in the same sandbox, and receives the arguments of the call " +
+          "in `args`. \"list\" returns the tools you defined, with their description, " +
+          "parameters and code. \"remove\" removes one of them (built-in and MCP tools can " +
+          "not be removed). Define a tool only for logic you will call again with other " +
+          "arguments: for a one-off computation, use run_javascript.",
         parameters: {
           type: "object",
           properties: {
-            command: {
-              type: "string",
-              "enum": ["define", "list", "remove"],
-              description: "\"define\" (default), \"list\" or \"remove\"."
-            },
-            name: { type: "string", description: "define, remove: the tool name, e.g. " +
-              "\"fahrenheit_to_celsius\". To define, it must not clash with an existing tool." },
-            description: { type: "string", description: "define: shown to yourself on future turns - " +
-              "describe what it does and when to use it." },
+            command: { type: "string", "enum": ["define", "list", "remove"], description: "Default \"define\"." },
+            name: { type: "string", description: "For \"define\" and \"remove\": the tool name, eg. \"fahrenheit_to_celsius\". A new tool can not take the name of an existing one." },
+            description: { type: "string", description: "For \"define\": what the tool does and when to use it." },
             parameters: {
               type: "object",
-              description: "define: JSON schema object for this tool's own arguments, e.g. " +
-                "{\"type\":\"object\",\"properties\":{\"fahrenheit\":{\"type\":\"number\"}},\"required\":[\"fahrenheit\"]}."
+              description: "For \"define\": JSON schema of the arguments of the tool, eg. {\"type\": \"object\", " +
+              "\"properties\": {\"fahrenheit\": {\"type\": \"number\"}}, \"required\": [\"fahrenheit\"]}."
             },
-            code: { type: "string", description: "define: async function body implementing the tool, " +
-              "e.g. \"return (args.fahrenheit - 32) * 5 / 9;\"." },
+            code: { type: "string", description: "For \"define\": the async function body, eg. \"return (args.fahrenheit - 32) * 5 / 9;\"." },
             libraries: {
               type: "array",
-              description: "define: https:// URLs to preload before each call.",
-              items: { type: "string" }
+              items: { type: "string" },
+              description: "For \"define\": https:// URLs of scripts to load before each call, like for run_javascript."
             }
           }
         }

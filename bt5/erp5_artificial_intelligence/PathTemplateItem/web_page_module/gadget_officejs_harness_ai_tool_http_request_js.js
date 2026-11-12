@@ -49,32 +49,37 @@
     .declareMethod('getDefinition', function () {
       return {
         name: "http_request",
-        description: "Fetch a URL - a web page, a JSON API, any public HTTP(S) resource. Relayed " +
-          "through the proxy the user set (Proxy Server URL, in the External service page), purely " +
-          "to get around the browser's own CORS restriction on the target; without one, this is a " +
-          "plain, unproxied fetch, which only succeeds if the target itself allows cross-origin " +
-          "requests. HTML is converted to readable text unless `raw` is requested. This is not a " +
-          "general web browser - no JavaScript on the fetched page runs, and there is no rendering. " +
-          "One call returns at most " + HTTP_TEXT_WINDOW_CHARS + " chars of the " +
-          "response; use min_chars to read further, or `pattern` to search a long page for what you " +
-          "need instead of reading all of it.",
+        description: "Fetch a public URL: a web page or a JSON API. HTML is converted to " +
+          "readable text, with each link written as \"text (absolute URL)\". The JavaScript of " +
+          "the page does not run, so pages built by JavaScript (many search engines and web " +
+          "portals) come back nearly empty. Requests carry no cookies or login. PDF and other " +
+          "binary files can not be read.\n" +
+          "Fetch only a URL given by the user, a link found in a page you fetched, or the home page " +
+          "or documented API of a site you know. Do not build URLs yourself: no guessed paths, no " +
+          "made-up query parameters (search=, keyword=, _format=json, ...), no search engine result " +
+          "pages. If 2 or 3 fetches for the same source fail or do not give what you need, stop " +
+          "trying that source: use the results you have, and report what you could not find or " +
+          "verify.",
         parameters: {
           type: "object",
           properties: {
             url: { type: "string" },
-            method: { type: "string", "enum": ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"] },
+            method: { type: "string", "enum": ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"],
+              description: "Default GET." },
             headers: { type: "object", description: "Extra request headers." },
-            body: { type: "string" },
-            raw: { type: "boolean", description: "Return the body verbatim instead of extracted text." },
-            min_chars: { type: "integer", description: "Return the text from this character offset " +
-              "(default 0). Use it to continue reading a long response." },
-            max_chars: { type: "integer", description: "Stop at this character offset, exclusive (default " +
-              "and maximum: min_chars + " + HTTP_TEXT_WINDOW_CHARS + ")." },
-            pattern: { type: "string", description: "Search the response text instead of reading it: a " +
-              "case-insensitive regular expression (eg. \"deadline|closing date\"). Returns each match " +
-              "with its char offset and " + window.ChatToolCommon.TEXT_SEARCH_CONTEXT_CHARS + " chars of " +
-              "context on each side, at most " + window.ChatToolCommon.TEXT_SEARCH_MAX_MATCHES + " matches. " +
-              "min_chars/max_chars are ignored." }
+            body: { type: "string", description: "Request body, eg. JSON text for a POST." },
+            raw: { type: "boolean", description: "Return the body as it is, not converted to text." },
+            min_chars: { type: "integer", description: "One call returns at most " +
+              HTTP_TEXT_WINDOW_CHARS + " chars of the text: start from this char offset to read " +
+              "further (default 0)." },
+            max_chars: { type: "integer", description: "Stop at this char offset (default and " +
+              "maximum: min_chars + " + HTTP_TEXT_WINDOW_CHARS + ")." },
+            pattern: { type: "string", description: "Search the whole text instead of reading it: " +
+              "a case-insensitive regular expression (eg. \"deadline|closing date\", or a link " +
+              "text to find its URL). Returns each match with its char offset and " +
+              window.ChatToolCommon.TEXT_SEARCH_CONTEXT_CHARS + " chars of context on each side, at " +
+              "most " + window.ChatToolCommon.TEXT_SEARCH_MAX_MATCHES + " matches. min_chars and " +
+              "max_chars are ignored." }
           },
           required: ["url"]
         }
@@ -180,7 +185,7 @@
           is_html = /html/i.test(result.content_type || "") ||
             /<(!doctype\s+html|html|head)[\s>]/i.test(text.slice(0, 2000));
           if (!args.raw && is_html) {
-            text = window.ChatToolCommon.htmlToText(text);
+            text = window.ChatToolCommon.htmlToText(text, result.final_url || target);
           }
           text = args.pattern ? window.ChatToolCommon.searchText(text, args.pattern) :
               window.ChatToolCommon.readTextWindow(text, args.min_chars, args.max_chars, undefined,

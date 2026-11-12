@@ -8,32 +8,32 @@
       return {
         name: "execution_plan",
         executionMode: "sequential",
-        description: "USE THIS ONLY WHEN THE USER EXPLICITLY ASKS for a plan or a checklist " +
-          "(eg. \"make a plan first\", \"track the steps\"). Otherwise do not call it: just do the work " +
-          "with the other tools. Shows the user an ordered checklist of steps towards a goal, live in " +
-          "your current chat message. Two commands: \"set\" creates or completely replaces the plan " +
-          "(every step back to \"pending\" - mark finished steps \"done\" again afterwards), and " +
-          "\"update_step\" changes one step's status with an optional note. Once a turn finishes, its " +
-          "final checklist stays attached to it, so a later \"set\" for a new goal does not hide it. " +
-          "Never call \"set\" just to test the tool while a plan is in progress: it replaces that plan " +
-          "and the step indices you were using become invalid.",
+        description: "Show the user a checklist of the steps towards a goal, updated live in your " +
+          "answer. Use it ONLY when the user asks for a plan or a checklist (eg. \"make a " +
+          "plan first\"): otherwise just do the work. \"set\" creates the plan, or replaces " +
+          "it with all its steps pending: call it again only for a new goal. \"update_step\" " +
+          "changes the status of one step, with an optional note.",
         parameters: {
           type: "object",
           properties: {
             command: { type: "string", "enum": ["set", "update_step"] },
-            goal: { type: "string", description: "Required for \"set\": the overall goal / success condition this plan works towards." },
+            goal: { type: "string", description: "For \"set\": the goal of the plan." },
             step_list: {
               type: "array",
-              description: "Required for \"set\": ordered list of steps.",
+              description: "For \"set\": the steps, in order.",
               items: {
                 type: "object",
                 properties: { title: { type: "string" } },
                 required: ["title"]
               }
             },
-            index: { type: "integer", description: "Required for \"update_step\": 0-based index of the step in the current plan's step_list." },
-            status: { type: "string", "enum": ["pending", "in_progress", "done", "failed", "skipped"], description: "Required for \"update_step\"." },
-            note: { type: "string", description: "Optional, for \"update_step\": dry-run prediction, real result, or reason for failure/skip." }
+            index: { type: "integer", description: "For \"update_step\": index of the step, from 0." },
+            status: {
+              type: "string",
+              "enum": ["pending", "in_progress", "done", "failed", "skipped"],
+              description: "For \"update_step\"."
+            },
+            note: { type: "string", description: "For \"update_step\", optional: the result, or why the step failed or was skipped." }
           },
           required: ["command"]
         }

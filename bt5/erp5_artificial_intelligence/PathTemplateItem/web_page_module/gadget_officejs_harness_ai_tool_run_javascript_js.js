@@ -7,36 +7,25 @@
     .declareMethod('getDefinition', function () {
       return {
         name: "run_javascript",
-        description: "Run JavaScript and get the result back. Runs in the same isolated sandbox " +
-          "worker as run_wasm - no DOM, no cookies, no access to the page or any other tool's state " +
-          "(the only network access is the optional library fetch below, done by this worker itself, " +
-          "never by your code). Write the body of an async function: `await` is available, and you " +
-          "must \"return <value>;\" to produce a result (only JSON-serializable values are usable; " +
-          "console output is captured separately and returned alongside the result). A `utils` object " +
-          "with b64encode/b64decode/describe/wat2wasm helpers is also available to the code. Pass " +
-          "`libraries` (https:// URLs to a UMD/IIFE script or .mjs ES module) to preload third-party " +
-          "helpers, available both as their usual global (e.g. a UMD bundle's own global, auto-detected) " +
-          "and via `lib[\"<the URL you passed>\"]`. To check the real API of a library before " +
-          "writing code against it, instead of guessing, load it and return what it exposes, e.g. " +
-          "`return Object.keys(lib[url]);`. Errors thrown by the " +
-          "code are reported back as an error message; a runaway loop is killed at its deadline, which " +
-          "costs one worker, not the tab. USE THIS WHEN: you need custom computation or to " +
-          "reshape/combine data you already have (e.g. a previous tool's result) that's easier to do in " +
-          "code than by hand. DO NOT USE THIS WHEN: an existing tool (an MCP server's tools, " +
-          "run_wasm) already does what you need, or you need DOM/arbitrary network access - this sandbox " +
-          "cannot reach either.",
+        description: "Run JavaScript in an isolated sandbox (a web worker: no DOM, no access to the " +
+          "page, no cookies) and return its result, with its console output. Use it for a " +
+          "computation or to reshape data, not for what another tool does. The code can " +
+          "not see the other tools or their results: to process a result, write the data " +
+          "the code needs into it. To get data from the web, use http_request, not fetch() " +
+          "in the code.",
         parameters: {
           type: "object",
           properties: {
-            code: {
-              type: "string",
-              description: "Async function body, e.g. \"return 1 + 1;\" or " +
-                "\"var total = 0; for (var i = 0; i < 10; i++) { total += i; } return total;\"."
-            },
+            code: { type: "string", description: "Body of an async function: `await` works, and `return` gives the result, which " +
+              "must be JSON serializable. It receives `utils` (b64encode, b64decode, describe, " +
+              "wat2wasm) and `lib`. Eg. \"var total = 0; for (var i = 0; i < 10; i += 1) { " +
+              "total += i; } return total;\"." },
             libraries: {
               type: "array",
-              description: "https:// URLs to load before running code, e.g. [\"https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js\"].",
-              items: { type: "string" }
+              items: { type: "string" },
+              description: "https:// URLs of scripts to load before the code runs (UMD/IIFE script or .mjs " +
+                "ES module). Each one is in lib[url], and under its usual global name. To learn " +
+                "the API of a library, return Object.keys(lib[url]) first, instead of guessing."
             },
             timeout_ms: { type: "integer", description: "Deadline in ms (default 10000, max 120000)." }
           },

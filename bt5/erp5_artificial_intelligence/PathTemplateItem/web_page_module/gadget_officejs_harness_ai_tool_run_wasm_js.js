@@ -7,20 +7,17 @@
     .declareMethod('getDefinition', function () {
       return {
         name: "run_wasm",
-        description: "Assemble WebAssembly text format (.wat) into a module, instantiate it and call " +
-          "its exports. Use this when you want the result to be a real WASM artifact, or for hot " +
-          "numeric loops. Runs in an isolated sandbox worker with no DOM and no network access, using a " +
-          "spec-complete WAT assembler - the full instruction set is supported, including tables and " +
-          "call_indirect. Both folded (i32.add (local.get 0) (local.get 1)) and flat notation work. " +
-          "Host functions importable from module \"env\": log_i32, log_i64, log_f32, log_f64, " +
-          "log_str(ptr,len), abort(code), now() -> f64, random() -> f64. Export a memory as \"memory\" " +
-          "if you want log_str or a memory dump to work. i64 arguments and results are exchanged as " +
-          "decimal strings with an \"n\" suffix, e.g. \"42n\".",
+        description: "Assemble a WebAssembly text module (.wat), or take a binary one, instantiate it " +
+          "and call its exported functions, in the sandbox of run_javascript. Give `wat` " +
+          "or `wasm_base64`. Imports of module \"env\": log_i32, log_i64, log_f32, log_f64, " +
+          "log_str(ptr, len) (needs an exported \"memory\"), abort(code), now() -> f64, " +
+          "random() -> f64. i64 values are strings with an \"n\" suffix, eg. \"42n\". For an " +
+          "ordinary computation, use run_javascript.",
         parameters: {
           type: "object",
           properties: {
-            wat: { type: "string", description: "WebAssembly text source, starting with (module …)." },
-            wasm_base64: { type: "string", description: "Alternative to `wat`: a pre-assembled module, base64-encoded." },
+            wat: { type: "string", description: "WebAssembly text source, starting with (module ...)." },
+            wasm_base64: { type: "string", description: "Instead of `wat`: a binary module, base64 encoded." },
             calls: {
               type: "array",
               description: "Exported functions to call, in order.",
@@ -33,7 +30,7 @@
                 required: ["name"]
               }
             },
-            dump_memory: { type: "integer", description: "Show the first N bytes of exported memory." },
+            dump_memory: { type: "integer", description: "Return the first N bytes of the exported \"memory\"." },
             timeout_ms: { type: "integer", description: "Deadline in ms (default 10000, max 120000)." }
           }
         }

@@ -719,6 +719,10 @@
       if (gadget.streaming_frame) {
         window.cancelAnimationFrame(gadget.streaming_frame);
         gadget.streaming_frame = null;
+        // The last streamed text is not shown yet: show it before this
+        // message, which may have no content and keep the text shown.
+        gadget.rendered_tool_message_count = renderMessage(gadget.new_message_element,
+          gadget.streaming_message, gadget.rendered_tool_message_count);
       }
       gadget.rendered_tool_message_count = renderMessage(gadget.new_message_element,
         message, gadget.rendered_tool_message_count);

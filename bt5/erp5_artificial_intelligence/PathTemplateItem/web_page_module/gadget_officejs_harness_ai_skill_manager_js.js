@@ -41,9 +41,8 @@
       if (!skill_list.length) {
         return null;
       }
-      return "The following skills provide specialized instructions for specific tasks. Call the " +
-        "load_skill tool with the skill's name when the current task matches its description, to " +
-        "load its full instructions.\n\n<available_skills>\n" +
+      return "Skills give instructions for specific tasks. When the task matches the description of a " +
+        "skill, call load_skill with its name to get its instructions.\n\n<available_skills>\n" +
         skill_list.map(function (skill) {
           return "  <skill>\n    <name>" + skill.name + "</name>\n    <description>" +
             skill.description + "</description>\n  </skill>";

@@ -585,7 +585,7 @@ crlf_stream = False
 # 2. Compaction summary requests (compactMessageList): SUMMARY-ONE only when
 # the long tool results were truncated, SUMMARY-TWO only when SUMMARY-ONE was
 # passed as <previous-summary>.
-if first_system_content.startswith('The text above is a conversation to summarize'):
+if first_system_content.startswith('Summarize the conversation given'):
   # testOfficeJSHarnessAIStoredCompaction.zpt
   if 'STORED-COMPACTION-ONE' in last_content:
     chunk_list = [text_chunk('STORED-SUMMARY: the first long answer was summarized.')]
@@ -593,7 +593,7 @@ if first_system_content.startswith('The text above is a conversation to summariz
     chunk_list = [text_chunk('SUMMARY-ONE: compaction context test in progress.')]
   else:
     chunk_list = [text_chunk('SUMMARY-UNTRUNCATED')]
-elif first_system_content.startswith('The text above contains NEW conversation messages'):
+elif first_system_content.startswith('Update the summary given'):
   if '<previous-summary>\nSUMMARY-ONE' in last_content:
     chunk_list = [text_chunk('SUMMARY-TWO: merged with the previous summary.')]
   else:

@@ -17,7 +17,66 @@
     TEXT_SEARCH_CONTEXT_CHARS = 150,
     // A longer match (eg. of a greedy pattern) is cut, so that a search
     // never returns most of the text.
-    TEXT_SEARCH_MATCH_MAX_CHARS = 300;
+    TEXT_SEARCH_MATCH_MAX_CHARS = 300,
+    // Failed LLM requests of the agent loop and of spawn_subagent: transient
+    // errors (context overflow, rate limit, 5xx, empty response) are retried
+    // MAX_RETRY_COUNT times in a row, each kind counted apart. Network
+    // errors, frequent in a browser (sleep, wifi, ...), are retried until it
+    // works.
+    MAX_RETRY_COUNT = 3,
+    MAX_RETRY_DELAY = 60000,
+    // After a context overflow, the history is compacted to keep only this
+    // many recent tokens.
+    PANIC_KEEP_RECENT_TOKEN_BUDGET = 8000,
+    // Error messages of the servers (in a 4xx response) when the prompt is
+    // larger than the context window.
+    CONTEXT_OVERFLOW_PATTERN = /context[_ ]length|context (?:size|window)|prompt (?:is )?too long|too many tokens|token limit exceeded/i,
+    // Errors sent inside the stream, which have no HTTP status, that may
+    // succeed later.
+    RETRYABLE_ERROR_PATTERN = /overloaded|rate.?limit|too many requests|unavailable|server.?error|internal.?error|provider returned error/i,
+    NON_RETRYABLE_ERROR_PATTERN = /insufficient_quota|quota exceeded|billing/i,
+    // The request or its response stream failed: "Failed to fetch" and
+    // "network error" (Chrome), "NetworkError ..." and "Error in input
+    // stream" (Firefox, the stream cut midway), "Load failed" (Safari).
+    NETWORK_ERROR_PATTERN = /failed to fetch|network\s*error|load failed|connection was lost|error in input stream/i;
+
+  // The kind of retry of a failed LLM request, or null if the error is not
+  // transient: "context_overflow_retry", "rate_limit_retry" (also server
+  // errors, but not an exhausted quota or billing problem),
+  // "empty_response_retry" or "network_error_retry".
+  function getRetryName(e) {
+    var message = (e && e.message) || "";
+    if (e && e.status && (e.status === 413 || (e.status >= 400 && e.status < 500 && e.status !== 429 &&
+        CONTEXT_OVERFLOW_PATTERN.test(message)))) {
+      return "context_overflow_retry";
+    }
+    if (message && !NON_RETRYABLE_ERROR_PATTERN.test(message) && (e.status === 429 || e.status >= 500 ||
+        (!e.status && RETRYABLE_ERROR_PATTERN.test(message)))) {
+      return "rate_limit_retry";
+    }
+    if ((/^Empty response from LLM/).test(message)) {
+      return "empty_response_retry";
+    }
+    if (NETWORK_ERROR_PATTERN.test(message)) {
+      return "network_error_retry";
+    }
+    return null;
+  }
+
+  // Whether a request that failed retry_count times in a row with this kind
+  // of error is retried once more.
+  function isRetryAllowed(retry_name, retry_count) {
+    return Boolean(retry_name) && (retry_name === "network_error_retry" || retry_count < MAX_RETRY_COUNT);
+  }
+
+  // What the server asked with Retry-After (at most 2 minutes), otherwise
+  // 2s doubled at each attempt, at most MAX_RETRY_DELAY.
+  function getRetryDelay(e, retry_count) {
+    if (e && e.retry_after_ms > 0) {
+      return Math.min(e.retry_after_ms, 120000);
+    }
+    return Math.min(2000 * Math.pow(2, retry_count), MAX_RETRY_DELAY);
+  }
 
   // Usage counting of the agent loop and of spawn_subagent: each LLM call,
   // compaction and sub-agent returns its usage_totals, which the caller adds
@@ -36,29 +95,73 @@
     return usage_totals;
   }
 
-  function htmlToText(html) {
-    var body_match = /<body[^>]*>([\s\S]*)<\/body>/i.exec(html);
-    if (body_match) {
-      html = body_match[1];
-    }
-    return html
-      .replace(/<script[\s\S]*?<\/script>/gi, " ")
-      .replace(/<style[\s\S]*?<\/style>/gi, " ")
-      .replace(/<!--[\s\S]*?-->/g, " ")
-      .replace(/<\/(p|div|li|tr|h[1-6]|section|article)>/gi, "\n")
-      .replace(/<br\s*\/?>/gi, "\n")
-      .replace(/<[^>]+>/g, " ")
+  function decodeHtmlEntities(text) {
+    return text
       .replace(/&nbsp;/g, " ")
-      .replace(/&amp;/g, "&")
       .replace(/&lt;/g, "<")
       .replace(/&gt;/g, ">")
       .replace(/&quot;/g, "\"")
       .replace(/&#(\d+);/g, function (match, code) { return String.fromCharCode(+code); })
       .replace(/&#x([0-9a-f]+);/gi, function (match, hex) { return String.fromCharCode(parseInt(hex, 16)); })
+      .replace(/&amp;/g, "&");
+  }
+
+  // The absolute URL of a link of a page, or "" for a link that does not
+  // lead to another page (an anchor in the page, javascript:, mailto:, ...).
+  function getLinkUrl(href, base_url) {
+    var url;
+    href = decodeHtmlEntities(href).trim();
+    if (!href || href.charAt(0) === "#") {
+      return "";
+    }
+    try {
+      url = new URL(href, base_url || undefined);
+    } catch (ignore) {
+      return "";
+    }
+    if (url.protocol !== "http:" && url.protocol !== "https:") {
+      return "";
+    }
+    url.hash = "";
+    return url.href;
+  }
+
+  // The readable text of an HTML page. Its links are kept as
+  // "text (absolute URL)", resolved against base_url (the URL of the page),
+  // so that the model can follow them instead of guessing URLs.
+  function htmlToText(html, base_url) {
+    var body_match = /<body[^>]*>([\s\S]*)<\/body>/i.exec(html),
+      base_match = /<base\b[^>]*\bhref\s*=\s*["']?([^"'\s>]+)/i.exec(html);
+    if (base_match) {
+      base_url = getLinkUrl(base_match[1], base_url) || base_url;
+    }
+    if (body_match) {
+      html = body_match[1];
+    }
+    return decodeHtmlEntities(html
+      .replace(/<script[\s\S]*?<\/script>/gi, " ")
+      .replace(/<style[\s\S]*?<\/style>/gi, " ")
+      .replace(/<!--[\s\S]*?-->/g, " ")
+      .replace(/<a\b[^>]*?\bhref\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+))[^>]*>([\s\S]*?)<\/a\s*>/gi,
+        function (match, href_double, href_single, href_bare, inner_html) {
+          var url = getLinkUrl(href_double || href_single || href_bare || "", base_url),
+            text = inner_html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+          if (!url) {
+            return " " + text + " ";
+          }
+          if (!text || text === url || text + "/" === url) {
+            return " " + url + " ";
+          }
+          return " " + text + " (" + url + ") ";
+        })
+      .replace(/<\/(p|div|li|tr|h[1-6]|section|article)>/gi, "\n")
+      .replace(/<br\s*\/?>/gi, "\n")
+      .replace(/<[^>]+>/g, " "))
       .replace(/[ \t]+/g, " ")
       .replace(/\n\s*\n\s*\n+/g, "\n\n")
       .replace(/^\s+|\s+$/g, "");
   }
+
 
   function runSandboxJob(kind, payload, timeout_ms) {
     var budget = Math.min(Math.max(Number(timeout_ms) || SANDBOX_DEFAULT_TIMEOUT_MS, 100), SANDBOX_MAX_TIMEOUT_MS),
@@ -189,7 +292,8 @@
     }
     return text.slice(start, end) + "\n\n[Showing chars " + start + "-" + end + " of " + text.length +
       locate(start, end) + "." + (end < text.length ?
-          " Use min_chars=" + end + " to continue, or pattern to search the whole text." :
+          " To find something, search the whole text with pattern; to read the next part, use " +
+            "min_chars=" + end + "." :
           " End of the text.") + "]";
   }
 
@@ -203,6 +307,11 @@
     runSandboxJob: runSandboxJob,
     runJsCode: runJsCode,
     createUsageTotals: createUsageTotals,
-    addUsageTotals: addUsageTotals
+    addUsageTotals: addUsageTotals,
+    MAX_RETRY_COUNT: MAX_RETRY_COUNT,
+    PANIC_KEEP_RECENT_TOKEN_BUDGET: PANIC_KEEP_RECENT_TOKEN_BUDGET,
+    getRetryName: getRetryName,
+    isRetryAllowed: isRetryAllowed,
+    getRetryDelay: getRetryDelay
   };
 }(window, document));

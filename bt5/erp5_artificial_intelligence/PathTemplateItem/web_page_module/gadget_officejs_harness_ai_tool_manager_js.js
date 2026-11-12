@@ -34,9 +34,8 @@
     // message_list keeps that tool removed for the rest of the task.
     TOOL_DISABLED_NOTICE = "This tool is now disabled for the rest of this task.",
     TOOL_CALL_REPEAT_STOP_LIMIT = 5,
-    TOOL_CALL_REPEAT_SYSTEM_PROMPT = "If a tool call with the exact same name and arguments fails or does " +
-      "not help, do not call it again with the exact same arguments - it will not produce a different " +
-      "result. Try different arguments, a different tool, or report the issue and move on instead.";
+    TOOL_CALL_REPEAT_SYSTEM_PROMPT = "Do not repeat a tool call with the same name and arguments: it " +
+      "gives the same result. Change the arguments, use another tool, or report the problem.";
 
   function findClientTool(name, tool_list) {
     var i;
@@ -143,9 +142,6 @@
   }
 
 
-  // How many times each tool call (same name, same arguments) appears in
-  // the last TOOL_CALL_REPEAT_WINDOW assistant turns of message_list, keyed
-  // by the JSON of its name and arguments.
   // The index of the first message of the current turn: the one after the
   // last user message. The tool calls of the earlier answers, replayed in
   // the history, do not count as repeats: the user may ask the same again.
@@ -159,6 +155,9 @@
     return 0;
   }
 
+  // How many times each tool call (same name, same arguments) appears in
+  // the last TOOL_CALL_REPEAT_WINDOW assistant turns of the current turn of
+  // message_list, keyed by the JSON of its name and arguments.
   function countToolCalls(message_list) {
     var count_dict = {}, turn_count = 0, i, j, message, key,
       turn_start_index = getTurnStartIndex(message_list);
@@ -207,24 +206,23 @@
       return {
         tool_call_id: tool_call.id,
         name: tool_call.function.name,
-        content: "You already called this exact tool with these exact same arguments (" +
+        content: "Not run: you already made this exact call (" +
           (tool_call.function.arguments.length > 300 ?
               tool_call.function.arguments.slice(0, 300) + "..." : tool_call.function.arguments) + ") " +
-          (repeat_count - 1) + " time(s) in the last " + TOOL_CALL_REPEAT_WINDOW + " turns, and it did not help - repeating it again will not " +
-          "produce a different result. Stop retrying this exact call: try different arguments, a " +
-          "different tool, or report the failure and move on." +
+          (repeat_count - 1) + " time(s), and the same call gives the same result. Change the " +
+          "arguments, use another tool, or report the failure." +
           (repeat_count >= TOOL_CALL_REPEAT_HIDE_LIMIT ?
               " " + TOOL_DISABLED_NOTICE :
-              " If you call it again with these same arguments, this tool will be disabled for the " +
-              "rest of this task.")
+              " Calls of this tool with other arguments are still allowed, but if you make this " +
+              "exact call once more, the whole tool is disabled for the rest of this task.")
       };
     }
     if (getDisabledToolNameList(message_list).indexOf(tool_call.function.name) !== -1) {
       return {
         tool_call_id: tool_call.id,
         name: tool_call.function.name,
-        content: "Not run: it was called again and again with the same arguments before. " +
-          TOOL_DISABLED_NOTICE + " Use another tool, or the results you already have."
+        content: "Not run: the same call was repeated too often. " + TOOL_DISABLED_NOTICE +
+          " Use another tool, or the results you have."
       };
     }
     return runClientToolCall(tool_call, tool_list);
