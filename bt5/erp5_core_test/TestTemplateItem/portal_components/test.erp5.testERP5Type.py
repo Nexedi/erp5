@@ -3426,6 +3426,8 @@ class TestZODBStreaming(ERP5TypeTestCase):
           return self
         def __next__(self):
           return next(self._iterator)
+        if six.PY2:
+          next = __next__
         def __len__(self):
           return len(b''.join(test.chunk_list))
       return PlainStreamIterator()
@@ -3442,7 +3444,7 @@ class TestZODBStreaming(ERP5TypeTestCase):
     # Publish like Testing.ZopeTestCase.Functional does, without the read of
     # the body by ERP5TypeTestCaseMixin.publish
     from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCaseMixin
-    return super(ERP5TypeTestCaseMixin, self).publish(
+    return super(ERP5TypeTestCaseMixin, self).publish(  # pylint:disable=bad-super-call
       path, basic=self.basic, request_method=request_method)
 
   def test_body_is_read_a_bit_at_a_time(self):
@@ -3456,7 +3458,7 @@ class TestZODBStreaming(ERP5TypeTestCase):
     self.assertEqual(next(result), self.chunk_list[0])
     self.assertEqual(next(result), self.chunk_list[1])
     self.assertEqual(len(self.loaded_list), 2)
-    connection, = set(self.loaded_list)
+    connection, = set(self.loaded_list)  # pylint:disable=unbalanced-tuple-unpacking
     self.assertIsNotNone(connection.opened)
     # The WSGI server closes the body when the client disconnects
     result.close()
@@ -3468,7 +3470,7 @@ class TestZODBStreaming(ERP5TypeTestCase):
     self.assertEqual(response.getStatus(), 200)
     self.assertEqual(response.getBody(), b''.join(self.chunk_list))
     self.assertEqual(len(self.loaded_list), self.chunk_count)
-    connection, = set(self.loaded_list)
+    connection, = set(self.loaded_list)   # pylint:disable=unbalanced-tuple-unpacking
     self.assertIsNone(connection.opened)
 
   def test_head(self):
@@ -3487,7 +3489,7 @@ class TestZODBStreaming(ERP5TypeTestCase):
     response = self._publishWithoutReading(
       self.stream_path + '?stream_iterator:int=0')
     result = response._wsgi_result
-    self.assertTrue(IStreamIterator.providedBy(result))
+    self.assertTrue(IStreamIterator.providedBy(result))  # pylint:disable=no-value-for-parameter
     self.assertNotIsInstance(result, _ZODBStreamIterator)
     self.assertEqual(b''.join(result), b''.join(self.chunk_list))
 
