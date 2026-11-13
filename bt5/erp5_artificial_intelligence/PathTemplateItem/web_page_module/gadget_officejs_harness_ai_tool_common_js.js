@@ -98,6 +98,92 @@
     return usage_totals;
   }
 
+  function isOfType(value, type) {
+    if (type === "integer") {
+      return typeof value === "number" && Math.floor(value) === value;
+    }
+    if (type === "array") {
+      return Array.isArray(value);
+    }
+    if (type === "object") {
+      return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+    }
+    if (type === "null") {
+      return value === null;
+    }
+    return typeof value === type;
+  }
+
+  // args checked against the JSON schema of the parameters of a tool: type,
+  // required, enum, properties (no other property is accepted), items.
+  // A number or a boolean given as a string is converted, and a property set
+  // to null is left out. Returns {args, error_list}.
+  function validateArguments(schema, args) {
+    var error_list = [];
+
+    function check(value, value_schema, path) {
+      var type_list,
+        converted,
+        result;
+      if (!value_schema || typeof value_schema !== "object") {
+        return value;
+      }
+      type_list = value_schema.type === undefined ? [] :
+          (Array.isArray(value_schema.type) ? value_schema.type : [value_schema.type]);
+      if (type_list.length && !type_list.some(function (type) {
+          return isOfType(value, type);
+        })) {
+        if (typeof value === "string" && (type_list.indexOf("number") !== -1 ||
+            type_list.indexOf("integer") !== -1) && value.trim() !== "" && !isNaN(Number(value))) {
+          converted = Number(value);
+        } else if (value === "true" || value === "false") {
+          converted = value === "true";
+        }
+        if (converted === undefined || !type_list.some(function (type) {
+            return isOfType(converted, type);
+          })) {
+          error_list.push(path + ": must be " + type_list.join(" or ") + ", got " + JSON.stringify(value));
+          return value;
+        }
+        value = converted;
+      }
+      if (value_schema["enum"] && value_schema["enum"].indexOf(value) === -1) {
+        error_list.push(path + ": must be one of " + JSON.stringify(value_schema["enum"]) + ", got " +
+          JSON.stringify(value));
+      }
+      if (Array.isArray(value) && value_schema.items) {
+        return value.map(function (item, index) {
+          return check(item, value_schema.items, path + "[" + index + "]");
+        });
+      }
+      if (isOfType(value, "object") && value_schema.properties) {
+        result = {};
+        Object.keys(value).forEach(function (name) {
+          var name_path = path ? path + "." + name : name;
+          if (value[name] === null && (value_schema.required || []).indexOf(name) === -1) {
+            return;
+          }
+          if (!value_schema.properties.hasOwnProperty(name)) {
+            error_list.push(name_path + ": not a parameter of this tool (its parameters: " +
+              Object.keys(value_schema.properties).join(", ") + ")");
+            return;
+          }
+          result[name] = check(value[name], value_schema.properties[name], name_path);
+        });
+        (value_schema.required || []).forEach(function (name) {
+          if (!result.hasOwnProperty(name)) {
+            error_list.push((path ? path + "." + name : name) + ": required");
+          }
+        });
+        return result;
+      }
+      return value;
+    }
+
+    args = check(args, schema, "");
+    return { args: args, error_list: error_list };
+  }
+
   // JSON with every non-ASCII code point escaped, so it stays valid in an
   // HTTP header.
   function asciiJSON(value) {
@@ -344,6 +430,7 @@
 
   window.ChatToolCommon = {
     proxyFetch: proxyFetch,
+    validateArguments: validateArguments,
     TEXT_WINDOW_CHARS: TEXT_WINDOW_CHARS,
     TEXT_SEARCH_MAX_MATCHES: TEXT_SEARCH_MAX_MATCHES,
     TEXT_SEARCH_CONTEXT_CHARS: TEXT_SEARCH_CONTEXT_CHARS,

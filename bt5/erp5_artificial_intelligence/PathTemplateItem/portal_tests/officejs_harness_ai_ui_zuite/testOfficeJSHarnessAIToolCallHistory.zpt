@@ -91,7 +91,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//li[contains(@class, 'post-question')][contains(., 'Please run the slow tool history step')]/following-sibling::li[1][contains(@class, 'post-answer')]//div[contains(@class, 'post-tool-entry')][contains(., 'Tool: cancelled')]</td>
+  <td>//li[contains(@class, 'post-question')][contains(., 'Please run the slow tool history step')]/following-sibling::li[1][contains(@class, 'post-answer')]//div[contains(@class, 'post-tool-entry')][contains(., 'Note: cancelled')]</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForHarnessAI/macros/wait_for_editor" />

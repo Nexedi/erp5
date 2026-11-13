@@ -73,7 +73,7 @@
     }
     if (isImageMimeType(parsed.mime)) {
       if (base64ByteLength(parsed.base64) > ATTACHMENT_IMAGE_MAX_BYTES) {
-        return { type: "text", skipped: true, text: "[Attachment: " + attachment_name +
+        return { type: "text", text: "[Attachment: " + attachment_name +
           " - image too large to send (" +
           Math.round(base64ByteLength(parsed.base64) / 1024) + "KB), skipped]" };
       }
@@ -86,11 +86,11 @@
         text.slice(0, ATTACHMENT_TEXT_MAX_LENGTH) + (truncated ? "\n[... truncated ...]" : "") };
     }
     if (parsed.mime === "application/pdf") {
-      return { type: "text", skipped: true, text: "[Attachment: " + attachment_name +
+      return { type: "text", text: "[Attachment: " + attachment_name +
         " - a PDF, not sent inline. Call the pdf_to_text tool with file_name=\"" + attachment_name +
         "\" to read its text content]" };
     }
-    return { type: "text", skipped: true, text: "[Attachment: " + attachment_name + " (" +
+    return { type: "text", text: "[Attachment: " + attachment_name + " (" +
       (parsed.mime || "unknown type") + ") - not shown, unsupported type]" };
   }
 
@@ -173,7 +173,6 @@
   function formatPost(post) {
     var date = new Date(post.date);
     post.date_formatted = date.toLocaleString();
-    post.date_relative = date.toLocaleString();
     return post;
   }
 
@@ -194,13 +193,11 @@
         domsugar("div", [domsugar("pre", [post.text])]),
         dom_list = [
         content_element
-      ],
-      attachment_children;
-    if (post.attachment_link) {
-      attachment_children = [
-        domsugar("a", { href: post.attachment_link, download: post.attachment_name }, [post.attachment_name])
       ];
-      dom_list.push(domsugar("div", { "class": "post-attachment" }, attachment_children));
+    if (post.attachment_link) {
+      dom_list.push(domsugar("div", { "class": "post-attachment" }, [
+        domsugar("a", { href: post.attachment_link, download: post.attachment_name }, [post.attachment_name])
+      ]));
     }
     dom_list.push(domsugar("time", { datetime: post.date, title: post.date }, [
       (post.response && post.author_title) ? (post.author_title + " · " + post.date_formatted) : post.date_formatted
@@ -278,40 +275,61 @@
   function getSubMessageDiv(sub_message) {
     var label = sub_message.role === "tool" ?
         ("Tool: " + sub_message.name) :
-        (sub_message.role === "assistant" ? "Assistant" : "Task");
-    return domsugar("div", { "class": "post-tool-entry post-tool-sub-entry" }, [
-      domsugar("strong", [label]),
+        (sub_message.role === "assistant" ? "Assistant" : "Task"),
+      dom_list = [
+        domsugar("strong", [label]),
+        domsugar("br"),
+        domsugar("div", { "class": "post-markdown post-tool-content", html: marked.parse(sub_message.content || "") })
+      ];
+    (sub_message.tool_calls || []).forEach(function (tool_call) {
+      var tool_function = tool_call["function"] || {};
+      dom_list.push(domsugar("div", { "class": "post-tool-call" }, [
+        domsugar("strong", ["Tool call: " + tool_function.name + (tool_call.id ? " (" + tool_call.id + ")" : "")]),
+        domsugar("pre", { "class": "post-tool-content" }, [tool_function.arguments || ""])
+      ]));
+    });
+    return domsugar("div", { "class": "post-tool-entry post-tool-sub-entry" }, dom_list);
+  }
+
+  function getNoteDiv(note) {
+    return domsugar("div", { "class": "post-tool-entry post-note-entry" }, [
+      domsugar("strong", ["Note: " + note.name]),
       domsugar("br"),
-      domsugar("div", { "class": "post-markdown post-tool-content", html: marked.parse(sub_message.content || "") })
+      domsugar("div", { "class": "post-markdown post-tool-content", html: marked.parse(note.content || "") })
     ]);
   }
 
-  // A tool result has the tool_call_id of its call; a tool message without
-  // it is a note of the agent (retry, compaction, usage...).
   function getToolCallDiv(tool_message) {
-    var dom_list = [
+    var sub_message_list = (tool_message.sub_message_list || []).filter(function (sub_message) {
+        return sub_message.role !== "system";
+      }),
+      dom_list = [
       domsugar("strong", ["Tool: " + tool_message.name +
         (tool_message.tool_call_id ? " (result " + tool_message.tool_call_id + ")" : "") +
         (tool_message.duration_ms !== undefined ? " - " + formatSeconds(tool_message.duration_ms) : "")]),
       domsugar("br"),
       domsugar("div", { "class": "post-markdown post-tool-content", html: marked.parse(tool_message.content || "") })
     ];
-    if (tool_message.sub_message_list && tool_message.sub_message_list.length) {
+    if (sub_message_list.length) {
       dom_list.push(domsugar("details", { "class": "post-tool-sub-list" }, [
-        domsugar("summary", ["Sub-agent trace (" + tool_message.sub_message_list.length + ")"])
-      ].concat(tool_message.sub_message_list.map(getSubMessageDiv))));
+        domsugar("summary", ["Sub-agent trace (" + sub_message_list.length + ")"])
+      ].concat(sub_message_list.map(getSubMessageDiv))));
     }
     return domsugar("div", { "class": "post-tool-entry" }, dom_list);
   }
 
   function getAgentMessageDiv(agent_message) {
-    return agent_message.role === "assistant" ?
-      getAssistantMessageDiv(agent_message) :
-      getToolCallDiv(agent_message);
+    if (agent_message.role === "assistant") {
+      return getAssistantMessageDiv(agent_message);
+    }
+    if (agent_message.role === "note") {
+      return getNoteDiv(agent_message);
+    }
+    return getToolCallDiv(agent_message);
   }
 
   function getToolCallSummaryText(count) {
-    return "Tool calls (" + count + ")";
+    return "Trace (" + count + ")";
   }
 
   var EXECUTION_PLAN_STATUS_ICON = {
@@ -433,7 +451,7 @@
       i;
     markdown_element = message_element.querySelector(".post-markdown");
     if (message.hasOwnProperty('content') && message.content) {
-      markdown_element.innerHTML = marked.parse(message.content || "");
+      markdown_element.innerHTML = marked.parse(message.content);
       if (message.content.trim()) {
         message_element.classList.add("post-has-text");
       }
@@ -565,12 +583,7 @@
               });
             })
           .push(function (dom_list) {
-            var all_dom_list = [], post_list_element, i;
-            for (i = 0; i < dom_list.length; i += 1) {
-              all_dom_list = all_dom_list.concat(dom_list[i]);
-            }
-            post_list_element = gadget.element.querySelector("#post_list");
-            domsugar(post_list_element, all_dom_list);
+            domsugar(gadget.element.querySelector("#post_list"), dom_list);
           });
       }
       return queue;
@@ -603,10 +616,7 @@
         });
     })
     .declareMethod('appendPost', function (post) {
-      var gadget = this,
-        post_list_element = gadget.element.querySelector("#post_list"),
-        dom = appendPlanAndToolDom(getPostDom(formatPost(post)), post);
-      post_list_element.appendChild(dom);
+      this.element.querySelector("#post_list").appendChild(appendPlanAndToolDom(getPostDom(formatPost(post)), post));
     })
     // Starts the answer, at the end of the page, and the processing.
     .declareMethod('startProcessing', function () {

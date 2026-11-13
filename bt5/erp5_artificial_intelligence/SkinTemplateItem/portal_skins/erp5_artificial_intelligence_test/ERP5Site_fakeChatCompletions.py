@@ -132,8 +132,9 @@ def first_tool_call(message):
 
 def is_call(message, name=None, marker=''):
   # Whether the message's first tool call is to `name` (any tool if None)
-  # with `marker` in its arguments text. Test calls carry a marker argument
-  # (e.g. "repeat_test": true) so that their result can be recognized here.
+  # with `marker` in its arguments text. Test calls carry a marker in an
+  # argument the tool accepts (e.g. "?repeat_test=1" in the URL), so that
+  # their result can be recognized here.
   call_name, arguments_text = first_tool_call(message)
   return (call_name is not None
           and (name is None or call_name == name)
@@ -165,9 +166,9 @@ def find_tool_name(description_marker):
   return None
 
 
-REPEAT_TEST_ARGUMENTS = {'url': ENDPOINT_URL, 'repeat_test': True}
-STUCK_TEST_ARGUMENTS = {'url': ENDPOINT_URL, 'stuck_test': True}
-DEFINE_TOOL_LIST_REPEAT_ARGUMENTS = {'command': 'list', 'repeat_test': True}
+REPEAT_TEST_ARGUMENTS = {'url': ENDPOINT_URL + '?repeat_test=1'}
+STUCK_TEST_ARGUMENTS = {'url': ENDPOINT_URL + '?stuck_test=1'}
+DEFINE_TOOL_LIST_REPEAT_ARGUMENTS = {'command': 'list', 'name': 'repeat_test'}
 REASONING_TEST_TEXT = 'REASONING-MARKER: fetch the fake endpoint first.'
 READ_OUTPUT_NEEDLE = 'READ-OUTPUT-NEEDLE'
 # Runs about 8 seconds, so the test can cancel the task while it runs.
@@ -232,16 +233,16 @@ def reply_to_tool_result():
   # testOfficeJSHarnessAIRepeatedToolCall.zpt: re-issue the same call until it
   # was made 3 times; the client's guard answers the 3rd itself, and that
   # notice is echoed by the generic answer at the end.
-  if (is_call(previous, 'http_request', '"repeat_test"')
+  if (is_call(previous, 'http_request', 'repeat_test=1')
       and count_calls('http_request', REPEAT_TEST_ARGUMENTS) < 3):
     return [tool_call_chunk('http_request', REPEAT_TEST_ARGUMENTS)]
 
   # testOfficeJSHarnessAIChat.zpt: the report was written with the tool call.
-  if is_call(previous, marker='"report_test"'):
+  if is_call(previous, marker='report_test=1'):
     return [text_chunk('The full report is above.')]
 
   # testOfficeJSHarnessAIThinking.zpt: the client must send the reasoning back.
-  if is_call(previous, marker='"reasoning_test"'):
+  if is_call(previous, marker='reasoning_test=1'):
     if previous.get('reasoning_content') == REASONING_TEST_TEXT:
       return [text_chunk('The reasoning was sent back.')]
     return [text_chunk('The reasoning was lost.')]
@@ -253,18 +254,18 @@ def reply_to_tool_result():
 
   # testOfficeJSHarnessAIRepeatedToolCall.zpt: a model that ignores the guard
   # notice and never gives up - the client must stop the task itself.
-  if is_call(previous, 'http_request', '"stuck_test"'):
+  if is_call(previous, 'http_request', 'stuck_test=1'):
     return [tool_call_chunk('http_request', STUCK_TEST_ARGUMENTS)]
 
   # testOfficeJSHarnessAIRepeatedToolCall.zpt: define_tool is allow_repeat, so
   # all 4 identical calls must reach the real tool.
-  if (is_call(previous, 'define_tool', '"repeat_test"')
+  if (is_call(previous, 'define_tool', 'repeat_test')
       and count_calls('define_tool', DEFINE_TOOL_LIST_REPEAT_ARGUMENTS) < 4):
     return [tool_call_chunk('define_tool', DEFINE_TOOL_LIST_REPEAT_ARGUMENTS)]
 
   # testOfficeJSHarnessAICancelRequest.zpt: stall so the user can cancel after
   # some text was already written.
-  if is_call(previous, marker='"cancel_test"'):
+  if is_call(previous, marker='cancel_test=1'):
     time.sleep(5)
     return [text_chunk('Finished stalling.')]
 
@@ -294,12 +295,12 @@ def reply_to_user_message():
   # testOfficeJSHarnessAIToolCallHistory.zpt: a tool call that returns, then
   # a slow one cancelled while it runs, then a check of the history sent.
   if 'please start the tool history test' in text:
-    return [tool_call_chunk('http_request', {'url': ENDPOINT_URL, 'tool_history_test': True})]
+    return [tool_call_chunk('http_request', {'url': ENDPOINT_URL + '?tool_history_test=1'})]
   if 'please run the slow tool history step' in text:
     return [tool_call_chunk('run_javascript', {'code': TOOL_HISTORY_SLOW_CODE})]
   if 'please check the tool history' in text:
     return [text_chunk('Tool history: replayed=%s, missing result filled=%s.' % (
-        'Hello from the fake HTTP endpoint!' in tool_result_of('http_request', '"tool_history_test"'),
+        'Hello from the fake HTTP endpoint!' in tool_result_of('http_request', 'tool_history_test=1'),
         tool_result_of('run_javascript', 'tool-history-slow').startswith(
             'Not run: the task stopped')))]
 
@@ -335,7 +336,7 @@ def reply_to_user_message():
   if 'please work then stall for the cancel test' in text:
     return [
         text_chunk('WORK-DONE-BEFORE-CANCEL.'),
-        tool_call_chunk('http_request', {'url': ENDPOINT_URL, 'cancel_test': True}),
+        tool_call_chunk('http_request', {'url': ENDPOINT_URL + '?cancel_test=1'}),
     ]
   # Real providers are never instant: give the test time to click Cancel.
   if 'please stall for the cancel test' in text:
@@ -353,7 +354,7 @@ def reply_to_user_message():
   if 'repairable tool arguments test' in text:
     return [raw_tool_call_chunk('run_javascript', '{"code": "return \'repaired-json-ok\';\n"}')]
   if 'truncated tool call test' in text:
-    return [tool_call_chunk('http_request', {'url': ENDPOINT_URL, 'truncated_test': True},
+    return [tool_call_chunk('http_request', {'url': ENDPOINT_URL + '?truncated_test=1'},
                             finish_reason='length')]
 
   # testOfficeJSHarnessAIChat.zpt: frames separated by "\r\n\r\n" (see the end).
@@ -467,7 +468,7 @@ def reply_to_user_message():
   if 'report in tool turn test' in text:
     return [
         text_chunk('REPORT-BODY: the whole report.'),
-        tool_call_chunk('http_request', {'url': ENDPOINT_URL, 'report_test': True}),
+        tool_call_chunk('http_request', {'url': ENDPOINT_URL + '?report_test=1'}),
     ]
 
   # testOfficeJSHarnessAIThinking.zpt: reasoning streamed before a tool call,
@@ -476,7 +477,7 @@ def reply_to_user_message():
     return [
         reasoning_chunk(REASONING_TEST_TEXT[:20]),
         reasoning_chunk(REASONING_TEST_TEXT[20:]),
-        tool_call_chunk('http_request', {'url': ENDPOINT_URL, 'reasoning_test': True}),
+        tool_call_chunk('http_request', {'url': ENDPOINT_URL + '?reasoning_test=1'}),
     ]
 
   # testOfficeJSHarnessAIHttpRequestTool.zpt: the result lists the match.

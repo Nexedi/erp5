@@ -158,7 +158,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//li[contains(@class, 'post-question')][contains(., 'Please check the stored compaction test')]/following-sibling::li[1][contains(@class, 'post-answer')]//div[contains(@class, 'post-tool-entry')][contains(., 'Tool: compact_history') and contains(., 'Conversation getting long - summarizing')]</td>
+  <td>//li[contains(@class, 'post-question')][contains(., 'Please check the stored compaction test')]/following-sibling::li[1][contains(@class, 'post-answer')]//div[contains(@class, 'post-tool-entry')][contains(., 'Note: compact_history') and contains(., 'Conversation getting long - summarizing')]</td>
   <td></td>
 </tr>
 <tr>
@@ -205,7 +205,7 @@
 </tr>
 <tr>
   <td>assertElementNotPresent</td>
-  <td>//li[contains(@class, 'post-question')][contains(., 'Please check the stored compaction test again')]/following-sibling::li[1][contains(@class, 'post-answer')]//div[contains(@class, 'post-tool-entry')][contains(., 'Tool: compact_history')]</td>
+  <td>//li[contains(@class, 'post-question')][contains(., 'Please check the stored compaction test again')]/following-sibling::li[1][contains(@class, 'post-answer')]//div[contains(@class, 'post-tool-entry')][contains(., 'Note: compact_history')]</td>
   <td></td>
 </tr>
 </tbody></table>

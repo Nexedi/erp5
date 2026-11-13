@@ -110,12 +110,12 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[contains(@class, 'post-tool-entry')][contains(., 'Tool: context_overflow_retry') and contains(., 'context_length_exceeded')]</td>
+  <td>//div[contains(@class, 'post-tool-entry')][contains(., 'Note: context_overflow_retry') and contains(., 'context_length_exceeded')]</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[contains(@class, 'post-tool-entry')][contains(., 'Tool: compact_history') and contains(., 'Conversation getting long - summarizing')]</td>
+  <td>//div[contains(@class, 'post-tool-entry')][contains(., 'Note: compact_history') and contains(., 'Conversation getting long - summarizing')]</td>
   <td></td>
 </tr>
 <tr>

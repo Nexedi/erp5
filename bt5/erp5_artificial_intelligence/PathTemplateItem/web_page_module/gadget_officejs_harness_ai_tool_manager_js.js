@@ -94,6 +94,7 @@
     var tool = findClientTool(tool_call.function.name, tool_list),
       args = parseToolCallArguments(tool_call.function.arguments),
       start_time = Date.now(),
+      validation,
       result;
     if (args === null) {
       return {
@@ -114,6 +115,19 @@
         content: result
       };
     }
+    validation = window.ChatToolCommon.validateArguments(tool.definition.parameters, args);
+    if (validation.error_list.length) {
+      return {
+        tool_call_id: tool_call.id,
+        name: tool_call.function.name,
+        content: "Error: the arguments of this \"" + tool_call.function.name + "\" call do not match its " +
+          "parameters, so the tool was not run:\n- " + validation.error_list.join("\n- ") +
+          "\nReceived: " + (tool_call.function.arguments.length > 500 ?
+              tool_call.function.arguments.slice(0, 500) + "..." : tool_call.function.arguments) +
+          "\nRe-issue the call with valid arguments."
+      };
+    }
+    args = validation.args;
     return new RSVP.Queue()
       .push(function () {
         return tool.gadget ? tool.gadget.execute(args) : tool.execute(args);

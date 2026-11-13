@@ -58,7 +58,7 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[contains(@class, 'post-tool-entry')][contains(., 'Tool: cancelled') and contains(., 'Cancelled by user')]</td>
+  <td>//div[contains(@class, 'post-tool-entry')][contains(., 'Note: cancelled') and contains(., 'Cancelled by user')]</td>
   <td></td>
 </tr>
 <tr>

@@ -124,7 +124,7 @@
 </tr>
 <tr>
   <td>assertElementNotPresent</td>
-  <td>//div[contains(@class, 'post-tool-entry')][contains(., 'Tool: mcp_unavailable')]</td>
+  <td>//div[contains(@class, 'post-tool-entry')][contains(., 'Note: mcp_unavailable')]</td>
   <td></td>
 </tr>
 <tr>

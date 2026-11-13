@@ -38,7 +38,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[contains(@class, 'post-tool-entry')][contains(., 'Tool: rate_limit_retry') and contains(., 'retry 3 of 3')]</td>
+  <td>//div[contains(@class, 'post-tool-entry')][contains(., 'Note: rate_limit_retry') and contains(., 'retry 3 of 3')]</td>
   <td></td>
 </tr>
 <tr>
