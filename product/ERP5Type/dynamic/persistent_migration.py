@@ -269,6 +269,27 @@ def enable_zodbupdate_load_monkey_patch():
     from _compat_pickle import NAME_MAPPING
     from _compat_pickle import IMPORT_MAPPING
     from io import BytesIO
+    import re
+
+
+    # Python 2 accepts global inline flags anywhere in a regular expression,
+    # for example at the end of the result of fnmatch.translate, which
+    # Products.MimetypesRegistry stores compiled. Python >= 3.11 accepts them
+    # only at the start of the expression, so move them there.
+    global_flags_re = re.compile(r'\(\?[aiLmsux]+\)')
+    global_flags_bytes_re = re.compile(br'\(\?[aiLmsux]+\)')
+    def re_compile(pattern, flags):
+        try:
+            return re._compile(pattern, flags)
+        except re.error:
+            flags_re = global_flags_re if isinstance(pattern, str) \
+                else global_flags_bytes_re
+            flag_list = flags_re.findall(pattern)
+            if not flag_list:
+                raise
+            return re._compile(
+                pattern[:0].join(flag_list) + flags_re.sub(pattern[:0], pattern),
+                flags)
 
 
     from ZODB._compat import Unpickler
@@ -292,6 +313,8 @@ def enable_zodbupdate_load_monkey_patch():
     # the conversion regardless of the pickle protocol.
     _orig_Unpickler_find_class = Unpickler.find_class
     def _Unpickler_find_class(self, modulename, name):
+        if (modulename, name) == ('re', '_compile'):
+            return re_compile
         if (modulename, name) in NAME_MAPPING:
             modulename, name = NAME_MAPPING[(modulename, name)]
         if modulename in IMPORT_MAPPING:
@@ -311,6 +334,8 @@ def enable_zodbupdate_load_monkey_patch():
         conn = self._conn
 
         def find_global(modulename, name):
+            if (modulename, name) == ('re', '_compile'):
+                return re_compile
             if (modulename, name) in NAME_MAPPING:
                 modulename, name = NAME_MAPPING[(modulename, name)]
             if modulename in IMPORT_MAPPING:
