@@ -49,6 +49,22 @@ if listbox is not None:
     listbox_line_list.append(value)
   doaction_param_list['listbox'] = tuple(listbox_line_list)
 
+consistency_message = doaction_param_list.get('consistency', '')
+if consistency_message:
+  acknowledge = doaction_param_list.get('consistency_acknowledge', False)
+  if not acknowledge:
+    message = translateString("All warnings must be fixed or accepted.")
+    return context.Base_renderMessage(message, WARNING, request)
+  else:
+    comment = doaction_param_list.get('comment', '')
+    doaction_param_list['comment'] = translateString(
+      "Consistency issues: ${consistency_message}. ${original_comment}",
+      mapping={
+        "consistency_message": consistency_message,
+        "original_comment": comment,
+      }
+    )
+
 execution_date = doaction_param_list.pop('execution_date', None)
 if execution_date is not None:
   context.activate(
