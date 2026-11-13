@@ -223,7 +223,7 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
       # if one day Alarm is moved to component, then this test needs to be updated
       # with another module that lives on the file system.
       import Products.ERP5.Document.Alarm
-      self.assertIn('product/ERP5/Document/Alarm.py', Products.ERP5.Document.Alarm.__file__)
+      self.assertIn('Products/ERP5/Document/Alarm.py', Products.ERP5.Document.Alarm.__file__)
 
       # document classes are also dynamically loaded in Products.ERP5Type.Document module
       from Products.ERP5Type.Document.Alarm import Alarm as Alarm_from_ERP5Type  # pylint:disable=import-error,no-name-in-module

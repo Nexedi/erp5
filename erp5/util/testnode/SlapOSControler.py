@@ -25,7 +25,7 @@
 #
 ##############################################################################
 import os
-import pkg_resources
+import pkgutil
 import slapos.slap
 import subprocess
 import time
@@ -232,7 +232,7 @@ class SlapOSControler(object):
                               shared_part_list='\n  '.join(self.shared_part_list))
 
     with open(self.slapos_config, 'w') as f:
-      f.write(pkg_resources.resource_string(
+      f.write(pkgutil.get_data(
          'erp5.util.testnode', 'template/slapos.cfg.in').decode() %
            slapos_config_dict)
     # By erasing everything, we make sure that we are able to "update"
