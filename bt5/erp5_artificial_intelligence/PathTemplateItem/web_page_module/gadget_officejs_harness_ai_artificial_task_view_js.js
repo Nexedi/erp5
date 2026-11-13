@@ -1,4 +1,4 @@
-/*global window, rJS, RSVP, SimpleQuery, ComplexQuery, AbortController, fetch, TextDecoder */
+/*global window, rJS, RSVP, SimpleQuery, ComplexQuery, AbortController, TextDecoder */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 (function (window, rJS, RSVP, SimpleQuery, ComplexQuery) {
   "use strict";
@@ -13,27 +13,11 @@
   }
 
 
-  // JSON with every non-ASCII code point escaped, so it stays valid in an
-  // HTTP header (ported from ai-agent-harness's js/util.js asciiJSON).
-  function asciiJSON(value) {
-    return JSON.stringify(value).replace(/[\u0080-\uffff]/g, function (c) {
-      var code = c.charCodeAt(0).toString(16);
-      while (code.length < 4) {
-        code = "0" + code;
-      }
-      return "\\u" + code;
-    });
-  }
-
-
   function applyStreamChunk(json, state) {
     var choice = json.choices && json.choices[0], delta, grew = false, i, field;
     if (json.error) {
       state.error = json.error;
       return false;
-    }
-    if (json.model) {
-      state.model = json.model;
     }
     if (json.usage) {
       state.usage = json.usage;
@@ -60,11 +44,10 @@
     }
     if (delta.tool_calls) {
       delta.tool_calls.forEach(function (tc) {
-        var index = tc.index || 0, entry = state.tool_call_map[index];
+        var index = tc.index || 0, entry = state.tool_call_list[index];
         if (!entry) {
           entry = {id: tc.id || "", type: tc.type || "function", "function": {name: "", arguments: ""}};
-          state.tool_call_map[index] = entry;
-          state.tool_call_order.push(index);
+          state.tool_call_list[index] = entry;
         }
         if (tc.id) {
           entry.id = tc.id;
@@ -82,148 +65,130 @@
     return grew;
   }
 
-  // start_time: when the request was sent, to time the response: the
-  // result has timing {duration_ms, first_token_ms}, and its usage has
-  // duration_ms too, for the totals of the task.
   function consumeOpenAIStream(response, on_delta, start_time) {
     var reader = response.body.getReader(),
+      read_loop = new RSVP.Queue(),
       decoder = new TextDecoder(),
       buffer = "",
-      state = {content: "", reasoning: "", reasoning_field: null, model: null, usage: null, finish_reason: null,
-        done: false, first_token_time: null,
-        error: null, tool_call_map: {}, tool_call_order: []};
+      state = {content: "", reasoning: "", reasoning_field: null, usage: null, finish_reason: null,
+        done: false, first_token_time: null, error: null,
+        // The tool calls, by their index in the stream.
+        tool_call_list: []};
 
     // A frame may hold several "data:" lines: per the SSE spec they are one
     // value joined by "\n".
+    // Returns whether the content or the reasoning grew.
     function handleFrame(frame) {
       var data_line_list, data_line, json;
       data_line_list = frame.split("\n").filter(function (line) {
         return line.indexOf("data:") === 0;
       });
       if (!data_line_list.length) {
-        return;
+        return false;
       }
       data_line = data_line_list.map(function (line) {
         return line.slice(line.charAt(5) === " " ? 6 : 5);
       }).join("\n").trim();
       if (data_line === "[DONE]") {
         state.done = true;
-        return;
+        return false;
       }
       if (data_line === "") {
-        return;
+        return false;
       }
       try {
         json = JSON.parse(data_line);
       } catch (ignore) {
-        return;
+        return false;
       }
       if (state.first_token_time === null && json.choices && json.choices.length) {
         state.first_token_time = Date.now();
       }
-      if (applyStreamChunk(json, state) && on_delta) {
-        on_delta({content: state.content, reasoning: state.reasoning});
-      }
+      return applyStreamChunk(json, state);
     }
 
-    function pump() {
-      return new RSVP.Queue(reader.read()).push(function (step) {
-        var split;
-        if (step.done) {
-          if (buffer) {
-            handleFrame(buffer.replace(/\r/g, "\n"));
+    function loop() {
+      var tool_calls, timing, usage, result;
+      read_loop
+        .push(function () {
+          return reader.read();
+        })
+        .push(function (step) {
+          var split,
+            grew = false;
+          if (step.done) {
+            if (buffer) {
+              handleFrame(buffer.replace(/\r/g, "\n"));
+            }
+            if (state.error) {
+              throw new Error(typeof state.error === "string" ? state.error :
+                (state.error.message || JSON.stringify(state.error)));
+            }
+            // A forwarder relays the stream until its end of file: if the LLM
+            // server connection breaks, the stream just ends, without
+            // finish_reason nor [DONE]. Its content is then incomplete.
+            if (!state.done && !state.finish_reason) {
+              throw new Error("LLM stream ended before the end of the response: the connection was lost");
+            }
+            tool_calls = state.tool_call_list.filter(Boolean);
+            timing = {
+              duration_ms: Date.now() - start_time,
+              first_token_ms: state.first_token_time === null ? null : state.first_token_time - start_time
+            };
+            // The usage reported by the server (0 if it did not), in the shape
+            // of the usage totals the callers add up (ChatToolCommon.addUsageTotals).
+            // cached_tokens: the prompt tokens read from the prompt cache of the
+            // server (prompt_tokens_details.cached_tokens of OpenAI, vLLM,
+            // llama.cpp and OpenRouter, prompt_cache_hit_tokens of DeepSeek).
+            usage = state.usage || {};
+            usage = {
+              call_count: 1,
+              prompt_tokens: usage.prompt_tokens || 0,
+              completion_tokens: usage.completion_tokens || 0,
+              total_tokens: usage.total_tokens || ((usage.prompt_tokens || 0) + (usage.completion_tokens || 0)),
+              cached_tokens: (usage.prompt_tokens_details && usage.prompt_tokens_details.cached_tokens) ||
+                usage.prompt_cache_hit_tokens || 0,
+              duration_ms: timing.duration_ms
+            };
+            result = {content: state.content, reasoning: state.reasoning, finish_reason: state.finish_reason,
+              usage: usage, timing: timing};
+            if (tool_calls.length) {
+              result.tool_calls = tool_calls;
+              // The assistant message to append to the conversation before the
+              // tool results. The reasoning is sent back in the field the server
+              // used, so the model still sees why it made these calls.
+              result.message = {role: "assistant", content: state.content, tool_calls: tool_calls};
+              if (state.reasoning) {
+                result.message[state.reasoning_field] = state.reasoning;
+              }
+            }
+            return result;
           }
-          return;
-        }
-        // Servers may frame events with "\r\n": normalize before splitting.
-        // A lone "\r" at the end may be the first half of a "\r\n" split
-        // across two reads, so it waits for the next one.
-        buffer = (buffer + decoder.decode(step.value, {stream: true})).replace(/\r\n|\r(?!$)/g, "\n");
-        split = buffer.indexOf("\n\n");
-        while (split !== -1) {
-          handleFrame(buffer.slice(0, split));
-          buffer = buffer.slice(split + 2);
+          // Servers may frame events with "\r\n": normalize before splitting.
+          // A lone "\r" at the end may be the first half of a "\r\n" split
+          // across two reads, so it waits for the next one.
+          buffer = (buffer + decoder.decode(step.value, {stream: true})).replace(/\r\n|\r(?!$)/g, "\n");
           split = buffer.indexOf("\n\n");
-        }
-        return pump();
-      });
+          while (split !== -1) {
+            grew = handleFrame(buffer.slice(0, split)) || grew;
+            buffer = buffer.slice(split + 2);
+            split = buffer.indexOf("\n\n");
+          }
+          loop();
+          // Shown once per chunk, and waited for, before the next chunk: a
+          // later display, like the one of the final answer, can not come
+          // before it.
+          if (grew && on_delta) {
+            return on_delta({content: state.content, reasoning: state.reasoning});
+          }
+        });
     }
 
-    return new RSVP.Queue()
-      .push(function () {
-        return pump();
-      })
-      .push(function () {
-        var tool_calls, message, timing, usage;
-        if (state.error) {
-          throw new Error(typeof state.error === "string" ? state.error :
-            (state.error.message || JSON.stringify(state.error)));
-        }
-        // A forwarder relays the stream until its end of file: if the LLM
-        // server connection breaks, the stream just ends, without
-        // finish_reason nor [DONE]. Its content is then incomplete.
-        if (!state.done && !state.finish_reason) {
-          throw new Error("LLM stream ended before the end of the response: the connection was lost");
-        }
-        tool_calls = state.tool_call_order.map(function (index) {
-          return state.tool_call_map[index];
-        });
-        timing = {
-          duration_ms: Date.now() - start_time,
-          first_token_ms: state.first_token_time === null ? null : state.first_token_time - start_time
-        };
-        // The usage reported by the server (0 if it did not), in the shape
-        // of the usage totals the callers add up (ChatToolCommon.addUsageTotals).
-        // cached_tokens: the prompt tokens read from the prompt cache of the
-        // server (prompt_tokens_details.cached_tokens of OpenAI, vLLM,
-        // llama.cpp and OpenRouter, prompt_cache_hit_tokens of DeepSeek).
-        usage = state.usage || {};
-        usage = {
-          call_count: 1,
-          prompt_tokens: usage.prompt_tokens || 0,
-          completion_tokens: usage.completion_tokens || 0,
-          total_tokens: usage.total_tokens || ((usage.prompt_tokens || 0) + (usage.completion_tokens || 0)),
-          cached_tokens: (usage.prompt_tokens_details && usage.prompt_tokens_details.cached_tokens) ||
-            usage.prompt_cache_hit_tokens || 0,
-          duration_ms: timing.duration_ms
-        };
-        if (tool_calls.length) {
-          // The assistant message to append to the conversation before the
-          // tool results. The reasoning is sent back in the field the server
-          // used, so the model still sees why it made these calls.
-          message = {role: "assistant", content: state.content || "", tool_calls: tool_calls};
-          if (state.reasoning && state.reasoning_field) {
-            message[state.reasoning_field] = state.reasoning;
-          }
-          return {content: state.content || "", tool_calls: tool_calls, message: message, usage: usage,
-            finish_reason: state.finish_reason, reasoning: state.reasoning, reasoning_field: state.reasoning_field,
-            timing: timing};
-        }
-        return {content: state.content, model: state.model, usage: usage, finish_reason: state.finish_reason,
-          reasoning: state.reasoning, reasoning_field: state.reasoning_field, timing: timing};
-      });
+    loop();
+    return read_loop;
   }
 
 
-
-  // The row of the Artificial Task Compaction of the task, or null.
-  function findTaskCompactionRow(gadget, document_id) {
-    return gadget.jio_allDocs({
-      query: new ComplexQuery({
-        operator: "AND",
-        type: "complex",
-        query_list: [
-          new SimpleQuery({key: "portal_type", type: "simple", value: "Artificial Task Compaction"}),
-          new SimpleQuery({key: "parent_relative_url", type: "simple", value: document_id})
-        ]
-      }),
-      select_list: ["text_content", "int_index"],
-      limit: [0, 1]
-    })
-      .push(function (result) {
-        return (result.data.rows || [])[0] || null;
-      });
-  }
 
   rJS(window)
     .declareAcquiredMethod("updateHeader", "updateHeader")
@@ -339,11 +304,29 @@
           });
         });
     })
+    // The row of the Artificial Task Compaction of the task, or null.
+    .declareMethod('findTaskCompactionRow', function (document_id) {
+      return this.jio_allDocs({
+        query: new ComplexQuery({
+          operator: "AND",
+          type: "complex",
+          query_list: [
+            new SimpleQuery({key: "portal_type", type: "simple", value: "Artificial Task Compaction"}),
+            new SimpleQuery({key: "parent_relative_url", type: "simple", value: document_id})
+          ]
+        }),
+        select_list: ["text_content", "int_index"],
+        limit: [0, 1]
+      })
+        .push(function (result) {
+          return (result.data.rows || [])[0] || null;
+        });
+    })
     // The summary of the older posts of the task, stored by
     // storeTaskCompaction: {summary, summarized_before_int_index}, or null. The
     // posts before summarized_before_int_index are replaced by the summary.
     .allowPublicAcquisition('getTaskCompaction', function (argument_list) {
-      return findTaskCompactionRow(this, argument_list[0])
+      return this.findTaskCompactionRow(argument_list[0])
         .push(function (row) {
           if (!row || !row.value.text_content) {
             return null;
@@ -366,7 +349,7 @@
           int_index: compaction.summarized_before_int_index,
           date: new Date().toISOString()
         };
-      return findTaskCompactionRow(gadget, document_id)
+      return gadget.findTaskCompactionRow(document_id)
         .push(function (row) {
           if (row) {
             return gadget.jio_put(row.id, doc);
@@ -470,56 +453,32 @@
         body = argument_list[1],
         settings = gadget.llm_settings,
         controller = new AbortController(),
-        target = settings.baseUrl ?
-            settings.baseUrl.replace(/\/+$/, '') + "/" + (settings.endpoint || "chat/completions").replace(/^\/+/, '') :
-            "",
-        payload,
+        target,
         tool_definition_list,
-        // When the request is sent, to time it.
-        start_time,
-        fetch_url,
-        fetch_options;
+        payload;
 
       if (!settings.apiKey || !settings.baseUrl) {
         throw new Error(
           "No LLM API key/base URL configured - open Setting from the panel first."
         );
       }
-
+      target = settings.baseUrl.replace(/\/+$/, '') + "/" + settings.endpoint.replace(/^\/+/, '');
+      tool_definition_list = JSON.parse(body.tool_definition_list);
+      // A field set to undefined is left out of the JSON.
       payload = {
         model: settings.model,
         stream: true,
         stream_options: {include_usage: true},
-        messages: JSON.parse(body.message_list)
+        messages: JSON.parse(body.message_list),
+        // Some servers reject an empty tools list.
+        tools: tool_definition_list.length ? tool_definition_list : undefined,
+        chat_template_kwargs: settings.thinking ? {enable_thinking: true, preserve_thinking: true} : undefined
       };
-      tool_definition_list = JSON.parse(body.tool_definition_list);
-      // if thinking is enabled
-      if (settings.thinking) {
-        payload.chat_template_kwargs = {enable_thinking: true, preserve_thinking: true};
-      }
-      if (tool_definition_list.length) {
-        payload.tools = tool_definition_list;
-      }
 
-      if (settings.proxy_server_url) {
-        fetch_url = settings.proxy_server_url.replace(/\/+$/, '') + "/proxy";
-        fetch_options = {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/octet-stream",
-            "X-Target-URL": encodeURI(target),
-            "X-Target-Method": "POST",
-            "X-Target-Headers": asciiJSON({
-              "Content-Type": "application/json",
-              "Authorization": "Bearer " + settings.apiKey
-            })
-          },
-          body: JSON.stringify(payload),
-          signal: controller.signal
-        };
-      } else {
-        fetch_url = target;
-        fetch_options = {
+      return new RSVP.Promise(function (resolve, reject) {
+        // When the request is sent, to time it.
+        var start_time = Date.now();
+        window.ChatToolCommon.proxyFetch(settings.proxy_server_url, target, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -527,29 +486,23 @@
           },
           body: JSON.stringify(payload),
           signal: controller.signal
-        };
-      }
-
-      return new RSVP.Promise(function (resolve, reject) {
-        start_time = Date.now();
-        fetch(fetch_url, fetch_options)
+        })
           .then(function (response) {
             if (!response.ok) {
-              return response.text().then(function (text) {
-                var error = new Error("LLM " + response.status + " error: " + text.slice(0, 1000)),
-                  retry_after_ms = response.headers.get("retry-after-ms"),
-                  retry_after = response.headers.get("retry-after");
-                // Kept on the error so the agent can wait as long as the
-                // server asks before retrying a 429 or 5xx.
-                error.status = response.status;
-                if (retry_after_ms && !isNaN(Number(retry_after_ms))) {
-                  error.retry_after_ms = Number(retry_after_ms);
-                } else if (retry_after) {
-                  error.retry_after_ms = !isNaN(Number(retry_after)) ? Number(retry_after) * 1000 :
-                      Math.max(0, Date.parse(retry_after) - Date.now()) || undefined;
-                }
-                throw error;
-              });
+              return new RSVP.Queue(response.text())
+                .push(function (text) {
+                  var error = new Error("LLM " + response.status + " error: " + text.slice(0, 1000)),
+                    // retry-after-ms, otherwise retry-after in seconds, or
+                    // as a date.
+                    retry_after_ms = Number(response.headers.get("retry-after-ms")) ||
+                      Number(response.headers.get("retry-after")) * 1000 ||
+                      Date.parse(response.headers.get("retry-after")) - Date.now();
+                  // Kept on the error so the agent can wait as long as the
+                  // server asks before retrying a 429 or 5xx.
+                  error.status = response.status;
+                  error.retry_after_ms = retry_after_ms > 0 ? retry_after_ms : undefined;
+                  throw error;
+                });
             }
             return consumeOpenAIStream(
               response,
@@ -567,9 +520,7 @@
     })
     .allowPublicAcquisition('getModelContextWindow', function () {
       var gadget = this,
-        settings = gadget.llm_settings,
-        target,
-        headers;
+        settings = gadget.llm_settings;
       // Fetched once per render: undefined = not fetched yet, null = unknown.
       if (gadget.model_context_window !== undefined) {
         return gadget.model_context_window;
@@ -577,22 +528,10 @@
       if (!settings.apiKey || !settings.baseUrl || !settings.model) {
         return null;
       }
-      target = settings.baseUrl.replace(/\/+$/, '') + "/models";
-      headers = {"Authorization": "Bearer " + settings.apiKey};
       return new RSVP.Queue()
         .push(function () {
-          if (settings.proxy_server_url) {
-            return fetch(settings.proxy_server_url.replace(/\/+$/, '') + "/proxy", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/octet-stream",
-                "X-Target-URL": encodeURI(target),
-                "X-Target-Method": "GET",
-                "X-Target-Headers": asciiJSON(headers)
-              }
-            });
-          }
-          return fetch(target, {headers: headers});
+          return window.ChatToolCommon.proxyFetch(settings.proxy_server_url,
+            settings.baseUrl.replace(/\/+$/, '') + "/models", {headers: {"Authorization": "Bearer " + settings.apiKey}});
         })
         .push(function (response) {
           if (!response.ok) {

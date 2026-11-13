@@ -1,4 +1,4 @@
-/*global window, document, Worker, URL, RSVP, setTimeout, clearTimeout */
+/*global window, document, Worker, URL, RSVP, setTimeout, clearTimeout, fetch */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 (function (window, document) {
   "use strict";
@@ -96,6 +96,48 @@
       usage_totals.duration_ms += added_usage_totals.duration_ms || 0;
     }
     return usage_totals;
+  }
+
+  // JSON with every non-ASCII code point escaped, so it stays valid in an
+  // HTTP header.
+  function asciiJSON(value) {
+    return JSON.stringify(value).replace(/[\u0080-\uffff]/g, function (c) {
+      var code = c.charCodeAt(0).toString(16);
+      while (code.length < 4) {
+        code = "0" + code;
+      }
+      return "\\u" + code;
+    });
+  }
+
+  // fetch() of url: directly, or through the proxy at proxy_server_url if
+  // it is set, which forwards the request given in its X-Target-* headers,
+  // to get around the CORS restriction of the browser.
+  // option_dict: method (default GET), headers, body, signal, credentials.
+  function proxyFetch(proxy_server_url, url, option_dict) {
+    var method = option_dict.method || "GET",
+      headers = option_dict.headers || {};
+    if (!proxy_server_url) {
+      return fetch(url, {
+        method: method,
+        headers: headers,
+        body: option_dict.body,
+        signal: option_dict.signal,
+        credentials: option_dict.credentials
+      });
+    }
+    return fetch(proxy_server_url.replace(/\/+$/, "") + "/proxy", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/octet-stream",
+        "X-Target-URL": encodeURI(url),
+        "X-Target-Method": method,
+        "X-Target-Headers": asciiJSON(headers)
+      },
+      body: option_dict.body,
+      signal: option_dict.signal,
+      credentials: option_dict.credentials
+    });
   }
 
   function decodeHtmlEntities(text) {
@@ -301,6 +343,7 @@
   }
 
   window.ChatToolCommon = {
+    proxyFetch: proxyFetch,
     TEXT_WINDOW_CHARS: TEXT_WINDOW_CHARS,
     TEXT_SEARCH_MAX_MATCHES: TEXT_SEARCH_MAX_MATCHES,
     TEXT_SEARCH_CONTEXT_CHARS: TEXT_SEARCH_CONTEXT_CHARS,

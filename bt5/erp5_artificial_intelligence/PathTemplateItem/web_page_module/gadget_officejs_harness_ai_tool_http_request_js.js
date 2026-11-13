@@ -1,19 +1,7 @@
-/*global window, rJS, RSVP, AbortController, fetch */
+/*global window, rJS, RSVP, AbortController */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 (function (window, rJS, RSVP) {
   "use strict";
-
-  // JSON with every non-ASCII code point escaped, so it stays valid in an
-  // HTTP header (ported from ai-agent-harness's js/util.js asciiJSON).
-  function asciiJSON(value) {
-    return JSON.stringify(value).replace(/[\u0080-￿]/g, function (c) {
-      var code = c.charCodeAt(0).toString(16);
-      while (code.length < 4) {
-        code = "0" + code;
-      }
-      return "\\u" + code;
-    });
-  }
 
   var HTTP_TEXT_WINDOW_CHARS = 8000,
     // Appended to failures, so the model moves on instead of retrying the
@@ -91,8 +79,6 @@
         target = args.url,
         method = (args.method || "GET").toUpperCase(),
         request_headers = args.headers || {},
-        fetch_url,
-        fetch_options,
         raw_promise;
 
       if (!target) {
@@ -101,33 +87,14 @@
 
       // Requests never carry this site's cookies (credentials "omit"): the
       // model must not act on the site as the logged-in user.
-      if (gadget.proxy_server_url) {
-        fetch_url = gadget.proxy_server_url.replace(/\/+$/, '') + "/proxy";
-        fetch_options = {
-          method: "POST",
-          credentials: "omit",
-          headers: {
-            "Content-Type": "application/octet-stream",
-            "X-Target-URL": encodeURI(target),
-            "X-Target-Method": method,
-            "X-Target-Headers": asciiJSON(request_headers)
-          },
-          body: args.body,
-          signal: controller.signal
-        };
-      } else {
-        fetch_url = target;
-        fetch_options = {
+      raw_promise = new RSVP.Promise(function (resolve, reject) {
+        window.ChatToolCommon.proxyFetch(gadget.proxy_server_url, target, {
           method: method,
-          credentials: "omit",
           headers: request_headers,
           body: args.body,
-          signal: controller.signal
-        };
-      }
-
-      raw_promise = new RSVP.Promise(function (resolve, reject) {
-        fetch(fetch_url, fetch_options)
+          signal: controller.signal,
+          credentials: "omit"
+        })
           .then(function (response) {
             var content_type = response.headers.get("content-type") || "",
               status = response.status,

@@ -1,4 +1,4 @@
-/*global window, rJS, RSVP, fetch, Option */
+/*global window, rJS, RSVP, Option */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 (function (window, rJS, RSVP) {
   "use strict";
@@ -7,20 +7,6 @@
     var version = window.location.href.replace(window.location.hash, ""),
       index = version.indexOf(window.location.host) + window.location.host.length;
     return version.substr(index);
-  }
-
-  // JSON with every non-ASCII code point escaped, so it stays valid in an
-  // HTTP header - same helper as gadget_officejs_harness_ai_artificial_task_view_js.js's
-  // asciiJSON, duplicated here since this file has no dependency on that one.
-  function asciiJSON(value) {
-    var escape_non_ascii = /[\u0080-\uffff]/g;
-    return JSON.stringify(value).replace(escape_non_ascii, function (c) {
-      var code = c.charCodeAt(0).toString(16);
-      while (code.length < 4) {
-        code = "0" + code;
-      }
-      return "\\u" + code;
-    });
   }
 
   rJS(window)
@@ -141,21 +127,8 @@
 
       return new RSVP.Queue()
         .push(function () {
-          var target = base_url.replace(/\/+$/, "") + "/models";
-          if (gadget.state.proxy_server_url) {
-            return fetch(gadget.state.proxy_server_url.replace(/\/+$/, "") + "/proxy", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/octet-stream",
-                "X-Target-URL": encodeURI(target),
-                "X-Target-Method": "GET",
-                "X-Target-Headers": asciiJSON({Authorization: "Bearer " + api_key})
-              }
-            });
-          }
-          return fetch(target, {
-            headers: {Authorization: "Bearer " + api_key}
-          });
+          return window.ChatToolCommon.proxyFetch(gadget.state.proxy_server_url,
+            base_url.replace(/\/+$/, "") + "/models", {headers: {Authorization: "Bearer " + api_key}});
         })
         .push(function (response) {
           if (!response.ok) {
