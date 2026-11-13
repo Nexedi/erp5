@@ -1,7 +1,7 @@
-REPLACE INTO
+<dtml-let column_list="['version', 'size', 'language', 'revision', 'subject_set_uid', 'effective_date', 'expiration_date', 'creation_date_index', 'frequency_index']">
+INSERT INTO
   versioning
-  (`uid`, `version`, `size`, `language`, `revision`, `subject_set_uid`, `effective_date`,
-   `expiration_date`, `creation_date_index`, `frequency_index`)
+  (`uid`, <dtml-in column_list>`<dtml-var sequence-item>`<dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>)
 VALUES
 <dtml-in prefix="loop" expr="_.range(_.len(uid))">
 (
@@ -21,3 +21,8 @@ VALUES
 ,
 </dtml-if>
 </dtml-in>
+ON DUPLICATE KEY UPDATE
+<dtml-in column_list>
+  `<dtml-var sequence-item>` = VALUES(`<dtml-var sequence-item>`)<dtml-if sequence-end><dtml-else>,</dtml-if>
+</dtml-in>
+</dtml-let>
