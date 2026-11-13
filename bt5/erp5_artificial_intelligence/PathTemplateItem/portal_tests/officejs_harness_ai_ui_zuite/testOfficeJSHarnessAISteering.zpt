@@ -1,0 +1,252 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test OfficeJS Harness AI - Steering</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test OfficeJS Harness AI - Steering</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/officejs_harness_ai/</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForHarnessAI/macros/setup_fake_llm_and_new_task" />
+<!-- Steering: a post sent while the agent runs is added after the tool result, before the next LLM request. It goes above the answer, which keeps its tool calls -->
+<tr>
+  <td>waitForEval</td>
+  <td>(function(){var cm=window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror;cm.setValue('please stall then call a tool for the steering test');return cm.getValue();})()</td>
+  <td>please stall then call a tool for the steering test</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForVisible</td>
+  <td>id=cancel_button</td>
+  <td></td>
+</tr>
+<!-- Let the first LLM request start (it stalls 5s), so the next post is queued during it -->
+<tr>
+  <td>pause</td>
+  <td>1500</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForEval</td>
+  <td>(function(){var cm=window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror;cm.setValue('steering message');return cm.getValue();})()</td>
+  <td>steering message</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//li[contains(@class, 'post-question') and contains(@class, 'post-queued')][contains(., 'steering message')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//li[contains(@class, 'post-queued')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//li[contains(@class, 'post-question')][not(contains(@class, 'post-queued'))][contains(., 'steering message')]/following-sibling::li[1][contains(@class, 'post-answer')]//div[@class='post-markdown'][contains(., 'STEERING-RECEIVED after tool.')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//li[contains(@class, 'post-question')][not(contains(@class, 'post-queued'))][contains(., 'steering message')]/following-sibling::li[1][contains(@class, 'post-answer')]//div[contains(@class, 'post-tool-entry')][contains(., 'http_request')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//li[contains(@class, 'post-question')][not(contains(@class, 'post-queued'))][contains(., 'steering message')]/preceding-sibling::li[1][contains(@class, 'post-question')][contains(., 'please stall then call a tool for the steering test')]</td>
+  <td></td>
+</tr>
+<!-- Follow-up: a post sent while the model writes its final answer starts a new turn once the answer is stored -->
+<tr>
+  <td>waitForEval</td>
+  <td>(function(){var cm=window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror;cm.setValue('please stall for the cancel test');return cm.getValue();})()</td>
+  <td>please stall for the cancel test</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForVisible</td>
+  <td>id=cancel_button</td>
+  <td></td>
+</tr>
+<!-- Let the first LLM request start (it stalls 5s), so the next post is queued during it -->
+<tr>
+  <td>pause</td>
+  <td>1500</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForEval</td>
+  <td>(function(){var cm=window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror;cm.setValue('follow up message');return cm.getValue();})()</td>
+  <td>follow up message</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//li[contains(@class, 'post-question') and contains(@class, 'post-queued')][contains(., 'follow up message')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Completed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//li[contains(@class, 'post-question')][not(contains(@class, 'post-queued'))][contains(., 'follow up message')]/following-sibling::li[1]//div[@class='post-markdown'][contains(., 'FOLLOW-UP-RECEIVED after 2 answer(s).')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//li[contains(@class, 'post-question')][not(contains(@class, 'post-queued'))][contains(., 'follow up message')]/preceding-sibling::li[1]//div[@class='post-markdown'][contains(., 'Finished stalling.')]</td>
+  <td></td>
+</tr>
+<!-- Cancel: the queued post is dropped, with what the agent was doing -->
+<tr>
+  <td>waitForEval</td>
+  <td>(function(){var cm=window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror;cm.setValue('please stall for the cancel test');return cm.getValue();})()</td>
+  <td>please stall for the cancel test</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForVisible</td>
+  <td>id=cancel_button</td>
+  <td></td>
+</tr>
+<!-- Let the first LLM request start (it stalls 5s), so the next post is queued during it -->
+<tr>
+  <td>pause</td>
+  <td>1500</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForEval</td>
+  <td>(function(){var cm=window.document.querySelector('.chat-editor iframe').contentWindow.document.querySelector('.CodeMirror').CodeMirror;cm.setValue('queued during cancel');return cm.getValue();})()</td>
+  <td>queued during cancel</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@data-i18n='[value]Post Comment'][not(@disabled)]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//li[contains(@class, 'post-question') and contains(@class, 'post-queued')][contains(., 'queued during cancel')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>id=cancel_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Cancelled']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Cancelled']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Cancelled']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//li[contains(@class, 'post-question')][contains(., 'queued during cancel')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//li[contains(@class, 'post-question')][contains(., 'please stall for the cancel test')]/following-sibling::li[1][contains(@class, 'post-answer')]//div[contains(@class, 'post-tool-entry')][contains(., 'Cancelled by user')]</td>
+  <td></td>
+</tr>
+</tbody></table>
+</body>
+</html>
