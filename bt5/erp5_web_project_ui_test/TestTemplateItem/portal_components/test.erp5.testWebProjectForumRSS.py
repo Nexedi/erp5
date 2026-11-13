@@ -890,6 +890,13 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     result = self.portal.Base_filterProjectActions(actions=actions)
     self.assertNotIn('object_new_content_action', result)
 
+  def test_filter_project_actions_drops_add_on_task_module(self):
+    """Tasks are created from a project's actions only, so they always have a project."""
+    self.portal.REQUEST.form['relative_url'] = self.portal.task_module.getRelativeUrl()
+    actions = {'object_new_content_action': [{'id': 'create_a_document'}]}
+    result = self.portal.Base_filterProjectActions(actions=actions)
+    self.assertNotIn('object_new_content_action', result)
+
   def test_filter_project_actions_keeps_add_on_other_modules(self):
     self.portal.REQUEST.form['relative_url'] = self.portal.project_module.getRelativeUrl()
     add_action_list = [{'id': 'create_a_document'}]
