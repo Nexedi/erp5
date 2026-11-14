@@ -1,3 +1,4 @@
+extension.erp5.ERP5Forge
 extension.erp5.Glossary
 extension.erp5.ProxyFieldUtils
 extension.erp5.PythonScriptParserUtility
