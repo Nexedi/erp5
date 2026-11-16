@@ -54,6 +54,9 @@
     .tick line {
       stroke: white;
     }
+    #CopyPasteDiv {
+      display: none;
+    }
   </style>
 </head>
 
@@ -245,6 +248,12 @@
           })).change(function(){editor.setValue($("#presets").val()); redraw();});
 
           redraw();
+
+          // Workaround Handsontable's CopyPasteDiv stealing Ctrl keypresses on monaco
+          document.addEventListener("click", (e) => {
+            document.getElementById("CopyPasteDiv").style.display =
+              e.target.closest(".handsontable") === null ? "none" : "block";
+          });
         });
       });
   </script>
