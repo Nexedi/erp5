@@ -96,6 +96,7 @@
                         <string>your_title</string>
                         <string>your_description</string>
                         <string>your_bug_severity</string>
+                        <string>your_resource</string>
                       </list>
                     </value>
                 </item>
