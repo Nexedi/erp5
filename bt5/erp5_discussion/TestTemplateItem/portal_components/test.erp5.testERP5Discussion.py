@@ -522,6 +522,17 @@ class TestERP5Discussion(DocumentUploadTestCase):
     self.assertIn('DiscussionThread_viewCreateNewDiscussionPostWebDialog', html)
     self.assertIn('class="left reply-dialog', html)
 
+  def test_thread_reader_gets_the_post_count(self):
+    """The thread reader shows "Page x of N" from this count, computed when
+    the page is rendered, so it costs no extra request."""
+    thread = self.stepCreateThread()
+    self.stepCreatePost(thread)
+    self.stepCreatePost(thread)
+    self.tic()
+    renderjs_extra = dict(
+      thread.DiscussionThread_viewPostList.my_posts.get_value('renderjs_extra'))
+    self.assertEqual(2, renderjs_extra['post_count'])
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestERP5Discussion))
