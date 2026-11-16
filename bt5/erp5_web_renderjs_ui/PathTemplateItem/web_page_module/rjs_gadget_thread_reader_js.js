@@ -80,8 +80,12 @@
       };
     } else {
       span_dict = {
-        text: 'Page ' + Math.ceil((gadget.state.begin_from + count) / gadget.state.lines)
+        text: 'Page ' + (Math.floor(gadget.state.begin_from / gadget.state.lines) + 1)
       };
+      if (gadget.state.post_count !== undefined) {
+        span_dict.text += ' of ' +
+          Math.max(1, Math.ceil(gadget.state.post_count / gadget.state.lines));
+      }
     }
 
     console.warn(gadget.state);
@@ -165,6 +169,7 @@
             content_column: options.content_column || 'asStrippedHTML',
             attachment_column: options.attachment_column || 'Event_getAttachmentList',
             post_link: options.post_link || false,
+            post_count: options.post_count,
             // Force line calculation in any case
             render_timestamp: new Date().getTime(),
             first_render: true,

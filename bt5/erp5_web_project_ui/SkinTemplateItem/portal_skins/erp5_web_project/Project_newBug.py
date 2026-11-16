@@ -14,6 +14,8 @@ if portal_type not in module.getVisibleAllowedContentTypeList():
 bug_kw = {}
 if bug_severity:
   bug_kw['bug_severity'] = bug_severity
+if resource:
+  bug_kw['resource'] = resource
 
 bug = module.newContent(portal_type=portal_type,
                         title=title,
