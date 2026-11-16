@@ -499,6 +499,29 @@ class TestERP5Discussion(DocumentUploadTestCase):
       self.assertIn('discussion_thread_module/', guid)
     self.assertEqual(len(guids), len(set(guids)), 'guids must be unique per post')
 
+  def test_web_reply_dialog_keeps_the_old_web_layout(self):
+    """Old web themes size the reply editor only in the 'left reply-dialog'
+    group, while RenderJS shows it full width in 'center', so the web Reply
+    button renders a web copy of the stock dialog."""
+    skin = self.portal.portal_skins.erp5_discussion
+    stock_form = skin.DiscussionThread_viewCreateNewDiscussionPostDialog
+    web_form = skin.DiscussionThread_viewCreateNewDiscussionPostWebDialog
+    self.assertIn('your_text_content', [
+      field.getId() for field in stock_form.get_fields_in_group('center')])
+    self.assertEqual(
+      ['your_title', 'your_text_content', 'your_file', 'your_captcha', 'your_warning'],
+      [field.getId() for field in web_form.get_fields_in_group('left reply-dialog')])
+    self.assertEqual((stock_form.title, stock_form.action, stock_form.enctype),
+                     (web_form.title, web_form.action, web_form.enctype))
+    for field in web_form.get_fields():
+      self.assertEqual((stock_form.getId(), field.getId()),
+                       (field.values['form_id'], field.values['field_id']))
+
+  def test_web_reply_button_renders_the_web_dialog(self):
+    html = self.stepCreateThread().DiscussionThread_redirectCreateNewDiscussionPost()
+    self.assertIn('DiscussionThread_viewCreateNewDiscussionPostWebDialog', html)
+    self.assertIn('class="left reply-dialog', html)
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestERP5Discussion))
