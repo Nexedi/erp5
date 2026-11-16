@@ -28,6 +28,8 @@ line = bug.newContent(title="%s %s was %s" % (bug.getPortalType(),
                       portal_type="Bug Line",
                       text_content=comment,
                       content_type='text/plain')
+# Workflow_statusModify lands on the new line: the bug messages only list it once indexed
+bug.REQUEST.set('redirect_document_path', line.getRelativeUrl())
 if send_event:
   # This will post The message Automatically.
   line.start()
