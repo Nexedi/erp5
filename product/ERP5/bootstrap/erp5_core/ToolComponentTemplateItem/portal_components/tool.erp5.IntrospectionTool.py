@@ -29,6 +29,7 @@
 
 import os
 import sys
+import six
 import tempfile
 import json
 import tarfile
@@ -346,10 +347,17 @@ class IntrospectionTool(LogMixin, BaseTool):
       NOTE: consider using autoconf / automake tools ?
     """
     def cached_getSystemVersionDict():
-      import pkg_resources
       version_dict = {}
-      for dist in pkg_resources.working_set:  # pylint:disable=not-an-iterable
-        version_dict[dist.key] = dist.version
+      if six.PY2:
+        import pkg_resources
+        for dist in pkg_resources.working_set:  # pylint:disable=not-an-iterable
+          version_dict[dist.key] = dist.version
+      else:
+        import importlib.metadata  # pylint:disable=import-error
+        for dist in importlib.metadata.distributions():
+          dist_name = dist.metadata.get('Name')
+          if dist_name:
+            version_dict[dist_name.lower()] = dist.version
 
       from Products import ERP5 as erp5_product
       erp5_product_path = os.path.dirname(erp5_product.__file__)
