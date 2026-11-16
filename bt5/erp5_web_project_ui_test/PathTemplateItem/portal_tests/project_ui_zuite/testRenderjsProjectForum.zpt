@@ -305,7 +305,7 @@
 <!-- check reader -->
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_thread_reader.html']//nav//span[text()='Page 1']</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_thread_reader.html']//nav//span[text()='Page 1 of 1']</td>
   <td></td>
 </tr>
 <tr>
@@ -333,6 +333,44 @@
 <tr>
   <td>assertElementPresent</td>
   <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_thread_reader.html']//ol//li//ul//li//a[text()='test-attachment.txt']</td>
+  <td></td>
+</tr>
+<!-- 15 more posts: 2 pages of 15 lines, the extra post loaded to enable
+     Next must not shift the page number -->
+<tr>
+  <td>storeLocation</td>
+  <td>thread_url</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/portal_skins/erp5_web_project_test/ERP5Site_addTestForumPostList?thread_title=Thread%201&amp;post_count=15</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Posts Added</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+<tr>
+  <td>open</td>
+  <td>${thread_url}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_thread_reader.html']//nav//span[text()='Page 1 of 2']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_thread_reader.html']//nav//a[text()='Next']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_thread_reader.html']//nav//span[text()='Page 2 of 2']</td>
   <td></td>
 </tr>
 <tr>

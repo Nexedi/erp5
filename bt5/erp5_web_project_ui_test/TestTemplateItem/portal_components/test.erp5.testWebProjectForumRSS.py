@@ -581,6 +581,14 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     self.assertIn('("content_column", "BugLine_getContentOrTitle")',
                   field.get_tales('renderjs_extra')._text)
 
+  def test_bug_messages_reader_gets_the_line_count(self):
+    bug = self.portal.bug_module.newContent(portal_type='Bug')
+    bug.newContent(portal_type='Bug Line')
+    bug.newContent(portal_type='Bug Line')
+    self.tic()
+    renderjs_extra = dict(bug.Bug_viewProject.my_messages.get_value('renderjs_extra'))
+    self.assertEqual(2, renderjs_extra['post_count'])
+
   def test_bug_line_without_source_shows_a_blank_source(self):
     """A workflow Bug Line has no source: the thread reader draws '?' for an
     empty source title, and a blank avatar for a non-breaking space."""
@@ -772,6 +780,26 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     self.assertIn('my_source_decision_title',
                   [field.getId() for field in form.get_fields()])
 
+  def test_bug_view_shows_the_type(self):
+    field = self.portal.portal_skins.erp5_web_project.Bug_viewProject.my_resource
+    self.assertEqual('Type', field.get_value('title'))
+
+  def test_new_bug_from_project_gets_its_type(self):
+    bug_type = self.portal.portal_categories.bug_type
+    if bug_type.get('test_type') is None:
+      bug_type.newContent(portal_type='Category', id='test_type')
+    self.portal.portal_caches.clearAllCache()
+    form =self.portal.portal_skins.erp5_web_project.Project_viewNewBugDialog
+    self.assertIn('your_resource', [field.getId() for field in form.get_fields()])
+    project = self.portal.project_module.newContent(portal_type='Project')
+    self.assertIn('bug_type/test_type', [
+      item[1] for item in project.Project_viewNewBugDialog.your_resource.get_value('items')])
+    existing_bug_id_list = list(self.portal.bug_module.objectIds())
+    project.Project_newBug(title='Bug with a type', resource='bug_type/test_type')
+    bug, = [x for x in self.portal.bug_module.objectValues()
+            if x.getId() not in existing_bug_id_list]
+    self.assertEqual('bug_type/test_type', bug.getResource())
+
   def test_bug_actions_follow_the_add_permission_on_the_bug(self):
     """A project_jio_action permission is checked on the portal, not on the bug:
     the actions check Add portal content on the bug in their condition, so a
@@ -810,11 +838,23 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
                      [field.getId() for field in form.get_fields()])
     self.assertFalse(form.your_description.get_value('required'))
 
-  def test_send_bug_line_dialog_posts_to_the_forge_script(self):
+  def test_send_bug_line_dialog_posts_to_its_script(self):
     form = self.portal.portal_skins.erp5_web_project.Bug_viewSendBugLineProjectDialog
-    self.assertEqual('Bug_doBugLineSendFastInputAction', form.action)
+    self.assertEqual('Bug_sendBugLineProject', form.action)
     self.assertEqual(['your_title', 'your_text_content'],
                      [field.getId() for field in form.get_fields()])
+
+  def test_send_bug_line_redirects_to_the_new_bug_line(self):
+    """The bug messages list bug lines from the catalog, so sending a line
+    lands on that line."""
+    bug = self.portal.bug_module.newContent(portal_type='Bug')
+    redirect_url = bug.Bug_sendBugLineProject(title='Sent title',
+                                              text_content='Sent body')
+    bug_line, = bug.contentValues(portal_type='Bug Line')
+    self.assertEqual('Sent body', bug_line.getTextContent())
+    self.assertEqual('delivered', bug_line.getSimulationState())
+    self.assertTrue(redirect_url.startswith(
+      '%s/view' % bug_line.absolute_url()), redirect_url)
 
   def test_filter_project_actions_replaces_forge_send_bug_line(self):
     other_action = {'id': 'other'}
