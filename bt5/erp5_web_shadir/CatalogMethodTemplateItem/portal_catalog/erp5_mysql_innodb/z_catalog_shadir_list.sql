@@ -7,7 +7,7 @@ WHERE
 
 <dtml-let
     loads="__import__('json').loads"
-    tostr="lambda x: x.encode('utf-8') if type(x) is unicode else x"
+    tostr="lambda x: x if _.isinstance(x, _.str) or not _.hasattr(x, 'encode') else x.encode('utf-8')"
     row_list="[]">
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">
     <dtml-if "getFollowUp[loop_item] and getContentType[loop_item] == 'application/json'">
