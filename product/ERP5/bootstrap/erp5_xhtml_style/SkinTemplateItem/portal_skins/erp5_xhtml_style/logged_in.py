@@ -24,7 +24,7 @@ if portal.portal_membership.isAnonymousUser():
   )
   return
 if not url:
-  url = context.absolute_url()
+  url = context.absolute_url().rstrip('/')
 
 if REQUEST.get('is_user_account_password_expired_expire_date'):
   return context.Base_redirect(

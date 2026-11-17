@@ -643,6 +643,7 @@ class FolderMixIn(ExtensionClass.Base):
       hence it does not compute the inner acquisition path.
     """
     document_url = self.absolute_url()
+    document_url = document_url[:-1] if document_url.endswith('/') else document_url
     parsed_given_url = urlparse(given_url)
     parsed_document_url = urlparse(document_url)
     # XXX note that the following check:
