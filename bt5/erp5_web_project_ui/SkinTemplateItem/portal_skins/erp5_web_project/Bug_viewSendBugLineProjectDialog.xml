@@ -35,7 +35,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Bug_doBugLineSendFastInputAction</string> </value>
+            <value> <string>Bug_sendBugLineProject</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>

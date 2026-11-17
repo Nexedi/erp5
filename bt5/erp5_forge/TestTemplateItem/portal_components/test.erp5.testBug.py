@@ -606,6 +606,15 @@ class TestBug(ERP5TypeTestCase):
     self.workflow_tool.doActionFor(bug, 'stop_action', send_event=1)
     self.assertEqual(bug.getSimulationState(), 'stopped')
 
+  def test_transition_redirects_to_its_new_bug_line(self):
+    """Each transition adds a Bug Line, and the RenderJS Workflow_statusModify
+    lands on it through redirect_document_path."""
+    bug = self.portal.bug_module.newContent(portal_type='Bug')
+    self.workflow_tool.doActionFor(bug, 'confirm_action', send_event=1)
+    bug_line, = bug.contentValues(portal_type='Bug Line')
+    self.assertEqual(bug_line.getRelativeUrl(),
+                     self.portal.REQUEST.get('redirect_document_path'))
+
   def test_posting_bug_line_updates_bug_modification_date(self):
     bug = self.portal.bug_module.newContent(portal_type='Bug')
     bug_modification_date = bug.getModificationDate()

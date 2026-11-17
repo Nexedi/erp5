@@ -16,4 +16,4 @@ if discussion_post_uid is not None:
                                                                discussion_post.getTextContent())
     context.REQUEST.set('discussion_post_text_content', text_content)
 
-return context.DiscussionThread_viewCreateNewDiscussionPostDialog()
+return context.DiscussionThread_viewCreateNewDiscussionPostWebDialog()

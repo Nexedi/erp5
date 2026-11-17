@@ -53,6 +53,6 @@ if relative_url:
     filtered_actions.pop('workflow', None)
   if portal_type in ('Discussion Forum', 'Discussion Thread', 'Discussion Post'):
     filtered_actions.pop('object_clone_action', None)
-  if portal_type == 'Bug Module':
+  if portal_type in ('Bug Module', 'Task Module'):
     filtered_actions.pop('object_new_content_action', None)
 return filtered_actions
