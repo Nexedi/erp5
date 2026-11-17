@@ -856,6 +856,17 @@ class TestWebProjectForumRSS(ERP5TypeTestCase):
     self.assertTrue(redirect_url.startswith(
       '%s/view' % bug_line.absolute_url()), redirect_url)
 
+  def test_bug_transition_in_the_app_redirects_to_its_new_bug_line(self):
+    """The app hateoas section sets configuration_redirect_to_new_bug_line, so
+    bug_workflow makes Workflow_statusModify land on the new Bug Line."""
+    bug_id = self.portal.bug_module.newContent(portal_type='Bug').getId()
+    hateoas = self.portal.web_site_module.project_management.hateoas
+    bug = hateoas.bug_module[bug_id]
+    self.portal.portal_workflow.doActionFor(bug, 'confirm_action', send_event=1)
+    bug_line, = bug.contentValues(portal_type='Bug Line')
+    self.assertEqual(bug_line.getRelativeUrl(),
+                     self.portal.REQUEST.get('redirect_document_path'))
+
   def test_filter_project_actions_replaces_forge_send_bug_line(self):
     other_action = {'id': 'other'}
     result = self.portal.Base_filterProjectActions(actions={
