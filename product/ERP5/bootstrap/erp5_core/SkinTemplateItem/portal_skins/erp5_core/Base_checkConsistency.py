@@ -2,7 +2,13 @@ from Products.ERP5Type.Core.Workflow import ValidationFailed
 
 translateString = context.Base_translateString
 
-check_result = context.checkConsistency()
+if not isinstance(constraint_type_list, list):
+  constraint_type_list = [constraint_type_list]
+if None in constraint_type_list and \
+    'default' not in constraint_type_list:
+  constraint_type_list.append('default')
+
+check_result = context.checkConsistency(filter=dict(constraint_type=constraint_type_list))
 message_list = []
 
 for err in check_result:
