@@ -1,0 +1,14 @@
+web_site_module/output_data_json
+web_site_module/output_data_json/**
+web_page_module/output_json_js
+web_page_module/output_json_html
+currency_module/CNY
+currency_module/EUR
+currency_module/HKG
+currency_module/IDR
+currency_module/MYR
+currency_module/SGD
+currency_module/THB
+currency_module/USD
+quantity_unit_conversion_module/conversion_group_weight
+quantity_unit_conversion_module/conversion_group_weight/**
