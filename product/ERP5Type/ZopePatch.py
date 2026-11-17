@@ -38,7 +38,7 @@ if IS_ZOPE2: # BBB Zope2
   from Products.ERP5Type.patches import TM
 from Products.ERP5Type.patches import DA
 if WITH_LEGACY_WORKFLOW:
-  from Products.ERP5Type.patches import DCWorkflow
+  from Products.ERP5Type.patches import DCWorkflow_py2
   from Products.ERP5Type.patches import Worklists
 from Products.ERP5Type.patches import BTreeFolder2
 from Products.ERP5Type.patches import WorkflowTool
