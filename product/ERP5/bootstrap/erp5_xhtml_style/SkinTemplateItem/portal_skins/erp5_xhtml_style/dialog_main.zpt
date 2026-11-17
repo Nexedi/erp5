@@ -10,7 +10,9 @@
                global dialog_category request/dialog_category | nothing;
 
                local_parameter_list local_parameter_list | python: {};
-               dummy python: local_parameter_list.update({'dialog_id': dialog_id, 'dialog_method': dialog_method, 'update_method': update_action, 'dialog_category': dialog_category, 'cancel_url': request.get('cancel_url'), 'form_id': form_id, 'object_path': request.get('object_path', here.getPath())});
+               object_path request/object_path | nothing;
+               dummy python: local_parameter_list.update({'dialog_id': dialog_id, 'dialog_method': dialog_method, 'update_method': update_action, 'dialog_category': dialog_category, 'cancel_url': request.get('cancel_url'), 'form_id': form_id});
+               dummy python: local_parameter_list.update({'object_path': object_path}) if object_path and object_path != here.getPath() else None;
                title python: here.Base_translateString(here.Base_getFormViewDialogActionButtonTitle(form))">
       <tal:block metal:use-macro="here/main_template/macros/master">
         <tal:block metal:fill-slot="main">
