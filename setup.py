@@ -46,6 +46,7 @@ setup(name=name,
       keywords='erp5 utilities',
       license='GPLv3',
       namespace_packages=['erp5', 'erp5.util'],
+      python_requires=">=3.11",
       install_requires=[
         'setuptools', # namespaces
         'psutil >= 0.5.0',
