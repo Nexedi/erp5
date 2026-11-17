@@ -115,6 +115,7 @@
   <item>Chat Address</item>
   <item>Credit Card</item>
   <item>ERP5 Login</item>
+  <item>ERP5 WebAuthn Login</item>
   <item>Email</item>
   <item>Embedded File</item>
   <item>External Identifier</item>

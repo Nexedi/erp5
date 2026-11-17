@@ -35,6 +35,9 @@ Delivery Type | translation_view
 Delivery Type | update_local_roles
 Delivery Type | view
 ERP5 Login | view
+ERP5 WebAuthn Login | authenticate_device
+ERP5 WebAuthn Login | register_device
+ERP5 WebAuthn Login | view
 Email | change_function
 Email | view
 Embedded File | download
