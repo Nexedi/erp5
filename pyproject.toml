@@ -1,0 +1,93 @@
+[project]
+name = "erp5.util"
+version = "0.4.83"
+description = "Package containing various ERP5 related utilities."
+dynamic = ["readme"]
+requires-python = ">=3.11"
+license = "GPL-3.0-only"
+keywords = [
+  "erp5",
+  "utilities",
+]
+authors = [
+  {name = "The ERP5 Development Team"},
+]
+maintainers = [
+  {name = "The ERP5 Development Team"},
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Operating System :: POSIX",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Utilities",
+]
+
+dependencies = [
+  "psutil >= 0.5.0",
+  "six",
+]
+
+[project.optional-dependencies]
+benchmark = [
+  "erp5.util[testbrowser]",
+]
+benchmark-report = [
+  "erp5.util[benchmark]",
+  "matplotlib",
+  "numpy",
+]
+test = [
+  "psutil >= 0.5.0",
+  "setproctitle",
+  "slapos.core",
+  "xml_marshaller",
+]
+testbrowser = [
+  "z3c.etestbrowser",
+  "zope.testbrowser >= 5.0.0",
+]
+testnode = [
+  "netaddr",
+  "psutil >= 0.5.0",
+  "slapos.core",
+  "xml_marshaller",
+]
+zodbanalyse = [
+  "ZODB",
+]
+
+[project.scripts]
+generate_erp5_tester_report = "erp5.util.benchmark.report:generateReport"
+performance_tester_erp5 = "erp5.util.benchmark.performance_tester:main"
+requestUrl = "erp5.util.scalability.requestUrl:main"
+runScalabilityTestSuite = "erp5.util.scalability.runScalabilityTestSuite:main"
+testnode = "erp5.util.testnode:main"
+
+[project.urls]
+homepage = "https://www.erp5.com"
+source = "https://lab.nexedi.com/nexedi/erp5"
+changelog = "https://lab.nexedi.com/nexedi/erp5/-/raw/master/CHANGES.erp5.util.txt"
+
+[build-system]
+requires = ["setuptools>=77.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.dynamic.readme]
+file = [
+  "README.erp5.util.txt",
+  "erp5/util/README.taskdistribution.txt",
+  "erp5/util/README.testbrowser.txt",
+  "erp5/util/README.testnode.txt",
+  "CHANGES.erp5.util.txt",
+]
+content-type = "text/plain"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["erp5*"]
+namespaces = false
