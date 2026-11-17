@@ -28,8 +28,10 @@ line = bug.newContent(title="%s %s was %s" % (bug.getPortalType(),
                       portal_type="Bug Line",
                       text_content=comment,
                       content_type='text/plain')
-# Workflow_statusModify lands on the new line: the bug messages only list it once indexed
-bug.REQUEST.set('redirect_document_path', line.getRelativeUrl())
+# Sites opting in land on the new line: their bug messages only list it once indexed
+web_section = bug.getWebSectionValue()
+if web_section is not None and web_section.getLayoutProperty('configuration_redirect_to_new_bug_line', default=0):
+  bug.REQUEST.set('redirect_document_path', line.getRelativeUrl())
 if send_event:
   # This will post The message Automatically.
   line.start()
