@@ -606,6 +606,14 @@ class TestBug(ERP5TypeTestCase):
     self.workflow_tool.doActionFor(bug, 'stop_action', send_event=1)
     self.assertEqual(bug.getSimulationState(), 'stopped')
 
+  def test_transition_outside_web_site_keeps_redirect_on_bug(self):
+    """Only sites setting configuration_redirect_to_new_bug_line land on the
+    new Bug Line; elsewhere Workflow_statusModify stays on the Bug."""
+    bug = self.portal.bug_module.newContent(portal_type='Bug')
+    self.workflow_tool.doActionFor(bug, 'confirm_action', send_event=1)
+    self.assertEqual(1, len(bug.contentValues(portal_type='Bug Line')))
+    self.assertIsNone(self.portal.REQUEST.get('redirect_document_path'))
+
   def test_posting_bug_line_updates_bug_modification_date(self):
     bug = self.portal.bug_module.newContent(portal_type='Bug')
     bug_modification_date = bug.getModificationDate()
