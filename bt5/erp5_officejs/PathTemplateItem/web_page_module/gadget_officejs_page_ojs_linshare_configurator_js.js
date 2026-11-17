@@ -8,12 +8,14 @@
       .push(function () {
         return RSVP.all([
           gadget.getSetting("portal_type"),
-          gadget.getSetting("erp5_attachment_synchro", true)
+          gadget.getSetting("erp5_attachment_synchro", true),
+          gadget.getIndexedDBPrefix()
         ]);
       })
       .push(function (setting) {
         var configuration = {},
           attachment_synchro = setting[1] !== "",
+          prefix = setting[2],
           linshare_json = {
             type: "linshare",
             url: options.url
@@ -50,7 +52,7 @@
               type: "uuid",
               sub_storage: {
                 type: "indexeddb",
-                database: "ojs_linshare_hash"
+                database: prefix + "ojs_linshare_hash"
               }
             }
           },
@@ -61,7 +63,7 @@
               type: "uuid",
               sub_storage: {
                 type: "indexeddb",
-                database: "ojs_linshare"
+                database: prefix + "ojs_linshare"
               }
             }
           },
@@ -110,6 +112,7 @@
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("setSetting", "setSetting")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
+    .declareAcquiredMethod("getIndexedDBPrefix", "getIndexedDBPrefix")
     .declareMethod("render", function (options) {
       var gadget = this;
       if (options.url) {

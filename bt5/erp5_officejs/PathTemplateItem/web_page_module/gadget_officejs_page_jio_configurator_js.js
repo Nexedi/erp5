@@ -21,19 +21,22 @@
     },
     "local": {
       "setConfiguration": function (gadget) {
-        var configuration = {
-          type: "query",
-          sub_storage: {
-            type: "uuid",
-            sub_storage: {
-              type: "indexeddb",
-              database: "local_default"
-            }
-          }
-        };
-        return gadget.setSettingList({'jio_storage_description': configuration,
-                                      'jio_storage_name': 'LOCAL',
-                                      'sync_reload': true})
+        return gadget.getIndexedDBPrefix()
+          .push(function (prefix) {
+            var configuration = {
+              type: "query",
+              sub_storage: {
+                type: "uuid",
+                sub_storage: {
+                  type: "indexeddb",
+                  database: prefix + "local_default"
+                }
+              }
+            };
+            return gadget.setSettingList({'jio_storage_description': configuration,
+                                          'jio_storage_name': 'LOCAL',
+                                          'sync_reload': true});
+          })
           .push(function () {
             return gadget.redirect({command: "display", options: {page: 'ojs_sync', auto_repair: 'true'}});
           });
@@ -95,6 +98,7 @@
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("setSettingList", "setSettingList")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
+    .declareAcquiredMethod("getIndexedDBPrefix", "getIndexedDBPrefix")
     .declareMethod("render", function (options) {
       var gadget = this;
       return gadget.updateHeader({page_title: "Storage Configuration"})
