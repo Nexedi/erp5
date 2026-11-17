@@ -107,3 +107,6 @@ from Products.ERP5Type.Core.Workflow import ValidationFailed
 if WITH_LEGACY_WORKFLOW:
   from Products.ERP5Type.patches.DCWorkflow import ERP5TransitionDefinition
 from Products.ERP5Type.patches.BTreeFolder2 import ERP5BTreeFolder2Base
+
+# For backward compatibility of old-style classes
+from Products.ERP5Type.patches import UserPropertySheet
