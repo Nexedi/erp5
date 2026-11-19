@@ -153,7 +153,7 @@ def _delete(portal, data_set_id_list, document_id_list):
 
 def _deletableDataSetList(data_set_dict):
   return [data_set.getId()
-    for data_set, document_set in data_set_dict.iteritems()
+    for data_set, document_set in six.iteritems(data_set_dict)
     if document_set.issuperset(data_set.getFollowUpRelatedList())]
 
 def ERP5Site_deleteOrphanShadir(self):
@@ -227,7 +227,7 @@ def ShaDir_search(self, filename, summary, delete=False):
     metadata = loads(loads(document.getData())[0])
     del metadata[u"sha512"]
     x[';'.join('%s=%r' % (k, unicode2str(v))
-               for k, v in sorted(metadata.iteritems()))].append(
+               for k, v in sorted(six.iteritems(metadata)))].append(
       document.getId())
   r = '\n'.join('%s %s' % (k, sorted(v)) for k, v in sorted(six.iteritems(x)))
   if delete:

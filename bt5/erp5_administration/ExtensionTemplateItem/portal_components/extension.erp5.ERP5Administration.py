@@ -113,7 +113,7 @@ def MessageCatalog_deleteNotTranslatedMessageDict(self):
     Delete from  Localizer's MessageCatalog instance messages that are NOT translated.
   """
   not_translated_message_dict = MessageCatalog_getNotTranslatedMessageDict(self)
-  for k,_ in not_translated_message_dict.iteritems():
+  for k,_ in six.iteritems(not_translated_message_dict):
     # delete message from dict
     del(self._messages[k])
   return len(not_translated_message_dict.keys())
